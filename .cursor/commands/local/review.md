@@ -96,14 +96,18 @@ Execute this command to run the expert review workflow:
        - Last Review Date: [Current Date] (YYYY-MM-DD format)
        - Files Created: 0
        - Avg Changes per Review: 0.0
-       - Substantive Reviews: 0
-       - Acknowledgment Only: 0
+       - Structure Reviewed: 0
+       - Files Rearranged: 0
      - Add a new section in "Review Details" section (before "## Statistics Summary"):
        - Section header: `### [Expert Name] ([Short Expertise Description])`
        - Content: `- **Total Reviews**: 0`
      - **Update Statistics and Sort**: After updating tracker:
        - Run `/local/statistics` command to calculate and update statistics rows
        - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
+   - **Commit Changes**: Stage all changes and commit with message:
+     - Message format: `Expert review: Created expert [Expert Name] ([Expertise])`
+     - Stage all modified files (expert file, tracker)
+     - Commit with the generated message
    - **Output**: Expert name and expertise
    - **Stop**: End command here
 
@@ -165,6 +169,10 @@ Execute this command to run the expert review workflow:
    - **Update Tracker Status**: Before ending, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
      - Replace "Current reviewer" with "Last reviewer"
      - Replace "Current file" with "Last file"
+   - **Commit Changes**: Stage all changes and commit with message:
+     - Message format: `Expert review: [Expert Name] created [File Path]`
+     - Stage all modified files (new file, tracker)
+     - Commit with the generated message
    - **Output**: Expert name and created file (full path)
    - **Stop**: End command here
 
@@ -195,6 +203,10 @@ Execute this command to run the expert review workflow:
      - **Update Tracker Status**: Before ending, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
        - Replace "Current reviewer" with "Last reviewer"
        - Replace "Current file" with "Last file"
+     - **Commit Changes**: Stage all changes and commit with message:
+       - Message format: `Expert review: [Expert Name] created [File Path]`
+       - Stage all modified files (new file, tracker)
+       - Commit with the generated message
      - **Output**: Expert name and created file (full path)
      - **Stop**: End command here
 
@@ -243,6 +255,8 @@ Execute this command to run the expert review workflow:
        - Increment "Total Changes" count
        - Update "Last Review Date"
        - Add entry to "Review Details" section with file path and date
+       - If expert reviewed documentation structure (Documentation Expert, Architecture Expert, etc.): Increment "Structure Reviewed" count
+       - If expert rearranged files: Increment "Files Rearranged" count
        - Update statistics summary
      - **Update Statistics and Sort**: After updating tracker:
        - Run `/local/statistics` command to calculate and update statistics rows
@@ -252,8 +266,15 @@ Execute this command to run the expert review workflow:
        - Replace "Current file" with "Last file"
    - **File Rearrangement** (if expert's expertise is appropriate):
      - If the expert's expertise is appropriate (e.g., Documentation Expert, Architecture Expert, or any expert whose expertise relates to file organization/structure):
-       - Expert MUST also rearrange files in `docs/` directory in addition to the regular review
-       - Expert should search for the first file that needs to be rearranged according to documentation structure rules
+       - Expert MUST also review and evaluate documentation structure in addition to the regular review
+       - **Documentation Structure Review**:
+         - Review existing documentation structure rules (e.g., `docs/guides/DOCUMENTATION_STRUCTURE.md`)
+         - Evaluate if current rules are adequate, clear, and complete
+         - Determine if new rules or clarifications are needed based on current documentation state
+         - If new rules are needed, propose and document them (update structure documentation or create new guidance)
+         - Expert should not just follow existing rules blindly, but actively evaluate and improve them
+       - **File Reorganization**:
+         - Search for the first file that needs to be rearranged according to documentation structure rules (existing or newly determined)
        - Once found, expert should rearrange that file (move it to the correct location)
        - Expert should stop after rearranging the first file (do not continue searching for more files)
        - Expert should document the rearrangement in one designated file (e.g., `docs/guides/FILE_REORGANIZATION.md` or similar)
@@ -261,7 +282,15 @@ Execute this command to run the expert review workflow:
          - List of files moved/reorganized
          - Reason for reorganization
          - New structure/organization
+           - Any new rules or clarifications determined
          - Expert's name, expertise, and date
+         - **Update Expert Reviews Tracker**: After structure review and/or file reorganization:
+           - If expert reviewed documentation structure: Increment "Structure Reviewed" count for the expert
+           - If expert rearranged files: Increment "Files Rearranged" count for the expert
+   - **Commit Changes**: Stage all changes and commit with message:
+     - Message format: `Expert review: [Expert Name] reviewed [File Path]`
+     - Stage all modified files (reviewed file, tracker, reorganization documentation if applicable, any other files modified)
+     - Commit with the generated message
    - **Output**: Expert name and file name (full path)
 
 ## Implementation Notes
@@ -291,6 +320,14 @@ Execute this command to run the expert review workflow:
   - Execute `/local/sort` command:
     - If file was created: Use `sort-by="Files Created"`
     - If file was reviewed: Use default (sort-by="Files Reviewed")
+- **Commit Changes**: At the end of each workflow path, before output and stop:
+  - Stage all changes using `git add -A` (or stage specific files)
+  - Generate commit message based on action:
+    - Expert created: `Expert review: Created expert [Expert Name] ([Expertise])`
+    - File created: `Expert review: [Expert Name] created [File Path]`
+    - File reviewed: `Expert review: [Expert Name] reviewed [File Path]`
+  - Commit using `git commit -m "[commit message]"`
+  - Commit should include all changes made during the workflow (expert file, reviewed/created file, tracker, any other modified files)
 
 ### Expert File Creation
 - Check existing experts in `.cursor/rules/experts/*.mdc`
@@ -358,6 +395,8 @@ Execute this command to run the expert review workflow:
     - Increment "Total Changes" count
     - Update "Last Review Date"
     - Add entry to "Review Details" section with file path, date, and summary of changes
+    - If expert reviewed documentation structure (Documentation Expert, Architecture Expert, etc.): Increment "Structure Reviewed" count
+    - If expert rearranged files: Increment "Files Rearranged" count
     - Recalculate "Avg Changes per Review" (Total Changes / Files Reviewed)
     - Update statistics summary (total reviews, total files, etc.)
   - **Update Statistics and Sort**: After updating tracker:
@@ -365,12 +404,9 @@ Execute this command to run the expert review workflow:
     - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
 - **File Rearrangement** (if expert's expertise is appropriate):
   - If expert's expertise is appropriate (e.g., Documentation Expert, Architecture Expert, or any expert whose expertise relates to file organization/structure):
-    - Expert MUST also rearrange files in `docs/` directory in addition to the regular review
-    - Expert should search for the first file that needs to be rearranged according to documentation structure rules
-    - Once found, expert should rearrange that file (move it to the correct location)
-    - Expert should stop after rearranging the first file (do not continue searching for more files)
-    - Expert should document the rearrangement in one designated file (e.g., `docs/guides/FILE_REORGANIZATION.md` or similar)
-    - Documentation should include: list of files moved/reorganized, reason for reorganization, new structure/organization, expert's name/expertise/date
+    - Expert MUST also review and evaluate documentation structure in addition to the regular review
+    - **Documentation Structure Review**: Review existing documentation structure rules, evaluate if current rules are adequate/clear/complete, determine if new rules or clarifications are needed, and if so, propose and document them. Expert should not just follow existing rules blindly, but actively evaluate and improve them.
+    - **File Reorganization**: Search for the first file that needs to be rearranged according to documentation structure rules (existing or newly determined), rearrange that file, stop after rearranging the first file, and document the rearrangement in `docs/guides/FILE_REORGANIZATION.md` including: list of files moved/reorganized, reason for reorganization, new structure/organization, any new rules or clarifications determined, expert's name/expertise/date
 
 ## Validation and Verification Framework
 

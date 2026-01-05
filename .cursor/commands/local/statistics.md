@@ -21,7 +21,7 @@ No parameters required.
    - Data rows end when we hit "| Total:", "| Benford:", or a section header ("##" or "###")
 2. **Parse Data**: Extract all data rows (exclude Total and Benford rows)
 3. **Calculate Total Row**:
-   - Sum numeric columns (Files Reviewed, Total Changes, Files Created, Substantive Reviews, Acknowledgment Only)
+   - Sum numeric columns (Files Reviewed, Total Changes, Files Created, Structure Reviewed, Files Rearranged)
    - Calculate overall average for "Avg Changes per Review" (Total Changes / Files Reviewed)
    - Find most recent date in "Last Review Date" column
 4. **Calculate Benford Row**:
@@ -43,8 +43,8 @@ The "Total:" row provides summary statistics:
 - **Last Review Date**: Most recent date (or "-" if no dates)
 - **Files Created**: Sum of all values
 - **Avg Changes per Review**: Overall average = Total Changes / Files Reviewed
-- **Substantive Reviews**: Sum of all values
-- **Acknowledgment Only**: Sum of all values
+- **Structure Reviewed**: Sum of all values
+- **Files Rearranged**: Sum of all values
 
 ### Benford's Law MAD Scores
 
@@ -86,8 +86,8 @@ Benford's Law states that in many naturally occurring collections of numbers, th
 - **Last Review Date**: "" (skip - not numeric)
 - **Files Created**: MAD score with emoji
 - **Avg Changes per Review**: "" (skip - average column)
-- **Substantive Reviews**: MAD score with emoji
-- **Acknowledgment Only**: MAD score with emoji
+- **Structure Reviewed**: MAD score with emoji
+- **Files Rearranged**: MAD score with emoji
 
 **Emoji Mapping**:
 - ✅ for MAD < 0.006 (excellent)
@@ -113,8 +113,8 @@ Benford's Law states that in many naturally occurring collections of numbers, th
 4. Last Review Date (date)
 5. Files Created (numeric)
 6. Avg Changes per Review (average - numeric)
-7. Substantive Reviews (numeric)
-8. Acknowledgment Only (numeric)
+7. Structure Reviewed (numeric)
+8. Files Rearranged (numeric)
 
 ### Data Parsing
 - Parse markdown table format: `| Column1 | Column2 | ... |`

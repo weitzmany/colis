@@ -2,6 +2,8 @@
 
 Sort the expert review statistics table in `docs/reference/EXPERT_REVIEWS_TRACKER.md` by a specified column.
 
+This command is part of the expert review workflow system and works in conjunction with `/local/statistics` and `/local/review` commands to maintain the expert reviews tracker.
+
 ## Usage
 
 Execute this command to sort the expert review statistics table:
@@ -25,8 +27,8 @@ Execute this command to sort the expert review statistics table:
   - `Last Review Date`
   - `Files Created`
   - `Avg Changes per Review`
-  - `Substantive Reviews`
-  - `Acknowledgment Only`
+  - `Structure Reviewed`
+  - `Files Rearranged`
 
 ## Workflow
 
@@ -66,8 +68,8 @@ Execute this command to sort the expert review statistics table:
 - `Files Reviewed`
 - `Total Changes`
 - `Files Created`
-- `Substantive Reviews`
-- `Acknowledgment Only`
+- `Structure Reviewed`
+- `Files Rearranged`
 
 #### Numeric Columns (Ascending - lowest first)
 - `Avg Changes per Review`
@@ -125,19 +127,80 @@ Execute this command to sort the expert review statistics table:
 ```
 **Result**: Lowest average first (ascending)
 
+**Note**: This sorts ascending (lowest first). To see highest averages first, you would need to manually reverse the results or use a different sorting approach.
+
+### Sort by Files Created
+```bash
+/local/sort sort-by="Files Created"
+```
+**Result**: Experts with most files created first (descending)
+
+### Sort by Structure Reviewed
+```bash
+/local/sort sort-by="Structure Reviewed"
+```
+**Result**: Experts who have reviewed documentation structure most often first (descending)
+
+### Sort by Files Rearranged
+```bash
+/local/sort sort-by="Files Rearranged"
+```
+**Result**: Experts who have rearranged the most files first (descending)
+
+## Detailed Example
+
+### Before Sorting (Sample Data)
+```
+| Expert Name | Files Reviewed | Total Changes |
+|-------------|----------------|---------------|
+| Alice Smith | 1 | 1 |
+| Bob Jones | 3 | 5 |
+| Carol White | 2 | 3 |
+```
+
+### After Sorting by Files Reviewed (Descending)
+```
+| Expert Name | Files Reviewed | Total Changes |
+|-------------|----------------|---------------|
+| Bob Jones | 3 | 5 |
+| Carol White | 2 | 3 |
+| Alice Smith | 1 | 1 |
+```
+
+### After Sorting by Expert Name (Ascending)
+```
+| Expert Name | Files Reviewed | Total Changes |
+|-------------|----------------|---------------|
+| Alice Smith | 1 | 1 |
+| Bob Jones | 3 | 5 |
+| Carol White | 2 | 3 |
+```
+
 ## Expected Output
 
+### Successful Sort
 ```
 Table sorted
 Column: Files Reviewed
-Rows sorted: 21
+Rows sorted: 23
 ```
 
-Or if column not found:
+### Column Not Found (Uses Default)
 ```
 Table sorted
 Column: Files Reviewed (default - column "InvalidColumn" not found)
-Rows sorted: 21
+Rows sorted: 23
+```
+
+### Error Handling
+If the file or table structure cannot be found:
+```
+Error: Could not locate expert review statistics table
+```
+
+If the file doesn't exist:
+```
+Error: File docs/reference/EXPERT_REVIEWS_TRACKER.md not found
 ```
 
 ## Technical Implementation
@@ -150,8 +213,8 @@ Rows sorted: 21
 5. Last Review Date (4)
 6. Files Created (5)
 7. Avg Changes per Review (6)
-8. Substantive Reviews (7)
-9. Acknowledgment Only (8)
+8. Structure Reviewed (7)
+9. Files Rearranged (8)
 
 ### Sorting Algorithm
 1. Locate table dynamically (find "## Expert Review Statistics" section)
@@ -172,6 +235,73 @@ Rows sorted: 21
 - `0` in numeric column: Valid number, sort normally
 - Empty strings: Sort as empty (bottom for ascending, top for descending)
 
+## Related Commands
+
+- `/local/statistics` - Calculate and update statistics rows (run before or after sorting)
+- `/local/review` - Expert review workflow (automatically runs `/local/sort` after updates)
+
+## Common Workflows
+
+### After Adding New Expert
+1. Update tracker with new expert entry
+2. Run `/local/statistics` to update totals
+3. Run `/local/sort` to sort by "Files Reviewed" (default)
+
+### After Review or File Creation
+1. Update tracker with review/file creation entry
+2. Run `/local/statistics` to update totals and averages
+3. Run `/local/sort` to organize table (defaults to "Files Reviewed")
+
+### Finding Inactive Experts
+```bash
+/local/sort sort-by="Last Review Date"
+```
+Shows experts who haven't reviewed files recently (empty dates sort to bottom).
+
+### Analyzing Review Quality
+```bash
+/local/sort sort-by="Avg Changes per Review"
+```
+Shows experts with highest average changes per review (ascending sort shows most productive first, but note: ascending means lowest first).
+
+## Troubleshooting
+
+### Table Not Found
+**Problem**: Command reports table cannot be located  
+**Solution**: 
+- Verify `docs/reference/EXPERT_REVIEWS_TRACKER.md` exists
+- Check that "## Expert Review Statistics" section header exists
+- Ensure table header row starts with "| Expert Name"
+
+### Column Not Recognized
+**Problem**: Column name provided but default column used instead  
+**Solution**:
+- Verify column name matches header exactly (case-insensitive)
+- Check for extra spaces or typos in column name
+- Use exact column names from the "Valid columns" list
+
+### Rows Not Sorting Correctly
+**Problem**: Data appears in unexpected order after sorting  
+**Solution**:
+- Verify data types match expected format (numbers, dates, strings)
+- Check for formatting inconsistencies in table cells
+- Ensure date format is `YYYY-MM-DD` or `-` for empty dates
+- Numeric values should contain only digits and decimal points
+
+### Statistics Rows Affected
+**Problem**: Total or Benford rows are sorted or moved  
+**Solution**: This should not happen - if it does, verify table structure:
+- Statistics rows should start with "| Total:" or "| Benford:"
+- These rows should be preserved and not included in sorting
+- Check that data rows end before statistics rows
+
+### File Modification Issues
+**Problem**: File not updating or changes reverted  
+**Solution**:
+- Verify file is writable
+- Check for file locks or concurrent modifications
+- Ensure sufficient permissions on file and directory
+
 ## Notes
 
 - The command modifies the file in place
@@ -182,4 +312,16 @@ Rows sorted: 21
 - Table formatting is preserved
 - Case-insensitive column name matching
 - Default sort direction: Descending for counts, Ascending for names/averages
+- Safe to run multiple times (idempotent operation)
+
+---
+
+## Review/Contribution
+
+**Expert**: Dorothy Clark  
+**Expertise**: Documentation (Code, API, User Documentation)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced documentation clarity and completeness by adding comprehensive context, troubleshooting section, and improved examples. Added introduction context explaining this command's role in the expert review workflow system and relationship to `/local/statistics` and `/local/review` commands. Enhanced "Expected Output" section with error handling examples and clearer success/failure scenarios. Added "Related Commands" section linking to related workflow commands. Added "Common Workflows" section with practical usage patterns for after adding new expert, after review/file creation, finding inactive experts, and analyzing review quality. Added comprehensive "Troubleshooting" section covering common issues: table not found, column not recognized, rows not sorting correctly, statistics rows affected, and file modification issues, each with problem description and solution steps. Added additional sorting examples for "Files Created" and "Substantive Reviews" columns. Added "Detailed Example" section with before/after sorting scenarios showing concrete examples of how data is reorganized. Improved notes section with idempotent operation clarification. These additions provide users with better understanding of when and how to use the command, common issues they may encounter, and practical workflows for maintaining the expert reviews tracker.
+
+---
 

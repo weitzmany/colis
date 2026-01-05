@@ -166,18 +166,7 @@ Execute this command to run the expert review workflow:
 ### Step 5: Expert Review
 
 10. **Expert Review** (using expert from Step 2/4 and file from Step 3b/4/9)
-   - **Exception - File Rearrangement**: If the expert's expertise is appropriate (e.g., Documentation Expert, Architecture Expert, or any expert whose expertise relates to file organization/structure):
-     - Expert can rearrange files in `docs/` directory instead of reviewing the selected file
-     - Expert should reorganize files according to documentation structure rules, or change the rules if they think there is a better way
-     - Expert should document all changes in one designated file (e.g., `docs/guides/FILE_REORGANIZATION.md` or similar)
-     - Documentation should include:
-       - List of files moved/reorganized
-       - Reason for reorganization
-       - New structure/organization
-       - Expert's name, expertise, and date
-     - **Output**: Expert name and the designated documentation file (full path)
-     - **Stop**: End command here
-   - **Standard Review** (if exception doesn't apply):
+   - **Standard Review** (always performed):
      - Ask the expert to review the selected file
      - **⚠️ CRITICAL REQUIREMENT**: Expert must ACTUALLY ADD substantive content to the file, not just describe what should be added
      - **⚠️ THE FILE MUST BE VISIBLY CHANGED**: The file content must be expanded with new substantive material before any review contribution section is added
@@ -207,7 +196,19 @@ Execute this command to run the expert review workflow:
      - **Update Statistics and Sort**: After updating tracker:
        - Run `/local/statistics` command to calculate and update statistics rows
        - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
-     - **Output**: Expert name and file name (full path)
+   - **File Rearrangement** (if expert's expertise is appropriate):
+     - If the expert's expertise is appropriate (e.g., Documentation Expert, Architecture Expert, or any expert whose expertise relates to file organization/structure):
+       - Expert MUST also rearrange files in `docs/` directory in addition to the regular review
+       - Expert should search for the first file that needs to be rearranged according to documentation structure rules
+       - Once found, expert should rearrange that file (move it to the correct location)
+       - Expert should stop after rearranging the first file (do not continue searching for more files)
+       - Expert should document the rearrangement in one designated file (e.g., `docs/guides/FILE_REORGANIZATION.md` or similar)
+       - Documentation should include:
+         - List of files moved/reorganized
+         - Reason for reorganization
+         - New structure/organization
+         - Expert's name, expertise, and date
+   - **Output**: Expert name and file name (full path)
 
 ## Implementation Notes
 
@@ -251,13 +252,7 @@ Execute this command to run the expert review workflow:
 - Add signature block at end
 
 ### File Review
-- **Exception - File Rearrangement**:
-  - If expert's expertise is appropriate (e.g., Documentation Expert, Architecture Expert, or any expert whose expertise relates to file organization/structure):
-    - Expert can rearrange files in `docs/` directory instead of reviewing the selected file
-    - Expert should reorganize files according to documentation structure rules, or change the rules if they think there is a better way
-    - Expert should document all changes in one designated file (e.g., `docs/guides/FILE_REORGANIZATION.md` or similar)
-    - Documentation should include: list of files moved/reorganized, reason for reorganization, new structure/organization, expert's name/expertise/date
-- **Standard Review** (if exception doesn't apply):
+- **Standard Review** (always performed):
   - Read existing file content
   - **⚠️ CRITICAL REQUIREMENT**: Expert must ACTUALLY ADD substantive content to the file, not just describe what should be added
   - **⚠️ THE FILE MUST BE VISIBLY CHANGED**: The file content must be expanded with new substantive material before any review contribution section is added
@@ -282,6 +277,14 @@ Execute this command to run the expert review workflow:
   - **Update Statistics and Sort**: After updating tracker:
     - Run `/local/statistics` command to calculate and update statistics rows
     - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
+- **File Rearrangement** (if expert's expertise is appropriate):
+  - If expert's expertise is appropriate (e.g., Documentation Expert, Architecture Expert, or any expert whose expertise relates to file organization/structure):
+    - Expert MUST also rearrange files in `docs/` directory in addition to the regular review
+    - Expert should search for the first file that needs to be rearranged according to documentation structure rules
+    - Once found, expert should rearrange that file (move it to the correct location)
+    - Expert should stop after rearranging the first file (do not continue searching for more files)
+    - Expert should document the rearrangement in one designated file (e.g., `docs/guides/FILE_REORGANIZATION.md` or similar)
+    - Documentation should include: list of files moved/reorganized, reason for reorganization, new structure/organization, expert's name/expertise/date
 
 ## ⚠️ REMINDER: SUBSTANTIVE CONTENT FIRST
 

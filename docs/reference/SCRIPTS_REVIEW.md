@@ -135,6 +135,140 @@ Based on the review, here are the most generic and useful scripts:
 - Git hooks in `scripts/` (installed via setup script)
 - README files documenting script usage
 
+## Database Operations in Scripts
+
+### Database Script Patterns
+
+1. **Migration Scripts**:
+   - SQL migration files for schema changes
+   - Version-controlled migration scripts
+   - Up and down migration support
+   - Transaction-wrapped migrations
+   - Rollback capabilities for failed migrations
+   - Migration state tracking
+
+2. **Seed Scripts**:
+   - Database seeding for test/development data
+   - Idempotent seed operations
+   - Conditional seeding based on environment
+   - Data validation before insertion
+   - Foreign key relationship handling
+   - Bulk insert optimization
+
+3. **Backup and Restore Scripts**:
+   - Automated database backup scripts
+   - Point-in-time recovery support
+   - Backup rotation and retention
+   - Restore verification procedures
+   - Backup encryption for sensitive data
+   - Scheduled backup automation
+
+### Database Script Best Practices
+
+1. **Connection Management**:
+   - Connection pooling in scripts
+   - Proper connection cleanup
+   - Transaction management
+   - Error handling for connection failures
+   - Timeout configuration
+   - Connection retry logic
+
+2. **Query Optimization**:
+   - Use prepared statements (security and performance)
+   - Batch operations for multiple records
+   - Index-aware queries
+   - Query timeout configuration
+   - Explain plans for complex queries
+   - Avoid N+1 query patterns
+
+3. **Data Integrity**:
+   - Transaction boundaries for atomicity
+   - Foreign key constraint validation
+   - Data type validation
+   - Constraint checking before operations
+   - Rollback on error
+   - Data consistency verification
+
+### Database Script Security
+
+1. **Credential Management**:
+   - Environment variables for database credentials
+   - Never hardcode passwords in scripts
+   - Use secure credential storage (AWS Secrets Manager, etc.)
+   - Credential rotation support
+   - Least privilege database users
+   - Separate credentials per environment
+
+2. **SQL Injection Prevention**:
+   - Use parameterized queries exclusively
+   - Avoid string concatenation for SQL
+   - Input validation and sanitization
+   - Use ORM/prepared statements
+   - Validate user inputs
+   - Escape special characters when necessary
+
+3. **Access Control**:
+   - Script-specific database users
+   - Minimal required permissions
+   - Read-only users for reporting scripts
+   - Audit logging for sensitive operations
+   - Role-based access in scripts
+   - Principle of least privilege
+
+### Database Script Patterns
+
+1. **Schema Management Scripts**:
+   ```bash
+   # Migration script pattern
+   #!/bin/bash
+   # Run migrations in order
+   for migration in migrations/*.sql; do
+     mysql -u user -p database < "$migration"
+   done
+   ```
+
+2. **Data Seeding Scripts**:
+   ```bash
+   # Seed script pattern
+   #!/bin/bash
+   # Seed database with test data
+   mysql -u user -p database < seed.sql
+   ```
+
+3. **Backup Scripts**:
+   ```bash
+   # Backup script pattern
+   #!/bin/bash
+   # Create database backup
+   mysqldump -u user -p database > backup_$(date +%Y%m%d).sql
+   ```
+
+### Database Script Error Handling
+
+1. **Error Detection**:
+   - Check exit codes from database commands
+   - Validate query results
+   - Monitor for constraint violations
+   - Detect connection failures
+   - Track migration failures
+   - Log database errors
+
+2. **Error Recovery**:
+   - Transaction rollback on errors
+   - Retry logic for transient errors
+   - Graceful degradation
+   - Error notification and alerting
+   - Partial operation recovery
+   - Cleanup on failure
+
+3. **Error Reporting**:
+   - Detailed error messages
+   - Error logging to files
+   - Database error tracking
+   - Alerting for critical failures
+   - Error summary reports
+   - Debugging information
+
 ## Notes
 
 - Scripts use modern bash features (should work on macOS/Linux)
@@ -142,4 +276,18 @@ Based on the review, here are the most generic and useful scripts:
 - Scripts are well-documented with comments
 - Most scripts can be adapted to different projects with minimal changes
 - Git workflow scripts are particularly well-structured and reusable
+- Database scripts require special security considerations
+- Connection management is critical for database scripts
+- Transaction handling ensures data integrity
+- Prepared statements prevent SQL injection vulnerabilities
 
+---
+
+## Review/Contribution
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this scripts review document by adding a comprehensive "Database Operations in Scripts" section that covers database script patterns (migration scripts, seed scripts, backup and restore scripts), database script best practices (connection management, query optimization, data integrity), database script security (credential management, SQL injection prevention, access control), database script patterns (schema management, data seeding, backup), and database script error handling (error detection, error recovery, error reporting). This enhancement provides practical guidance for implementing secure and efficient database operations in automation scripts.
+
+---

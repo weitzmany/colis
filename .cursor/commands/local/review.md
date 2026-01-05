@@ -2,6 +2,18 @@
 
 Expert-driven file review and creation workflow. Randomly selects or creates experts and files, then has experts review/expand content.
 
+## ⚠️ CRITICAL REQUIREMENT: SUBSTANTIVE CONTENT ADDITION
+
+**EXPERTS MUST ACTUALLY ADD SUBSTANTIVE CONTENT TO FILES, NOT JUST DESCRIBE WHAT SHOULD BE ADDED.**
+
+- ❌ **FORBIDDEN**: Adding only a review contribution section that describes what "should be added"
+- ❌ **FORBIDDEN**: Describing changes without actually making them
+- ✅ **REQUIRED**: Actually adding new sections, expanding existing content, including examples, code snippets, best practices, procedures, tools, methodologies, or detailed explanations
+- ✅ **REQUIRED**: The file must be visibly changed with new substantive content before the review contribution section is added
+- ✅ **REQUIRED**: The review contribution section should describe what was ACTUALLY ADDED to the file, not what should be added
+
+**This is a critical requirement. Failure to add substantive content will result in the file not being changed, which defeats the purpose of the review workflow.**
+
 ## Usage
 
 Execute this command to run the expert review workflow:
@@ -83,13 +95,17 @@ Execute this command to run the expert review workflow:
      - **Stop**: End command here
    - **Standard Review** (if exception doesn't apply):
      - Ask the expert to review the selected file
-     - **CRITICAL**: Expert must ACTUALLY ADD substantive content to the file, not just describe what should be added
-     - Expert should expand the file according to their professional opinion by:
-       - Adding new sections with actual content
-       - Expanding existing sections with detailed information
-       - Adding examples, code snippets, best practices, or detailed explanations
-       - Including practical guidance, tools, procedures, or methodologies
-     - The review contribution section should describe what was ADDED, not what should be added
+     - **⚠️ CRITICAL REQUIREMENT**: Expert must ACTUALLY ADD substantive content to the file, not just describe what should be added
+     - **⚠️ THE FILE MUST BE VISIBLY CHANGED**: The file content must be expanded with new substantive material before any review contribution section is added
+     - **⚠️ FORBIDDEN**: Do NOT add only a review contribution section that describes what "should be added" - this is not acceptable
+     - **⚠️ FORBIDDEN**: Do NOT describe changes without actually making them to the file
+     - Expert MUST expand the file according to their professional opinion by:
+       - **REQUIRED**: Adding new sections with actual content (not just section headers or descriptions)
+       - **REQUIRED**: Expanding existing sections with detailed information (actual content, not descriptions)
+       - **REQUIRED**: Adding examples, code snippets, best practices, or detailed explanations (actual examples, not descriptions of examples)
+       - **REQUIRED**: Including practical guidance, tools, procedures, or methodologies (actual guidance, not descriptions of guidance)
+     - **⚠️ VERIFICATION**: Before adding the review contribution section, verify that the file has been visibly changed with new substantive content
+     - The review contribution section should describe what was ACTUALLY ADDED to the file, not what should be added
      - If expert has no professional connection to the content:
        - Expert should directly admit they have nothing to contribute
        - Still add a brief note at the end
@@ -144,13 +160,17 @@ Execute this command to run the expert review workflow:
     - Documentation should include: list of files moved/reorganized, reason for reorganization, new structure/organization, expert's name/expertise/date
 - **Standard Review** (if exception doesn't apply):
   - Read existing file content
-  - **CRITICAL**: Expert must ACTUALLY ADD substantive content to the file
+  - **⚠️ CRITICAL REQUIREMENT**: Expert must ACTUALLY ADD substantive content to the file, not just describe what should be added
+  - **⚠️ THE FILE MUST BE VISIBLY CHANGED**: The file content must be expanded with new substantive material before any review contribution section is added
+  - **⚠️ FORBIDDEN**: Do NOT add only a review contribution section that describes what "should be added" - this is not acceptable
+  - **⚠️ FORBIDDEN**: Do NOT describe changes without actually making them to the file
   - Have expert review and expand according to expertise by:
-    - Adding new sections with actual content (not just descriptions)
-    - Expanding existing sections with detailed information
-    - Including examples, code snippets, best practices, procedures
-    - Adding practical guidance, tools, methodologies, or detailed explanations
-  - The review contribution section describes what was ADDED, not what should be added
+    - **REQUIRED**: Adding new sections with actual content (not just section headers or descriptions)
+    - **REQUIRED**: Expanding existing sections with detailed information (actual content, not descriptions)
+    - **REQUIRED**: Including examples, code snippets, best practices, procedures (actual examples, not descriptions of examples)
+    - **REQUIRED**: Adding practical guidance, tools, methodologies, or detailed explanations (actual guidance, not descriptions of guidance)
+  - **⚠️ VERIFICATION**: Before adding the review contribution section, verify that the file has been visibly changed with new substantive content
+  - The review contribution section describes what was ACTUALLY ADDED, not what should be added
   - Append changes description with signature block
   - Format: Markdown section at end of file
   - **Update Expert Reviews Tracker**: After review, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
@@ -160,6 +180,10 @@ Execute this command to run the expert review workflow:
     - Add entry to "Review Details" section with file path, date, and summary of changes
     - Recalculate "Avg Changes per Review" (Total Changes / Files Reviewed)
     - Update statistics summary (total reviews, total files, etc.)
+
+## ⚠️ REMINDER: SUBSTANTIVE CONTENT FIRST
+
+**Before adding the signature block, ensure that substantive content has been ACTUALLY ADDED to the file. The signature block should describe what was added, not what should be added.**
 
 ## Signature Block Format
 

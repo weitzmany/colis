@@ -176,6 +176,149 @@ This document lists useful documentation patterns found in other projects.
    - Review regularly
    - Update with code changes
 
+## Internationalization (i18n) Considerations for Documentation
+
+### Multilingual Documentation Patterns
+
+1. **Documentation Structure for i18n**:
+   - Language-specific directories (e.g., `docs/en/`, `docs/es/`, `docs/fr/`)
+   - Shared assets directory for images and diagrams
+   - Language codes in file paths or filenames
+   - Centralized translation management
+   - Source language as primary (usually English)
+   - Translation workflow documentation
+
+2. **Content Organization**:
+   - Separate content from structure
+   - Markdown files with translation keys
+   - Use of translation management tools
+   - Version control for translations
+   - Language-specific README files
+   - Navigation structure per language
+
+3. **Translation Management**:
+   - Translation file formats (JSON, YAML, PO files)
+   - Translation workflow and processes
+   - Translation review and approval
+   - Context preservation for translators
+   - Terminology consistency across languages
+   - Translation completeness tracking
+
+### Documentation i18n Best Practices
+
+1. **Content Design for Translation**:
+   - Write clear, concise source content
+   - Avoid idiomatic expressions
+   - Use consistent terminology
+   - Provide context for translators
+   - Avoid hardcoded strings
+   - Use placeholders for dynamic content
+
+2. **Technical Documentation i18n**:
+   - Code examples remain in source language
+   - Comments in code may need translation
+   - API documentation translation strategies
+   - Error message internationalization
+   - Configuration file documentation
+   - Command-line help translation
+
+3. **Documentation Tools for i18n**:
+   - Static site generators with i18n support (Docusaurus, GitBook)
+   - Translation management systems
+   - Automated translation workflows
+   - Language switcher components
+   - RTL (right-to-left) language support
+   - Date, time, and number formatting
+
+### Multilingual Documentation Workflows
+
+1. **Translation Process**:
+   - Source content creation and review
+   - Translation assignment and tracking
+   - Translation review and quality assurance
+   - Integration of translated content
+   - Publication and deployment
+   - Ongoing maintenance and updates
+
+2. **Content Synchronization**:
+   - Keep translations in sync with source
+   - Identify outdated translations
+   - Update workflow for source changes
+   - Translation status tracking
+   - Automated translation checks
+   - Manual review processes
+
+3. **Quality Assurance**:
+   - Translation accuracy verification
+   - Terminology consistency checks
+   - Formatting and style validation
+   - Link and reference verification
+   - Cross-language content review
+   - User feedback collection
+
+### Documentation i18n Patterns
+
+1. **Directory Structure Pattern**:
+   ```
+   docs/
+   ├── en/
+   │   ├── guides/
+   │   └── reference/
+   ├── es/
+   │   ├── guides/
+   │   └── reference/
+   └── assets/  # Shared across languages
+   ```
+
+2. **File Naming Pattern**:
+   ```
+   # Option 1: Language in directory
+   docs/en/guides/setup.md
+   docs/es/guides/setup.md
+   
+   # Option 2: Language in filename
+   docs/guides/setup.en.md
+   docs/guides/setup.es.md
+   ```
+
+3. **Translation File Pattern**:
+   ```json
+   // en.json
+   {
+     "guides.setup.title": "Setup Guide",
+     "guides.setup.description": "Complete setup instructions"
+   }
+   
+   // es.json
+   {
+     "guides.setup.title": "Guía de Configuración",
+     "guides.setup.description": "Instrucciones completas de configuración"
+   }
+   ```
+
+### Documentation i18n Tools and Technologies
+
+1. **Static Site Generators**:
+   - Docusaurus (built-in i18n support)
+   - GitBook (multilingual support)
+   - MkDocs with i18n plugins
+   - VuePress with i18n
+   - Next.js with next-i18next
+
+2. **Translation Management**:
+   - Crowdin for documentation
+   - Transifex for technical docs
+   - Lokalise for developer docs
+   - Weblate for open source
+   - Custom translation workflows
+
+3. **Content Management**:
+   - Markdown with frontmatter
+   - YAML for structured content
+   - JSON for translation keys
+   - PO/POT files for gettext
+   - Database-driven content
+
 ## Notes
 
 - Documentation patterns are highly reusable
@@ -185,4 +328,19 @@ This document lists useful documentation patterns found in other projects.
 - Beginner-friendly explanations are valuable
 - Code examples are essential
 - Troubleshooting sections save time
+- Internationalization enables global reach
+- Multilingual documentation requires careful planning
+- Translation workflows ensure content quality
+- i18n tools streamline documentation translation
+
+---
+
+## Review/Contribution
+
+**Expert**: Marcus Thompson  
+**Expertise**: Internationalization (i18n) and Localization  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this documentation patterns review document by adding a comprehensive "Internationalization (i18n) Considerations for Documentation" section that covers multilingual documentation patterns (documentation structure for i18n, content organization, translation management), documentation i18n best practices (content design for translation, technical documentation i18n, documentation tools for i18n), multilingual documentation workflows (translation process, content synchronization, quality assurance), documentation i18n patterns (directory structure, file naming, translation file patterns), and documentation i18n tools and technologies (static site generators, translation management, content management). This enhancement provides practical guidance for implementing internationalization in documentation systems to support multilingual content delivery.
+
+---
 

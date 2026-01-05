@@ -79,12 +79,18 @@ Execute this command to run the expert review workflow:
      - **Stop**: End command here
    - **Standard Review** (if exception doesn't apply):
      - Ask the expert to review the selected file
-     - Expert should expand the file according to their professional opinion
+     - **CRITICAL**: Expert must ACTUALLY ADD substantive content to the file, not just describe what should be added
+     - Expert should expand the file according to their professional opinion by:
+       - Adding new sections with actual content
+       - Expanding existing sections with detailed information
+       - Adding examples, code snippets, best practices, or detailed explanations
+       - Including practical guidance, tools, procedures, or methodologies
+     - The review contribution section should describe what was ADDED, not what should be added
      - If expert has no professional connection to the content:
        - Expert should directly admit they have nothing to contribute
        - Still add a brief note at the end
      - Expert should add a brief description of changes at the end of the document with:
-       - Description of changes made
+       - Description of changes made (what was actually added to the file)
        - Expert's name
        - Expertise
        - Date
@@ -128,7 +134,13 @@ Execute this command to run the expert review workflow:
     - Documentation should include: list of files moved/reorganized, reason for reorganization, new structure/organization, expert's name/expertise/date
 - **Standard Review** (if exception doesn't apply):
   - Read existing file content
-  - Have expert review and expand according to expertise
+  - **CRITICAL**: Expert must ACTUALLY ADD substantive content to the file
+  - Have expert review and expand according to expertise by:
+    - Adding new sections with actual content (not just descriptions)
+    - Expanding existing sections with detailed information
+    - Including examples, code snippets, best practices, procedures
+    - Adding practical guidance, tools, methodologies, or detailed explanations
+  - The review contribution section describes what was ADDED, not what should be added
   - Append changes description with signature block
   - Format: Markdown section at end of file
 

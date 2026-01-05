@@ -1,1 +1,22 @@
 # Expert mapping cache: filename|expert_name
+accessibility_expert.mdc|Allison Foster
+api_design_expert.mdc|Andrew Lee
+architecture_expert.mdc|Arthur Davis
+backend_expert.mdc|Samuel Rodriguez
+bi_expert.mdc|Daniel Kim
+compliance_expert.mdc|Constance White
+content_expert.mdc|Carol Williams
+copywriter_expert.mdc|Emma Rodriguez
+database_expert.mdc|David Anderson
+devops_expert.mdc|Devin Patel
+documentation_expert.mdc|Dorothy Clark
+i18n_expert.mdc|Lisa Garcia
+market_research_expert.mdc|Marcus Thompson
+mobile_expert.mdc|Michael Brown
+performance_expert.mdc|James Martinez
+product_manager_expert.mdc|Patricia Martinez
+security_expert.mdc|Sarah Johnson
+seo_expert.mdc|Steven Taylor
+subject_matter_expert.mdc|Dr. Robert Chen
+testing_expert.mdc|Thomas Mitchell
+ui_ux_expert.mdc|Daisy Thompson

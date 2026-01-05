@@ -155,6 +155,67 @@ This document lists useful API structure patterns found in other projects.
    - Data access in repositories
    - Controllers/Actions are thin
 
+## Architectural Considerations
+
+### API Versioning Strategies
+
+1. **Semantic Versioning**:
+   - Version numbers (v1, v2, v3) in URL or header
+   - Major version for breaking changes
+   - Minor version for new features
+   - Patch version for bug fixes
+
+2. **URL Versioning**:
+   - `/api/v1/products` - Clear and explicit
+   - Easy to route to different implementations
+   - Allows gradual migration
+
+3. **Header-Based Versioning**:
+   - `Accept: application/vnd.api+json;version=1`
+   - Keeps URLs clean
+   - More flexible but less discoverable
+
+### Scalability Patterns
+
+1. **Stateless Design**:
+   - No server-side session state
+   - Each request is independent
+   - Enables horizontal scaling
+   - Easier load balancing
+
+2. **Caching Strategies**:
+   - Response caching (ETags, Cache-Control headers)
+   - CDN caching for static resources
+   - Application-level caching for frequently accessed data
+   - Cache invalidation strategies
+
+3. **Rate Limiting Architecture**:
+   - Per-user rate limits
+   - Per-IP rate limits
+   - Tiered rate limits (free vs paid)
+   - Distributed rate limiting for microservices
+
+### Architectural Patterns
+
+1. **RESTful Design**:
+   - Resource-based URLs
+   - HTTP methods for actions
+   - Stateless communication
+   - Uniform interface
+
+2. **Microservices API Boundaries**:
+   - Clear service boundaries
+   - API contracts between services
+   - Service discovery mechanisms
+   - Inter-service communication patterns
+
+3. **API Gateway Patterns**:
+   - Single entry point for clients
+   - Request routing to backend services
+   - Authentication/authorization
+   - Rate limiting and throttling
+   - Request/response transformation
+
 ## API Structure Best Practices
 
 1. **Organization**:
@@ -182,6 +243,24 @@ This document lists useful API structure patterns found in other projects.
    - API documentation
    - Request/response examples
    - Authentication requirements
+
+6. **Separation of Concerns**:
+   - Routing layer (URL mapping)
+   - Business logic layer (services)
+   - Data access layer (repositories)
+   - Clear boundaries between layers
+
+7. **Dependency Management**:
+   - Dependency injection
+   - Loose coupling between components
+   - Interface-based design
+   - Testability
+
+8. **System Boundaries**:
+   - Clear API boundaries
+   - Service contracts
+   - Versioning strategy
+   - Backward compatibility considerations
 
 ## Notes
 

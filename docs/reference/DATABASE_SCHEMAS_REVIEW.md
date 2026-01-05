@@ -199,6 +199,99 @@ database/
 - Rollback capability (optional)
 - Integration with deployment
 
+## Backend Implementation Patterns
+
+### Database Connection Management
+
+1. **Connection Pooling**:
+   - Reuse database connections efficiently
+   - Configure pool size based on expected load
+   - Monitor connection pool metrics
+   - Handle connection timeouts gracefully
+
+2. **Transaction Management**:
+   - Use transactions for atomic operations
+   - Implement proper rollback on errors
+   - Avoid long-running transactions
+   - Use savepoints for nested transactions
+
+3. **Query Optimization**:
+   - Use prepared statements for security and performance
+   - Index frequently queried columns
+   - Avoid N+1 query problems
+   - Use query result caching where appropriate
+
+### Migration Best Practices
+
+1. **Migration Naming Convention**:
+   - Use descriptive names: `YYYYMMDD_HHMMSS_description.sql`
+   - Include ticket/issue number if applicable
+   - Make purpose clear from filename
+
+2. **Idempotent Migrations**:
+   - Check if changes already exist before applying
+   - Use `IF NOT EXISTS` for tables/columns
+   - Handle partial migrations gracefully
+   - Support running migrations multiple times safely
+
+3. **Data Migrations**:
+   - Separate schema migrations from data migrations
+   - Test data migrations on copies of production data
+   - Provide rollback scripts for data changes
+   - Document data transformation logic
+
+4. **Backward Compatibility**:
+   - Maintain backward compatibility during transitions
+   - Use feature flags for gradual rollouts
+   - Support multiple schema versions during migration
+   - Plan deprecation timelines
+
+### Database Schema Design Patterns
+
+1. **Normalization**:
+   - Follow 3NF (Third Normal Form) for transactional data
+   - Denormalize for read-heavy analytics workloads
+   - Balance normalization with query performance
+   - Document denormalization decisions
+
+2. **Indexing Strategy**:
+   - Index foreign keys
+   - Index frequently filtered columns
+   - Composite indexes for multi-column queries
+   - Monitor index usage and remove unused indexes
+
+3. **Soft Deletes**:
+   - Use `deleted_at` timestamp instead of hard deletes
+   - Filter deleted records in queries
+   - Implement cleanup jobs for old soft-deleted records
+   - Consider GDPR right-to-deletion requirements
+
+4. **Audit Trails**:
+   - Track `created_at` and `updated_at` timestamps
+   - Log user who created/updated records
+   - Maintain change history for critical data
+   - Use triggers or application-level logging
+
+### Backend API Integration
+
+1. **Repository Pattern**:
+   - Abstract database access behind repository interfaces
+   - Implement repositories for each aggregate root
+   - Use dependency injection for testability
+   - Keep business logic out of repositories
+
+2. **ORM Usage**:
+   - Use ORM for simple CRUD operations
+   - Write raw SQL for complex queries
+   - Avoid N+1 queries with eager loading
+   - Use query builders for dynamic queries
+
+3. **Database Abstraction**:
+   - Use database-agnostic query builders when possible
+   - Abstract vendor-specific features
+   - Test with multiple database engines
+   - Document database-specific optimizations
+
 ## Notes
 
 - Migration patterns are database-specific but concepts are universal
@@ -211,4 +304,17 @@ database/
 - Migrations should be tested
 - Rollback strategy is valuable
 - Migration execution should be automated (CI/CD)
+- Connection pooling improves performance
+- Transaction management ensures data integrity
+- Query optimization is crucial for scalability
 
+---
+
+## Review/Contribution
+
+**Expert**: Samuel Rodriguez  
+**Expertise**: Backend Development  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this database schemas and migrations review document by adding a comprehensive "Backend Implementation Patterns" section that covers database connection management (connection pooling, transaction management, query optimization), migration best practices (naming conventions, idempotent migrations, data migrations, backward compatibility), database schema design patterns (normalization, indexing strategy, soft deletes, audit trails), and backend API integration patterns (repository pattern, ORM usage, database abstraction). This enhancement strengthens the document's practical applicability for backend developers implementing database schemas and migrations in real-world applications.
+
+---

@@ -55,6 +55,10 @@ Execute this command to run the expert review workflow:
      - Name
      - Expertise
      - Date
+   - **Update Expert Reviews Tracker**: After file creation, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+     - Increment "Files Created" count for the expert
+     - Add entry to "Review Details" section with file path and date
+     - Update statistics summary
    - **Output**: Expert name and created file (full path)
    - **Stop**: End command here
 
@@ -94,6 +98,12 @@ Execute this command to run the expert review workflow:
        - Expert's name
        - Expertise
        - Date
+     - **Update Expert Reviews Tracker**: After review, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+       - Increment "Files Reviewed" count for the expert
+       - Increment "Total Changes" count
+       - Update "Last Review Date"
+       - Add entry to "Review Details" section with file path and date
+       - Update statistics summary
      - **Output**: Expert name and file name (full path)
 
 ## Implementation Notes
@@ -143,6 +153,13 @@ Execute this command to run the expert review workflow:
   - The review contribution section describes what was ADDED, not what should be added
   - Append changes description with signature block
   - Format: Markdown section at end of file
+  - **Update Expert Reviews Tracker**: After review, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+    - Increment "Files Reviewed" count for the expert
+    - Increment "Total Changes" count
+    - Update "Last Review Date"
+    - Add entry to "Review Details" section with file path, date, and summary of changes
+    - Recalculate "Avg Changes per Review" (Total Changes / Files Reviewed)
+    - Update statistics summary (total reviews, total files, etc.)
 
 ## Signature Block Format
 

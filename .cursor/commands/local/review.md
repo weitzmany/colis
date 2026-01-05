@@ -17,19 +17,62 @@ Expert-driven file review and creation workflow. Randomly selects or creates exp
 ## Usage
 
 Execute this command to run the expert review workflow:
-1. Randomly select or create an expert
-2. Randomly select or create a file
+1. Select or create an expert (randomly, by name, or create new)
+2. Select or create a file (randomly, by name, or create new)
 3. Have the expert review/expand the file
+
+### Parameters
+
+#### `expert` (optional)
+- `<name>` - Use specific expert by name (assume expert exists, no validation)
+- `"new"` - Create a new expert
+- Empty/omitted - Use `/local/expert` to randomly select an expert
+
+#### `file` (optional)
+- `<name>` - Use specific file by name (no path needed):
+  - If file exists: Review the file
+  - If file doesn't exist: Create the file (decide best path based on content)
+- `"new"` - Create a new file
+- Empty/omitted - Use `/local/file` to randomly select a file
+
+### Examples
+
+```bash
+# Random expert, random file
+/local/review
+
+# Specific expert, random file
+/local/review expert="Sarah Johnson"
+
+# Random expert, specific file
+/local/review file="README.md"
+
+# Specific expert, specific file
+/local/review expert="Arthur Davis" file="API_STRUCTURE_REVIEW.md"
+
+# Create new expert
+/local/review expert="new"
+
+# Create new file with random expert
+/local/review file="new"
+
+# Specific expert, create new file
+/local/review expert="Sarah Johnson" file="new"
+
+# Create new file (file doesn't exist, will be created)
+/local/review file="NEW_DOCUMENTATION.md"
+```
 
 ## Workflow
 
 ### Step 1: Select or Create Expert
 
-1. **Random Decision**: Generate random number 1-10
-   - If 1 (10% chance): Create new expert → Go to Step 1a
-   - If 2-10 (90% chance): Select existing expert → Go to Step 2
+1. **Check `expert` parameter**:
+   - If `expert="new"`: Create new expert → Go to Step 1a
+   - If `expert="<name>"`: Use specified expert name → Go to Step 2
+   - If `expert` is empty/omitted: Random decision → Go to Step 1b
 
-2. **Step 1a: Create New Expert** (if random = 1)
+2. **Step 1a: Create New Expert** (if `expert="new"`)
    - Think of a very specific, narrow field that doesn't have an expert yet
    - Expert should be number one in their narrow field
    - Create expert persona with:
@@ -39,19 +82,27 @@ Execute this command to run the expert review workflow:
    - **Output**: Expert name and expertise
    - **Stop**: End command here
 
-3. **Step 2: Select Existing Expert** (if random = 2-10)
-   - Use `/local/expert` command to randomly select an expert
+3. **Step 1b: Random Expert Selection** (if `expert` is empty/omitted)
+   - **Random Decision**: Generate random number 1-10
+     - If 1 (10% chance): Create new expert → Go to Step 1a
+     - If 2-10 (90% chance): Select existing expert → Go to Step 2
+   - If random = 2-10: Use `/local/expert` command to randomly select an expert
    - Get expert's name from the command output
+   - Continue to Step 3
+
+4. **Step 2: Use Specified Expert** (if `expert="<name>"` or from Step 1b)
+   - Use the expert name directly (assume expert exists, no validation)
    - Continue to Step 3
 
 ### Step 3: Select or Create File
 
-4. **Random Decision**: Generate random number 1-5
-   - If 1 (20% chance): Create new file → Go to Step 3a
-   - If 2-5 (80% chance): Select existing file → Go to Step 4
+5. **Check `file` parameter** (using expert from Step 2/4):
+   - If `file="new"`: Create new file → Go to Step 3a
+   - If `file="<name>"`: Check if file exists → Go to Step 3b
+   - If `file` is empty/omitted: Random decision → Go to Step 3c
 
-5. **Step 3a: Create New File** (if random = 1)
-   - Ask the expert (from Step 2) to create a new file
+6. **Step 3a: Create New File** (if `file="new"`)
+   - Ask the expert (from Step 2/4) to create a new file
    - **File Types Allowed**:
      - ✅ Any file in `docs/` directory (documentation)
      - ✅ Command file (in `.cursor/commands/general/` - for use outside this scope)
@@ -71,17 +122,50 @@ Execute this command to run the expert review workflow:
      - Increment "Files Created" count for the expert
      - Add entry to "Review Details" section with file path and date
      - Update statistics summary
+   - **Update Statistics and Sort**: After updating tracker:
+     - Run `/local/statistics` command to calculate and update statistics rows
+     - Run `/local/sort sort-by="Files Created"` command to sort table by Files Created
    - **Output**: Expert name and created file (full path)
    - **Stop**: End command here
 
-6. **Step 4: Select Existing File** (if random = 2-5)
-   - Use `/local/file` command to randomly select a file
+7. **Step 3b: Handle Specified File** (if `file="<name>"`)
+   - Search for file by name in workspace (no path needed, search recursively)
+   - If file exists:
+     - Use the found file path
+     - Continue to Step 5
+   - If file doesn't exist:
+     - Create the file (decide best path based on content type)
+     - **Path Decision**: Based on content, decide appropriate path:
+       - Documentation → `docs/` subdirectory (can create new subdirectories)
+       - Commands → `.cursor/commands/general/`
+       - Rules → `.cursor/rules/experts/`
+     - Expert should create comprehensive content
+     - Expert should sign the document at the end
+     - **Update Expert Reviews Tracker**: After file creation, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+       - Increment "Files Created" count for the expert
+       - Add entry to "Review Details" section with file path and date
+       - Update statistics summary
+     - **Update Statistics and Sort**: After updating tracker:
+       - Run `/local/statistics` command to calculate and update statistics rows
+       - Run `/local/sort sort-by="Files Created"` command to sort table by Files Created
+     - **Output**: Expert name and created file (full path)
+     - **Stop**: End command here
+
+8. **Step 3c: Random File Selection** (if `file` is empty/omitted)
+   - **Random Decision**: Generate random number 1-5
+     - If 1 (20% chance): Create new file → Go to Step 3a
+     - If 2-5 (80% chance): Select existing file → Go to Step 4
+   - If random = 2-5: Use `/local/file` command to randomly select a file
    - Get file path from the command output
    - Continue to Step 5
 
+9. **Step 4: Use Randomly Selected File** (from Step 3c)
+   - Use the file path from `/local/file` command
+   - Continue to Step 5 (Expert Review)
+
 ### Step 5: Expert Review
 
-7. **Expert Review** (using expert from Step 2 and file from Step 4)
+10. **Expert Review** (using expert from Step 2/4 and file from Step 3b/4/9)
    - **Exception - File Rearrangement**: If the expert's expertise is appropriate (e.g., Documentation Expert, Architecture Expert, or any expert whose expertise relates to file organization/structure):
      - Expert can rearrange files in `docs/` directory instead of reviewing the selected file
      - Expert should reorganize files according to documentation structure rules, or change the rules if they think there is a better way
@@ -120,6 +204,9 @@ Execute this command to run the expert review workflow:
        - Update "Last Review Date"
        - Add entry to "Review Details" section with file path and date
        - Update statistics summary
+     - **Update Statistics and Sort**: After updating tracker:
+       - Run `/local/statistics` command to calculate and update statistics rows
+       - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
      - **Output**: Expert name and file name (full path)
 
 ## Implementation Notes
@@ -129,8 +216,15 @@ Execute this command to run the expert review workflow:
 - Use `$((RANDOM % 5 + 1))` for 1-5 range (file selection)
 
 ### Command Execution
-- Execute `/local/expert` command to get expert name
-- Execute `/local/file` command to get file path
+- Execute `/local/expert` command to get expert name (if `expert` parameter is empty)
+- Execute `/local/file` command to get file path (if `file` parameter is empty)
+- Use `expert` parameter value directly if provided (assume expert exists)
+- Search for file by name if `file` parameter is provided (use `find` or similar to locate file)
+- After updating Expert Reviews Tracker:
+  - Execute `/local/statistics` command to calculate and update statistics rows
+  - Execute `/local/sort` command:
+    - If file was created: Use `sort-by="Files Created"`
+    - If file was reviewed: Use default (sort-by="Files Reviewed")
 
 ### Expert File Creation
 - Check existing experts in `.cursor/rules/experts/*.mdc`
@@ -142,7 +236,12 @@ Execute this command to run the expert review workflow:
 - **File Type Restrictions**:
   - ✅ Can create: Documentation files in `docs/`, command files in `.cursor/commands/general/`, rule files in `.cursor/rules/experts/`
   - ❌ Cannot create: Expert persona files (expert personas are created separately in Step 1a, not through file creation)
-- Check existing files to ensure new file doesn't exist
+- Check existing files to ensure new file doesn't exist (when `file="new"`)
+- **File Search** (when `file="<name>"`):
+  - Search workspace recursively for file by name (no path needed)
+  - Use `find . -name "<name>" -type f` or similar
+  - If multiple matches found, use the first match or most appropriate one
+  - If file not found, create it (see Path Decision below)
 - **Path Decision**: Based on content type, determine appropriate location:
   - Documentation → `docs/` subdirectory (can create new subdirectories like `docs/guides/new-topic/`, `docs/reference/new-section/`)
   - Commands → `.cursor/commands/general/` (for use outside this scope in future or existing projects)
@@ -180,6 +279,9 @@ Execute this command to run the expert review workflow:
     - Add entry to "Review Details" section with file path, date, and summary of changes
     - Recalculate "Avg Changes per Review" (Total Changes / Files Reviewed)
     - Update statistics summary (total reviews, total files, etc.)
+  - **Update Statistics and Sort**: After updating tracker:
+    - Run `/local/statistics` command to calculate and update statistics rows
+    - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
 
 ## ⚠️ REMINDER: SUBSTANTIVE CONTENT FIRST
 

@@ -20,3 +20,194 @@ seo_expert.mdc|Steven Taylor
 subject_matter_expert.mdc|Dr. Robert Chen
 testing_expert.mdc|Thomas Mitchell
 ui_ux_expert.mdc|Daisy Thompson
+
+# ============================================================================
+# COMPLIANCE CONSIDERATIONS FOR EXPERT MAPPING FILE
+# ============================================================================
+#
+# This file contains personal information (expert names) and requires
+# compliance with data protection regulations. The following considerations
+# apply to ensure legal compliance and data protection.
+#
+# ----------------------------------------------------------------------------
+# PRIVACY AND DATA PROTECTION
+# ----------------------------------------------------------------------------
+#
+# 1. PERSONAL INFORMATION CLASSIFICATION
+#    - This file contains names, which are considered personal data under
+#      GDPR, CCPA, and other privacy regulations
+#    - Names alone may not be sufficient to identify individuals, but when
+#      combined with other data (expertise areas, project context), they
+#      may constitute personally identifiable information (PII)
+#    - Risk Level: LOW to MEDIUM (depends on whether names are real or
+#      pseudonyms and whether they can be linked to real individuals)
+#
+# 2. DATA MINIMIZATION PRINCIPLE
+#    - This file contains only the minimum necessary data (filename and name)
+#    - No additional personal information (email, address, phone, etc.) is stored
+#    - ✅ COMPLIANT: Follows data minimization best practices
+#
+# 3. PURPOSE LIMITATION
+#    - This file serves a specific technical purpose: mapping expert personas
+#      to their names for command execution
+#    - The data should not be used for any other purpose without consent
+#    - ✅ COMPLIANT: Single, well-defined purpose
+#
+# ----------------------------------------------------------------------------
+# ACCESS CONTROL AND SECURITY
+# ----------------------------------------------------------------------------
+#
+# 1. FILE ACCESS PERMISSIONS
+#    - Recommended: Restrict read access to authorized developers only
+#    - File should be readable by development tools but not publicly accessible
+#    - Consider: chmod 600 (owner read/write only) or 640 (owner/group read)
+#    - Current location: `.cursor/commands/local/` (hidden directory, good)
+#
+# 2. VERSION CONTROL CONSIDERATIONS
+#    - This file is likely tracked in version control (Git)
+#    - Names in version control become part of permanent history
+#    - If names are real and privacy-sensitive:
+#      - Consider: Add to .gitignore if names are sensitive
+#      - Consider: Use pseudonyms or initials instead of full names
+#      - Consider: Document in .gitignore why this file is excluded
+#    - If names are pseudonyms or public:
+#      - ✅ Safe to version control
+#      - Document in README that names are pseudonyms
+#
+# 3. SECURITY MEASURES
+#    - File should be stored in a secure location (✅ already in .cursor/)
+#    - No sensitive authentication data should be stored alongside names
+#    - Regular security audits should verify file permissions
+#    - Consider encryption at rest if storing in cloud repositories
+#
+# ----------------------------------------------------------------------------
+# REGULATORY COMPLIANCE
+# ----------------------------------------------------------------------------
+#
+# 1. GDPR COMPLIANCE (EU Users/Data)
+#    - If experts are EU residents or data is processed in EU:
+#      - Right to access: Experts should be able to see their data
+#      - Right to deletion: Experts should be able to request removal
+#      - Right to rectification: Experts should be able to correct their name
+#      - Data processing basis: Likely "legitimate interest" or "consent"
+#    - If this is internal tooling with no EU connection:
+#      - ✅ GDPR may not apply
+#      - Document the scope and applicability
+#
+# 2. CCPA COMPLIANCE (California Users/Data)
+#    - If experts are California residents:
+#      - Right to know: Experts can request what data is collected
+#      - Right to delete: Experts can request deletion
+#      - Right to opt-out: Experts can opt-out of data sharing
+#    - This file likely falls under "business-to-business" exception
+#      if used for internal tooling only
+#
+# 3. COPPA COMPLIANCE (Children Under 13)
+#    - This file does not contain children's data
+#    - ✅ COPPA does not apply to this file
+#
+# 4. FERPA COMPLIANCE (Educational Records)
+#    - This file does not contain educational records
+#    - ✅ FERPA does not apply to this file
+#
+# ----------------------------------------------------------------------------
+# DATA RETENTION AND DELETION
+# ----------------------------------------------------------------------------
+#
+# 1. RETENTION POLICY
+#    - This file should be retained as long as the expert personas are active
+#    - When an expert persona is removed, the corresponding mapping should
+#      be removed from this file
+#    - Consider: Automated cleanup when expert files are deleted
+#    - Retention period: Indefinite (as long as expert exists) or until
+#      expert requests deletion
+#
+# 2. DELETION PROCEDURES
+#    - If an expert requests deletion:
+#      - Remove the mapping line from this file
+#      - If version controlled: Commit the deletion
+#      - Document the deletion in audit log (if applicable)
+#      - Note: Git history will retain the name unless history is rewritten
+#    - If expert persona file is deleted:
+#      - Remove corresponding mapping automatically (if automated)
+#      - Or remove manually during cleanup
+#
+# 3. AUDIT TRAIL
+#    - Consider: Logging when mappings are added/removed
+#    - Consider: Tracking who made changes (if multiple developers)
+#    - Git history provides natural audit trail if file is version controlled
+#
+# ----------------------------------------------------------------------------
+# BEST PRACTICES AND RECOMMENDATIONS
+# ----------------------------------------------------------------------------
+#
+# 1. DOCUMENTATION
+#    - Document whether names are real or pseudonyms
+#    - Document the purpose and scope of data collection
+#    - Document data retention policy
+#    - Document access control procedures
+#
+# 2. CONSENT AND TRANSPARENCY
+#    - If names are real: Obtain consent from experts before including
+#    - Inform experts that their names are stored in this file
+#    - Provide clear information about how the data is used
+#    - Make it easy for experts to request changes or deletion
+#
+# 3. REGULAR REVIEWS
+#    - Periodically review this file for accuracy
+#    - Remove mappings for deleted expert personas
+#    - Verify that all listed experts are still active
+#    - Review and update compliance measures as regulations change
+#
+# 4. ALTERNATIVE APPROACHES
+#    - Consider: Using expert IDs instead of names (more privacy-friendly)
+#    - Consider: Storing mappings in a database with proper access controls
+#    - Consider: Using pseudonyms consistently across all expert personas
+#    - Consider: Encrypting the file if it contains sensitive information
+#
+# ----------------------------------------------------------------------------
+# COMPLIANCE CHECKLIST
+# ----------------------------------------------------------------------------
+#
+# For this file to be fully compliant, verify:
+#
+# [ ] File permissions are appropriately restricted
+# [ ] Version control strategy is documented (include/exclude from Git)
+# [ ] Data retention policy is defined and documented
+# [ ] Experts have been informed about data storage (if names are real)
+# [ ] Consent has been obtained (if required by applicable regulations)
+# [ ] Deletion procedures are documented and accessible
+# [ ] Access controls are implemented and reviewed
+# [ ] Regular compliance reviews are scheduled
+# [ ] Privacy impact assessment completed (if handling EU data)
+# [ ] Data processing basis is documented (GDPR requirement)
+#
+# ----------------------------------------------------------------------------
+# LEGAL DISCLAIMER
+# ----------------------------------------------------------------------------
+#
+# This compliance guidance is provided for informational purposes only
+# and does not constitute legal advice. Consult with legal counsel to
+# ensure full compliance with applicable data protection regulations
+# based on your specific circumstances, jurisdiction, and data processing
+# activities.
+#
+# ============================================================================
+#
+# Review/Contribution
+#
+# Expert: Constance White
+# Expertise: Compliance (Educational Platforms, Legal Requirements)
+# Date: 2026-01-05
+# Changes: Added comprehensive compliance considerations section covering
+# privacy and data protection (personal information classification, data
+# minimization, purpose limitation), access control and security (file
+# permissions, version control considerations, security measures),
+# regulatory compliance (GDPR, CCPA, COPPA, FERPA), data retention and
+# deletion procedures, best practices and recommendations, compliance
+# checklist, and legal disclaimer. This addition ensures the expert mapping
+# file is handled in compliance with applicable data protection regulations
+# and provides clear guidance for maintaining legal compliance when storing
+# personal information (names) in technical mapping files.
+#
+# ============================================================================

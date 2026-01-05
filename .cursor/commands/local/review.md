@@ -83,6 +83,27 @@ Execute this command to run the expert review workflow:
      - Name
      - Expertise (very specific, narrow field)
      - Description of why this expertise is valuable
+   - **Update Expert Reviews Tracker**: After expert file creation, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+     - Read the expert file (`.cursor/rules/experts/<expert_name>_expert.mdc`) to extract:
+       - Expert name (from `name:` field in frontmatter)
+       - Expertise (from `description:` field in frontmatter, or use a shortened version)
+     - Find the statistics table (after "## Expert Review Statistics" section)
+     - Insert a new row in the table before the "Total:" row with:
+       - Expert Name: [Extracted Name]
+       - Expertise: [Extracted Expertise]
+       - Files Reviewed: 0
+       - Total Changes: 0
+       - Last Review Date: [Current Date] (YYYY-MM-DD format)
+       - Files Created: 0
+       - Avg Changes per Review: 0.0
+       - Substantive Reviews: 0
+       - Acknowledgment Only: 0
+     - Add a new section in "Review Details" section (before "## Statistics Summary"):
+       - Section header: `### [Expert Name] ([Short Expertise Description])`
+       - Content: `- **Total Reviews**: 0`
+     - **Update Statistics and Sort**: After updating tracker:
+       - Run `/local/statistics` command to calculate and update statistics rows
+       - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
    - **Output**: Expert name and expertise
    - **Stop**: End command here
 
@@ -248,12 +269,19 @@ Execute this command to run the expert review workflow:
 ### Random Number Generation
 - Use `$((RANDOM % 10 + 1))` for 1-10 range (expert selection)
 - Use `$((RANDOM % 5 + 1))` for 1-5 range (file selection)
+- **Note**: `$RANDOM` is a bash built-in variable that generates random integers between 0 and 32767
+- The modulo operation (`%`) ensures the result falls within the desired range
+- Adding 1 shifts the range from 0-9 to 1-10, or from 0-4 to 1-5
 
 ### Command Execution
 - Execute `/local/expert` command to get expert name (if `expert` parameter is empty)
 - Execute `/local/file` command to get file path (if `file` parameter is empty)
 - Use `expert` parameter value directly if provided (assume expert exists)
 - Search for file by name if `file` parameter is provided (use `find` or similar to locate file)
+- **Validation Considerations**:
+  - Expert name validation: While the command assumes expert exists when provided, in practice, verify expert file exists at `.cursor/rules/experts/<expert_name>_expert.mdc` before proceeding
+  - File existence validation: Always verify file exists before attempting to read or modify
+  - Error handling: Implement graceful failure when expert or file cannot be found or accessed
 - **Tracker Status Updates** (Dynamic Location):
   - When expert is selected: Find the line containing "**Last Updated**:" and add/update the next line with `**Current reviewer**: [Expert Name]`
   - When file is selected: Find the line containing "**Last Updated**:" and add/update the line after "Current reviewer" (or after "Last Updated" if no reviewer line) with `**Current file**: [File Name]`
@@ -269,12 +297,33 @@ Execute this command to run the expert review workflow:
 - Identify gaps in expertise coverage
 - Create very specific, narrow field expert
 - Save as `.cursor/rules/experts/<expert_name>_expert.mdc`
+- **Expert Naming Convention**:
+  - Convert expert name to lowercase
+  - Replace spaces with underscores
+  - Append `_expert.mdc` suffix
+  - Example: "Dr. Robert Chen" → `dr_robert_chen_expert.mdc` or use last name: `chen_expert.mdc`
+- **Expertise Validation**:
+  - Ensure expertise is specific and narrow (not too broad)
+  - Verify no duplicate expertise exists
+  - Check that expertise field clearly describes the expert's domain
+- **After creating expert file**: Update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+  - Read expert file to extract name (from `name:` field) and expertise (from `description:` field)
+  - Extract expertise from description: Use the description text, or create a shortened version if description is too long
+  - Insert new row in statistics table (before "Total:" row) with all zeros and current date
+  - Add new section in "Review Details" section with expert name and "Total Reviews: 0"
+  - Run `/local/statistics` to update totals
+  - Run `/local/sort` to sort table by "Files Reviewed"
 
 ### File Creation
 - **File Type Restrictions**:
   - ✅ Can create: Documentation files in `docs/`, command files in `.cursor/commands/general/`, rule files in `.cursor/rules/experts/`
   - ❌ Cannot create: Expert persona files (expert personas are created separately in Step 1a, not through file creation)
 - Check existing files to ensure new file doesn't exist (when `file="new"`)
+- **File Naming and Path Validation**:
+  - Use descriptive, kebab-case filenames (e.g., `expert-review-workflow.md`)
+  - Ensure file path follows project structure conventions
+  - Verify parent directories exist before creating files (create if needed)
+  - Check for file name conflicts (case-insensitive on some systems)
 - **File Search** (when `file="<name>"`):
   - Search workspace recursively for file by name (no path needed)
   - Use `find . -name "<name>" -type f` or similar
@@ -323,9 +372,37 @@ Execute this command to run the expert review workflow:
     - Expert should document the rearrangement in one designated file (e.g., `docs/guides/FILE_REORGANIZATION.md` or similar)
     - Documentation should include: list of files moved/reorganized, reason for reorganization, new structure/organization, expert's name/expertise/date
 
+## Validation and Verification Framework
+
+### Expert Review Validation
+- **Pre-Review Checks**:
+  - Verify expert has appropriate expertise for the file type
+  - Confirm file is readable and writable
+  - Check file encoding and format compatibility
+- **During Review**:
+  - Ensure all changes are traceable and documented
+  - Validate that improvements align with expert's declared expertise
+  - Verify no unintended content deletion or corruption
+- **Post-Review Verification**:
+  - Confirm file has been visibly modified (diff check)
+  - Validate signature block accurately describes changes
+  - Verify tracker updates match actual changes made
+
+### Quality Assurance
+- **Accuracy Verification**: All facts, examples, and code snippets should be verified for correctness
+- **Completeness Check**: Ensure expert contributions are complete and not truncated
+- **Consistency Validation**: Check that new content matches existing style and conventions
+- **Educational Value Assessment**: Evaluate whether changes improve understanding and usability
+
 ## ⚠️ REMINDER: SUBSTANTIVE IMPROVEMENTS FIRST
 
 **Before adding the signature block, ensure that the file has been ACTUALLY IMPROVED (content added, fixed, deleted, or improved). The signature block should describe what was changed, not what should be changed.**
+
+**Academic Rigor**: All changes should be:
+- Factually accurate and verifiable
+- Logically sound and well-reasoned
+- Clearly documented and traceable
+- Educationally valuable and appropriate
 
 ## Signature Block Format
 
@@ -374,3 +451,13 @@ Expert: [Name]
 File: [full/path/to/reorganization-documentation.md]
 ```
 
+---
+
+## Review/Contribution
+
+**Expert**: Dr. Robert Chen  
+**Expertise**: Subject Matter (Physics, Math, CS, Academic Fields)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this expert review command specification with academic rigor and validation considerations. Added detailed explanation of random number generation algorithm (modulo operation, range shifting). Added validation considerations section covering expert name validation, file existence validation, and error handling practices. Enhanced expert file creation section with expert naming convention guidelines and expertise validation requirements (specificity, uniqueness, clarity). Added file naming and path validation guidelines including kebab-case conventions, path structure compliance, and conflict checking. Added comprehensive "Validation and Verification Framework" section covering pre-review checks (expert expertise verification, file accessibility), during-review validation (traceability, alignment verification), and post-review verification (diff checking, signature block validation, tracker consistency). Added "Quality Assurance" section with accuracy verification, completeness checks, consistency validation, and educational value assessment. Added academic rigor reminder emphasizing factual accuracy, logical soundness, clear documentation, and educational value for all changes. These additions strengthen the command's reliability, traceability, and adherence to academic standards for accuracy and validation.
+
+---

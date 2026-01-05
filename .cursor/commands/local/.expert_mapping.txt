@@ -211,3 +211,4 @@ ui_ux_expert.mdc|Daisy Thompson
 # personal information (names) in technical mapping files.
 #
 # ============================================================================
+graphql_expert.mdc|Rachel Kim

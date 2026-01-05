@@ -2,7 +2,7 @@
 
 This document lists generic/useful scripts found in other projects that could be helpful across multiple projects.
 
-**Last Updated**: 2025-01-05
+**Last Updated**: 2026-01-05
 
 ## Scripts Found in Other Projects
 
@@ -269,6 +269,346 @@ Based on the review, here are the most generic and useful scripts:
    - Error summary reports
    - Debugging information
 
+### Advanced Database Script Patterns
+
+1. **Database Health Check Scripts**:
+   - Connection health verification
+   - Database size monitoring
+   - Index fragmentation checks
+   - Query performance monitoring
+   - Lock detection and resolution
+   - Replication lag monitoring
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Database health check script
+     DB_HOST="${DB_HOST:-localhost}"
+     DB_NAME="${DB_NAME:-app_db}"
+     
+     # Check connection
+     if ! mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -e "SELECT 1" "$DB_NAME" > /dev/null 2>&1; then
+       echo "❌ Database connection failed"
+       exit 1
+     fi
+     
+     # Check database size
+     SIZE=$(mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -N -e \
+       "SELECT ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS 'DB Size in MB' \
+        FROM information_schema.tables WHERE table_schema='$DB_NAME'")
+     echo "✅ Database size: ${SIZE}MB"
+     
+     # Check for long-running queries
+     LONG_QUERIES=$(mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -N -e \
+       "SELECT COUNT(*) FROM information_schema.processlist \
+        WHERE db='$DB_NAME' AND time > 30")
+     if [ "$LONG_QUERIES" -gt 0 ]; then
+       echo "⚠️ Warning: $LONG_QUERIES long-running queries detected"
+     fi
+     ```
+
+2. **Database Maintenance Scripts**:
+   - Index optimization (ANALYZE, OPTIMIZE TABLE)
+   - Table maintenance (REPAIR, CHECK)
+   - Vacuum operations (PostgreSQL)
+   - Statistics updates
+   - Log rotation
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Database maintenance script
+     set -e
+     
+     DB_NAME="${DB_NAME:-app_db}"
+     TABLES=$(mysql -u "$DB_USER" -p"$DB_PASS" -N -e \
+       "SELECT table_name FROM information_schema.tables \
+        WHERE table_schema='$DB_NAME'")
+     
+     for table in $TABLES; do
+       echo "Optimizing table: $table"
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "OPTIMIZE TABLE $table"
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "ANALYZE TABLE $table"
+     done
+     ```
+
+3. **Database Migration Management Scripts**:
+   - Migration runner with state tracking
+   - Rollback script with dependency handling
+   - Migration validation
+   - Migration testing in isolated environments
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Advanced migration runner
+     set -e
+     
+     MIGRATIONS_DIR="migrations"
+     STATE_FILE=".migration_state"
+     
+     # Track applied migrations
+     get_applied_migrations() {
+       [ -f "$STATE_FILE" ] && cat "$STATE_FILE" || echo ""
+     }
+     
+     apply_migration() {
+       local migration_file="$1"
+       local migration_name=$(basename "$migration_file" .sql)
+       
+       echo "Applying migration: $migration_name"
+       
+       # Start transaction
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       START TRANSACTION;
+       SOURCE $migration_file;
+       COMMIT;
+       EOF
+       
+       # Record applied migration
+       echo "$migration_name" >> "$STATE_FILE"
+       echo "✅ Migration applied: $migration_name"
+     }
+     
+     # Run pending migrations
+     for migration in "$MIGRATIONS_DIR"/*.sql; do
+       migration_name=$(basename "$migration" .sql)
+       if ! grep -q "$migration_name" "$STATE_FILE" 2>/dev/null; then
+         apply_migration "$migration"
+       fi
+     done
+     ```
+
+4. **Database Performance Monitoring Scripts**:
+   - Slow query log analysis
+   - Index usage statistics
+   - Table statistics collection
+   - Query plan analysis
+   - Performance baseline tracking
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Database performance monitoring
+     
+     # Analyze slow queries
+     analyze_slow_queries() {
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       SELECT 
+         sql_text,
+         exec_count,
+         avg_timer_wait/1000000000000 as avg_time_sec,
+         sum_timer_wait/1000000000000 as total_time_sec
+       FROM performance_schema.events_statements_summary_by_digest
+       ORDER BY sum_timer_wait DESC
+       LIMIT 10;
+       EOF
+     }
+     
+     # Check index usage
+     check_index_usage() {
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       SELECT 
+         table_name,
+         index_name,
+         seq_in_index,
+         column_name,
+         cardinality
+       FROM information_schema.statistics
+       WHERE table_schema = '$DB_NAME'
+       ORDER BY table_name, index_name, seq_in_index;
+       EOF
+     }
+     ```
+
+5. **Database Data Validation Scripts**:
+   - Referential integrity checks
+   - Data quality validation
+   - Constraint verification
+   - Orphaned record detection
+   - Data consistency checks
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Database data validation script
+     
+     # Check referential integrity
+     check_foreign_keys() {
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       SELECT 
+         TABLE_NAME,
+         CONSTRAINT_NAME,
+         COLUMN_NAME,
+         REFERENCED_TABLE_NAME,
+         REFERENCED_COLUMN_NAME
+       FROM information_schema.KEY_COLUMN_USAGE
+       WHERE TABLE_SCHEMA = '$DB_NAME'
+         AND REFERENCED_TABLE_NAME IS NOT NULL;
+       EOF
+     }
+     
+     # Find orphaned records
+     find_orphaned_records() {
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       SELECT o.id, o.user_id
+       FROM orders o
+       LEFT JOIN users u ON o.user_id = u.id
+       WHERE u.id IS NULL;
+       EOF
+     }
+     ```
+
+6. **Database Replication Scripts**:
+   - Replication status monitoring
+   - Replication lag detection
+   - Master-slave synchronization
+   - Replication failover procedures
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Replication status check
+     
+     check_replication_status() {
+       mysql -u "$DB_USER" -p"$DB_PASS" -h "$SLAVE_HOST" <<EOF
+       SHOW SLAVE STATUS\G
+       EOF
+     }
+     
+     # Check replication lag
+     check_replication_lag() {
+       mysql -u "$DB_USER" -p"$DB_PASS" -h "$SLAVE_HOST" <<EOF
+       SELECT 
+         TIMESTAMPDIFF(SECOND, 
+           (SELECT MAX(ts) FROM replication_log), 
+           NOW()) as lag_seconds;
+       EOF
+     }
+     ```
+
+### Database Script Testing Patterns
+
+1. **Test Database Setup Scripts**:
+   - Isolated test database creation
+   - Test data seeding
+   - Test environment cleanup
+   - Database snapshot/restore for tests
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Test database setup
+     
+     TEST_DB="app_test_db"
+     
+     # Create test database
+     mysql -u root -p <<EOF
+     DROP DATABASE IF EXISTS $TEST_DB;
+     CREATE DATABASE $TEST_DB;
+     USE $TEST_DB;
+     SOURCE schema.sql;
+     SOURCE seed_test_data.sql;
+     EOF
+     ```
+
+2. **Database Script Unit Testing**:
+   - Test migration scripts
+   - Test data transformation scripts
+   - Test backup/restore procedures
+   - Test rollback scenarios
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Test migration script
+     
+     test_migration() {
+       local migration_file="$1"
+       
+       # Create test database
+       mysql -u root -p <<EOF
+       CREATE DATABASE test_migration_db;
+       USE test_migration_db;
+       SOURCE $migration_file;
+       EOF
+       
+       # Verify migration
+       if [ $? -eq 0 ]; then
+         echo "✅ Migration test passed"
+         mysql -u root -p -e "DROP DATABASE test_migration_db"
+       else
+         echo "❌ Migration test failed"
+         exit 1
+       fi
+     }
+     ```
+
+### Database Script Performance Optimization
+
+1. **Bulk Operation Scripts**:
+   - Batch insert optimization
+   - Bulk update strategies
+   - Chunked processing for large datasets
+   - Parallel processing where safe
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Bulk insert with batching
+     
+     BATCH_SIZE=1000
+     TOTAL_RECORDS=10000
+     
+     for ((i=0; i<$TOTAL_RECORDS; i+=$BATCH_SIZE)); do
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       INSERT INTO users (name, email) VALUES
+       $(for ((j=0; j<$BATCH_SIZE; j++)); do
+         echo "('User $((i+j))', 'user$((i+j))@example.com'),"
+       done | sed 's/,$//')
+       EOF
+     done
+     ```
+
+2. **Query Optimization Scripts**:
+   - EXPLAIN plan analysis
+   - Index recommendation
+   - Query rewriting suggestions
+   - Statistics collection
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Query optimization analysis
+     
+     analyze_query() {
+       local query="$1"
+       
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       EXPLAIN $query;
+       EOF
+     }
+     
+     # Suggest indexes
+     suggest_indexes() {
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       SELECT 
+         table_name,
+         column_name,
+         cardinality
+       FROM information_schema.statistics
+       WHERE table_schema = '$DB_NAME'
+         AND cardinality < 100
+       ORDER BY cardinality;
+       EOF
+     }
+     ```
+
+### Database Script Checklist
+
+When creating database scripts, ensure:
+
+- [ ] **Connection Management**: Proper connection handling, pooling, cleanup
+- [ ] **Security**: Credentials from environment, parameterized queries, least privilege
+- [ ] **Error Handling**: Transaction rollback, error detection, logging
+- [ ] **Data Integrity**: Transaction boundaries, constraint validation, consistency checks
+- [ ] **Performance**: Query optimization, batch operations, index awareness
+- [ ] **Testing**: Test scripts in isolated environments, validate results
+- [ ] **Documentation**: Document script purpose, parameters, dependencies
+- [ ] **Idempotency**: Scripts can be run multiple times safely
+- [ ] **Rollback**: Ability to undo changes when possible
+- [ ] **Monitoring**: Logging, alerting, performance tracking
+
 ## Notes
 
 - Scripts use modern bash features (should work on macOS/Linux)
@@ -289,5 +629,10 @@ Based on the review, here are the most generic and useful scripts:
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this scripts review document by adding a comprehensive "Database Operations in Scripts" section that covers database script patterns (migration scripts, seed scripts, backup and restore scripts), database script best practices (connection management, query optimization, data integrity), database script security (credential management, SQL injection prevention, access control), database script patterns (schema management, data seeding, backup), and database script error handling (error detection, error recovery, error reporting). This enhancement provides practical guidance for implementing secure and efficient database operations in automation scripts.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Further enhanced this scripts review document by adding advanced database script patterns and implementation guidance including: advanced database script patterns (database health check scripts with connection verification, size monitoring, and performance checks, database maintenance scripts with index optimization and table maintenance, database migration management scripts with state tracking and rollback capabilities, database performance monitoring scripts with slow query analysis and index usage statistics, database data validation scripts with referential integrity checks and orphaned record detection, database replication scripts with replication status monitoring and lag detection), database script testing patterns (test database setup scripts with isolated test environments, database script unit testing with migration testing and rollback scenarios), database script performance optimization (bulk operation scripts with batch insert optimization and chunked processing, query optimization scripts with EXPLAIN plan analysis and index recommendations), and a comprehensive database script checklist covering connection management, security, error handling, data integrity, performance, testing, documentation, idempotency, rollback, and monitoring. Also fixed the date from 2025-01-05 to 2026-01-05. This addition provides advanced, production-ready database script patterns with complete code examples for health checks, maintenance, migration management, performance monitoring, data validation, replication, testing, and optimization, ensuring database scripts are robust, secure, and performant.
 
 ---

@@ -1,0 +1,106 @@
+---
+description: Documentation structure rules - organization and naming conventions for documentation files
+globs: ["docs/**/*.md"]
+alwaysApply: true
+---
+
+# Documentation Structure Rules
+
+## Structure Rule
+
+**All documentation files (except README.md) must be organized in subdirectories.**
+
+The `docs/` directory structure:
+- **README.md** - Only `.md` file allowed in root
+- **features/** - All feature documentation (must be in `features/<feature-name>/` directories)
+- **guides/** - General guides and structure docs
+- **reference/** - Reference documentation
+- **architecture/** - Architecture documentation
+- **Other topic directories** - As needed (e.g., `patterns/`, `workflows/`)
+
+## Key Rules
+
+1. **No .md files in root** - Only `README.md` is allowed in the main `docs/` directory
+2. **Features go in `features/`** - All feature documentation must be in `features/<feature-name>/` directories
+3. **Other docs by topic** - Non-feature documentation must be organized by topic in dedicated directories
+4. **Directory naming** - Use kebab-case for all directory names
+5. **Never place .md files directly in the `docs/` root** (except README.md)
+
+## Directory Naming Convention
+
+- Use **kebab-case** for all directory names
+- Feature examples: `features/user-authentication/`, `features/analytics-dashboard/`
+- Topic examples: `guides/`, `reference/`, `architecture/`, `patterns/`
+
+## File Organization
+
+### Feature Documentation
+
+All feature documentation must be in `features/<feature-name>/` directories:
+- **Required files**: `PRD.md` (Product Requirements Document), `TASKS.md` (Implementation Task List)
+- **Optional files**: `ARCHITECTURE.md`, `API.md`, `TESTING.md`, `DEPLOYMENT.md`
+- Use kebab-case for feature directory names
+
+### Non-Feature Documentation
+
+Non-feature documentation must be organized by topic in dedicated directories:
+- **General guides** → `guides/` directory
+- **Reference materials** → `reference/` directory
+- **Architecture docs** → `architecture/` directory
+- **Design patterns** → `patterns/` directory (create if needed)
+- **Other topics** → Create new topic directory as needed
+
+## Workflow for Creating Documentation
+
+### For Features:
+
+1. Create feature directory in `docs/features/` using kebab-case naming
+2. Create `PRD.md` in the feature directory with complete requirements
+3. Create `TASKS.md` in the feature directory with detailed task breakdown
+4. Update `docs/README.md` to include the new feature
+5. Follow the same structure for all future features
+
+### For Other Documentation:
+
+1. Identify the topic (guides, reference, architecture, etc.)
+2. Use existing topic directory if it exists, or create a new one
+3. Place the file in the appropriate topic directory
+4. Update `docs/README.md` to include the new documentation
+5. **Never place files directly in `docs/` root** (except README.md)
+
+## Examples
+
+### Correct Structure:
+```
+docs/
+├── README.md
+├── features/
+│   ├── user-authentication/
+│   │   ├── PRD.md
+│   │   └── TASKS.md
+│   └── analytics-dashboard/
+│       ├── PRD.md
+│       └── TASKS.md
+├── guides/
+│   └── documentation-structure.md
+└── reference/
+    └── projects-list.md
+```
+
+### Incorrect Structure:
+```
+docs/
+├── README.md
+├── feature-planning.md          ❌ Should be in features/<feature-name>/
+├── user-authentication-prd.md   ❌ Should be in features/user-authentication/
+└── setup-guide.md              ❌ Should be in guides/
+```
+
+## Benefits
+
+- **Organization**: Clear separation between features and topics
+- **Discoverability**: Easy to find documentation by category
+- **Scalability**: Can add more files per feature or topic as needed
+- **Consistency**: Same structure for all documentation
+- **Maintainability**: No clutter in root directory
+- **Clarity**: README.md is the only file in root, making navigation obvious

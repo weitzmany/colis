@@ -1,0 +1,77 @@
+---
+description: Planning mode rules - strict documentation-only mode with no code changes allowed
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Planning Mode Rules
+
+## ⚠️ PLANNING MODE ACTIVE
+
+This project is currently in **PLANNING/DOCUMENTATION ONLY** mode.
+
+Planning mode is **ACTIVE** when the file `docs/.PLANNING_MODE` exists.
+
+## CRITICAL RULES
+
+While planning mode is active (when `docs/.PLANNING_MODE` exists):
+
+- **NO CODE CHANGES ALLOWED**
+- **NO FILE CREATION OUTSIDE OF `docs/` DIRECTORY** (exceptions: `.cursor/` directory)
+- **NO IMPLEMENTATION**
+- **NO TESTING**
+- **ONLY DOCUMENTATION**
+- **EVERYTHING THE USER SAYS MUST BE DOCUMENTED**
+
+## Everything User Says Must Be Documented
+
+**Everything said by the user must be documented while in planning mode.**
+
+This means:
+- All user requests, ideas, and requirements must be captured in documentation
+- All decisions and discussions should be recorded
+- All project descriptions, workflows, and plans must be written down
+- Nothing should be lost or forgotten
+- Document user input immediately in the appropriate location
+
+## Allowed Activities
+
+- Creating documentation in `docs/` directory
+- Creating rules and commands in `.cursor/` directory
+- Planning features
+- Creating PRDs (Product Requirements Documents)
+- Creating TASKS.md files
+- Creating guides, references, and architecture documentation
+- Describing projects, workflows, and plans
+- Documenting all user requests, ideas, and decisions
+
+## Prohibited Activities
+
+- **Code Changes** - No code modifications
+- **File Creation Outside `docs/`** - No file creation outside `docs/` and `.cursor/` directories
+- **Implementation** - No actual coding or implementation
+- **Testing** - No testing code
+- **Configuration Files** - No configuration files (except `.cursor/` directory)
+
+## Exception: `.cursor/` Directory
+
+The `.cursor/` directory is **allowed** during planning mode for:
+- Creating rules files (`.mdc` files)
+- Creating commands configuration (`.md` files)
+- Setting up IDE workflow configurations
+
+This is allowed because Cursor configuration files are tooling/configuration rather than code implementation.
+
+## Exiting Planning Mode
+
+To exit planning mode:
+- The user must **explicitly request** removal of `docs/.PLANNING_MODE` file
+- Only then may code changes and implementation begin
+- Documentation created during planning mode serves as the foundation for implementation
+
+## Checking Planning Mode Status
+
+To check if planning mode is active:
+- Verify the existence of `docs/.PLANNING_MODE` file
+- If the file exists, planning mode is **ACTIVE**
+- If the file does not exist, planning mode is **INACTIVE**

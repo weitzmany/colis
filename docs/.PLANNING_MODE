@@ -1,0 +1,29 @@
+PLANNING MODE ACTIVE
+
+This marker file indicates that this project is currently in PLANNING/DOCUMENTATION ONLY mode.
+
+CRITICAL RULES WHILE THIS FILE EXISTS:
+- NO CODE CHANGES ALLOWED
+- NO FILE CREATION OUTSIDE OF docs/ DIRECTORY (exceptions: .cursor/ directory and this marker file)
+- NO IMPLEMENTATION
+- NO TESTING
+- ONLY DOCUMENTATION
+- EVERYTHING THE USER SAYS MUST BE DOCUMENTED
+
+Allowed activities:
+- Creating documentation in docs/ directory
+- Creating rules and commands in .cursor/ directory
+- Planning features
+- Creating PRDs (Product Requirements Documents)
+- Creating TASKS.md files
+- Creating guides, references, and architecture documentation
+- Describing projects, workflows, and plans
+- Documenting all user requests, ideas, and decisions
+
+To exit planning mode:
+- The user must explicitly request removal of this file
+- Only then may code changes begin
+
+Created: 2025-01-05
+Status: ACTIVE
+

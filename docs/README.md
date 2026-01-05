@@ -10,7 +10,7 @@ Packages can be:
 - **Actual tools & features** - Reusable functionality to embed in projects
 - **Rules & consistency packages** - Standards, templates, and patterns to maintain consistency
 
-See [Project Purpose](./PROJECT_PURPOSE.md) for complete details.
+See [Project Purpose](./reference/PROJECT_PURPOSE.md) for complete details.
 
 ## ⚠️ PLANNING MODE ACTIVE
 
@@ -41,7 +41,7 @@ _Features will be documented here as they are added._
 ## 📚 Documentation by Topic
 
 ### Project Overview
-- [Project Purpose](./PROJECT_PURPOSE.md) - Main goal and purpose of this packages project
+- [Project Purpose](./reference/PROJECT_PURPOSE.md) - Main goal and purpose of this packages project
 
 ### Guides
 - [Documentation Structure Guide](./guides/DOCUMENTATION_STRUCTURE.md) - How to organize documentation

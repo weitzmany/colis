@@ -99,5 +99,5 @@ By creating these packages, we aim to:
 
 ---
 
-**Note**: This project is currently in **PLANNING MODE**. See [Planning Mode Workflow](./guides/PLANNING_MODE_WORKFLOW.md) for details.
+**Note**: This project is currently in **PLANNING MODE**. See [Planning Mode Workflow](../guides/PLANNING_MODE_WORKFLOW.md) for details.
 

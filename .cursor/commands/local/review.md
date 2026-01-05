@@ -2,17 +2,21 @@
 
 Expert-driven file review and creation workflow. Randomly selects or creates experts and files, then has experts review/expand content.
 
-## ⚠️ CRITICAL REQUIREMENT: SUBSTANTIVE CONTENT ADDITION
+## ⚠️ CRITICAL REQUIREMENT: SUBSTANTIVE FILE IMPROVEMENT
 
-**EXPERTS MUST ACTUALLY ADD SUBSTANTIVE CONTENT TO FILES, NOT JUST DESCRIBE WHAT SHOULD BE ADDED.**
+**EXPERTS MUST ACTUALLY IMPROVE FILES, NOT JUST DESCRIBE WHAT SHOULD BE CHANGED.**
 
-- ❌ **FORBIDDEN**: Adding only a review contribution section that describes what "should be added"
+- ❌ **FORBIDDEN**: Adding only a review contribution section that describes what "should be added" or "should be fixed"
 - ❌ **FORBIDDEN**: Describing changes without actually making them
-- ✅ **REQUIRED**: Actually adding new sections, expanding existing content, including examples, code snippets, best practices, procedures, tools, methodologies, or detailed explanations
-- ✅ **REQUIRED**: The file must be visibly changed with new substantive content before the review contribution section is added
-- ✅ **REQUIRED**: The review contribution section should describe what was ACTUALLY ADDED to the file, not what should be added
+- ✅ **REQUIRED**: Actually making changes to improve the file:
+  - **Adding**: New sections, expanding existing content, including examples, code snippets, best practices, procedures, tools, methodologies, or detailed explanations
+  - **Fixing**: Correcting errors, fixing mistakes, improving accuracy
+  - **Deleting**: Removing wrong, outdated, or incorrect content
+  - **Improving**: Enhancing clarity, structure, organization, or quality
+- ✅ **REQUIRED**: The file must be visibly changed before any review contribution section is added
+- ✅ **REQUIRED**: The review contribution section should describe what was ACTUALLY CHANGED in the file (added, fixed, deleted, improved), not what should be changed
 
-**This is a critical requirement. Failure to add substantive content will result in the file not being changed, which defeats the purpose of the review workflow.**
+**This is a critical requirement. Experts should actively improve files by adding, fixing, deleting, or improving content as needed. Failure to make actual changes defeats the purpose of the review workflow.**
 
 ## Usage
 
@@ -168,22 +172,22 @@ Execute this command to run the expert review workflow:
 10. **Expert Review** (using expert from Step 2/4 and file from Step 3b/4/9)
    - **Standard Review** (always performed):
      - Ask the expert to review the selected file
-     - **⚠️ CRITICAL REQUIREMENT**: Expert must ACTUALLY ADD substantive content to the file, not just describe what should be added
-     - **⚠️ THE FILE MUST BE VISIBLY CHANGED**: The file content must be expanded with new substantive material before any review contribution section is added
-     - **⚠️ FORBIDDEN**: Do NOT add only a review contribution section that describes what "should be added" - this is not acceptable
+     - **⚠️ CRITICAL REQUIREMENT**: Expert must ACTUALLY IMPROVE the file, not just describe what should be changed
+     - **⚠️ THE FILE MUST BE VISIBLY CHANGED**: The file must be improved before any review contribution section is added
+     - **⚠️ FORBIDDEN**: Do NOT add only a review contribution section that describes what "should be added" or "should be fixed" - this is not acceptable
      - **⚠️ FORBIDDEN**: Do NOT describe changes without actually making them to the file
-     - Expert MUST expand the file according to their professional opinion by:
-       - **REQUIRED**: Adding new sections with actual content (not just section headers or descriptions)
-       - **REQUIRED**: Expanding existing sections with detailed information (actual content, not descriptions)
-       - **REQUIRED**: Adding examples, code snippets, best practices, or detailed explanations (actual examples, not descriptions of examples)
-       - **REQUIRED**: Including practical guidance, tools, procedures, or methodologies (actual guidance, not descriptions of guidance)
-     - **⚠️ VERIFICATION**: Before adding the review contribution section, verify that the file has been visibly changed with new substantive content
-     - The review contribution section should describe what was ACTUALLY ADDED to the file, not what should be added
+     - Expert MUST improve the file according to their professional opinion by:
+       - **Adding**: New sections with actual content, expanding existing sections, including examples, code snippets, best practices, procedures, tools, methodologies, or detailed explanations (actual content, not descriptions)
+       - **Fixing**: Correcting errors, fixing mistakes, improving accuracy, correcting typos, fixing broken links, correcting factual errors
+       - **Deleting**: Removing wrong, outdated, incorrect, or redundant content
+       - **Improving**: Enhancing clarity, improving structure, better organization, improving formatting, refining language
+     - **⚠️ VERIFICATION**: Before adding the review contribution section, verify that the file has been visibly changed (added, fixed, deleted, or improved)
+     - The review contribution section should describe what was ACTUALLY CHANGED in the file (added, fixed, deleted, improved), not what should be changed
      - If expert has no professional connection to the content:
        - Expert should directly admit they have nothing to contribute
        - Still add a brief note at the end
      - Expert should add a brief description of changes at the end of the document with:
-       - Description of changes made (what was actually added to the file)
+       - Description of changes made (what was actually added, fixed, deleted, or improved in the file)
        - Expert's name
        - Expertise
        - Date
@@ -254,17 +258,17 @@ Execute this command to run the expert review workflow:
 ### File Review
 - **Standard Review** (always performed):
   - Read existing file content
-  - **⚠️ CRITICAL REQUIREMENT**: Expert must ACTUALLY ADD substantive content to the file, not just describe what should be added
-  - **⚠️ THE FILE MUST BE VISIBLY CHANGED**: The file content must be expanded with new substantive material before any review contribution section is added
-  - **⚠️ FORBIDDEN**: Do NOT add only a review contribution section that describes what "should be added" - this is not acceptable
+  - **⚠️ CRITICAL REQUIREMENT**: Expert must ACTUALLY IMPROVE the file, not just describe what should be changed
+  - **⚠️ THE FILE MUST BE VISIBLY CHANGED**: The file must be improved before any review contribution section is added
+  - **⚠️ FORBIDDEN**: Do NOT add only a review contribution section that describes what "should be added" or "should be fixed" - this is not acceptable
   - **⚠️ FORBIDDEN**: Do NOT describe changes without actually making them to the file
-  - Have expert review and expand according to expertise by:
-    - **REQUIRED**: Adding new sections with actual content (not just section headers or descriptions)
-    - **REQUIRED**: Expanding existing sections with detailed information (actual content, not descriptions)
-    - **REQUIRED**: Including examples, code snippets, best practices, procedures (actual examples, not descriptions of examples)
-    - **REQUIRED**: Adding practical guidance, tools, methodologies, or detailed explanations (actual guidance, not descriptions of guidance)
-  - **⚠️ VERIFICATION**: Before adding the review contribution section, verify that the file has been visibly changed with new substantive content
-  - The review contribution section describes what was ACTUALLY ADDED, not what should be added
+  - Have expert review and improve according to expertise by:
+    - **Adding**: New sections with actual content, expanding existing sections, including examples, code snippets, best practices, procedures (actual content, not descriptions)
+    - **Fixing**: Correcting errors, fixing mistakes, improving accuracy, correcting typos, fixing broken links, correcting factual errors
+    - **Deleting**: Removing wrong, outdated, incorrect, or redundant content
+    - **Improving**: Enhancing clarity, improving structure, better organization, improving formatting, refining language
+  - **⚠️ VERIFICATION**: Before adding the review contribution section, verify that the file has been visibly changed (added, fixed, deleted, or improved)
+  - The review contribution section describes what was ACTUALLY CHANGED (added, fixed, deleted, improved), not what should be changed
   - Append changes description with signature block
   - Format: Markdown section at end of file
   - **Update Expert Reviews Tracker**: After review, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
@@ -286,9 +290,9 @@ Execute this command to run the expert review workflow:
     - Expert should document the rearrangement in one designated file (e.g., `docs/guides/FILE_REORGANIZATION.md` or similar)
     - Documentation should include: list of files moved/reorganized, reason for reorganization, new structure/organization, expert's name/expertise/date
 
-## ⚠️ REMINDER: SUBSTANTIVE CONTENT FIRST
+## ⚠️ REMINDER: SUBSTANTIVE IMPROVEMENTS FIRST
 
-**Before adding the signature block, ensure that substantive content has been ACTUALLY ADDED to the file. The signature block should describe what was added, not what should be added.**
+**Before adding the signature block, ensure that the file has been ACTUALLY IMPROVED (content added, fixed, deleted, or improved). The signature block should describe what was changed, not what should be changed.**
 
 ## Signature Block Format
 

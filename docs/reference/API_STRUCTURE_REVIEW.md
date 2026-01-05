@@ -2,7 +2,7 @@
 
 This document lists useful API structure patterns found in other projects.
 
-**Last Updated**: 2025-01-05
+**Last Updated**: 2026-01-05
 
 ## API Structure Patterns Found
 
@@ -500,6 +500,472 @@ This document lists useful API structure patterns found in other projects.
    - Provide rate limit information in responses
    - Handle rate limit exceeded gracefully
 
+### API Testing Patterns
+
+1. **Contract Testing**:
+   - Test API contracts between services
+   - Use tools like Pact, Spring Cloud Contract
+   - Ensure backward compatibility
+   - Validate request/response schemas
+   - Example:
+     ```typescript
+     // Contract test example
+     describe('User API Contract', () => {
+       it('should return user with expected schema', async () => {
+         const response = await request(app)
+           .get('/api/v1/users/123')
+           .expect(200);
+         
+         expect(response.body).toMatchSchema({
+           type: 'object',
+           required: ['id', 'name', 'email'],
+           properties: {
+             id: { type: 'string' },
+             name: { type: 'string' },
+             email: { type: 'string', format: 'email' }
+           }
+         });
+       });
+     });
+     ```
+
+2. **Integration Testing**:
+   - Test full request/response cycle
+   - Test authentication and authorization
+   - Test error scenarios
+   - Test edge cases and boundary conditions
+   - Example:
+     ```typescript
+     describe('User API Integration', () => {
+       it('should create user and return 201', async () => {
+         const newUser = {
+           name: 'John Doe',
+           email: 'john@example.com'
+         };
+         
+         const response = await request(app)
+           .post('/api/v1/users')
+           .set('Authorization', `Bearer ${token}`)
+           .send(newUser)
+           .expect(201);
+         
+         expect(response.body.data).toHaveProperty('id');
+         expect(response.body.data.email).toBe(newUser.email);
+       });
+     });
+     ```
+
+3. **API Testing Best Practices**:
+   - Test all HTTP methods for each endpoint
+   - Test authentication and authorization
+   - Test validation errors
+   - Test error responses
+   - Test pagination, filtering, sorting
+   - Test rate limiting
+   - Use test fixtures and factories
+   - Clean up test data
+
+### API Evolution and Migration
+
+1. **Backward Compatibility Strategies**:
+   - **Additive Changes Only**: Add new fields, endpoints, or optional parameters
+   - **Deprecation Warnings**: Signal upcoming breaking changes
+   - **Version Support**: Maintain multiple API versions simultaneously
+   - **Gradual Migration**: Provide migration paths for clients
+   - **Communication**: Clearly document changes and timelines
+
+2. **Breaking Change Management**:
+   - **Major Version Increment**: Use for breaking changes
+   - **Deprecation Period**: Provide sufficient notice (e.g., 6-12 months)
+   - **Migration Guides**: Step-by-step guides for upgrading
+   - **Feature Flags**: Use feature flags for gradual rollout
+   - **Monitoring**: Track usage of deprecated endpoints
+
+3. **API Migration Example**:
+   ```php
+   // v1 endpoint (deprecated)
+   $app->get('/api/v1/users/{id}', function ($request, $response, $args) {
+       // Add deprecation header
+       $response = $response->withHeader('Deprecation', 'true');
+       $response = $response->withHeader('Sunset', '2026-12-31');
+       $response = $response->withHeader('Link', '</api/v2/users/{id}>; rel="successor-version"');
+       
+       // Return v1 response format
+       return $response->withJson(['user' => $user]);
+   });
+   
+   // v2 endpoint (new)
+   $app->get('/api/v2/users/{id}', function ($request, $response, $args) {
+       // Return v2 response format
+       return $response->withJson(['data' => $user]);
+   });
+   ```
+
+### API Design Anti-Patterns
+
+1. **Common Anti-Patterns to Avoid**:
+   - ❌ **Verb-Based URLs**: `/api/getUsers`, `/api/createUser` (use resource-based: `/api/users`)
+   - ❌ **Inconsistent Naming**: Mixing camelCase and snake_case (be consistent)
+   - ❌ **Wrong HTTP Methods**: Using GET for mutations (use POST/PUT/PATCH)
+   - ❌ **Generic Error Messages**: "Error occurred" (provide specific, actionable errors)
+   - ❌ **No Versioning**: Changing APIs without versioning (breaks clients)
+   - ❌ **Over-Nesting**: `/api/users/123/orders/456/items/789/details` (limit to 2-3 levels)
+   - ❌ **Inconsistent Response Formats**: Different structures for similar endpoints
+   - ❌ **Missing Pagination**: Returning all records without pagination
+   - ❌ **No Rate Limiting**: Allowing unlimited requests (security risk)
+   - ❌ **Exposing Internal Details**: Returning database errors, stack traces
+
+2. **Anti-Pattern Examples and Fixes**:
+   ```typescript
+   // ❌ ANTI-PATTERN: Verb-based URL
+   POST /api/getUserById
+   
+   // ✅ CORRECT: Resource-based URL
+   GET /api/users/{id}
+   
+   // ❌ ANTI-PATTERN: Wrong HTTP method
+   GET /api/users/{id}/delete
+   
+   // ✅ CORRECT: Proper HTTP method
+   DELETE /api/users/{id}
+   
+   // ❌ ANTI-PATTERN: Inconsistent response format
+   GET /api/users/1 → { "user": {...} }
+   GET /api/users/2 → { "data": {...} }
+   
+   // ✅ CORRECT: Consistent response format
+   GET /api/users/1 → { "data": {...} }
+   GET /api/users/2 → { "data": {...} }
+   ```
+
+### API Design Decision Framework
+
+1. **Resource Design Decisions**:
+   - **Question**: Should this be a resource or an action?
+     - **Resource**: `/api/users`, `/api/orders` (nouns, collections)
+     - **Action**: `/api/users/{id}/activate` (verb, specific operation)
+   - **Question**: Should this be nested or separate?
+     - **Nested**: `/api/users/{id}/orders` (hierarchical relationship)
+     - **Separate**: `/api/orders?user_id={id}` (independent resource)
+
+2. **HTTP Method Selection**:
+   - **Question**: Is this operation idempotent?
+     - **Yes**: Use PUT (full update) or PATCH (partial update)
+     - **No**: Use POST (create)
+   - **Question**: Does this modify state?
+     - **No**: Use GET (read-only)
+     - **Yes**: Use POST, PUT, PATCH, or DELETE
+
+3. **Versioning Decision**:
+   - **Question**: Is this a breaking change?
+     - **Yes**: Create new version (v2)
+     - **No**: Add to existing version (v1)
+   - **Question**: How long to support old version?
+     - **Deprecation Timeline**: 6-12 months minimum
+     - **Migration Support**: Provide tools and guides
+
+### API Design Checklist
+
+Use this checklist when designing new APIs:
+
+#### Resource Design
+- [ ] Resource names are nouns (not verbs)
+- [ ] Resource names are plural for collections
+- [ ] Naming is consistent across the API
+- [ ] Nesting is limited (max 2-3 levels)
+- [ ] Resource relationships are clear
+
+#### HTTP Methods
+- [ ] GET is used only for read operations
+- [ ] POST is used for creation
+- [ ] PUT/PATCH is used for updates
+- [ ] DELETE is used for removal
+- [ ] Methods are used semantically correctly
+
+#### Request Design
+- [ ] Request body format is consistent (JSON)
+- [ ] All input is validated
+- [ ] Content-Type headers are correct
+- [ ] Query parameters are used for filtering/sorting
+- [ ] Request IDs are included for tracing
+
+#### Response Design
+- [ ] Response format is consistent
+- [ ] HTTP status codes are appropriate
+- [ ] Error responses follow standard format
+- [ ] Metadata is included (pagination, timestamps)
+- [ ] Sensitive data is not exposed
+
+#### Security
+- [ ] Authentication is required where needed
+- [ ] Authorization is properly implemented
+- [ ] Input validation prevents injection attacks
+- [ ] Rate limiting is implemented
+- [ ] HTTPS is used in production
+
+#### Documentation
+- [ ] OpenAPI/Swagger spec is complete
+- [ ] All endpoints are documented
+- [ ] Request/response examples are provided
+- [ ] Authentication requirements are documented
+- [ ] Error codes are documented
+
+#### Versioning
+- [ ] Versioning strategy is defined
+- [ ] Breaking changes create new versions
+- [ ] Deprecation timeline is communicated
+- [ ] Migration guides are provided
+- [ ] Multiple versions are supported during transition
+
+#### Testing
+- [ ] Unit tests cover all endpoints
+- [ ] Integration tests validate full flow
+- [ ] Contract tests ensure compatibility
+- [ ] Error scenarios are tested
+- [ ] Edge cases are covered
+
+### Framework-Specific Implementation Examples
+
+#### PHP Slim Framework API Implementation
+
+```php
+<?php
+// routes.php
+use Slim\App;
+use App\Controllers\UserController;
+use App\Middleware\AuthMiddleware;
+use App\Middleware\ValidationMiddleware;
+
+return function (App $app) {
+    // API v1 routes
+    $app->group('/api/v1', function ($group) {
+        // Users resource
+        $group->get('/users', UserController::class . ':index')
+            ->add(ValidationMiddleware::class);
+        
+        $group->get('/users/{id}', UserController::class . ':show')
+            ->add(ValidationMiddleware::class);
+        
+        $group->post('/users', UserController::class . ':store')
+            ->add(AuthMiddleware::class)
+            ->add(ValidationMiddleware::class);
+        
+        $group->put('/users/{id}', UserController::class . ':update')
+            ->add(AuthMiddleware::class)
+            ->add(ValidationMiddleware::class);
+        
+        $group->delete('/users/{id}', UserController::class . ':destroy')
+            ->add(AuthMiddleware::class);
+    });
+};
+```
+
+```php
+<?php
+// UserController.php
+namespace App\Controllers;
+
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use App\Services\UserService;
+use App\Responses\ApiResponse;
+
+class UserController
+{
+    private UserService $userService;
+    
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+    
+    public function index(Request $request, Response $response): Response
+    {
+        $page = (int)($request->getQueryParams()['page'] ?? 1);
+        $perPage = min((int)($request->getQueryParams()['per_page'] ?? 10), 100);
+        
+        $users = $this->userService->getPaginated($page, $perPage);
+        $total = $this->userService->getTotal();
+        
+        return ApiResponse::success([
+            'items' => $users,
+            'pagination' => [
+                'page' => $page,
+                'per_page' => $perPage,
+                'total' => $total,
+                'total_pages' => ceil($total / $perPage)
+            ]
+        ]);
+    }
+    
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        $user = $this->userService->findById($args['id']);
+        
+        if (!$user) {
+            return ApiResponse::error('User not found', 404);
+        }
+        
+        return ApiResponse::success($user);
+    }
+    
+    public function store(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+        
+        try {
+            $user = $this->userService->create($data);
+            return ApiResponse::success($user, 201);
+        } catch (ValidationException $e) {
+            return ApiResponse::error('Validation failed', 422, $e->getErrors());
+        }
+    }
+}
+```
+
+#### Node.js/Express API Implementation
+
+```typescript
+// routes/users.ts
+import { Router } from 'express';
+import { UserController } from '../controllers/UserController';
+import { authMiddleware } from '../middleware/auth';
+import { validateRequest } from '../middleware/validation';
+import { createUserSchema, updateUserSchema } from '../schemas/user';
+
+const router = Router();
+const userController = new UserController();
+
+// GET /api/v1/users
+router.get(
+  '/',
+  validateRequest({ query: paginationSchema }),
+  userController.index
+);
+
+// GET /api/v1/users/:id
+router.get(
+  '/:id',
+  validateRequest({ params: idSchema }),
+  userController.show
+);
+
+// POST /api/v1/users
+router.post(
+  '/',
+  authMiddleware,
+  validateRequest({ body: createUserSchema }),
+  userController.store
+);
+
+// PUT /api/v1/users/:id
+router.put(
+  '/:id',
+  authMiddleware,
+  validateRequest({ params: idSchema, body: updateUserSchema }),
+  userController.update
+);
+
+// DELETE /api/v1/users/:id
+router.delete(
+  '/:id',
+  authMiddleware,
+  validateRequest({ params: idSchema }),
+  userController.destroy
+);
+
+export default router;
+```
+
+```typescript
+// controllers/UserController.ts
+import { Request, Response } from 'express';
+import { UserService } from '../services/UserService';
+import { ApiResponse } from '../utils/ApiResponse';
+
+export class UserController {
+  private userService: UserService;
+  
+  constructor() {
+    this.userService = new UserService();
+  }
+  
+  async index(req: Request, res: Response): Promise<Response> {
+    const { page = 1, per_page = 10 } = req.query;
+    const { users, total } = await this.userService.getPaginated(
+      Number(page),
+      Number(per_page)
+    );
+    
+    return res.json(ApiResponse.success({
+      items: users,
+      pagination: {
+        page: Number(page),
+        per_page: Number(per_page),
+        total,
+        total_pages: Math.ceil(total / Number(per_page))
+      }
+    }));
+  }
+  
+  async show(req: Request, res: Response): Promise<Response> {
+    const user = await this.userService.findById(req.params.id);
+    
+    if (!user) {
+      return res.status(404).json(
+        ApiResponse.error('User not found', 404)
+      );
+    }
+    
+    return res.json(ApiResponse.success(user));
+  }
+  
+  async store(req: Request, res: Response): Promise<Response> {
+    try {
+      const user = await this.userService.create(req.body);
+      return res.status(201).json(ApiResponse.success(user));
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        return res.status(422).json(
+          ApiResponse.error('Validation failed', 422, error.errors)
+        );
+      }
+      throw error;
+    }
+  }
+}
+```
+
+### API Design Tools and Resources
+
+1. **API Design Tools**:
+   - **Postman**: API testing and documentation
+   - **Insomnia**: REST client and API testing
+   - **Swagger Editor**: OpenAPI specification editor
+   - **Stoplight**: API design and documentation platform
+   - **API Blueprint**: API documentation format
+
+2. **API Testing Tools**:
+   - **Postman/Newman**: Automated API testing
+   - **REST Assured**: Java API testing
+   - **Supertest**: Node.js API testing
+   - **Pact**: Contract testing
+   - **Karate**: API testing framework
+
+3. **API Documentation Tools**:
+   - **Swagger UI**: Interactive API documentation
+   - **ReDoc**: OpenAPI documentation generator
+   - **Slate**: Beautiful API documentation
+   - **GitBook**: API documentation platform
+   - **ReadMe**: API documentation and developer portals
+
+4. **API Monitoring Tools**:
+   - **Postman Monitoring**: API health monitoring
+   - **Datadog APM**: Application performance monitoring
+   - **New Relic**: API performance tracking
+   - **Sentry**: Error tracking for APIs
+   - **LogRocket**: API session replay
+
 ## Notes
 
 - API structure patterns are framework-specific but concepts are universal
@@ -532,5 +998,10 @@ This document lists useful API structure patterns found in other projects.
 **Expertise**: RESTful API Design  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this API structure review document by adding a comprehensive "RESTful API Design Best Practices" section that covers resource-based design (resource naming conventions, HTTP methods and semantics, resource relationships), request and response design (request design, response design, response structure patterns), API design patterns (pagination patterns, filtering and sorting, search patterns, bulk operations), API documentation standards (OpenAPI/Swagger specification, documentation best practices, interactive documentation), API security design (authentication patterns, authorization patterns, security best practices), API versioning strategies (URL versioning, header versioning, query parameter versioning, versioning best practices), and error handling patterns (error response structure, HTTP status code usage, error handling best practices). This enhancement provides practical guidance for implementing RESTful API design principles and best practices to ensure consistent, secure, and well-documented APIs.
+
+**Expert**: Andrew Lee  
+**Expertise**: RESTful API Design  
+**Date**: 2026-01-05  
+**Changes**: Further enhanced this API structure review document by adding comprehensive implementation guidance including: API testing patterns (contract testing with schema validation examples, integration testing with authentication scenarios, API testing best practices), API evolution and migration strategies (backward compatibility strategies, breaking change management with deprecation headers, API migration examples with version transition patterns), API design anti-patterns (common anti-patterns to avoid with verb-based URLs, wrong HTTP methods, inconsistent formats, and fixes for each), API design decision framework (resource design decisions, HTTP method selection guidelines, versioning decision criteria), comprehensive API design checklist (resource design, HTTP methods, request design, response design, security, documentation, versioning, testing), framework-specific implementation examples (PHP Slim Framework API implementation with routes, controllers, and middleware examples, Node.js/Express API implementation with TypeScript examples), and API design tools and resources (API design tools, API testing tools, API documentation tools, API monitoring tools). Also fixed the date from 2025-01-05 to 2026-01-05. This addition provides practical, actionable implementation guidance for developers building RESTful APIs, including code examples, decision frameworks, testing strategies, and tool recommendations to ensure APIs are well-designed, tested, and maintainable.
 
 ---

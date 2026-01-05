@@ -92,10 +92,18 @@ Execute this command to run the expert review workflow:
      - If 2-10 (90% chance): Select existing expert → Go to Step 2
    - If random = 2-10: Use `/local/expert` command to randomly select an expert
    - Get expert's name from the command output
+   - **Update Tracker**: Immediately update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+     - Find the line containing "**Last Updated**:"
+     - Add or update the next line: `**Current reviewer**: [Expert Name]`
+     - If "Last reviewer" exists, replace it with "Current reviewer"
    - Continue to Step 3
 
 4. **Step 2: Use Specified Expert** (if `expert="<name>"` or from Step 1b)
    - Use the expert name directly (assume expert exists, no validation)
+   - **Update Tracker**: Immediately update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+     - Find the line containing "**Last Updated**:"
+     - Add or update the next line: `**Current reviewer**: [Expert Name]`
+     - If "Last reviewer" exists, replace it with "Current reviewer"
    - Continue to Step 3
 
 ### Step 3: Select or Create File
@@ -107,6 +115,10 @@ Execute this command to run the expert review workflow:
 
 6. **Step 3a: Create New File** (if `file="new"`)
    - Ask the expert (from Step 2/4) to create a new file
+   - **Update Tracker**: When file path is determined, immediately update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+     - Find the line containing "**Last Updated**:"
+     - Add or update the line after "Current reviewer" (or after "Last Updated" if no reviewer line): `**Current file**: [File Name]`
+     - If "Last file" exists, replace it with "Current file"
    - **File Types Allowed**:
      - ✅ Any file in `docs/` directory (documentation)
      - ✅ Command file (in `.cursor/commands/general/` - for use outside this scope)
@@ -129,6 +141,9 @@ Execute this command to run the expert review workflow:
    - **Update Statistics and Sort**: After updating tracker:
      - Run `/local/statistics` command to calculate and update statistics rows
      - Run `/local/sort sort-by="Files Created"` command to sort table by Files Created
+   - **Update Tracker Status**: Before ending, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+     - Replace "Current reviewer" with "Last reviewer"
+     - Replace "Current file" with "Last file"
    - **Output**: Expert name and created file (full path)
    - **Stop**: End command here
 
@@ -136,6 +151,10 @@ Execute this command to run the expert review workflow:
    - Search for file by name in workspace (no path needed, search recursively)
    - If file exists:
      - Use the found file path
+     - **Update Tracker**: Immediately update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+       - Find the line containing "**Last Updated**:"
+       - Add or update the line after "Current reviewer" (or after "Last Updated" if no reviewer line): `**Current file**: [File Name]`
+       - If "Last file" exists, replace it with "Current file"
      - Continue to Step 5
    - If file doesn't exist:
      - Create the file (decide best path based on content type)
@@ -152,6 +171,9 @@ Execute this command to run the expert review workflow:
      - **Update Statistics and Sort**: After updating tracker:
        - Run `/local/statistics` command to calculate and update statistics rows
        - Run `/local/sort sort-by="Files Created"` command to sort table by Files Created
+     - **Update Tracker Status**: Before ending, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+       - Replace "Current reviewer" with "Last reviewer"
+       - Replace "Current file" with "Last file"
      - **Output**: Expert name and created file (full path)
      - **Stop**: End command here
 
@@ -165,6 +187,10 @@ Execute this command to run the expert review workflow:
 
 9. **Step 4: Use Randomly Selected File** (from Step 3c)
    - Use the file path from `/local/file` command
+   - **Update Tracker**: Immediately update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+     - Find the line containing "**Last Updated**:"
+     - Add or update the line after "Current reviewer" (or after "Last Updated" if no reviewer line): `**Current file**: [File Name]`
+     - If "Last file" exists, replace it with "Current file"
    - Continue to Step 5 (Expert Review)
 
 ### Step 5: Expert Review
@@ -200,6 +226,9 @@ Execute this command to run the expert review workflow:
      - **Update Statistics and Sort**: After updating tracker:
        - Run `/local/statistics` command to calculate and update statistics rows
        - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
+     - **Update Tracker Status**: Before ending, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+       - Replace "Current reviewer" with "Last reviewer"
+       - Replace "Current file" with "Last file"
    - **File Rearrangement** (if expert's expertise is appropriate):
      - If the expert's expertise is appropriate (e.g., Documentation Expert, Architecture Expert, or any expert whose expertise relates to file organization/structure):
        - Expert MUST also rearrange files in `docs/` directory in addition to the regular review
@@ -225,6 +254,10 @@ Execute this command to run the expert review workflow:
 - Execute `/local/file` command to get file path (if `file` parameter is empty)
 - Use `expert` parameter value directly if provided (assume expert exists)
 - Search for file by name if `file` parameter is provided (use `find` or similar to locate file)
+- **Tracker Status Updates** (Dynamic Location):
+  - When expert is selected: Find the line containing "**Last Updated**:" and add/update the next line with `**Current reviewer**: [Expert Name]`
+  - When file is selected: Find the line containing "**Last Updated**:" and add/update the line after "Current reviewer" (or after "Last Updated" if no reviewer line) with `**Current file**: [File Name]`
+  - When review/creation is complete: Replace "Current" with "Last" in both lines (find dynamically by searching for "Current reviewer" and "Current file")
 - After updating Expert Reviews Tracker:
   - Execute `/local/statistics` command to calculate and update statistics rows
   - Execute `/local/sort` command:

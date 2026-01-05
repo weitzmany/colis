@@ -453,6 +453,240 @@ docs/features/<feature-name>/
 - Create summary/index
 - Link to detailed sections
 
+### Mobile Considerations in Planning Mode
+
+When planning features and documenting requirements during planning mode, it's critical to consider mobile-first design and mobile optimization from the start. Mobile is not an afterthought—it's a primary platform.
+
+#### Mobile-First Planning Principles
+
+1. **Mobile-First Mindset**
+   - Plan for mobile devices first, then enhance for larger screens
+   - Consider mobile constraints (screen size, touch input, network conditions) as primary constraints
+   - Design for the smallest screen, then progressively enhance
+   - Mobile users are not a subset—they're often the majority
+
+2. **Touch-First Design**
+   - Plan for touch interactions, not just mouse clicks
+   - Consider gesture support (swipe, pinch, long-press)
+   - Design large touch targets (minimum 44x44px or 48x48px)
+   - Plan for thumb-friendly zones on mobile screens
+   - Consider one-handed vs. two-handed usage patterns
+
+3. **Mobile Performance Planning**
+   - Plan for slower mobile networks (3G, 4G, variable speeds)
+   - Consider data usage constraints
+   - Plan for battery efficiency
+   - Optimize for mobile CPU/GPU limitations
+   - Plan for offline functionality (PWA considerations)
+
+#### Mobile Requirements in PRDs
+
+When creating PRDs during planning mode, include mobile-specific sections:
+
+```markdown
+## Mobile Requirements
+
+### Device Support
+- Target devices: [Smartphones, Tablets, specific screen sizes]
+- Operating systems: [iOS, Android, versions]
+- Browser support: [Mobile browsers, versions]
+
+### Touch Interactions
+- Required gestures: [Swipe, tap, long-press, etc.]
+- Touch target sizes: [Minimum 44x44px]
+- Gesture feedback: [Visual, haptic]
+
+### Responsive Design
+- Breakpoints: [Mobile: < 768px, Tablet: 768-1024px, Desktop: > 1024px]
+- Layout strategy: [Mobile-first, progressive enhancement]
+- Image optimization: [Responsive images, lazy loading]
+
+### Performance Targets
+- First Contentful Paint: [< 1.5s on 3G]
+- Time to Interactive: [< 3s on 3G]
+- Bundle size: [< 200KB initial load]
+- Data usage: [Minimize, optimize assets]
+
+### Progressive Web App (PWA)
+- Offline support: [Yes/No, scope]
+- Installable: [Yes/No]
+- Service worker strategy: [Caching, background sync]
+- App manifest: [Icons, theme, display mode]
+```
+
+#### Mobile Testing Requirements in Planning
+
+When planning features, document mobile testing requirements:
+
+1. **Device Testing Plan**
+   - Real device testing (iOS, Android)
+   - Emulator/simulator testing
+   - Different screen sizes and resolutions
+   - Different OS versions
+   - Different browsers
+
+2. **Network Testing**
+   - 3G, 4G, 5G network conditions
+   - Slow network simulation
+   - Offline functionality testing
+   - Network switching (WiFi to cellular)
+
+3. **Performance Testing**
+   - Load time on mobile networks
+   - Battery usage
+   - Memory usage
+   - CPU/GPU performance
+
+4. **Usability Testing**
+   - Touch interaction testing
+   - Gesture recognition
+   - One-handed vs. two-handed usage
+   - Orientation changes (portrait/landscape)
+   - Keyboard interactions
+
+#### Mobile Considerations in TASKS.md
+
+When breaking down implementation tasks, include mobile-specific tasks:
+
+```markdown
+## Phase 1: Mobile Foundation
+- [ ] Set up responsive breakpoints
+- [ ] Implement mobile-first CSS
+- [ ] Configure viewport meta tags
+- [ ] Set up touch event handlers
+- [ ] Design mobile navigation
+- [ ] Optimize images for mobile
+- [ ] Implement lazy loading
+
+## Phase 2: Touch Interactions
+- [ ] Implement swipe gestures
+- [ ] Add touch feedback (haptic, visual)
+- [ ] Design touch targets (44x44px minimum)
+- [ ] Test gesture recognition
+- [ ] Handle orientation changes
+
+## Phase 3: Mobile Performance
+- [ ] Optimize bundle size
+- [ ] Implement code splitting
+- [ ] Optimize images (WebP, responsive)
+- [ ] Minimize network requests
+- [ ] Implement caching strategy
+
+## Phase 4: PWA Features (if applicable)
+- [ ] Set up service worker
+- [ ] Create app manifest
+- [ ] Implement offline support
+- [ ] Add install prompts
+- [ ] Test offline functionality
+```
+
+#### Mobile Documentation Best Practices
+
+When documenting during planning mode, consider mobile accessibility:
+
+1. **Mobile-Readable Documentation**
+   - Use short paragraphs (easier to read on small screens)
+   - Break up long sections with headers
+   - Use bullet points and lists (scannable on mobile)
+   - Include code examples that are mobile-friendly
+   - Test documentation readability on mobile devices
+
+2. **Mobile-Friendly Code Examples**
+   - Show mobile-specific code patterns
+   - Include responsive design examples
+   - Demonstrate touch interaction code
+   - Provide mobile performance optimization examples
+   - Include PWA implementation examples
+
+3. **Mobile Planning Checklists**
+
+Add mobile-specific items to planning checklists:
+
+```markdown
+## Mobile Planning Checklist
+
+### Design
+- [ ] Mobile-first design approach
+- [ ] Touch-friendly interface design
+- [ ] Responsive layout planned
+- [ ] Mobile navigation designed
+- [ ] Thumb-friendly zones considered
+
+### Development
+- [ ] Responsive breakpoints defined
+- [ ] Touch interactions planned
+- [ ] Mobile performance targets set
+- [ ] Image optimization strategy planned
+- [ ] PWA features considered (if applicable)
+
+### Testing
+- [ ] Real device testing planned
+- [ ] Network condition testing planned
+- [ ] Performance testing planned
+- [ ] Usability testing planned
+- [ ] Accessibility testing planned (mobile screen readers)
+```
+
+#### Mobile Performance Planning
+
+When planning features, document mobile performance considerations:
+
+1. **Initial Load Performance**
+   - Target: First Contentful Paint < 1.5s on 3G
+   - Strategy: Code splitting, lazy loading, minimal initial bundle
+   - Assets: Optimize images, use WebP, implement responsive images
+
+2. **Runtime Performance**
+   - Target: 60fps animations, smooth scrolling
+   - Strategy: Optimize JavaScript, use CSS animations, minimize reflows
+   - Memory: Monitor memory usage, avoid memory leaks
+
+3. **Network Performance**
+   - Target: Minimize data usage, fast loading on slow networks
+   - Strategy: Caching, compression, minimize requests
+   - Offline: Plan for offline functionality if needed
+
+4. **Battery Efficiency**
+   - Strategy: Minimize CPU usage, optimize animations
+   - Background: Limit background processing
+   - Sensors: Use sensors efficiently (GPS, accelerometer)
+
+#### Mobile Accessibility in Planning
+
+When planning features, consider mobile accessibility:
+
+1. **Screen Reader Support**
+   - Plan for mobile screen readers (VoiceOver, TalkBack)
+   - Ensure touch targets are accessible
+   - Plan for proper ARIA labels on mobile
+
+2. **Touch Accessibility**
+   - Large touch targets (minimum 44x44px)
+   - Adequate spacing between touch targets
+   - Touch feedback (visual and haptic)
+   - Gesture alternatives for complex interactions
+
+3. **Visual Accessibility**
+   - Responsive text sizing
+   - High contrast on mobile screens
+   - Readable font sizes on small screens
+   - Color contrast considerations
+
+#### Mobile Considerations Checklist for Planning Mode
+
+When documenting features during planning mode, verify:
+
+- [ ] Mobile-first approach is documented
+- [ ] Touch interactions are planned
+- [ ] Responsive design breakpoints are defined
+- [ ] Mobile performance targets are set
+- [ ] Mobile testing requirements are documented
+- [ ] PWA features are considered (if applicable)
+- [ ] Mobile accessibility is planned
+- [ ] Mobile-specific user stories are included
+- [ ] Mobile constraints are documented
+- [ ] Mobile optimization strategies are outlined
+
 ### Planning Mode Checklist
 
 Before considering planning mode complete, verify:
@@ -469,12 +703,26 @@ Before considering planning mode complete, verify:
 - [ ] All links are working
 - [ ] Documentation is clear and complete
 - [ ] Nothing is lost or forgotten
+- [ ] **Mobile considerations are documented for all features**
+- [ ] **Mobile-first approach is applied**
+- [ ] **Mobile testing requirements are included**
 
 ---
 
-**Last Updated**: 2025-01-05  
+**Last Updated**: 2026-01-05  
 **Status**: ACTIVE  
-**Version**: 1.1
+**Version**: 1.2
+
+---
+
+## Review/Contribution
+
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this planning mode workflow guide by adding a comprehensive "Mobile Considerations in Planning Mode" section covering mobile-first planning principles (mobile-first mindset, touch-first design, mobile performance planning), mobile requirements in PRDs (device support, touch interactions, responsive design, performance targets, PWA considerations), mobile testing requirements in planning (device testing plan, network testing, performance testing, usability testing), mobile considerations in TASKS.md (mobile foundation tasks, touch interaction tasks, mobile performance tasks, PWA feature tasks), mobile documentation best practices (mobile-readable documentation, mobile-friendly code examples, mobile planning checklists), mobile performance planning (initial load performance, runtime performance, network performance, battery efficiency), mobile accessibility in planning (screen reader support, touch accessibility, visual accessibility), and a mobile considerations checklist for planning mode. Also fixed the date from 2025-01-05 to 2026-01-05. This addition ensures that mobile-first thinking is integrated into the planning process from the start, preventing mobile optimization from being an afterthought and ensuring all features are designed with mobile users in mind.
+
+---
 
 ---
 

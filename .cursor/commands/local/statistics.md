@@ -13,8 +13,13 @@ No parameters required.
 
 ## Workflow
 
-1. **Read Table**: Read lines 9-31 from `docs/reference/EXPERT_REVIEWS_TRACKER.md`
-2. **Parse Data**: Extract all data rows (lines 11-31)
+1. **Locate Table**: Dynamically find the table in `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+   - Find the "## Expert Review Statistics" section
+   - Find the header row (starts with "| Expert Name")
+   - Find the separator row (next line after header, starts with "|-------------")
+   - Find all data rows (lines starting with "|" that are not "Total:" or "Benford:")
+   - Data rows end when we hit "| Total:", "| Benford:", or a section header ("##" or "###")
+2. **Parse Data**: Extract all data rows (exclude Total and Benford rows)
 3. **Calculate Total Row**:
    - Sum numeric columns (Files Reviewed, Total Changes, Files Created, Substantive Reviews, Acknowledgment Only)
    - Calculate overall average for "Avg Changes per Review" (Total Changes / Files Reviewed)
@@ -22,7 +27,7 @@ No parameters required.
 4. **Calculate Benford Row**:
    - Calculate MAD (Mean Absolute Deviation) scores for Benford's Law for numeric columns
    - Skip date columns and average columns
-5. **Update Table**: Insert/update Total and Benford rows after the data rows (before line 32)
+5. **Update Table**: Insert/update Total and Benford rows after the data rows (before Review Details section)
 6. **Output**: Display confirmation message
 
 ## Statistics Calculations
@@ -62,6 +67,10 @@ Benford's Law states that in many naturally occurring collections of numbers, th
 3. Calculate observed percentage for each digit
 4. Calculate absolute deviation from expected percentage for each digit
 5. Calculate mean of absolute deviations (MAD)
+6. **Apply MAD Factor**:
+   - Find MAX: the largest leading digit that appears in the data
+   - Calculate FACTOR = 10 - MAX
+   - Final MAD = MAD / FACTOR
 
 **MAD Interpretation**:
 - MAD < 0.006: Close conformity (excellent) ✅
@@ -88,12 +97,13 @@ Benford's Law states that in many naturally occurring collections of numbers, th
 
 ## Implementation Notes
 
-### Table Structure
-- **Header Row**: Line 9
-- **Separator Row**: Line 10
-- **Data Rows**: Lines 11-31 (21 rows)
-- **Statistics Rows**: Lines 32-33 (Total and Benford)
-- **Next Section**: Line 34 (## Review Details)
+### Table Structure (Dynamic Location)
+- **Section Header**: "## Expert Review Statistics" (locate dynamically)
+- **Header Row**: First line starting with "| Expert Name" (after section header)
+- **Separator Row**: Next line after header (starts with "|-------------")
+- **Data Rows**: All lines starting with "|" that are NOT "Total:" or "Benford:" (until we hit statistics rows or next section)
+- **Statistics Rows**: Lines starting with "| Total:" and "| Benford:" (located dynamically)
+- **Next Section**: First line starting with "##" or "###" after the table (usually "## Review Details" or "### [Expert Name]")
 
 ### Column Index Mapping
 0. Expert Name (string)
@@ -155,7 +165,15 @@ def calculate_benford_mad(values):
     # Calculate MAD
     mad = sum(deviations) / 9
     
-    return mad
+    # Apply MAD Factor
+    # Find MAX: the largest leading digit that appears in the data
+    max_digit = max(leading_digits)
+    # Calculate FACTOR = 10 - MAX
+    factor = 10 - max_digit
+    # Final MAD = MAD / FACTOR
+    final_mad = mad / factor
+    
+    return final_mad
 ```
 
 ### Date Handling

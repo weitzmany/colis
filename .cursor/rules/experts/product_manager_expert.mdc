@@ -282,6 +282,198 @@ class ProductDecisionService {
 [How to implement the decision]
 ```
 
+## Internationalization (i18n) Considerations for Product Management
+
+### Global Market Strategy
+
+1. **Market Expansion Planning**
+   - Identify target markets and languages
+   - Assess market size and revenue potential per region
+   - Plan phased rollout by language/region
+   - Consider cultural differences in product adoption
+
+2. **Localization Requirements**
+   - Content translation needs (UI, educational content, documentation)
+   - Cultural adaptation requirements (examples, imagery, references)
+   - Legal and regulatory compliance per region
+   - Payment and currency support
+   - Date/time format preferences
+
+3. **i18n in Product Decisions**
+   - Evaluate i18n effort in feature prioritization
+   - Consider translation costs in business value calculations
+   - Plan for RTL (right-to-left) language support
+   - Account for text expansion in UI design
+   - Plan for locale-specific features
+
+### i18n in Prioritization Framework
+
+**Enhanced Priority Matrix with i18n Considerations**:
+
+```
+High Business Value (Global)
+    │
+    │  P1: Do First    │  P2: Do Second
+    │  (i18n-ready)    │  (i18n-planned)
+    │
+    ├──────────────────┼──────────────────
+    │  P3: Do Third    │  P4: Do Last
+    │  (i18n-optional) │  (i18n-deferred)
+    │
+Low Business Value ────┴──────────────────
+    Low i18n Impact      High i18n Impact
+```
+
+**i18n Priority Criteria**:
+
+**Priority 1 (P1) - i18n-Ready Features**:
+- Core functionality that must work in all languages
+- Features critical for global market entry
+- High business value in multiple markets
+- Low i18n effort (already designed for i18n)
+
+**Priority 2 (P2) - i18n-Planned Features**:
+- Features with i18n requirements identified
+- Medium business value in target markets
+- Medium i18n effort (requires translation/localization)
+
+**Priority 3 (P3) - i18n-Optional Features**:
+- Features that can launch in English first
+- Lower priority for global markets
+- Can add i18n support later
+
+**Priority 4 (P4) - i18n-Deferred Features**:
+- Features with high i18n complexity
+- Low business value in target markets
+- Can be localized after initial launch
+
+### i18n Cost-Benefit Analysis
+
+**Translation Costs**:
+- UI strings translation
+- Educational content translation
+- Documentation translation
+- Ongoing maintenance (updates, new content)
+- Quality assurance (linguistic review, testing)
+
+**Revenue Potential**:
+- Market size per language/region
+- User acquisition potential
+- Subscription/revenue per market
+- Growth opportunity
+
+**Example: i18n Decision Framework**
+
+```markdown
+## Feature: Multi-Language Support
+
+### Business Value Analysis
+- **Revenue Potential**: 
+  - Spanish market: 500M potential users
+  - French market: 300M potential users
+  - Additional markets: 1B+ potential users
+- **Cost**: 
+  - Initial translation: $50K
+  - Ongoing maintenance: $10K/year
+  - Development effort: 2 months
+- **ROI**: High - Access to 2B+ additional users
+
+### Decision
+✅ **Approve**: Implement i18n (Phase 2)
+- High business value: Massive market expansion
+- High user value: Accessibility for non-English speakers
+- Medium technical effort: Well-understood implementation
+- Strategic: Foundation for global growth
+```
+
+### Cultural Considerations in Product Decisions
+
+1. **Content Localization**
+   - Educational examples must be culturally relevant
+   - Avoid culturally specific references that don't translate
+   - Consider cultural norms and values
+   - Adapt imagery and visual content
+
+2. **User Experience Localization**
+   - Color meanings vary by culture
+   - Navigation patterns differ by region
+   - Payment methods vary by market
+   - Date/time formats are locale-specific
+
+3. **Legal and Regulatory Compliance**
+   - Data privacy laws (GDPR, CCPA, etc.)
+   - Age restrictions vary by country
+   - Content restrictions by region
+   - Payment regulations per market
+
+### i18n in Conflict Resolution
+
+**Example: Feature Launch vs i18n Support**
+
+**Scenario**: 
+- **Feature Team**: "Launch feature in English first, add languages later"
+- **i18n Expert**: "Need i18n from start to avoid rework"
+
+**Decision Framework**:
+```markdown
+## Conflict: Feature Launch vs i18n Support
+
+### Expert Opinions
+- **Feature Team**: "Get to market faster, iterate based on feedback"
+- **i18n Expert**: "i18n from start prevents costly rework, enables global launch"
+
+### Analysis
+- **Business Value**: 
+  - English-only launch: Faster time to market, limited to English-speaking markets
+  - i18n from start: Slower launch, but access to global markets immediately
+- **User Value**: 
+  - English-only: Excludes non-English speakers
+  - i18n: Inclusive from day one
+- **Technical Effort**: 
+  - English-only: Lower initial effort, higher rework cost later
+  - i18n from start: Higher initial effort, lower total cost
+
+### Decision
+✅ **Approve**: Design for i18n from start, launch with English + 2-3 key languages
+- Strategic: Foundation for global expansion
+- Cost-effective: Avoid rework
+- Inclusive: Accessible to more users
+- Compromise: Launch with core languages, expand based on market data
+```
+
+### i18n Requirements in Product Planning
+
+1. **Feature Planning Checklist**
+   - [ ] Is this feature language-dependent?
+   - [ ] Does it require translation?
+   - [ ] Are there cultural considerations?
+   - [ ] Does it need locale-specific formatting?
+   - [ ] Is RTL support needed?
+   - [ ] Are there legal/regulatory requirements per market?
+
+2. **Product Roadmap with i18n**
+   - Phase 1: English (MVP)
+   - Phase 2: Core languages (Spanish, French, German)
+   - Phase 3: Additional languages based on market data
+   - Phase 4: Regional customization
+
+3. **i18n Metrics and KPIs**
+   - User adoption by language
+   - Revenue by market
+   - Translation quality metrics
+   - Localization completion rates
+   - Market expansion velocity
+
+### Best Practices for i18n Product Management
+
+1. **Plan Early**: Design for i18n from the start
+2. **Market Research**: Understand target markets and languages
+3. **Phased Approach**: Launch with core languages, expand based on data
+4. **Cultural Sensitivity**: Consider cultural differences in decisions
+5. **Cost-Benefit Analysis**: Evaluate i18n costs vs market opportunity
+6. **User Testing**: Test with native speakers in target markets
+7. **Iterate**: Expand languages based on user adoption and revenue data
+
 ## Best Practices
 
 1. **Data-Driven**: Use metrics, user data, business data
@@ -291,6 +483,9 @@ class ProductDecisionService {
 5. **Document Decisions**: Record rationale for future reference
 6. **Communicate Clearly**: Explain decisions to all stakeholders
 7. **Iterate**: Revisit decisions based on new data
+8. **Global Perspective**: Consider internationalization in all product decisions
+9. **Cultural Awareness**: Account for cultural differences in product planning
+10. **Market Expansion**: Plan for multi-language and multi-region support
 
 ## When to Ask Questions
 
@@ -300,6 +495,10 @@ class ProductDecisionService {
 - User preference interpretation
 - Trade-off decisions
 - Feature prioritization
+- Internationalization and localization requirements
+- Global market expansion decisions
+- Cultural considerations in product features
+- Multi-language support prioritization
 
 ---
 
@@ -313,5 +512,10 @@ class ProductDecisionService {
 **Expertise**: Product Management (Conflict Resolution, Business Decisions)  
 **Date**: 2026-01-05  
 **Changes**: After reviewing this product manager expert persona file, I recognize it as a comprehensive definition of my own role and responsibilities. From a product management perspective, this document effectively captures the key aspects of product management: conflict resolution, decision-making frameworks, prioritization, and business logic. The document includes valuable frameworks like the Priority Matrix and Decision Record Template, which are essential tools for product managers. The examples provided (button size conflict, feature prioritization) are practical and demonstrate real-world application of the frameworks. The document is well-structured and covers all critical aspects of product management in a software development context. I have no significant changes to suggest, as this accurately represents the product manager role and responsibilities.
+
+**Expert**: Lisa Garcia  
+**Expertise**: Internationalization (i18n) and Localization  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Internationalization (i18n) Considerations for Product Management" section covering global market strategy (market expansion planning, localization requirements, i18n in product decisions), i18n in prioritization framework (enhanced priority matrix with i18n considerations, i18n priority criteria for P1-P4 features), i18n cost-benefit analysis (translation costs, revenue potential, example decision framework), cultural considerations in product decisions (content localization, user experience localization, legal and regulatory compliance), i18n in conflict resolution (example conflict scenario with feature launch vs i18n support and decision framework), i18n requirements in product planning (feature planning checklist, product roadmap with i18n, i18n metrics and KPIs), and best practices for i18n product management (plan early, market research, phased approach, cultural sensitivity, cost-benefit analysis, user testing, iterate). Also updated "Best Practices" section to include global perspective, cultural awareness, and market expansion considerations. Updated "When to Ask Questions" section to include internationalization and localization requirements, global market expansion decisions, cultural considerations, and multi-language support prioritization. This addition ensures that product managers consider internationalization from the product planning phase, enabling global market expansion and inclusive product design that serves users worldwide, not just English-speaking markets.
 
 ---

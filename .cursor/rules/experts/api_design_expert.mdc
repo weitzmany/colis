@@ -368,6 +368,296 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) {
 });
 ```
 
+## Analytics and Business Intelligence API Design
+
+### Analytics Event Tracking APIs
+
+1. **Event Ingestion Endpoints**
+   - High-throughput event collection
+   - Batch and real-time event processing
+   - Asynchronous processing for performance
+   - Idempotency for reliable event tracking
+
+2. **Event Tracking API Design**
+   ```php
+   // ✅ DO: Analytics event endpoint
+   // POST /api/v1/analytics/events
+   // Accepts single or batch events
+   
+   {
+     "events": [
+       {
+         "event_type": "question_viewed",
+         "user_id": "hashed_user_id",
+         "timestamp": "2026-01-05T12:00:00Z",
+         "properties": {
+           "question_id": 123,
+           "topic": "boolean_logic",
+           "session_id": "abc123"
+         }
+       }
+     ]
+   }
+   
+   // Response: 202 Accepted (async processing)
+   {
+     "data": {
+       "accepted": 1,
+       "queued": true
+     }
+   }
+   ```
+
+3. **Analytics Query APIs**
+   - Aggregated metrics endpoints
+   - Time-series data queries
+   - Filtering and grouping capabilities
+   - Efficient data retrieval patterns
+
+### Analytics Endpoint Design Patterns
+
+1. **Metrics Endpoints**
+   ```php
+   // ✅ DO: Analytics metrics endpoints
+   // GET /api/v1/analytics/metrics/engagement
+   // GET /api/v1/analytics/metrics/learning-outcomes
+   // GET /api/v1/analytics/metrics/content-performance
+   
+   // Response structure
+   {
+     "data": {
+       "metric": "engagement",
+       "period": "2026-01-01 to 2026-01-31",
+       "values": {
+         "active_users": 1250,
+         "sessions": 3450,
+         "avg_session_duration": 420
+       },
+       "trends": {
+         "active_users": "+15%",
+         "sessions": "+8%"
+       }
+     },
+     "meta": {
+       "generated_at": "2026-01-05T12:00:00Z",
+       "cache_ttl": 300
+     }
+   }
+   ```
+
+2. **Time-Series Data APIs**
+   ```php
+   // ✅ DO: Time-series analytics
+   // GET /api/v1/analytics/time-series?metric=active_users&granularity=daily&start_date=2026-01-01&end_date=2026-01-31
+   
+   {
+     "data": {
+       "metric": "active_users",
+       "granularity": "daily",
+       "series": [
+         {
+           "date": "2026-01-01",
+           "value": 1200
+         },
+         {
+           "date": "2026-01-02",
+           "value": 1250
+         }
+       ]
+     }
+   }
+   ```
+
+3. **Aggregation APIs**
+   ```php
+   // ✅ DO: Aggregated analytics
+   // GET /api/v1/analytics/aggregate?group_by=topic&metric=correct_answer_rate&period=last_30_days
+   
+   {
+     "data": {
+       "group_by": "topic",
+       "metric": "correct_answer_rate",
+       "results": [
+         {
+           "topic": "boolean_logic",
+           "correct_answer_rate": 0.75,
+           "total_answers": 1250
+         },
+         {
+           "topic": "data_structures",
+           "correct_answer_rate": 0.68,
+           "total_answers": 980
+         }
+       ]
+     }
+   }
+   ```
+
+### Analytics API Performance Considerations
+
+1. **Caching Strategy**
+   - Cache aggregated metrics (5-15 minutes TTL)
+   - Cache time-series data (1-5 minutes TTL)
+   - Invalidate cache on data updates
+   - Use ETags for conditional requests
+
+2. **Query Optimization**
+   - Pre-aggregate common metrics
+   - Use materialized views for complex queries
+   - Limit time range for time-series queries
+   - Paginate large result sets
+
+3. **Rate Limiting for Analytics**
+   - Different limits for event ingestion vs queries
+   - Higher limits for batch event submission
+   - Lower limits for expensive aggregation queries
+   - Per-user or per-API-key rate limits
+
+### Analytics API Privacy and Compliance
+
+1. **Data Anonymization**
+   - Hash user identifiers in event data
+   - Aggregate data to prevent user identification
+   - Remove PII from analytics responses
+   - Comply with GDPR, COPPA, FERPA
+
+2. **Privacy-Aware Analytics Endpoints**
+   ```php
+   // ✅ DO: Privacy-compliant analytics
+   // GET /api/v1/analytics/metrics/engagement
+   // Returns aggregated data only, no individual user data
+   
+   {
+     "data": {
+       "active_users": 1250,  // Aggregated count
+       "sessions": 3450,      // Aggregated count
+       // No individual user data
+     }
+   }
+   ```
+
+3. **Data Retention Policies**
+   - Define retention periods in API documentation
+   - Support data deletion requests
+   - Archive old data automatically
+   - Comply with legal requirements
+
+### Analytics API Documentation
+
+1. **OpenAPI Specification for Analytics**
+   ```yaml
+   paths:
+     /api/v1/analytics/events:
+       post:
+         summary: Submit analytics events
+         requestBody:
+           content:
+             application/json:
+               schema:
+                 type: object
+                 properties:
+                   events:
+                     type: array
+                     items:
+                       $ref: '#/components/schemas/AnalyticsEvent'
+         responses:
+           '202':
+             description: Events accepted for processing
+     
+     /api/v1/analytics/metrics/{metric}:
+       get:
+         summary: Get analytics metrics
+         parameters:
+           - name: metric
+             in: path
+             schema:
+               type: string
+               enum: [engagement, learning-outcomes, content-performance]
+           - name: period
+             in: query
+             schema:
+               type: string
+               enum: [last_7_days, last_30_days, last_90_days]
+         responses:
+           '200':
+             description: Metrics data
+             content:
+               application/json:
+                 schema:
+                   $ref: '#/components/schemas/MetricsResponse'
+   ```
+
+2. **Analytics Schema Definitions**
+   ```yaml
+   components:
+     schemas:
+       AnalyticsEvent:
+         type: object
+         required:
+           - event_type
+           - timestamp
+         properties:
+           event_type:
+             type: string
+             example: "question_viewed"
+           user_id:
+             type: string
+             description: "Hashed user identifier"
+           timestamp:
+             type: string
+             format: date-time
+           properties:
+             type: object
+             additionalProperties: true
+       
+       MetricsResponse:
+         type: object
+         properties:
+           data:
+             type: object
+             properties:
+               metric:
+                 type: string
+               period:
+                 type: string
+               values:
+                 type: object
+               trends:
+                 type: object
+   ```
+
+### Analytics API Best Practices
+
+1. **Event Ingestion**
+   - Accept batch events for efficiency
+   - Use async processing for high throughput
+   - Return 202 Accepted for async operations
+   - Provide idempotency keys for reliable tracking
+
+2. **Metrics Queries**
+   - Pre-aggregate common metrics
+   - Cache query results appropriately
+   - Support time range filtering
+   - Limit result set sizes
+
+3. **Performance**
+   - Optimize database queries
+   - Use read replicas for analytics queries
+   - Implement query timeouts
+   - Monitor API performance metrics
+
+4. **Privacy and Compliance**
+   - Aggregate data to prevent identification
+   - Hash user identifiers
+   - Document data retention policies
+   - Support data deletion requests
+
+5. **Documentation**
+   - Document all analytics endpoints
+   - Provide example queries
+   - Explain metric calculations
+   - Include privacy considerations
+
 ## Best Practices
 
 1. **Consistent Naming**: Use consistent naming conventions
@@ -377,6 +667,9 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) {
 5. **Error Handling**: Consistent error responses
 6. **Validation**: Validate all input
 7. **Security**: Authentication, authorization, rate limiting
+8. **Analytics Integration**: Design APIs with analytics in mind
+9. **Performance**: Optimize for analytics workloads
+10. **Privacy**: Ensure analytics APIs comply with privacy regulations
 
 ## When to Ask Questions
 
@@ -386,6 +679,19 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) {
 - Error handling approach
 - Documentation requirements
 - Breaking changes
+- Analytics event tracking requirements
+- Metrics and reporting API design
+- Analytics data aggregation needs
+- Privacy and compliance for analytics APIs
+
+---
+
+## Review/Contribution
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Analytics and Business Intelligence API Design" section covering analytics event tracking APIs (event ingestion endpoints with high-throughput collection, batch and real-time processing, asynchronous processing, idempotency), analytics endpoint design patterns (metrics endpoints with response structure examples, time-series data APIs with granularity options, aggregation APIs with group-by capabilities), analytics API performance considerations (caching strategy with TTL recommendations, query optimization with pre-aggregation and materialized views, rate limiting for analytics with different limits for ingestion vs queries), analytics API privacy and compliance (data anonymization with hashed identifiers, privacy-aware analytics endpoints with aggregated data only, data retention policies with deletion support), analytics API documentation (OpenAPI specification for analytics endpoints, analytics schema definitions with event and metrics schemas), and analytics API best practices (event ingestion with batch support and async processing, metrics queries with pre-aggregation and caching, performance optimization, privacy and compliance, documentation requirements). Also updated "Best Practices" section to include analytics integration, performance optimization for analytics workloads, and privacy compliance. Updated "When to Ask Questions" section to include analytics event tracking requirements, metrics and reporting API design, analytics data aggregation needs, and privacy and compliance for analytics APIs. This addition ensures that API designers consider analytics requirements from the design phase, enabling effective data collection, metrics reporting, and business intelligence capabilities through well-designed RESTful APIs that balance performance, privacy, and compliance.
 
 ---
 

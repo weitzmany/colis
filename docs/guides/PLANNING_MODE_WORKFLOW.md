@@ -687,6 +687,252 @@ When documenting features during planning mode, verify:
 - [ ] Mobile constraints are documented
 - [ ] Mobile optimization strategies are outlined
 
+### Copywriting Considerations in Planning Mode
+
+When creating documentation during planning mode, apply copywriting principles to ensure clarity, consistency, and user-friendliness. Good copywriting in planning documentation makes features easier to understand, implement, and communicate to stakeholders.
+
+#### Copywriting Principles for Planning Documentation
+
+1. **Clarity First**
+   - Use clear, simple language
+   - Avoid jargon unless necessary (and define it when used)
+   - Write in active voice
+   - Be specific and concrete
+   - Example: "Users can create custom study sets" vs "Custom study set creation functionality is available"
+
+2. **User-Centric Language**
+   - Write from the user's perspective
+   - Use "you" and "your" when appropriate
+   - Focus on user benefits, not just technical features
+   - Example: "You can track your progress" vs "Progress tracking feature is implemented"
+
+3. **Consistent Terminology**
+   - Use the same terms throughout documentation
+   - Create a glossary for key terms
+   - Avoid synonyms that create confusion
+   - Example: Always use "Practice Mode" not "Practice Mode" and "Practice Session" interchangeably
+
+4. **Action-Oriented**
+   - Use action verbs in task descriptions
+   - Make requirements actionable and specific
+   - Use imperative mood for instructions
+   - Example: "Create user authentication flow" vs "User authentication flow should be created"
+
+5. **Benefit-Focused**
+   - Explain why features matter, not just what they do
+   - Connect features to user goals
+   - Highlight value in descriptions
+   - Example: "Adaptive difficulty adjusts to your skill level, keeping you challenged but not overwhelmed" vs "Adaptive difficulty feature adjusts difficulty"
+
+#### Naming Conventions in Planning Mode
+
+When naming features, sections, and documentation during planning mode:
+
+**Feature Naming Best Practices**:
+- ✅ **DO**: Use clear, descriptive names
+  - "Exam Mode", "Progress Dashboard", "Daily Challenge"
+  - "Practice Session", "Study Set Creator", "Performance Analytics"
+- ❌ **DON'T**: Use vague or technical names
+  - "Feature 1", "Module A", "Component X"
+  - "UserService", "DataHandler", "Manager"
+
+**Section Naming Guidelines**:
+- ✅ **DO**: Use user-friendly navigation labels
+  - "Practice", "Exams", "Progress", "Settings"
+  - "My Dashboard", "Study Materials", "Help Center"
+- ❌ **DON'T**: Use technical or administrative terms
+  - "User Area", "Content Management", "Administrative Functions"
+  - "Data Entry", "System Configuration", "User Management"
+
+**Documentation Naming**:
+- ✅ **DO**: Use descriptive, searchable names
+  - "User Authentication PRD", "Mobile Optimization Guide"
+  - "API Integration Tasks", "Deployment Checklist"
+- ❌ **DON'T**: Use generic or unclear names
+  - "Feature PRD", "Documentation", "Tasks"
+  - "Guide 1", "Reference", "Notes"
+
+#### Writing Clear PRDs
+
+When writing Product Requirements Documents, apply copywriting principles:
+
+**PRD Headlines and Sections**:
+```markdown
+# Feature Name: Clear, Benefit-Focused Title
+
+## Overview
+[1-2 sentences that clearly explain what this feature does and why it matters]
+
+## Goals
+[Specific, measurable goals written from user perspective]
+- Help users [specific user benefit]
+- Enable [specific capability]
+- Improve [specific metric or experience]
+
+## User Stories
+- As a [user type], I want [clear action] so that [specific benefit]
+- Example: "As a student, I want to track my daily practice time so that I can see my learning progress"
+```
+
+**PRD Language Guidelines**:
+- Use active voice: "Users can create" not "Creation is possible"
+- Be specific: "Students can create up to 10 custom study sets" not "Users can create study sets"
+- Focus on benefits: "Saves time by auto-generating practice questions" not "Auto-generates questions"
+- Avoid ambiguity: "Requires 5 minutes to complete" not "Quick to complete"
+
+#### Writing Clear TASKS.md Files
+
+When writing implementation task lists, use clear, actionable language:
+
+**Task Description Best Practices**:
+```markdown
+## Phase 1: User Authentication Foundation
+- [ ] Create login form with email and password fields
+  - Dependencies: None
+  - Notes: Include "Remember me" checkbox and "Forgot password" link
+- [ ] Implement password validation (minimum 8 characters, 1 uppercase, 1 number)
+  - Dependencies: Login form created
+  - Notes: Show real-time validation feedback
+```
+
+**Task Writing Guidelines**:
+- Start with action verbs: "Create", "Implement", "Design", "Test"
+- Be specific: "Create login form" not "Work on authentication"
+- Include context: "Add error message for invalid email format" not "Add error handling"
+- Make it measurable: "Implement password reset flow" not "Handle password issues"
+
+#### Brand Voice in Planning Documentation
+
+Maintain consistent brand voice in planning documentation:
+
+**Voice Characteristics**:
+- **Professional yet Approachable**: Use professional language that's friendly and accessible
+- **Encouraging**: Frame challenges as opportunities
+- **Clear**: Avoid unnecessary complexity
+- **Confident**: Express certainty about solutions
+- **Engaging**: Make documentation interesting to read
+
+**Tone Examples for Planning Docs**:
+```markdown
+✅ DO: "This feature enables students to track their learning progress, helping them identify areas for improvement and celebrate their achievements."
+
+❌ DON'T: "This feature provides functionality for tracking user progress metrics and performance indicators."
+
+✅ DO: "Users can create custom study sets tailored to their specific learning needs."
+
+❌ DON'T: "The system supports the creation of user-defined study set configurations."
+```
+
+#### Copywriting Checklist for Planning Documentation
+
+When creating documentation during planning mode, verify:
+
+**Clarity**:
+- [ ] Language is clear and understandable
+- [ ] Technical terms are defined when first used
+- [ ] Sentences are concise and well-structured
+- [ ] Active voice is used throughout
+- [ ] No ambiguous or vague language
+
+**Consistency**:
+- [ ] Terminology is consistent across all documents
+- [ ] Feature names are used consistently
+- [ ] Section names follow naming conventions
+- [ ] Tone and voice are consistent
+- [ ] Formatting follows established patterns
+
+**User-Centricity**:
+- [ ] User perspective is maintained
+- [ ] Benefits are clearly explained
+- [ ] User stories are well-written
+- [ ] Language is accessible to target audience
+- [ ] Examples are user-focused
+
+**Actionability**:
+- [ ] Tasks are clearly defined
+- [ ] Requirements are specific and measurable
+- [ ] Instructions use imperative mood
+- [ ] Next steps are clear
+- [ ] Dependencies are explicit
+
+**Brand Alignment**:
+- [ ] Voice matches brand personality
+- [ ] Tone is appropriate for audience
+- [ ] Messaging is consistent with brand values
+- [ ] Language is professional yet approachable
+- [ ] Content is engaging and motivating
+
+#### Copywriting Templates for Planning Mode
+
+**Feature Description Template**:
+```markdown
+## [Feature Name]
+
+**What it does**: [Clear, one-sentence description]
+**Why it matters**: [User benefit in 1-2 sentences]
+**Key capabilities**: 
+- [Capability 1: User benefit]
+- [Capability 2: User benefit]
+- [Capability 3: User benefit]
+```
+
+**User Story Template**:
+```markdown
+As a [specific user type], 
+I want [clear, specific action], 
+so that [specific, measurable benefit].
+
+Example:
+As a physics student preparing for exams,
+I want to practice with timed quizzes,
+so that I can improve my speed and accuracy under exam conditions.
+```
+
+**Task Description Template**:
+```markdown
+- [ ] [Action verb] [specific deliverable] [context/requirements]
+  - Dependencies: [List dependencies]
+  - Notes: [Additional context, constraints, or considerations]
+  
+Example:
+- [ ] Create responsive login form with email and password fields, including validation
+  - Dependencies: Design mockups approved
+  - Notes: Must be accessible (WCAG 2.1 AA), mobile-friendly, include "Remember me" option
+```
+
+#### Common Copywriting Mistakes in Planning Documentation
+
+**Mistake 1: Overly Technical Language**
+- ❌ "Implement RESTful API endpoint for user authentication"
+- ✅ "Create login functionality that allows users to sign in with email and password"
+
+**Mistake 2: Vague Descriptions**
+- ❌ "Improve user experience"
+- ✅ "Reduce login time from 30 seconds to under 5 seconds"
+
+**Mistake 3: Passive Voice**
+- ❌ "The feature will be implemented"
+- ✅ "We will implement the feature" or "Implement the feature"
+
+**Mistake 4: Missing User Context**
+- ❌ "Add progress tracking"
+- ✅ "Enable students to see their learning progress over time"
+
+**Mistake 5: Inconsistent Terminology**
+- ❌ Using "Practice Mode", "Practice Session", and "Practice Feature" interchangeably
+- ✅ Consistently use "Practice Mode" throughout
+
+#### Copywriting Review Process
+
+Before finalizing planning documentation:
+
+1. **Read Aloud**: Read documentation aloud to catch awkward phrasing
+2. **User Test**: Have someone unfamiliar with the project read it
+3. **Consistency Check**: Verify terminology is consistent
+4. **Clarity Check**: Ensure every sentence is clear and understandable
+5. **Benefit Check**: Verify user benefits are clearly stated
+6. **Action Check**: Confirm all tasks and requirements are actionable
+
 ### Planning Mode Checklist
 
 Before considering planning mode complete, verify:
@@ -706,6 +952,10 @@ Before considering planning mode complete, verify:
 - [ ] **Mobile considerations are documented for all features**
 - [ ] **Mobile-first approach is applied**
 - [ ] **Mobile testing requirements are included**
+- [ ] **Copywriting principles are applied to all documentation**
+- [ ] **Naming conventions are consistent**
+- [ ] **Brand voice is maintained**
+- [ ] **Language is clear and user-centric**
 
 ---
 
@@ -732,4 +982,9 @@ Before considering planning mode complete, verify:
 **Expertise**: Documentation (Code, API, User Documentation)  
 **Date**: 2026-01-05  
 **Changes**: Expanded this planning mode workflow guide with comprehensive documentation best practices, including: documentation structure and organization guidelines (appropriate directories, naming conventions, file organization), documentation templates (PRD template structure, TASKS.md template structure with status tracking), effective user input capture techniques (immediate documentation checklist, content type identification, location determination, context capture), quality standards for planning mode documentation (completeness, clarity, consistency, accessibility), common documentation patterns (feature documentation pattern, guide documentation pattern, reference documentation pattern), detailed workflow examples (user requests new feature, user describes workflow, user makes decision), documentation maintenance practices (regular review, version control, cross-references, completeness checks), troubleshooting guide for common documentation issues, and a comprehensive planning mode checklist. These additions provide practical, actionable guidance for creating and maintaining high-quality documentation during planning mode, ensuring nothing is lost and all information is properly organized and accessible.
+
+**Expert**: Emma Rodriguez  
+**Expertise**: Copywriting (App Naming, Section Naming, Website Content)  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Copywriting Considerations in Planning Mode" section covering copywriting principles for planning documentation (clarity first with clear simple language and active voice, user-centric language with user perspective and benefit focus, consistent terminology with glossary creation, action-oriented language with action verbs and imperative mood, benefit-focused descriptions connecting features to user goals), naming conventions in planning mode (feature naming best practices with clear descriptive names vs vague technical names, section naming guidelines with user-friendly navigation labels vs technical administrative terms, documentation naming with descriptive searchable names vs generic unclear names), writing clear PRDs (PRD headlines and sections with benefit-focused titles, PRD language guidelines with active voice and specific measurable goals), writing clear TASKS.md files (task description best practices with action verbs and specific context, task writing guidelines with measurable deliverables), brand voice in planning documentation (voice characteristics including professional yet approachable, encouraging, clear, confident, engaging with tone examples), copywriting checklist for planning documentation (clarity checklist with clear language and active voice, consistency checklist with terminology and naming conventions, user-centricity checklist with user perspective and benefits, actionability checklist with clear tasks and requirements, brand alignment checklist with voice and tone consistency), copywriting templates for planning mode (feature description template, user story template, task description template), common copywriting mistakes in planning documentation (overly technical language, vague descriptions, passive voice, missing user context, inconsistent terminology with examples and corrections), and copywriting review process (read aloud, user test, consistency check, clarity check, benefit check, action check). Also updated the planning mode checklist to include copywriting principles, naming conventions, brand voice, and clear user-centric language. This addition ensures that all documentation created during planning mode follows copywriting best practices, making features easier to understand, implement, and communicate to stakeholders while maintaining brand consistency and user-centricity.
 

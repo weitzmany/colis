@@ -1,6 +1,6 @@
 # Calculate Statistics for Expert Reviews Tracker
 
-Calculate and update statistics rows (Total, Benford's Law MAD scores, and Acceptance p-values) in the expert review statistics table.
+Calculate and update statistics rows (Total, Benford's Law MAD scores, and Acceptance p-values) in the expert review statistics table, and update the total row in the files reviewed statistics table.
 
 ## Usage
 
@@ -13,29 +13,39 @@ No parameters required.
 
 ## Workflow
 
-1. **Locate Table**: Dynamically find the table in `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+1. **Locate Expert Review Statistics Table**: Dynamically find the table in `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
    - Find the "## Expert Review Statistics" section
    - Find the header row (starts with "| Expert Name")
    - Find the separator row (next line after header, starts with "|-------------")
    - Find all data rows (lines starting with "|" that are not "Total:", "Benford:", or "Acceptance:")
    - Data rows end when we hit "| Total:", "| Benford:", "| Acceptance:", or a section header ("##" or "###")
-2. **Parse Data**: Extract all data rows (exclude Total and Benford rows)
-3. **Calculate Total Row**:
+2. **Parse Expert Data**: Extract all data rows (exclude Total and Benford rows)
+3. **Calculate Expert Total Row**:
    - Sum numeric columns (Files Reviewed, Total Changes, Files Created, Structure Reviewed, Files Rearranged)
    - Calculate overall average for "Avg Changes per Review" (Total Changes / Files Reviewed)
    - Find most recent date in "Last Review Date" column
-4. **Calculate Benford Row**:
+4. **Calculate Expert Benford Row**:
    - Calculate MAD (Mean Absolute Deviation) scores for Benford's Law for numeric columns
    - Skip date columns and average columns
-5. **Calculate Acceptance Row**:
+5. **Calculate Expert Acceptance Row**:
    - For each numeric column (excluding dates and averages):
      - K = number of experts (number of rows)
      - N = sum of column values
      - x = minimum value in that column
      - p = P(X ≤ x) where X ~ Binomial(N, 1/K)
    - Format p-values as percentages with emojis based on breakpoints
-6. **Update Table**: Insert/update Total, Benford, and Acceptance rows after the data rows (before Review Details section)
-7. **Output**: Display confirmation message
+6. **Update Expert Table**: Insert/update Total, Benford, and Acceptance rows after the data rows (before next section)
+7. **Locate Files Reviewed Statistics Table**: Dynamically find the "## Files Reviewed Statistics" section:
+   - Find the "## Files Reviewed Statistics" section
+   - Find the header row (starts with "| File Path")
+   - Find the separator row (next line after header, starts with "|-----------")
+   - Find all data rows (lines starting with "|" that are not "**Total**")
+   - Data rows end when we hit "| **Total**" or a section header ("##" or "###")
+8. **Parse Files Data**: Extract all data rows (exclude Total row)
+9. **Calculate Files Total Row**:
+   - Sum the "Reviews" column (column index 1)
+   - Update or insert "| **Total** | **[sum]** |" row after all data rows
+10. **Output**: Display confirmation message
 
 ## Statistics Calculations
 
@@ -228,9 +238,12 @@ def calculate_benford_mad(values):
 
 ```
 Statistics calculated
-Total row updated
-Benford row updated
-Acceptance row updated
+Expert Review Statistics:
+  Total row updated
+  Benford row updated
+  Acceptance row updated
+Files Reviewed Statistics:
+  Total row updated
 ```
 
 ## Error Handling
@@ -244,7 +257,7 @@ Acceptance row updated
 ## Notes
 
 - The command modifies the file in place
-- Statistics rows are inserted after data rows (before Review Details section)
+- Statistics rows are inserted after data rows (before next section)
 - If statistics rows already exist, they are updated
 - MAD scores are formatted to 4 decimal places
 - Only numeric columns (excluding dates and averages) get Benford scores
@@ -252,6 +265,8 @@ Acceptance row updated
 - Acceptance p-values are calculated using binomial distribution (scipy.stats.binom or equivalent)
 - P-values are formatted as percentages with 2 decimal places
 - Only numeric columns (excluding dates and averages) get Acceptance p-values
+- Files Reviewed Statistics table total is calculated by summing the "Reviews" column
+- Files Reviewed Statistics total row format: `| **Total** | **[sum]** |`
 
 ### Mobile Optimization Considerations
 

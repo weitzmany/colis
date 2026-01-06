@@ -3,8 +3,8 @@
 This document tracks all expert reviews and contributions across the project.
 
 **Last Updated**: 2026-01-05
-**Last reviewer**: Arthur Davis
-**Last file**: docs/features/project-template/PRD.md
+**Last reviewer**: Andrew Lee
+**Last file**: docs/guides/COMMAND_VS_SCRIPT.md
 
 ## Expert Review Statistics
 
@@ -23,7 +23,7 @@ This document tracks all expert reviews and contributions across the project.
 | David Anderson | Database (Schema Design, Query Optimization, Migrations) | 2 | 2 | 2026-01-05 | 0 | 1.0 | 0 | 0 |
 | Sarah Johnson | Security (STRIDE Threat Modeling, OWASP Top 10) | 2 | 2 | 2026-01-05 | 0 | 1.0 | 0 | 0 |
 | Samuel Rodriguez | Backend Development | 2 | 2 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
-| Andrew Lee | RESTful API Design | 2 | 2 | 2026-01-05 | 0 | 1.0 | 2 | 0 |
+| Andrew Lee | RESTful API Design | 3 | 3 | 2026-01-05 | 0 | 1.0 | 2 | 0 |
 | Constance White | Compliance (Educational Platforms, Legal Requirements) | 1 | 1 | 2026-01-05 | 0 | 1.0 | 0 | 0 |
 | Daniel Kim | Business Intelligence and Analytics | 1 | 1 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
 | Thomas Mitchell | Testing (TDD, Unit Tests, Integration Tests, E2E Tests) | 1 | 1 | 2026-01-05 | 0 | 1.0 | 0 | 0 |
@@ -34,7 +34,7 @@ This document tracks all expert reviews and contributions across the project.
 | Devin Patel | DevOps, CI/CD, and Deployment | 1 | 1 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
 | Allison Foster | Accessibility (WCAG Compliance, Inclusive Design) | 1 | 1 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
 | Daisy Thompson | UI/UX Design | 1 | 1 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
-| Total: | | 48 | 48 | 2026-01-05 | 2 | 1.00 | 31 | 0 |
+| Total: | | 49 | 49 | 2026-01-05 | 2 | 1.00 | 31 | 0 |
 | Benford: | | ⚠️ 0.0140 | ⚠️ 0.0140 | | ❌ 0.0173 | | ❌ 0.0157 | ❌ - |
 | Acceptance: | | ✅ 41.18% | ✅ 41.18% | | ✅ 91.84% | | ✅ 26.73% | ❌ - |
 
@@ -120,7 +120,7 @@ This document tracks all expert reviews and contributions across the project.
 | `docs/features/testing-utilities/PRD.md` | 0 |
 | `docs/features/typescript-config/PRD.md` | 0 |
 | `docs/features/validation-tool/PRD.md` | 0 |
-| `docs/guides/COMMAND_VS_SCRIPT.md` | 0 |
+| `docs/guides/COMMAND_VS_SCRIPT.md` | 1 |
 | `docs/guides/CURSOR_PACKAGE_NPM.md` | 0 |
 | `docs/guides/CURSOR_PACKAGE_SETUP.md` | 0 |
 | `docs/guides/DOCUMENTATION_STANDARDS_ENFORCEMENT.md` | 0 |
@@ -133,14 +133,14 @@ This document tracks all expert reviews and contributions across the project.
 | `docs/reference/GENERIC_RULES_REVIEW.md` | 0 |
 | `docs/reference/PROJECT_PURPOSE.md` | 0 |
 | `docs/reference/PROJECT_STRUCTURE_REVIEW.md` | 0 |
-| **Total** | **47** |
+| **Total** | **48** |
 
 
 ## Statistics Summary
 
 - **Total Experts**: 24
-- **Total Reviews**: 48
-- **Total Files Reviewed**: 45
+- **Total Reviews**: 49
+- **Total Files Reviewed**: 46
 - **Total Files Created**: 2
 - **Experts with Reviews**: 24
 - **Experts without Reviews**: 0

@@ -135,6 +135,274 @@ When deciding between commands and scripts for mobile development:
    - Commands: More suitable for mobile development workflows (SSH, mobile terminals)
    - Scripts: Better for CI/CD and automated processes that don't run on mobile
 
+## RESTful Design Principles for Commands and Scripts
+
+Applying RESTful API design principles to command and script architecture can improve consistency, maintainability, and developer experience.
+
+### Resource-Based Command Design
+
+Commands should follow resource-based thinking similar to RESTful APIs:
+
+**✅ DO: Resource-Oriented Commands**
+- `/local/review` - Operates on review resources
+- `/local/expert` - Retrieves expert resources
+- `/local/file` - Operates on file resources
+
+**❌ DON'T: Action-Oriented Commands**
+- `/local/do-review` - Verb-based naming
+- `/local/get-expert` - Unnecessary verb
+- `/local/select-file` - Action-oriented
+
+### HTTP Method Equivalents in Commands
+
+Map HTTP methods to command patterns:
+
+| HTTP Method | Command Pattern | Script Pattern | Use Case |
+|-------------|----------------|----------------|----------|
+| GET | `/local/resource` | `get-resource.sh` | Retrieve/read data |
+| POST | `/local/resource` with params | `create-resource.sh` | Create new resources |
+| PUT | `/local/resource` with update params | `update-resource.sh` | Full resource update |
+| PATCH | `/local/resource` with partial params | `patch-resource.sh` | Partial resource update |
+| DELETE | `/local/resource` with delete flag | `delete-resource.sh` | Remove resources |
+
+**Example Command Patterns:**
+```markdown
+# GET equivalent - Retrieves information
+/local/review              # List or show review options
+/local/expert              # Get expert information
+
+# POST equivalent - Creates resources
+/local/review expert="new" # Create new review with expert
+/local/review file="new"   # Create new file with review
+
+# PUT/PATCH equivalent - Updates resources
+/local/review file="README.md" # Update file via review
+/local/update-tracker          # Update tracker resource
+```
+
+### Consistent Response Patterns
+
+Just as REST APIs use consistent response structures, commands and scripts should follow predictable patterns:
+
+**Command Response Pattern:**
+```markdown
+## Expected Output Format
+
+Commands should output structured, parseable responses:
+- Success: Clear confirmation with relevant data
+- Error: Descriptive error message with exit code
+- Status: Progress indicators for long-running operations
+```
+
+**Script Response Pattern:**
+```bash
+# ✅ DO: Consistent script output
+# Success output to stdout
+echo "Resource created: $resource_path"
+
+# Error output to stderr
+echo "Error: Resource not found" >&2
+exit 1
+
+# Exit codes: 0 = success, non-zero = error
+```
+
+### Error Handling Consistency
+
+Apply RESTful error handling patterns to commands and scripts:
+
+**Error Response Structure:**
+```bash
+# Script error response (similar to API error format)
+{
+  "error": {
+    "message": "File not found",
+    "code": "FILE_NOT_FOUND",
+    "details": {
+      "file": "docs/example.md",
+      "path": "./docs/example.md"
+    }
+  },
+  "timestamp": "2026-01-05T12:00:00Z"
+}
+```
+
+**Command Error Handling:**
+- Use consistent error messages
+- Provide actionable error details
+- Include error codes for programmatic handling
+- Follow RESTful status code concepts (200/201/400/404/500 equivalents)
+
+### Versioning Commands and Scripts
+
+Apply API versioning strategies to commands:
+
+**Command Versioning:**
+```markdown
+# Versioned commands (similar to /api/v1/)
+/local/v1/review
+/local/v2/review  # New version with breaking changes
+
+# Or use command parameters for versioning
+/local/review version=2
+```
+
+**Script Versioning:**
+```bash
+# Versioned scripts
+review-v1.sh
+review-v2.sh
+
+# Or use semantic versioning in script names
+review-1.0.0.sh
+review-1.1.0.sh
+```
+
+**Deprecation Strategy:**
+- Announce deprecated commands/scripts in documentation
+- Provide migration guides (like API migration guides)
+- Support old versions for transition period
+- Clear deprecation timelines
+
+### Request/Response Validation
+
+Apply API validation principles:
+
+**Command Parameter Validation:**
+```markdown
+## Command Parameters (similar to API query parameters)
+
+/local/review expert="Andrew Lee"  # Required parameter
+/local/review file="README.md"      # Required parameter
+/local/review tag="api"            # Optional parameter
+
+# Validation rules:
+# - Required parameters must be present
+# - Parameter format validation
+# - Type checking (string, integer, boolean)
+```
+
+**Script Input Validation:**
+```bash
+# ✅ DO: Validate script inputs (like API input validation)
+if [ -z "$1" ]; then
+    echo "Error: Required parameter missing" >&2
+    exit 1
+fi
+
+# Validate file exists
+if [ ! -f "$file_path" ]; then
+    echo "Error: File not found: $file_path" >&2
+    exit 1
+fi
+```
+
+### Documentation Standards
+
+Apply OpenAPI/Swagger documentation principles to commands:
+
+**Command Documentation Structure:**
+```markdown
+## Command Documentation (similar to OpenAPI spec)
+
+### /local/review
+
+**Description**: Review files with expert personas
+
+**Parameters**:
+- `expert` (optional, string): Expert name or "new"
+- `file` (optional, string): File name or "new"
+
+**Examples**:
+- `/local/review` - Random expert, random file
+- `/local/review expert="Andrew Lee"` - Specific expert
+- `/local/review file="README.md"` - Specific file
+
+**Errors**:
+- `EXPERT_NOT_FOUND`: Expert doesn't exist
+- `FILE_NOT_FOUND`: File doesn't exist
+```
+
+**Script Documentation:**
+```bash
+#!/bin/bash
+#
+# Script: review-file.sh
+# Description: Review a file with specified expert
+# 
+# Parameters:
+#   $1 - Expert name (required)
+#   $2 - File path (required)
+#
+# Exit codes:
+#   0 - Success
+#   1 - Invalid parameters
+#   2 - Expert not found
+#   3 - File not found
+```
+
+### Consistency Principles
+
+Apply RESTful consistency principles:
+
+1. **Naming Consistency**: Use consistent naming patterns across all commands and scripts
+2. **Parameter Consistency**: Similar operations use similar parameter names
+3. **Response Consistency**: Similar operations return similar response formats
+4. **Error Consistency**: Consistent error handling and messaging
+5. **Documentation Consistency**: All commands/scripts documented with same structure
+
+**Example Consistent Patterns:**
+```markdown
+# Consistent command structure
+/local/{resource}                    # List/retrieve resource
+/local/{resource} {id}               # Get specific resource
+/local/{resource} {action}           # Perform action on resource
+
+# Consistent script structure
+{resource}-list.sh                   # List resources
+{resource}-get.sh {id}              # Get resource
+{resource}-{action}.sh {id}         # Action on resource
+```
+
+### Rate Limiting and Resource Management
+
+Apply API rate limiting concepts to commands:
+
+**Command Execution Limits:**
+- Limit concurrent command executions
+- Queue long-running commands
+- Implement command execution timeouts
+- Track command usage metrics
+
+**Script Resource Management:**
+- Limit script execution time
+- Monitor script resource usage
+- Implement script cancellation
+- Queue expensive script operations
+
+### API-Like Command Contracts
+
+Define clear contracts for commands (like API contracts):
+
+**Command Contract Example:**
+```markdown
+## Command Contract: /local/review
+
+**Input Contract**:
+- Parameters: expert (string, optional), file (string, optional)
+- Validation: Expert must exist or be "new", file must exist or be "new"
+
+**Output Contract**:
+- Success: Expert name and file path
+- Error: Error message with code and details
+- Side Effects: Updates tracker, creates files, commits changes
+
+**Behavior Contract**:
+- Atomicity: All-or-nothing operations
+- Idempotency: Safe to retry
+- Consistency: Updates tracker atomically
+```
+
 ## SEO Considerations for This Guide
 
 When this guide is published for web access:
@@ -169,6 +437,11 @@ When this guide is published for web access:
 **Expertise**: Mobile Optimization  
 **Date**: 2026-01-05  
 **Changes**: Added mobile considerations for commands vs scripts section covering mobile execution environment (interactive workflows, terminal compatibility, command availability limitations), mobile performance (lightweight commands, slower file system operations), mobile battery efficiency (battery-efficient workflows, minimize automated script impact), and mobile development workflow (SSH/mobile terminals, CI/CD automation). This addition ensures decisions between commands and scripts account for mobile device constraints and mobile development workflows.
+
+**Expert**: Andrew Lee  
+**Expertise**: RESTful API Design  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "RESTful Design Principles for Commands and Scripts" section applying RESTful API design principles to command and script architecture. The addition includes resource-based command design (resource-oriented naming conventions, avoiding action-oriented commands), HTTP method equivalents in commands and scripts (GET/POST/PUT/PATCH/DELETE patterns with command and script examples), consistent response patterns (structured command outputs, standardized script responses), error handling consistency (RESTful error response structures, actionable error details, error codes), versioning commands and scripts (API versioning strategies applied to commands, script versioning patterns, deprecation strategies with migration guides), request/response validation (command parameter validation with examples, script input validation patterns), documentation standards (OpenAPI/Swagger-like documentation structure for commands, script documentation patterns with exit codes), consistency principles (naming, parameter, response, error, and documentation consistency across commands and scripts), rate limiting and resource management concepts, and API-like command contracts (input/output/behavior contracts with examples). This addition ensures commands and scripts follow RESTful design principles, resulting in consistent, maintainable, and developer-friendly command and script architectures that mirror best practices from RESTful API design.
 
 ---
 

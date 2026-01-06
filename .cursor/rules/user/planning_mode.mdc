@@ -44,6 +44,12 @@ This means:
 - Creating guides, references, and architecture documentation
 - Describing projects, workflows, and plans
 - Documenting all user requests, ideas, and decisions
+- Business value assessment and prioritization
+- Product roadmap planning
+- Stakeholder requirement documentation
+- Business requirements and success metrics definition
+- Feature prioritization and decision-making
+- Business model and monetization strategy planning
 
 ## Prohibited Activities
 
@@ -75,3 +81,157 @@ To check if planning mode is active:
 - Verify the existence of `docs/.PLANNING_MODE` file
 - If the file exists, planning mode is **ACTIVE**
 - If the file does not exist, planning mode is **INACTIVE**
+
+## Product Management Considerations in Planning Mode
+
+### Business Value Assessment During Planning
+
+1. **Feature Prioritization Framework**
+   - Evaluate business value (revenue potential, market opportunity, strategic alignment)
+   - Assess user value (user needs, engagement potential, satisfaction impact)
+   - Consider technical feasibility (development effort, risk, dependencies)
+   - Apply priority matrix: High Business Value + High User Value = Priority 1
+
+2. **Business Requirements Documentation**
+   - Document business objectives for each feature
+   - Define success metrics and KPIs
+   - Identify revenue opportunities
+   - Assess market fit and competitive positioning
+   - Document business constraints and limitations
+
+3. **Stakeholder Alignment**
+   - Document stakeholder requirements
+   - Balance competing priorities
+   - Resolve conflicts between expert teams
+   - Ensure business goals are clearly communicated
+   - Align technical decisions with business objectives
+
+### Product Roadmap Planning
+
+1. **Roadmap Structure**
+   - Phase 1: MVP features (highest business value, essential functionality)
+   - Phase 2: Core features (high business value, user engagement)
+   - Phase 3: Enhancement features (medium business value, user satisfaction)
+   - Phase 4: Nice-to-have features (lower priority, future consideration)
+
+2. **Feature Prioritization in Planning**
+   - Use priority matrix (Business Value vs User Value)
+   - Consider compliance requirements (legal, regulatory - non-negotiable)
+   - Evaluate technical dependencies
+   - Assess market timing and competitive landscape
+   - Document prioritization rationale
+
+3. **Business Model Considerations**
+   - Document monetization strategy (freemium, subscription, one-time)
+   - Plan feature tiers and access levels
+   - Consider pricing models
+   - Assess revenue potential per feature
+   - Plan for scalability and growth
+
+### Decision-Making in Planning Mode
+
+1. **Product Decisions**
+   - Document all product decisions with rationale
+   - Include business value analysis
+   - Consider user impact assessment
+   - Evaluate technical feasibility
+   - Document trade-offs and alternatives considered
+
+2. **Conflict Resolution**
+   - Mediate between competing expert requirements
+   - Balance business needs with technical constraints
+   - Resolve prioritization conflicts
+   - Make data-driven decisions
+   - Document decision rationale for future reference
+
+3. **Requirements Documentation**
+   - Create comprehensive PRDs (Product Requirements Documents)
+   - Include business context and objectives
+   - Define success criteria and metrics
+   - Document user stories and use cases
+   - Specify acceptance criteria
+
+### Business Value Documentation
+
+1. **Feature Business Cases**
+   - Revenue potential analysis
+   - Market opportunity assessment
+   - User acquisition potential
+   - Engagement and retention impact
+   - Strategic value and competitive advantage
+
+2. **ROI Analysis**
+   - Development cost estimation
+   - Maintenance cost considerations
+   - Revenue potential calculation
+   - Time-to-market assessment
+   - Risk evaluation
+
+3. **Success Metrics**
+   - Define KPIs for each feature
+   - Establish baseline metrics
+   - Plan measurement and tracking
+   - Set success criteria
+   - Document analytics requirements
+
+### Product Planning Best Practices
+
+1. **Start with Business Value**
+   - Always consider business impact first
+   - Align features with business objectives
+   - Prioritize revenue-generating features
+   - Consider market timing and competition
+
+2. **User-Centric Planning**
+   - Understand user needs and pain points
+   - Prioritize features that solve real problems
+   - Consider user experience and satisfaction
+   - Plan for user feedback and iteration
+
+3. **Data-Driven Decisions**
+   - Use market research and user data
+   - Analyze competitive landscape
+   - Consider user preferences and behavior
+   - Make decisions based on evidence, not assumptions
+
+4. **Stakeholder Management**
+   - Document all stakeholder requirements
+   - Balance competing priorities
+   - Communicate decisions clearly
+   - Manage expectations appropriately
+
+5. **Documentation Standards**
+   - Create comprehensive PRDs
+   - Document business rationale
+   - Include success metrics
+   - Plan for measurement and tracking
+   - Maintain decision logs
+
+### Planning Mode Product Management Checklist
+
+- [ ] Business value assessed for all features
+- [ ] User value evaluated for prioritization
+- [ ] Technical feasibility considered
+- [ ] Compliance requirements identified (non-negotiable)
+- [ ] Product roadmap created with phases
+- [ ] Feature prioritization documented
+- [ ] Business requirements captured in PRDs
+- [ ] Success metrics and KPIs defined
+- [ ] Stakeholder requirements documented
+- [ ] Decision rationale recorded
+- [ ] Business model considerations documented
+- [ ] Revenue potential analyzed
+- [ ] Market opportunity assessed
+- [ ] Competitive positioning considered
+- [ ] Risk evaluation completed
+
+---
+
+## Review/Contribution
+
+**Expert**: Patricia Martinez  
+**Expertise**: Product Management (Conflict Resolution, Business Decisions)  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Product Management Considerations in Planning Mode" section covering business value assessment during planning (feature prioritization framework with priority matrix, business requirements documentation with business objectives and success metrics, stakeholder alignment with conflict resolution), product roadmap planning (roadmap structure with phased approach, feature prioritization in planning with priority matrix and compliance considerations, business model considerations with monetization strategy and revenue potential), decision-making in planning mode (product decisions with business value analysis and trade-offs, conflict resolution with mediation and data-driven decisions, requirements documentation with PRDs and acceptance criteria), business value documentation (feature business cases with revenue potential and market opportunity, ROI analysis with cost estimation and risk evaluation, success metrics with KPIs and measurement planning), product planning best practices (start with business value, user-centric planning, data-driven decisions, stakeholder management, documentation standards), and planning mode product management checklist covering business value assessment, user value evaluation, technical feasibility, compliance requirements, product roadmap, feature prioritization, business requirements, success metrics, stakeholder requirements, decision rationale, business model, revenue potential, market opportunity, competitive positioning, and risk evaluation. Also updated "Allowed Activities" section to include business value assessment, product roadmap planning, stakeholder requirement documentation, business requirements definition, feature prioritization, and business model planning. This addition ensures that planning mode incorporates product management principles from the start, enabling strategic planning that balances business value, user needs, and technical feasibility, ensuring that all planning activities consider product strategy, market positioning, and business objectives.
+
+---

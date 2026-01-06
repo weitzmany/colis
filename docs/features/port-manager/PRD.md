@@ -1,14 +1,46 @@
 # Port Manager - PRD
 
 **Feature Name**: Port Manager  
-**Type**: Development Tool Package (npm)  
+**Type**: Core Feature (part of `@your-org/core` package)  
 **Status**: Planning  
 **Priority**: P1 (High)  
-**Created**: 2026-01-05
+**Created**: 2026-01-05  
+**Package Architecture**: Core Package Feature
+
+## Package Context
+
+Port Manager is a **core feature** within the `@your-org/core` package. The core package contains:
+
+- **Features**: Port Manager, Authentication, Database Tools, and more
+- **Rules**: Cursor rules, expert personas, user rules
+- **Commands**: Cursor commands for common tasks
+- **Shared Utilities**: Database abstractions, configuration utilities
+
+Other packages (e.g., `@your-org/task-manager`) depend on `@your-org/core` and can use Port Manager along with other core features.
+
+See [Package Architecture Strategy](../../architecture/PACKAGE_ARCHITECTURE.md) for details.
 
 ## Overview
 
-Port Manager is an npm package that eliminates port conflicts and simplifies development workflow. It automatically manages port assignments across all your projects through a centralized registry, ensuring consistent configuration and preventing conflicts before they happen.
+Port Manager is a core feature in `@your-org/core` that eliminates port conflicts and simplifies development workflow. It automatically manages port assignments across all your projects through a centralized registry, ensuring consistent configuration and preventing conflicts before they happen.
+
+**Installation**:
+```bash
+# Install core package (includes Port Manager and other features)
+npm install @your-org/core
+
+# Use Port Manager
+import { PortManager } from '@your-org/core/features/port-manager';
+```
+
+**As Part of Feature Package**:
+```bash
+# Install feature package (automatically includes core)
+npm install @your-org/task-manager
+
+# Port Manager available via core dependency
+import { PortManager } from '@your-org/core/features/port-manager';
+```
 
 ## Problem Statement
 
@@ -1179,8 +1211,9 @@ port-manager migrate --project-path <path> [--port <port>]
 
 The Port Manager provides a clean, RESTful-inspired programmatic API that follows consistent design principles:
 
+**Import from Core Package**:
 ```typescript
-import { PortManager } from 'port-manager';
+import { PortManager } from '@your-org/core/features/port-manager';
 
 const manager = new PortManager({
   database: {
@@ -2132,10 +2165,49 @@ Port Manager should support developers working on mobile development projects an
 - **Ionic**: Ionic serve port management
 - **Mobile Backends**: API server port management for mobile apps
 
+## Package Architecture
+
+### Core Package Integration
+
+Port Manager is implemented as a feature module within `@your-org/core`. This architecture provides:
+
+1. **Shared Infrastructure**: Uses core's shared database abstractions and utilities
+2. **Consistent Patterns**: Follows core package patterns and conventions
+3. **Easy Integration**: Other core features can use Port Manager
+4. **Feature Packages**: Feature packages (e.g., `@your-org/task-manager`) can use Port Manager via core dependency
+
+### Usage in Feature Packages
+
+Feature packages that depend on `@your-org/core` can use Port Manager:
+
+```typescript
+// In @your-org/task-manager
+import { PortManager } from '@your-org/core/features/port-manager';
+
+// Use Port Manager for task manager's port needs
+const portManager = new PortManager({...});
+```
+
+### Export Strategy
+
+Port Manager is exported from core package as:
+
+```typescript
+// @your-org/core/src/index.ts
+export { PortManager } from './features/port-manager';
+export * from './features/port-manager';
+
+// Usage
+import { PortManager } from '@your-org/core/features/port-manager';
+// Or
+import { PortManager } from '@your-org/core';
+```
+
 ## Related Documentation
 
-- [Port Management Strategy](../guides/PORT_MANAGEMENT_STRATEGY.md)
-- [Projects Ports Reference](../reference/PROJECTS_PORTS.md)
+- [Package Architecture Strategy](../../architecture/PACKAGE_ARCHITECTURE.md) - Core package architecture
+- [Port Management Strategy](../guides/PORT_MANAGEMENT_STRATEGY.md) - Port management strategy
+- [Projects Ports Reference](../reference/PROJECTS_PORTS.md) - Current port assignments
 
 ---
 

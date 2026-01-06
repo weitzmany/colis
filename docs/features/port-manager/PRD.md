@@ -1596,6 +1596,283 @@ interface ConflictReport {
 - **What You Get**: Team collaboration features, cloud sync, advanced analytics, dedicated support, custom integrations
 - **Best For**: Organizations that need enterprise-grade port management
 
+## Security Considerations
+
+### Security Threat Analysis (STRIDE Framework)
+
+#### 1. Spoofing (Identity Attacks)
+
+**Threat**: Unauthorized access to port registry or configuration files
+
+**Mitigation**:
+- **File Permissions**: Restrict database file permissions (600 for SQLite, owner-only access)
+- **Database Credentials**: Secure storage of MySQL/PostgreSQL credentials (environment variables, not hardcoded)
+- **User Context**: Run CLI with appropriate user permissions (no root/sudo required)
+- **Access Control**: Database-level access control for shared databases (MySQL/PostgreSQL)
+
+**Implementation**:
+```typescript
+// Secure file permissions for SQLite database
+import { chmod } from 'fs-extra';
+await chmod(dbPath, 0o600); // Owner read/write only
+```
+
+#### 2. Tampering (Data Integrity)
+
+**Threat**: Unauthorized modification of port assignments or configuration files
+
+**Mitigation**:
+- **Input Validation**: Validate all inputs (project names, port numbers, app types)
+- **File Integrity**: Backup original configuration files before modification
+- **Atomic Operations**: Use database transactions for atomic updates
+- **Read-Only Mode**: Option to run in read-only mode for validation
+
+**Input Validation**:
+```typescript
+function validatePort(port: number): boolean {
+  return Number.isInteger(port) && port >= 1 && port <= 65535;
+}
+
+function validateProjectName(name: string): boolean {
+  return /^[a-zA-Z0-9_-]+$/.test(name) && name.length <= 255;
+}
+```
+
+#### 3. Repudiation (Non-repudiation)
+
+**Threat**: Inability to track who made port assignments or changes
+
+**Mitigation**:
+- **Audit Logging**: Log all port assignments, releases, and configuration changes
+- **Port History**: Maintain complete history of port assignments
+- **User Tracking**: Track system user for local operations (optional)
+- **Timestamp Tracking**: Automatic timestamps for all operations
+
+**Audit Trail**:
+```sql
+CREATE TABLE port_history (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  assignment_id INT,
+  action ENUM('created', 'updated', 'released', 'reserved'),
+  user_id VARCHAR(100),
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  details TEXT
+);
+```
+
+#### 4. Information Disclosure (Confidentiality)
+
+**Threat**: Exposure of sensitive information (project paths, credentials, port assignments)
+
+**Mitigation**:
+- **Sensitive Data**: Never log or expose database credentials
+- **Path Sanitization**: Sanitize file paths in error messages
+- **Secure Defaults**: Secure default file permissions
+- **Environment Variables**: Use environment variables for sensitive configuration
+
+**Secure Error Messages**:
+```typescript
+// Don't expose full paths in errors
+const sanitizedPath = path.basename(projectPath);
+throw new Error(`Port conflict in project: ${sanitizedPath}`);
+```
+
+#### 5. Denial of Service (DoS)
+
+**Threat**: Port exhaustion or resource exhaustion attacks
+
+**Mitigation**:
+- **Port Range Limits**: Enforce port range limits per app type
+- **Rate Limiting**: Limit port allocation requests (future enhancement)
+- **Resource Limits**: Database connection limits and query timeouts
+- **Validation**: Prevent invalid port assignments
+
+**Port Range Enforcement**:
+```typescript
+function validatePortRange(port: number, appType: AppType): boolean {
+  const range = PORT_RANGES[appType];
+  return port >= range.start && port <= range.end;
+}
+```
+
+#### 6. Elevation of Privilege
+
+**Threat**: Unauthorized access to system ports or elevated permissions
+
+**Mitigation**:
+- **No Root Required**: Tool should not require root/sudo privileges
+- **Port Validation**: Only manage user-space ports (1024-65535)
+- **System Port Protection**: Prevent assignment of system ports (< 1024)
+- **Least Privilege**: Run with minimum required permissions
+
+**System Port Protection**:
+```typescript
+const SYSTEM_PORT_THRESHOLD = 1024;
+if (port < SYSTEM_PORT_THRESHOLD) {
+  throw new Error(`Cannot assign system port ${port}. Use ports >= ${SYSTEM_PORT_THRESHOLD}`);
+}
+```
+
+### OWASP Top 10 Security Considerations
+
+#### A01:2021 – Broken Access Control
+
+**Risk**: Unauthorized access to port registry
+
+**Mitigation**:
+- File system permissions (600 for database files)
+- Database access control (MySQL/PostgreSQL user permissions)
+- Input validation for all operations
+
+#### A02:2021 – Cryptographic Failures
+
+**Risk**: Exposure of database credentials
+
+**Mitigation**:
+- Environment variables for credentials (never hardcode)
+- Secure credential storage
+- No sensitive data in configuration files
+
+#### A03:2021 – Injection
+
+**Risk**: SQL injection in database queries
+
+**Mitigation**:
+- Parameterized queries (prepared statements)
+- Input validation and sanitization
+- Type-safe database interfaces
+
+**Example**:
+```typescript
+// Use parameterized queries
+await db.query(
+  'SELECT * FROM port_assignments WHERE project_name = ? AND app_type = ?',
+  [projectName, appType]
+);
+```
+
+#### A04:2021 – Insecure Design
+
+**Risk**: Security flaws in architecture
+
+**Mitigation**:
+- Security-first design principles
+- Threat modeling (STRIDE)
+- Secure defaults
+
+#### A05:2021 – Security Misconfiguration
+
+**Risk**: Insecure default configurations
+
+**Mitigation**:
+- Secure default file permissions
+- Secure default database configurations
+- Security configuration documentation
+
+#### A06:2021 – Vulnerable Components
+
+**Risk**: Vulnerable dependencies
+
+**Mitigation**:
+- Regular dependency updates
+- Security vulnerability scanning (npm audit)
+- Dependency version pinning
+
+#### A07:2021 – Authentication Failures
+
+**Risk**: Weak authentication for shared databases
+
+**Mitigation**:
+- Strong database passwords
+- Connection string security
+- Environment variable management
+
+#### A08:2021 – Software and Data Integrity Failures
+
+**Risk**: Tampered configuration files or database
+
+**Mitigation**:
+- File integrity checks (backup before modification)
+- Atomic file operations
+- Database transaction integrity
+
+#### A09:2021 – Security Logging Failures
+
+**Risk**: Insufficient security logging
+
+**Mitigation**:
+- Comprehensive audit logging
+- Port history tracking
+- Error logging (without sensitive data)
+
+#### A10:2021 – Server-Side Request Forgery (SSRF)
+
+**Risk**: Not applicable (local tool, no network requests)
+
+**Mitigation**: N/A (CLI tool, no server component)
+
+### Security Best Practices
+
+#### 1. Secure Configuration
+
+**Database Credentials**:
+```bash
+# Use environment variables
+export PORT_MANAGER_DB_HOST=localhost
+export PORT_MANAGER_DB_USER=port_manager
+export PORT_MANAGER_DB_PASSWORD=secure_password
+```
+
+**File Permissions**:
+- Database files: 600 (owner read/write only)
+- Configuration files: 644 (owner read/write, others read)
+- Scripts: 755 (owner read/write/execute, others read/execute)
+
+#### 2. Input Validation
+
+**All Inputs Must Be Validated**:
+- Port numbers: 1-65535, integer
+- Project names: Alphanumeric, underscore, hyphen only
+- App types: Valid enum values
+- File paths: Sanitized, validated
+
+#### 3. Secure Defaults
+
+**Default Security Settings**:
+- Secure file permissions on database creation
+- No default credentials
+- Port range limits enforced
+- System port protection enabled
+
+#### 4. Error Handling
+
+**Secure Error Messages**:
+- No sensitive information in error messages
+- Sanitized file paths
+- Generic error messages for security failures
+- Detailed logging (separate from user-facing errors)
+
+#### 5. Dependency Security
+
+**Security Maintenance**:
+- Regular `npm audit` checks
+- Automated dependency updates
+- Security vulnerability monitoring
+- Pinned dependency versions
+
+### Security Checklist
+
+- [ ] File permissions set correctly (600 for database)
+- [ ] Database credentials stored securely (environment variables)
+- [ ] Input validation for all user inputs
+- [ ] Parameterized queries (no SQL injection)
+- [ ] System port protection (< 1024 blocked)
+- [ ] Audit logging implemented
+- [ ] Secure error messages (no sensitive data)
+- [ ] Dependency security (npm audit clean)
+- [ ] Secure defaults configured
+- [ ] Security documentation complete
+
 ## Risk Assessment
 
 ### Technical Risks
@@ -1897,4 +2174,9 @@ Port Manager should support developers working on mobile development projects an
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Significantly enhanced the "Database Schema" section with comprehensive database design best practices. Added "Schema Design Principles" subsection covering normalization (3NF compliance, no redundancy, atomic values), data integrity (primary key, unique constraints, NOT NULL constraints, ENUM constraints), indexing strategy (primary indexes for fast lookups, secondary indexes for query optimization, composite index for port availability queries, covering index strategy), data types optimization (string types with appropriate lengths, numeric types, temporal types), and character set and collation (utf8mb4 for full UTF-8 support). Added "Query Optimization" subsection with common query patterns (port availability check, find available port in range, list ports by project, list ports by app type) with optimized SQL examples and query performance targets (< 10ms for availability check, < 50ms for allocation, < 100ms for list operations). Added "Migration Strategy" subsection covering versioned migrations (sequential migration files, migration tracking table, rollback support), migration best practices (backward compatible, data preservation, transaction safety, testing), and example migration structure. Added "Database-Specific Considerations" subsection covering SQLite (simpler schema, file-based, single-user), MySQL (full feature set, connection pooling, InnoDB engine), and PostgreSQL (SERIAL, JSON support, advanced indexing). These additions transform the database schema from a basic table definition into a comprehensive database design specification with optimization strategies and migration planning.
+
+**Expert**: Sarah Johnson  
+**Expertise**: Security (STRIDE Threat Modeling, OWASP Top 10)  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Security Considerations" section covering security threat analysis using STRIDE framework. Added detailed analysis for each STRIDE threat: Spoofing (file permissions, database credentials, access control), Tampering (input validation, file integrity, atomic operations), Repudiation (audit logging, port history, user tracking), Information Disclosure (sensitive data protection, path sanitization, secure defaults), Denial of Service (port range limits, rate limiting, resource limits), and Elevation of Privilege (no root required, port validation, system port protection). Added OWASP Top 10 security considerations covering all 10 categories with specific mitigations for each (Broken Access Control, Cryptographic Failures, Injection, Insecure Design, Security Misconfiguration, Vulnerable Components, Authentication Failures, Software and Data Integrity Failures, Security Logging Failures). Added "Security Best Practices" subsection covering secure configuration (database credentials, file permissions), input validation (all inputs validated), secure defaults (default security settings), error handling (secure error messages), and dependency security (regular audits, updates). Added comprehensive "Security Checklist" with 10 security requirements. These additions ensure Port Manager follows security best practices and addresses all major security threats for a CLI tool managing port assignments and configuration files.
 

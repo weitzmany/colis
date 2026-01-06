@@ -621,6 +621,684 @@ When creating database scripts, ensure:
 - Transaction handling ensures data integrity
 - Prepared statements prevent SQL injection vulnerabilities
 
+## Script Architecture and Infrastructure Patterns
+
+### Script Architecture Principles
+
+1. **Modularity and Reusability**
+   - Design scripts as composable modules
+   - Separate concerns (validation, execution, reporting)
+   - Create reusable utility functions
+   - Follow DRY (Don't Repeat Yourself) principles
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Modular script architecture
+     
+     # Utility functions (can be sourced from separate file)
+     source "$(dirname "$0")/lib/utils.sh"
+     source "$(dirname "$0")/lib/logging.sh"
+     source "$(dirname "$0")/lib/validation.sh"
+     
+     # Main script logic
+     main() {
+       validate_environment
+       execute_operation
+       report_results
+     }
+     
+     main "$@"
+     ```
+
+2. **Layered Architecture for Scripts**
+   - **Presentation Layer**: User interaction, output formatting
+   - **Business Logic Layer**: Core operations, validation
+   - **Data Access Layer**: Database, file system, API interactions
+   - **Infrastructure Layer**: Logging, error handling, configuration
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Layered script architecture
+     
+     # Infrastructure layer
+     log_info() { echo "[INFO] $*" >&2; }
+     log_error() { echo "[ERROR] $*" >&2; }
+     
+     # Data access layer
+     db_query() {
+       local query="$1"
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$query"
+     }
+     
+     # Business logic layer
+     validate_user() {
+       local user_id="$1"
+       local count=$(db_query "SELECT COUNT(*) FROM users WHERE id=$user_id")
+       [ "$count" -eq 1 ]
+     }
+     
+     # Presentation layer
+     display_user_info() {
+       local user_id="$1"
+       if validate_user "$user_id"; then
+         log_info "User $user_id is valid"
+         db_query "SELECT * FROM users WHERE id=$user_id"
+       else
+         log_error "User $user_id not found"
+         return 1
+       fi
+     }
+     ```
+
+3. **Service-Oriented Script Architecture**
+   - Organize scripts as independent services
+   - Define clear interfaces between scripts
+   - Use message passing or shared state
+   - Enable script composition and orchestration
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Service-oriented script architecture
+     
+     # Script service interface
+     SCRIPT_SERVICES_DIR="${SCRIPT_SERVICES_DIR:-./services}"
+     
+     # Service discovery
+     list_services() {
+       find "$SCRIPT_SERVICES_DIR" -name "*.sh" -type f | sort
+     }
+     
+     # Service execution
+     execute_service() {
+       local service_name="$1"
+       shift
+       local service_script="$SCRIPT_SERVICES_DIR/${service_name}.sh"
+       
+       if [ -f "$service_script" ]; then
+         bash "$service_script" "$@"
+       else
+         echo "Service not found: $service_name" >&2
+         return 1
+       fi
+     }
+     
+     # Service orchestration
+     deploy_application() {
+       execute_service "validate_environment"
+       execute_service "run_tests"
+       execute_service "build_application"
+       execute_service "deploy_to_staging"
+       execute_service "run_integration_tests"
+       execute_service "deploy_to_production"
+     }
+     ```
+
+### Script Infrastructure Architecture
+
+1. **Script Execution Environment**
+   - **Containerization**: Run scripts in containers for consistency
+   - **Virtual Environments**: Isolate script dependencies
+   - **Execution Context**: Define runtime environment clearly
+   - **Resource Limits**: Set CPU, memory, disk limits
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script execution environment setup
+     
+     # Container-based execution
+     run_in_container() {
+       local script="$1"
+       shift
+       docker run --rm \
+         -v "$(pwd):/workspace" \
+         -w /workspace \
+         -e DB_HOST \
+         -e DB_USER \
+         -e DB_PASS \
+         script-runner:latest \
+         bash "$script" "$@"
+     }
+     
+     # Resource-limited execution
+     run_with_limits() {
+       local script="$1"
+       shift
+       ulimit -t 300  # CPU time limit (5 minutes)
+       ulimit -v 1048576  # Memory limit (1GB)
+       bash "$script" "$@"
+     }
+     ```
+
+2. **Script Configuration Management**
+   - **Environment-Based Configuration**: Different configs per environment
+   - **Configuration Files**: Centralized configuration management
+   - **Secret Management**: Secure credential storage
+   - **Configuration Validation**: Verify configuration before execution
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script configuration management
+     
+     # Load configuration
+     load_config() {
+       local env="${ENVIRONMENT:-development}"
+       local config_file="config/${env}.sh"
+       
+       if [ -f "$config_file" ]; then
+         source "$config_file"
+       else
+         echo "Configuration file not found: $config_file" >&2
+         exit 1
+       fi
+     }
+     
+     # Validate configuration
+     validate_config() {
+       local required_vars=("DB_HOST" "DB_USER" "DB_PASS" "DB_NAME")
+       
+       for var in "${required_vars[@]}"; do
+         if [ -z "${!var}" ]; then
+           echo "Required configuration missing: $var" >&2
+           exit 1
+         fi
+       done
+     }
+     
+     # Load and validate
+     load_config
+     validate_config
+     ```
+
+3. **Script Dependency Management**
+   - **Dependency Declaration**: Document script dependencies
+   - **Dependency Resolution**: Check and install dependencies
+   - **Version Management**: Pin dependency versions
+   - **Dependency Isolation**: Isolate script dependencies
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script dependency management
+     
+     # Dependency declaration
+     declare -A SCRIPT_DEPS=(
+       ["jq"]="1.6"
+       ["curl"]="7.0"
+       ["mysql"]="8.0"
+     )
+     
+     # Check dependencies
+     check_dependencies() {
+       local missing_deps=()
+       
+       for dep in "${!SCRIPT_DEPS[@]}"; do
+         if ! command -v "$dep" &> /dev/null; then
+           missing_deps+=("$dep")
+         fi
+       done
+       
+       if [ ${#missing_deps[@]} -gt 0 ]; then
+         echo "Missing dependencies: ${missing_deps[*]}" >&2
+         return 1
+       fi
+     }
+     
+     # Install dependencies (if possible)
+     install_dependencies() {
+       if command -v brew &> /dev/null; then
+         brew install "${!SCRIPT_DEPS[@]}"
+       elif command -v apt-get &> /dev/null; then
+         sudo apt-get install -y "${!SCRIPT_DEPS[@]}"
+       else
+         echo "Package manager not found" >&2
+         return 1
+       fi
+     }
+     ```
+
+### Script Scalability Architecture
+
+1. **Horizontal Scaling for Scripts**
+   - **Parallel Execution**: Run scripts in parallel when safe
+   - **Distributed Execution**: Execute scripts across multiple machines
+   - **Load Distribution**: Distribute script execution load
+   - **Fault Tolerance**: Handle script failures gracefully
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Parallel script execution
+     
+     # Parallel execution with job control
+     run_parallel() {
+       local max_jobs="${MAX_PARALLEL_JOBS:-4}"
+       local pids=()
+       
+       for script in "$@"; do
+         while [ ${#pids[@]} -ge "$max_jobs" ]; do
+           for pid in "${pids[@]}"; do
+             if ! kill -0 "$pid" 2>/dev/null; then
+               pids=("${pids[@]/$pid}")
+             fi
+           done
+           sleep 0.1
+         done
+         
+         bash "$script" &
+         pids+=($!)
+       done
+       
+       # Wait for all jobs
+       wait
+     }
+     ```
+
+2. **Script Caching and State Management**
+   - **Result Caching**: Cache script execution results
+   - **State Persistence**: Save script state between runs
+   - **Incremental Execution**: Only process changed data
+   - **Cache Invalidation**: Clear cache when needed
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script caching and state management
+     
+     CACHE_DIR="${CACHE_DIR:-.cache}"
+     mkdir -p "$CACHE_DIR"
+     
+     # Cache key generation
+     cache_key() {
+       echo "$1" | sha256sum | cut -d' ' -f1
+     }
+     
+     # Check cache
+     check_cache() {
+       local key=$(cache_key "$1")
+       local cache_file="$CACHE_DIR/$key"
+       
+       if [ -f "$cache_file" ]; then
+         cat "$cache_file"
+         return 0
+       fi
+       return 1
+     }
+     
+     # Store in cache
+     store_cache() {
+       local key=$(cache_key "$1")
+       local value="$2"
+       echo "$value" > "$CACHE_DIR/$key"
+     }
+     
+     # Cached execution
+     cached_execution() {
+       local command="$1"
+       local result
+       
+       if result=$(check_cache "$command"); then
+         echo "Cache hit: $command"
+         echo "$result"
+       else
+         echo "Cache miss: $command"
+         result=$(eval "$command")
+         store_cache "$command" "$result"
+         echo "$result"
+       fi
+     }
+     ```
+
+3. **Script Queue and Job Management**
+   - **Job Queue**: Queue script execution jobs
+   - **Priority Management**: Prioritize important scripts
+   - **Retry Logic**: Retry failed scripts
+   - **Job Scheduling**: Schedule script execution
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script job queue management
+     
+     QUEUE_DIR="${QUEUE_DIR:-.queue}"
+     mkdir -p "$QUEUE_DIR"
+     
+     # Enqueue job
+     enqueue_job() {
+       local script="$1"
+       local priority="${2:-5}"
+       local job_id=$(date +%s%N)
+       
+       echo "$priority|$script" > "$QUEUE_DIR/$job_id"
+     }
+     
+     # Process queue
+     process_queue() {
+       local jobs=($(ls -t "$QUEUE_DIR" | sort -t'|' -k1 -n))
+       
+       for job_file in "${jobs[@]}"; do
+         IFS='|' read -r priority script < "$QUEUE_DIR/$job_file"
+         echo "Executing: $script (priority: $priority)"
+         bash "$script"
+         rm "$QUEUE_DIR/$job_file"
+       done
+     }
+     ```
+
+### Script Deployment Architecture
+
+1. **Script Deployment Patterns**
+   - **Blue-Green Deployment**: Deploy scripts without downtime
+   - **Canary Deployment**: Gradual script rollout
+   - **Rolling Deployment**: Update scripts incrementally
+   - **Version Management**: Track script versions
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script version management
+     
+     SCRIPT_VERSION="${SCRIPT_VERSION:-1.0.0}"
+     SCRIPT_DIR="${SCRIPT_DIR:-./scripts}"
+     
+     # Versioned script execution
+     execute_versioned_script() {
+       local script_name="$1"
+       local version="${2:-latest}"
+       local script_path="$SCRIPT_DIR/$script_name/$version.sh"
+       
+       if [ -f "$script_path" ]; then
+         bash "$script_path"
+       else
+         echo "Script version not found: $script_name/$version" >&2
+         return 1
+       fi
+     }
+     
+     # Rollback to previous version
+     rollback_script() {
+       local script_name="$1"
+       local current_version=$(get_current_version "$script_name")
+       local previous_version=$(get_previous_version "$script_name")
+       
+       if [ -n "$previous_version" ]; then
+         execute_versioned_script "$script_name" "$previous_version"
+       else
+         echo "No previous version found" >&2
+         return 1
+       fi
+     }
+     ```
+
+2. **Script Monitoring and Observability**
+   - **Execution Logging**: Log script execution details
+   - **Performance Metrics**: Track script performance
+   - **Error Tracking**: Monitor script errors
+   - **Health Checks**: Verify script health
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script monitoring and observability
+     
+     # Execution logging
+     log_execution() {
+       local script_name="$1"
+       local start_time="$2"
+       local end_time="$3"
+       local exit_code="$4"
+       local duration=$((end_time - start_time))
+       
+       echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) | $script_name | $duration | $exit_code" >> execution.log
+     }
+     
+     # Performance metrics
+     track_performance() {
+       local script_name="$1"
+       local start_time=$(date +%s)
+       
+       # Execute script
+       "$@"
+       local exit_code=$?
+       
+       local end_time=$(date +%s)
+       log_execution "$script_name" "$start_time" "$end_time" "$exit_code"
+       
+       return $exit_code
+     }
+     
+     # Health check
+     health_check() {
+       local script_name="$1"
+       local last_execution=$(tail -1 execution.log | cut -d'|' -f1)
+       local current_time=$(date +%s)
+       local time_since_execution=$((current_time - last_execution))
+       
+       if [ "$time_since_execution" -gt 3600 ]; then
+         echo "Health check failed: Script not executed in last hour"
+         return 1
+       fi
+       
+       return 0
+     }
+     ```
+
+### Script Security Architecture
+
+1. **Script Access Control**
+   - **Authentication**: Verify script execution permissions
+   - **Authorization**: Control script access levels
+   - **Audit Logging**: Log script access attempts
+   - **Role-Based Access**: Assign roles to scripts
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script access control
+     
+     # Check execution permissions
+     check_permissions() {
+       local script="$1"
+       local user=$(whoami)
+       
+       # Check if user has permission to execute
+       if ! grep -q "$user" "$SCRIPT_PERMISSIONS_FILE" 2>/dev/null; then
+         echo "Permission denied: $user cannot execute $script" >&2
+         return 1
+       fi
+       
+       return 0
+     }
+     
+     # Audit logging
+     audit_log() {
+       local script="$1"
+       local user=$(whoami)
+       local timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+       
+       echo "$timestamp | $user | $script | $*" >> audit.log
+     }
+     ```
+
+2. **Script Input Validation Architecture**
+   - **Input Sanitization**: Clean script inputs
+   - **Input Validation**: Validate script parameters
+   - **Boundary Checking**: Check input boundaries
+   - **Type Validation**: Verify input types
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script input validation architecture
+     
+     # Input sanitization
+     sanitize_input() {
+       local input="$1"
+       # Remove dangerous characters
+       echo "$input" | sed 's/[;&|`$()]//g'
+     }
+     
+     # Input validation
+     validate_input() {
+       local input="$1"
+       local pattern="$2"
+       
+       if [[ ! "$input" =~ $pattern ]]; then
+         echo "Invalid input: $input" >&2
+         return 1
+       fi
+       
+       return 0
+     }
+     
+     # Validate script parameters
+     validate_script_params() {
+       local user_id="$1"
+       
+       # Sanitize
+       user_id=$(sanitize_input "$user_id")
+       
+       # Validate (numeric ID)
+       if ! validate_input "$user_id" '^[0-9]+$'; then
+         return 1
+       fi
+       
+       # Boundary check
+       if [ "$user_id" -lt 1 ] || [ "$user_id" -gt 1000000 ]; then
+         echo "User ID out of range: $user_id" >&2
+         return 1
+       fi
+       
+       return 0
+     }
+     ```
+
+### Script Integration Architecture
+
+1. **Script API Architecture**
+   - **RESTful Script Interface**: Expose scripts via REST API
+   - **Script Orchestration**: Coordinate multiple scripts
+   - **Event-Driven Scripts**: Trigger scripts on events
+   - **Message Queue Integration**: Integrate with message queues
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script API architecture
+     
+     # RESTful script endpoint
+     script_api() {
+       local method="$1"
+       local endpoint="$2"
+       shift 2
+       
+       case "$method" in
+         GET)
+           case "$endpoint" in
+             /scripts)
+               list_scripts
+               ;;
+             /scripts/*)
+               get_script_status "${endpoint#/scripts/}"
+               ;;
+             *)
+               echo "404 Not Found" >&2
+               return 1
+               ;;
+           esac
+           ;;
+         POST)
+           case "$endpoint" in
+             /scripts/execute)
+               execute_script "$@"
+               ;;
+             *)
+               echo "404 Not Found" >&2
+               return 1
+               ;;
+           esac
+           ;;
+         *)
+           echo "405 Method Not Allowed" >&2
+           return 1
+           ;;
+       esac
+     }
+     ```
+
+2. **Script Event Architecture**
+   - **Event Listeners**: Listen for events
+   - **Event Handlers**: Handle events with scripts
+   - **Event Publishing**: Publish script events
+   - **Event Routing**: Route events to scripts
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Script event architecture
+     
+     # Event listener
+     listen_for_events() {
+       local event_type="$1"
+       local script="$2"
+       
+       while read -r event; do
+         if echo "$event" | grep -q "$event_type"; then
+           bash "$script" "$event"
+         fi
+       done
+     }
+     
+     # Event handler
+     handle_event() {
+       local event="$1"
+       local event_type=$(echo "$event" | jq -r '.type')
+       local handler_script="handlers/${event_type}.sh"
+       
+       if [ -f "$handler_script" ]; then
+         bash "$handler_script" "$event"
+       else
+         echo "No handler for event type: $event_type" >&2
+       fi
+     }
+     ```
+
+### Script Architecture Best Practices
+
+1. **Separation of Concerns**
+   - Separate configuration from logic
+   - Separate validation from execution
+   - Separate logging from business logic
+   - Use functions for reusable operations
+
+2. **Error Handling Architecture**
+   - Implement comprehensive error handling
+   - Use exit codes consistently
+   - Log errors appropriately
+   - Provide meaningful error messages
+
+3. **Testing Architecture**
+   - Unit test script functions
+   - Integration test script workflows
+   - Test error scenarios
+   - Test edge cases
+
+4. **Documentation Architecture**
+   - Document script purpose and usage
+   - Document parameters and options
+   - Document dependencies
+   - Document examples
+
+5. **Version Control Architecture**
+   - Version control all scripts
+   - Tag script versions
+   - Document changes in changelog
+   - Use semantic versioning
+
+### Script Architecture Checklist
+
+When designing script architecture, ensure:
+
+- [ ] **Modularity**: Scripts are modular and reusable
+- [ ] **Scalability**: Scripts can scale horizontally
+- [ ] **Security**: Scripts implement security best practices
+- [ ] **Monitoring**: Scripts are observable and monitorable
+- [ ] **Testing**: Scripts are testable
+- [ ] **Documentation**: Scripts are well-documented
+- [ ] **Deployment**: Scripts have deployment strategy
+- [ ] **Error Handling**: Scripts handle errors gracefully
+- [ ] **Configuration**: Scripts use external configuration
+- [ ] **Dependencies**: Script dependencies are managed
+
 ---
 
 ## Review/Contribution
@@ -634,5 +1312,10 @@ When creating database scripts, ensure:
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Further enhanced this scripts review document by adding advanced database script patterns and implementation guidance including: advanced database script patterns (database health check scripts with connection verification, size monitoring, and performance checks, database maintenance scripts with index optimization and table maintenance, database migration management scripts with state tracking and rollback capabilities, database performance monitoring scripts with slow query analysis and index usage statistics, database data validation scripts with referential integrity checks and orphaned record detection, database replication scripts with replication status monitoring and lag detection), database script testing patterns (test database setup scripts with isolated test environments, database script unit testing with migration testing and rollback scenarios), database script performance optimization (bulk operation scripts with batch insert optimization and chunked processing, query optimization scripts with EXPLAIN plan analysis and index recommendations), and a comprehensive database script checklist covering connection management, security, error handling, data integrity, performance, testing, documentation, idempotency, rollback, and monitoring. Also fixed the date from 2025-01-05 to 2026-01-05. This addition provides advanced, production-ready database script patterns with complete code examples for health checks, maintenance, migration management, performance monitoring, data validation, replication, testing, and optimization, ensuring database scripts are robust, secure, and performant.
+
+**Expert**: Arthur Davis  
+**Expertise**: Architecture (System Design, Scalability)  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Script Architecture and Infrastructure Patterns" section covering script architecture principles (modularity and reusability with composable modules and utility functions, layered architecture with presentation/business logic/data access/infrastructure layers, service-oriented script architecture with service discovery and orchestration), script infrastructure architecture (script execution environment with containerization and resource limits, script configuration management with environment-based configuration and validation, script dependency management with dependency declaration and resolution), script scalability architecture (horizontal scaling with parallel and distributed execution, script caching and state management with result caching and incremental execution, script queue and job management with priority management and retry logic), script deployment architecture (script deployment patterns with blue-green and canary deployment, script monitoring and observability with execution logging and performance metrics), script security architecture (script access control with authentication and audit logging, script input validation architecture with sanitization and boundary checking), script integration architecture (script API architecture with RESTful interfaces and orchestration, script event architecture with event listeners and handlers), script architecture best practices (separation of concerns, error handling architecture, testing architecture, documentation architecture, version control architecture), and comprehensive script architecture checklist covering modularity, scalability, security, monitoring, testing, documentation, deployment, error handling, configuration, and dependencies. This addition provides architectural guidance for designing scalable, maintainable, secure, and observable script infrastructure, ensuring scripts follow architectural best practices and can scale to meet production requirements.
 
 ---

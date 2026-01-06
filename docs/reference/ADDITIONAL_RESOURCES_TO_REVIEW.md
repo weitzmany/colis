@@ -473,6 +473,290 @@ When creating or updating a resource review document, ensure:
 - [ ] Visual indicators (stars, checkmarks) are used appropriately
 - [ ] Summary section provides quick overview
 
+## Observability Considerations for Resource Reviews
+
+### Observability Patterns in Resource Categories
+
+When reviewing resources, consider observability implications and patterns:
+
+#### 1. Scripts - Observability Integration
+
+**Monitoring and Logging in Scripts**:
+- **Structured Logging**: Scripts should use structured logging (JSON format) for automation scripts
+- **Execution Metrics**: Track script execution time, success/failure rates, and resource usage
+- **Error Tracking**: Log errors with context (correlation IDs, timestamps, input parameters)
+- **Alerting Integration**: Script failures should trigger alerts for critical operations
+- **Observability Examples**:
+  - Git workflow scripts: Log commit hashes, branch names, execution duration
+  - Deployment scripts: Track deployment duration, success rates, rollback events
+  - Testing scripts: Log test execution metrics, failure rates, test coverage
+  - Setup scripts: Track setup completion time, error rates, configuration validation
+
+**Script Observability Checklist**:
+- [ ] Structured logging implemented (JSON format)
+- [ ] Execution metrics tracked (duration, success/failure)
+- [ ] Error context captured (correlation IDs, stack traces)
+- [ ] Alerting configured for critical failures
+- [ ] Log aggregation configured (centralized logging)
+- [ ] Script performance baselines established
+
+#### 2. CI/CD Workflows - Observability Integration
+
+**Monitoring CI/CD Pipelines**:
+- **Pipeline Metrics**: Track build duration, success rates, failure rates, queue times
+- **Job-Level Observability**: Monitor individual job execution, resource usage, dependencies
+- **Deployment Observability**: Track deployment frequency, success rates, rollback rates
+- **Test Observability**: Monitor test execution time, failure rates, flaky test detection
+- **Observability Tools**: Integrate with monitoring tools (Prometheus, Grafana, Datadog)
+- **Observability Examples**:
+  - Build workflows: Track build duration, artifact sizes, cache hit rates
+  - Test workflows: Monitor test execution time, coverage metrics, failure patterns
+  - Deployment workflows: Track deployment duration, success rates, rollback events
+  - Security scanning: Monitor scan duration, vulnerability detection rates
+
+**CI/CD Observability Checklist**:
+- [ ] Pipeline metrics collected (duration, success/failure rates)
+- [ ] Job-level monitoring implemented
+- [ ] Deployment metrics tracked
+- [ ] Test observability configured
+- [ ] Alerting for pipeline failures
+- [ ] Dashboard for CI/CD metrics
+- [ ] Integration with observability tools
+
+#### 3. Configuration Files - Observability Configuration
+
+**Observability in Configuration**:
+- **Logging Configuration**: Log levels, log formats, log destinations
+- **Metrics Configuration**: Metrics collection endpoints, sampling rates, retention policies
+- **Tracing Configuration**: Trace sampling rates, trace backends, trace context propagation
+- **Monitoring Configuration**: Alert thresholds, alert destinations, SLO definitions
+- **Observability Examples**:
+  - `package.json`: Scripts for observability setup, metrics collection
+  - `docker-compose.yml`: Logging drivers, metrics endpoints, tracing configuration
+  - `tsconfig.json`: Source maps for error tracking, debugging configuration
+  - `.env.example`: Observability service endpoints, API keys, configuration
+
+**Configuration Observability Checklist**:
+- [ ] Logging configuration documented
+- [ ] Metrics configuration specified
+- [ ] Tracing configuration included
+- [ ] Monitoring configuration defined
+- [ ] Observability service endpoints configured
+- [ ] Environment variables for observability documented
+
+#### 4. Documentation Patterns - Observability Documentation
+
+**Observability in Documentation**:
+- **Runbooks**: Document common issues, resolution steps, escalation procedures
+- **SLO Documentation**: Document service level objectives, error budgets, alerting policies
+- [ ] **Dashboard Documentation**: Document key metrics, dashboard purposes, alert thresholds
+- **Troubleshooting Guides**: Document observability workflows, correlation strategies
+- **Observability Examples**:
+  - README.md: Observability setup instructions, metrics endpoints, dashboard links
+  - Setup guides: Observability tool installation, configuration steps
+  - Architecture docs: Observability architecture, data flow, tool integration
+  - Contributing guides: Observability standards, logging conventions, metrics naming
+
+**Documentation Observability Checklist**:
+- [ ] Runbooks documented for common issues
+- [ ] SLO documentation included
+- [ ] Dashboard documentation provided
+- [ ] Troubleshooting guides with observability workflows
+- [ ] Observability setup instructions
+- [ ] Metrics and logging conventions documented
+
+#### 5. Testing Structure - Observability in Tests
+
+**Observability in Testing**:
+- **Test Metrics**: Track test execution time, test coverage, flaky test detection
+- **Test Logging**: Structured logging in tests, test correlation IDs, test context
+- **Performance Testing**: Track performance metrics, baseline comparisons, regression detection
+- **Test Observability**: Monitor test infrastructure, test execution patterns, test failures
+- **Observability Examples**:
+  - Test utilities: Observability helpers, metrics collection, logging utilities
+  - E2E tests: Request tracing, performance metrics, error tracking
+  - Integration tests: Service dependency tracking, latency measurement
+  - Performance tests: Metrics collection, baseline comparison, regression detection
+
+**Testing Observability Checklist**:
+- [ ] Test metrics collected (execution time, coverage)
+- [ ] Structured logging in tests
+- [ ] Performance test metrics tracked
+- [ ] Test observability infrastructure configured
+- [ ] Flaky test detection implemented
+- [ ] Test correlation IDs for debugging
+
+#### 6. Environment Setup - Observability Setup
+
+**Observability in Environment Setup**:
+- **Observability Tools Setup**: Install and configure monitoring, logging, tracing tools
+- **Metrics Collection Setup**: Configure metrics endpoints, sampling rates, retention
+- **Logging Setup**: Configure log aggregation, log retention, log indexing
+- **Tracing Setup**: Configure trace backends, sampling rates, trace context propagation
+- **Observability Examples**:
+  - Docker setup: Logging drivers, metrics endpoints, tracing configuration
+  - Environment variables: Observability service endpoints, API keys, configuration
+  - Local development: Local observability tools, development dashboards, test data
+  - Database setup: Database metrics, query logging, performance monitoring
+
+**Environment Observability Checklist**:
+- [ ] Observability tools installed and configured
+- [ ] Metrics collection configured
+- [ ] Logging setup completed
+- [ ] Tracing configured
+- [ ] Environment variables documented
+- [ ] Local development observability setup
+
+#### 7. API Structure Patterns - Observability in APIs
+
+**Observability in API Design**:
+- **Request Tracing**: Correlation IDs, trace context propagation, distributed tracing
+- **API Metrics**: Request rates, error rates, latency metrics, throughput metrics
+- **API Logging**: Structured logging, request/response logging, error logging
+- **API Monitoring**: Health checks, dependency monitoring, performance monitoring
+- **Observability Examples**:
+  - RESTful APIs: Correlation IDs in headers, metrics endpoints, health check endpoints
+  - API versioning: Metrics per version, version-specific dashboards, deprecation tracking
+  - Controller patterns: Request tracing, error tracking, performance metrics
+  - Request/response patterns: Structured logging, metrics collection, trace context
+
+**API Observability Checklist**:
+- [ ] Correlation IDs implemented
+- [ ] API metrics collected (rates, latency, errors)
+- [ ] Structured logging in APIs
+- [ ] Health check endpoints configured
+- [ ] Distributed tracing implemented
+- [ ] API monitoring dashboards created
+
+#### 8. Build & Deployment Scripts - Observability in Deployment
+
+**Observability in Deployment**:
+- **Deployment Metrics**: Track deployment duration, success rates, rollback rates
+- **Deployment Logging**: Log deployment events, configuration changes, rollback events
+- **Deployment Tracing**: Trace deployment processes, dependency tracking, failure analysis
+- **Deployment Monitoring**: Monitor deployment health, post-deployment metrics, alerting
+- **Observability Examples**:
+  - Build scripts: Build duration, artifact sizes, build success rates
+  - Deployment scripts: Deployment duration, success rates, rollback events
+  - AWS deployment: CloudWatch integration, deployment metrics, error tracking
+  - Docker builds: Build metrics, image sizes, build cache hit rates
+
+**Deployment Observability Checklist**:
+- [ ] Deployment metrics tracked
+- [ ] Deployment logging configured
+- [ ] Deployment tracing implemented
+- [ ] Post-deployment monitoring configured
+- [ ] Rollback observability configured
+- [ ] Deployment dashboards created
+
+#### 9. Git Hooks - Observability in Automation
+
+**Observability in Git Hooks**:
+- **Hook Execution Metrics**: Track hook execution time, success/failure rates
+- **Hook Logging**: Log hook events, validation results, error context
+- **Hook Monitoring**: Monitor hook performance, failure patterns, alerting
+- **Observability Examples**:
+  - Pre-push hooks: Execution time, validation results, failure rates
+  - Pre-commit hooks: Hook duration, validation metrics, error tracking
+  - Hook setup scripts: Setup metrics, configuration validation, error logging
+
+**Git Hooks Observability Checklist**:
+- [ ] Hook execution metrics tracked
+- [ ] Hook logging configured
+- [ ] Hook monitoring implemented
+- [ ] Hook performance baselines established
+- [ ] Hook failure alerting configured
+
+### Observability Integration Patterns
+
+**Common Observability Patterns Across Resources**:
+
+1. **Structured Logging Pattern**:
+   - Use JSON format for all logs
+   - Include correlation IDs for request tracing
+   - Include contextual information (timestamps, user IDs, action types)
+   - Sanitize sensitive data before logging
+
+2. **Metrics Collection Pattern**:
+   - Collect execution metrics (duration, success/failure)
+   - Track resource usage (CPU, memory, disk, network)
+   - Monitor business metrics (user actions, feature usage)
+   - Use appropriate metric types (counters, gauges, histograms)
+
+3. **Distributed Tracing Pattern**:
+   - Generate correlation IDs at entry points
+   - Propagate trace context across services
+   - Create spans for significant operations
+   - Sample traces appropriately for high-volume systems
+
+4. **Alerting Pattern**:
+   - Alert on symptoms, not causes
+   - Set appropriate thresholds
+   - Avoid alert fatigue
+   - Group related alerts
+   - Escalate appropriately
+
+5. **Dashboard Pattern**:
+   - Create dashboards for key metrics
+   - Organize dashboards by service/component
+   - Include trend analysis
+   - Provide drill-down capabilities
+
+### Observability Best Practices for Resource Reviews
+
+1. **Identify Observability Gaps**:
+   - Review resources for missing observability instrumentation
+   - Identify areas where observability can be improved
+   - Document observability requirements for each resource category
+
+2. **Document Observability Patterns**:
+   - Document common observability patterns found in resources
+   - Provide examples of observability integration
+   - Include observability best practices
+
+3. **Recommend Observability Tools**:
+   - Suggest appropriate observability tools for each resource category
+   - Document tool integration patterns
+   - Provide tool configuration examples
+
+4. **Establish Observability Standards**:
+   - Define logging standards (format, levels, context)
+   - Define metrics standards (naming, types, collection)
+   - Define tracing standards (sampling, context propagation)
+   - Define alerting standards (thresholds, escalation)
+
+5. **Create Observability Checklists**:
+   - Include observability checklists in resource review documents
+   - Ensure observability is considered in all resource categories
+   - Track observability implementation status
+
+### Observability Metrics for Resource Reviews
+
+Track the following observability metrics for resource reviews:
+
+1. **Observability Coverage**:
+   - Number of resource categories with observability considerations
+   - Number of resources with observability instrumentation
+   - Percentage of observability coverage
+
+2. **Observability Implementation**:
+   - Number of resources with structured logging
+   - Number of resources with metrics collection
+   - Number of resources with distributed tracing
+   - Number of resources with alerting configured
+
+3. **Observability Quality**:
+   - Logging quality (structured format, context, correlation)
+   - Metrics quality (appropriate types, naming, collection)
+   - Tracing quality (sampling, context propagation, visualization)
+   - Alerting quality (thresholds, grouping, escalation)
+
+4. **Observability Maintenance**:
+   - Last observability review date
+   - Frequency of observability updates
+   - Number of observability improvements made
+   - Observability tool integration status
+
 ---
 
 ## Review/Contribution
@@ -481,4 +765,9 @@ When creating or updating a resource review document, ensure:
 **Expertise**: Documentation (Code, API, User Documentation)  
 **Date**: 2026-01-05  
 **Changes**: Expanded this resource review document with comprehensive documentation best practices, including: documentation templates for resource reviews (individual resource entry template, review document structure template), maintaining review documents (version control, regular review cycles, completeness checks, status tracking), documentation workflow for resource reviews (discovery, analysis, documentation, maintenance phases), best practices for documenting patterns (being specific, providing context, using visual indicators, making it actionable), discoverability and navigation strategies (table of contents, index documents, search-friendly structure, cross-reference system), quality standards for review documents (completeness, accuracy, clarity, consistency), documentation metrics and tracking (coverage, completeness, maintenance, usage), a complete example resource review document structure, and a documentation checklist for resource reviews. These additions provide practical guidance for creating, maintaining, and improving resource review documentation following professional documentation standards.
+
+**Expert**: Nicole Chen  
+**Expertise**: Observability (Monitoring, Logging, Tracing, Metrics)  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Observability Considerations for Resource Reviews" section covering observability patterns in resource categories (scripts with structured logging and execution metrics, CI/CD workflows with pipeline metrics and job-level observability, configuration files with observability configuration, documentation patterns with runbooks and SLO documentation, testing structure with test metrics and performance testing, environment setup with observability tools setup, API structure patterns with request tracing and API metrics, build and deployment scripts with deployment metrics and monitoring, git hooks with execution metrics and monitoring), observability integration patterns (structured logging pattern with JSON format and correlation IDs, metrics collection pattern with execution and resource metrics, distributed tracing pattern with correlation IDs and trace context propagation, alerting pattern with symptom-based alerting and threshold management, dashboard pattern with key metrics and trend analysis), observability best practices for resource reviews (identify observability gaps, document observability patterns, recommend observability tools, establish observability standards, create observability checklists), and observability metrics for resource reviews (observability coverage, observability implementation, observability quality, observability maintenance). Each resource category includes detailed observability checklists covering structured logging, metrics collection, distributed tracing, alerting configuration, and monitoring setup. This addition ensures that observability is considered across all resource categories, providing comprehensive visibility into system operations, performance, and reliability.
 

@@ -381,10 +381,377 @@ For languages like Arabic, Hebrew, or Urdu:
    - JSON for translation keys
    - Database-driven content with language fields
 
+## GraphQL API Documentation Structure
+
+When documenting GraphQL APIs, the structure must support schema-first development, type documentation, query examples, and introspection capabilities.
+
+### GraphQL Documentation Organization
+
+#### Recommended Structure for GraphQL APIs
+
+```
+docs/
+├── README.md
+├── features/
+│   └── graphql-api/                    # GraphQL API feature
+│       ├── PRD.md                      # Product Requirements Document
+│       ├── TASKS.md                     # Implementation tasks
+│       ├── SCHEMA.md                   # GraphQL schema documentation
+│       ├── QUERIES.md                   # Query documentation and examples
+│       ├── MUTATIONS.md                 # Mutation documentation and examples
+│       ├── SUBSCRIPTIONS.md             # Subscription documentation (if applicable)
+│       └── TYPES.md                     # Type definitions and descriptions
+├── reference/
+│   ├── graphql-schema.graphql          # Complete GraphQL schema file
+│   ├── graphql-examples/               # Example queries and mutations
+│   │   ├── queries/
+│   │   │   ├── user-queries.graphql
+│   │   │   └── product-queries.graphql
+│   │   └── mutations/
+│   │       ├── user-mutations.graphql
+│   │       └── product-mutations.graphql
+│   └── graphql-types/                  # Type documentation
+│       ├── user-types.md
+│       └── product-types.md
+└── architecture/
+    └── graphql-architecture.md         # GraphQL server architecture
+```
+
+### GraphQL Schema Documentation Structure
+
+#### Schema-First Documentation Approach
+
+1. **Schema File Organization**:
+   ```
+   docs/reference/
+   ├── graphql-schema.graphql            # Main schema file (complete)
+   └── graphql-schema-modules/          # Modular schema files
+       ├── user.graphql                  # User-related types
+       ├── product.graphql               # Product-related types
+       ├── order.graphql                 # Order-related types
+       └── common.graphql                # Common types (scalars, enums)
+   ```
+
+2. **Type Documentation Structure**:
+   - **Type Definitions**: Document each type with description, fields, and examples
+   - **Field Documentation**: Document each field with description, arguments, return type, and examples
+   - **Interface Documentation**: Document interfaces and implementing types
+   - **Union Documentation**: Document unions and member types
+   - **Enum Documentation**: Document enums with value descriptions
+   - **Scalar Documentation**: Document custom scalars with validation rules
+
+3. **Query Documentation Structure**:
+   ```
+   docs/reference/graphql-queries/
+   ├── README.md                         # Query overview and navigation
+   ├── user-queries.md                   # User-related queries
+   │   ├── getUser
+   │   ├── listUsers
+   │   └── searchUsers
+   ├── product-queries.md                 # Product-related queries
+   └── examples/                         # Query examples
+       ├── basic-queries.graphql
+       ├── nested-queries.graphql
+       └── filtered-queries.graphql
+   ```
+
+4. **Mutation Documentation Structure**:
+   ```
+   docs/reference/graphql-mutations/
+   ├── README.md                         # Mutation overview
+   ├── user-mutations.md                 # User-related mutations
+   │   ├── createUser
+   │   ├── updateUser
+   │   └── deleteUser
+   ├── product-mutations.md               # Product-related mutations
+   └── examples/                         # Mutation examples
+       ├── create-operations.graphql
+       └── update-operations.graphql
+   ```
+
+### GraphQL Documentation Best Practices
+
+1. **Schema Documentation**:
+   - Use GraphQL schema comments (`"""`) for type and field descriptions
+   - Include example queries in schema comments
+   - Document deprecation reasons and migration paths
+   - Use `@deprecated` directive with reason
+   - Example:
+     ```graphql
+     """
+     Represents a user in the system.
+     
+     Example query:
+     ```graphql
+     query {
+       user(id: "123") {
+         id
+         name
+         email
+       }
+     }
+     ```
+     """
+     type User {
+       """Unique identifier for the user"""
+       id: ID!
+       
+       """User's full name"""
+       name: String!
+       
+       """User's email address"""
+       email: String!
+       
+       """User's creation date"""
+       createdAt: DateTime!
+       
+       """User's last update date (deprecated: use updatedAt)"""
+       @deprecated(reason: "Use updatedAt instead")
+       modifiedAt: DateTime!
+     }
+     ```
+
+2. **Query Documentation**:
+   - Document query purpose and use cases
+   - Provide example queries with expected responses
+   - Document query complexity and performance considerations
+   - Include pagination and filtering examples
+   - Document error cases and responses
+   - Example:
+     ```markdown
+     ## getUser
+     
+     Retrieves a single user by ID.
+     
+     **Query**:
+     ```graphql
+     query GetUser($id: ID!) {
+       user(id: $id) {
+         id
+         name
+         email
+         createdAt
+       }
+     }
+     ```
+     
+     **Variables**:
+     ```json
+     {
+       "id": "123"
+     }
+     ```
+     
+     **Response**:
+     ```json
+     {
+       "data": {
+         "user": {
+           "id": "123",
+           "name": "John Doe",
+           "email": "john@example.com",
+           "createdAt": "2026-01-05T12:00:00Z"
+         }
+       }
+     }
+     ```
+     
+     **Error Cases**:
+     - User not found: Returns `null` with error in `errors` array
+     - Invalid ID format: Returns validation error
+     ```
+
+3. **Mutation Documentation**:
+   - Document mutation purpose and side effects
+   - Provide example mutations with input and output
+   - Document validation rules and constraints
+   - Include error handling examples
+   - Document idempotency (if applicable)
+   - Example:
+     ```markdown
+     ## createUser
+     
+     Creates a new user account.
+     
+     **Mutation**:
+     ```graphql
+     mutation CreateUser($input: CreateUserInput!) {
+       createUser(input: $input) {
+         user {
+           id
+           name
+           email
+         }
+         errors {
+           field
+           message
+         }
+       }
+     }
+     ```
+     
+     **Input Validation**:
+     - `name`: Required, 1-100 characters
+     - `email`: Required, valid email format, unique
+     - `password`: Required, minimum 8 characters
+     
+     **Success Response**:
+     ```json
+     {
+       "data": {
+         "createUser": {
+           "user": {
+             "id": "123",
+             "name": "John Doe",
+             "email": "john@example.com"
+           },
+           "errors": []
+         }
+       }
+     }
+     ```
+     ```
+
+4. **Type Documentation**:
+   - Document type purpose and relationships
+   - Document all fields with descriptions
+   - Include field-level examples
+   - Document type relationships (connections, edges)
+   - Document custom scalars and enums
+   - Example:
+     ```markdown
+     ## User Type
+     
+     Represents a user account in the system.
+     
+     **Fields**:
+     - `id: ID!` - Unique identifier
+     - `name: String!` - User's full name
+     - `email: String!` - User's email address
+     - `createdAt: DateTime!` - Account creation timestamp
+     - `posts: [Post!]!` - User's blog posts (connection)
+     
+     **Relationships**:
+     - One-to-many with `Post` type
+     - Many-to-many with `Group` type (via `UserGroup`)
+     
+     **Example**:
+     ```graphql
+     {
+       user(id: "123") {
+         id
+         name
+         email
+         posts {
+           id
+           title
+         }
+       }
+     }
+     ```
+     ```
+
+### GraphQL Documentation Tools Integration
+
+1. **Schema Documentation Generation**:
+   - Use tools like GraphQL Code Generator to generate TypeScript types
+   - Use schema introspection to generate documentation
+   - Integrate with GraphQL Playground or GraphiQL
+   - Use tools like SpectaQL or Magidoc for static documentation generation
+
+2. **Interactive Documentation**:
+   - GraphQL Playground: Interactive query editor with schema explorer
+   - GraphiQL: Interactive GraphQL IDE
+   - Apollo Studio: Schema registry and documentation
+   - Postman: GraphQL API testing and documentation
+
+3. **Documentation Automation**:
+   - Generate documentation from schema comments
+   - Automate example generation from test queries
+   - Generate type documentation from schema
+   - Sync documentation with schema changes
+
+### GraphQL Documentation Structure Checklist
+
+When organizing GraphQL API documentation:
+
+- [ ] **Schema Documentation**: Complete schema file with descriptions
+- [ ] **Type Documentation**: All types documented with fields and examples
+- [ ] **Query Documentation**: All queries documented with examples
+- [ ] **Mutation Documentation**: All mutations documented with input/output
+- [ ] **Subscription Documentation**: All subscriptions documented (if applicable)
+- [ ] **Example Queries**: Real-world query examples
+- [ ] **Example Mutations**: Real-world mutation examples
+- [ ] **Error Documentation**: Error types and handling
+- [ ] **Authentication**: Authentication and authorization documentation
+- [ ] **Rate Limiting**: Rate limiting and query complexity documentation
+- [ ] **Pagination**: Pagination patterns and examples
+- [ ] **Filtering**: Filtering and sorting documentation
+- [ ] **Deprecation**: Deprecated fields and migration paths
+- [ ] **Versioning**: Schema versioning strategy (if applicable)
+- [ ] **Introspection**: Introspection query documentation
+- [ ] **Tools Integration**: GraphQL Playground/GraphiQL setup
+
+### GraphQL Schema Documentation Best Practices
+
+1. **Schema-First Development**:
+   - Define schema before implementation
+   - Document schema in `.graphql` files
+   - Use schema comments for documentation
+   - Keep schema and documentation in sync
+
+2. **Type Documentation**:
+   - Document every type with purpose and usage
+   - Document all fields with descriptions
+   - Include example queries for complex types
+   - Document type relationships and connections
+
+3. **Query Documentation**:
+   - Document query purpose and use cases
+   - Provide complete query examples
+   - Document query complexity
+   - Include pagination and filtering examples
+
+4. **Mutation Documentation**:
+   - Document mutation side effects
+   - Provide input validation rules
+   - Document error responses
+   - Include idempotency information
+
+5. **Example Documentation**:
+   - Provide real-world examples
+   - Include both simple and complex examples
+   - Show error handling examples
+   - Document edge cases
+
+### GraphQL Documentation Integration with Documentation Structure
+
+When integrating GraphQL API documentation with the overall documentation structure:
+
+1. **Feature Documentation**:
+   - GraphQL API features go in `docs/features/graphql-api/`
+   - Include PRD, TASKS, and GraphQL-specific documentation
+   - Organize by domain (user, product, order, etc.)
+
+2. **Reference Documentation**:
+   - Schema files in `docs/reference/graphql-schema.graphql`
+   - Query examples in `docs/reference/graphql-examples/`
+   - Type documentation in `docs/reference/graphql-types/`
+
+3. **Architecture Documentation**:
+   - GraphQL server architecture in `docs/architecture/graphql-architecture.md`
+   - Resolver patterns in `docs/architecture/graphql-resolvers.md`
+   - DataLoader patterns in `docs/architecture/graphql-dataloaders.md`
+
+4. **Guides**:
+   - GraphQL query writing guide in `docs/guides/graphql-queries.md`
+   - GraphQL mutation guide in `docs/guides/graphql-mutations.md`
+   - GraphQL best practices in `docs/guides/graphql-best-practices.md`
+
 ---
 
 **Last Updated**: 2026-01-05  
-**Version**: 1.1
+**Version**: 1.2
 
 ---
 
@@ -394,4 +761,9 @@ For languages like Arabic, Hebrew, or Urdu:
 **Expertise**: Internationalization (i18n) and Localization  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this documentation structure guide by adding a comprehensive "Internationalization (i18n) Considerations for Documentation Structure" section covering multilingual documentation structure patterns (language-specific directories, language suffix in filenames, hybrid approach with shared assets), documentation structure rules for i18n (consistent structure across languages, language identification using ISO 639-1 codes, shared vs. translated content classification, file naming conventions), translation workflow integration (documentation structure for translation management, translation status tracking), best practices for i18n documentation structure (planning from start, maintaining consistency, handling language-specific content, linking between languages, version control), example multilingual feature documentation structure, documentation structure checklist for i18n, RTL (right-to-left) language considerations, and tools and technologies for i18n documentation. Also fixed the date from 2025-01-05 to 2026-01-05. This addition provides practical guidance for organizing documentation to support multiple languages while maintaining clear structure and discoverability.
+
+**Expert**: Rachel Kim  
+**Expertise**: GraphQL API Design and Schema Development  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "GraphQL API Documentation Structure" section covering GraphQL documentation organization (recommended structure for GraphQL APIs with schema, queries, mutations, subscriptions, and types documentation), GraphQL schema documentation structure (schema-first documentation approach with schema file organization, type documentation structure, query documentation structure, mutation documentation structure), GraphQL documentation best practices (schema documentation with GraphQL schema comments and examples, query documentation with purpose, examples, and error cases, mutation documentation with side effects and validation, type documentation with fields and relationships), GraphQL documentation tools integration (schema documentation generation with GraphQL Code Generator and introspection, interactive documentation with GraphQL Playground and GraphiQL, documentation automation), GraphQL documentation structure checklist covering schema documentation, type documentation, query documentation, mutation documentation, subscription documentation, example queries and mutations, error documentation, authentication, rate limiting, pagination, filtering, deprecation, versioning, introspection, and tools integration, GraphQL schema documentation best practices (schema-first development, type documentation, query documentation, mutation documentation, example documentation), and GraphQL documentation integration with documentation structure (feature documentation, reference documentation, architecture documentation, guides). Also updated version from 1.1 to 1.2. This addition provides practical guidance for organizing GraphQL API documentation following schema-first development principles, ensuring comprehensive type, query, and mutation documentation with examples, and integrating GraphQL documentation with the overall documentation structure.
 

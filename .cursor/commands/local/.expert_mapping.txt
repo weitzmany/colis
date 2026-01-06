@@ -214,3 +214,4 @@ ui_ux_expert.mdc|Daisy Thompson
 graphql_expert.mdc|Rachel Kim
 observability_expert.mdc|Nicole Chen
 code_quality_expert.mdc|Jennifer Park
+cloud_infrastructure_expert.mdc|James Wilson

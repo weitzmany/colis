@@ -48,6 +48,7 @@ All feature documentation is located in the `features/` directory.
 
 **Tool Packages:**
 - [Tasks](./features/tasks/PRD.md) - Task management and tracking utilities
+- [Port Manager](./features/port-manager/PRD.md) - Automated port management with central registry (MySQL/SQLite)
 - [Documentation Validation](./features/documentation-validation/PRD.md) - Documentation validation tools
 - [Authentication Tool](./features/authentication-tool/PRD.md) - Reusable authentication system
 - [Database Migration Tool](./features/database-migration-tool/PRD.md) - Database migration utilities
@@ -79,6 +80,7 @@ _Note: These are placeholder PRDs with basic ideas. More details will be added a
 - [Planning Mode Workflow](./guides/PLANNING_MODE_WORKFLOW.md) - How to work in planning mode
 - [.cursor Directory](./guides/CURSOR_DIRECTORY.md) - Cursor IDE configuration directory
 - [Security and Secrets](./guides/SECURITY_AND_SECRETS.md) - Rules for handling passwords, keys, tokens, and secrets
+- [Port Management Strategy](./guides/PORT_MANAGEMENT_STRATEGY.md) - Strategy for managing ports across projects to ensure consistency and prevent conflicts
 
 ### Reference
 - [Projects List](./reference/PROJECTS_LIST.md) - List of all projects in ~/Documents/
@@ -100,6 +102,7 @@ _Note: These are placeholder PRDs with basic ideas. More details will be added a
 - [Build & Deployment Review](./reference/BUILD_DEPLOYMENT_REVIEW.md) - Build and deployment automation
 - [Git Hooks Review](./reference/GIT_HOOKS_REVIEW.md) - Git hooks patterns
 - [Database Schemas Review](./reference/DATABASE_SCHEMAS_REVIEW.md) - Database migration patterns
+- [Projects Ports Reference](./reference/PROJECTS_PORTS.md) - Port assignments and configurations for all projects
 
 _Additional topic directories will be created as needed._
 

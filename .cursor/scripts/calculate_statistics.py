@@ -319,48 +319,168 @@ def main():
     benford_row = calculate_benford_row(data_rows)
     acceptance_row = calculate_acceptance_row(data_rows)
     
-    # Find insertion point (after last data row, before Review Details)
-    last_data_idx = data_rows[-1][0] if data_rows else 0
-    
     # Update or insert statistics rows
     new_lines = lines[:]
     
-    # Remove existing statistics rows
+    # Remove existing statistics rows (from anywhere in the file)
     indices_to_remove = []
     for stat_type, stat_data in stats_rows.items():
         if stat_data:
             indices_to_remove.append(stat_data[0])
     
+    # Also search for statistics rows that might be in wrong location
+    for i, line in enumerate(new_lines):
+        if line.strip().startswith('| Total:') or line.strip().startswith('| Benford:') or line.strip().startswith('| Acceptance:'):
+            if i not in indices_to_remove:
+                indices_to_remove.append(i)
+    
+    # Remove statistics rows (in reverse order to maintain indices)
     for idx in sorted(indices_to_remove, reverse=True):
         if idx < len(new_lines):
             new_lines.pop(idx)
     
-    # Insert statistics rows after last data row
-    insert_idx = last_data_idx + 1
+    # Find the correct insertion point: after last data row
+    # Use the original last_data_idx from data_rows, but adjust for removed lines
+    last_data_idx = data_rows[-1][0] if data_rows else None
     
-    # Add empty line before stats if needed
-    if insert_idx < len(new_lines) and new_lines[insert_idx].strip():
-        new_lines.insert(insert_idx, '\n')
-        insert_idx += 1
+    # Adjust for removed lines (count how many lines were removed before last_data_idx)
+    removed_before = sum(1 for idx in indices_to_remove if idx < last_data_idx)
+    last_data_idx = last_data_idx - removed_before if last_data_idx is not None else None
     
-    # Insert statistics rows
-    if total_row:
-        new_lines.insert(insert_idx, total_row + '\n')
-        insert_idx += 1
-    if benford_row:
-        new_lines.insert(insert_idx, benford_row + '\n')
-        insert_idx += 1
-    if acceptance_row:
-        new_lines.insert(insert_idx, acceptance_row + '\n')
+    # If we still can't find it, search for it in new_lines
+    if last_data_idx is None or last_data_idx >= len(new_lines):
+        # Find last data row by searching from Expert Review Statistics section
+        for i, line in enumerate(new_lines):
+            if line.strip().startswith('## Expert Review Statistics'):
+                # Found section start, now find last data row
+                last_found = None
+                for j in range(i + 1, min(len(new_lines), i + 100)):
+                    if new_lines[j].strip().startswith('|') and not new_lines[j].strip().startswith('|-------------'):
+                        # Check if it's a data row (not a section header, not Total/Benford/Acceptance)
+                        line_stripped = new_lines[j].strip()
+                        if (not line_stripped.startswith('##') and 
+                            not line_stripped.startswith('###') and
+                            not line_stripped.startswith('| Total:') and
+                            not line_stripped.startswith('| Benford:') and
+                            not line_stripped.startswith('| Acceptance:') and
+                            not line_stripped.startswith('| Expert Name')):
+                            last_found = j
+                            # Check if next non-blank line is a section header
+                            for k in range(j + 1, min(len(new_lines), j + 10)):
+                                next_line_stripped = new_lines[k].strip()
+                                if next_line_stripped:
+                                    if next_line_stripped.startswith('##') or next_line_stripped.startswith('###'):
+                                        last_data_idx = j
+                                        break
+                                    # If we hit another data row, this isn't the last one
+                                    if next_line_stripped.startswith('|') and not next_line_stripped.startswith('|-------------'):
+                                        break
+                            if last_data_idx is not None:
+                                break
+                # If we found a data row but didn't find a section header after it, use the last found
+                if last_data_idx is None and last_found is not None:
+                    last_data_idx = last_found
+                break
+    
+    # Fallback: if we still can't find it, search for "## Files Reviewed Statistics" and work backwards
+    if last_data_idx is None:
+        for i, line in enumerate(new_lines):
+            if line.strip().startswith('## Files Reviewed Statistics'):
+                # Work backwards to find last data row
+                for j in range(i - 1, max(0, i - 50), -1):
+                    if new_lines[j].strip().startswith('|') and not new_lines[j].strip().startswith('|-------------'):
+                        line_stripped = new_lines[j].strip()
+                        if (not line_stripped.startswith('##') and 
+                            not line_stripped.startswith('###') and
+                            not line_stripped.startswith('| Total:') and
+                            not line_stripped.startswith('| Benford:') and
+                            not line_stripped.startswith('| Acceptance:') and
+                            not line_stripped.startswith('| Expert Name')):
+                            last_data_idx = j
+                            break
+                break
+    
+    # If we found the last data row, insert after it
+    if last_data_idx is not None:
+        insert_idx = last_data_idx + 1
+        
+        # Skip blank lines after last data row
+        while insert_idx < len(new_lines) and not new_lines[insert_idx].strip():
+            insert_idx += 1
+        
+        # If next line is a section header, insert before it
+        if insert_idx < len(new_lines) and (new_lines[insert_idx].startswith('##') or new_lines[insert_idx].startswith('###')):
+            # Insert before section header
+            pass
+        else:
+            # Ensure we have a blank line before stats
+            if insert_idx > 0 and new_lines[insert_idx - 1].strip():
+                new_lines.insert(insert_idx, '\n')
+                insert_idx += 1
+        
+        # Insert statistics rows
+        if total_row:
+            new_lines.insert(insert_idx, total_row + '\n')
+            insert_idx += 1
+        if benford_row:
+            new_lines.insert(insert_idx, benford_row + '\n')
+            insert_idx += 1
+        if acceptance_row:
+            new_lines.insert(insert_idx, acceptance_row + '\n')
+            insert_idx += 1
+        
+        # Add blank line after stats if next line is not blank
+        if insert_idx < len(new_lines) and new_lines[insert_idx].strip():
+            new_lines.insert(insert_idx, '\n')
+    
+    # Update Files Reviewed Statistics table total
+    files_total_updated = False
+    for i, line in enumerate(new_lines):
+        if line.strip().startswith('| **Total**'):
+            # Extract current total if present
+            parts = [p.strip() for p in line.split('|')[1:-1]]
+            if len(parts) >= 2:
+                # Find the Files Reviewed Statistics section
+                files_section_start = None
+                for j in range(i, max(0, i-100), -1):
+                    if new_lines[j].strip().startswith('## Files Reviewed Statistics'):
+                        files_section_start = j
+                        break
+                
+                if files_section_start is not None:
+                    # Find all data rows in Files Reviewed Statistics table
+                    files_total = 0
+                    for j in range(files_section_start, min(len(new_lines), files_section_start + 200)):
+                        if new_lines[j].strip().startswith('| `') and not new_lines[j].strip().startswith('| **Total**'):
+                            # Extract review count (second column)
+                            parts = [p.strip() for p in new_lines[j].split('|')[1:-1]]
+                            if len(parts) >= 2:
+                                try:
+                                    count = int(parts[1])
+                                    files_total += count
+                                except ValueError:
+                                    pass
+                    
+                    # Update the total row
+                    new_lines[i] = f'| **Total** | **{files_total}** |\n'
+                    files_total_updated = True
+                    break
     
     # Write back
     with open(tracker_path, 'w') as f:
         f.writelines(new_lines)
     
     print('Statistics calculated')
-    print('Total row updated')
-    print('Benford row updated')
-    print('Acceptance row updated')
+    print('Expert Review Statistics:')
+    print('  Total row updated')
+    print('  Benford row updated')
+    print('  Acceptance row updated')
+    if files_total_updated:
+        print('Files Reviewed Statistics:')
+        print('  Total row updated')
+    else:
+        print('Files Reviewed Statistics:')
+        print('  Total row not found or already updated')
 
 if __name__ == '__main__':
     main()

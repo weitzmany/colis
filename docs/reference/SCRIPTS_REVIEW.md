@@ -1299,6 +1299,517 @@ When designing script architecture, ensure:
 - [ ] **Configuration**: Scripts use external configuration
 - [ ] **Dependencies**: Script dependencies are managed
 
+## Database-Specific Script Execution Considerations
+
+### Database Connection Management in Scripts
+
+When executing database operations in scripts, proper connection management is critical for performance, reliability, and resource efficiency.
+
+#### Connection Pooling Patterns
+
+1. **Persistent Connection Management**:
+   - Reuse database connections across script operations
+   - Implement connection pooling for high-volume scripts
+   - Monitor connection pool usage and limits
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Database connection pooling in scripts
+     
+     # Connection pool configuration
+     MAX_CONNECTIONS="${MAX_CONNECTIONS:-10}"
+     CONNECTION_TIMEOUT="${CONNECTION_TIMEOUT:-30}"
+     
+     # Connection pool management
+     get_connection() {
+       local pool_file=".db_connection_pool"
+       local available_connections=$(cat "$pool_file" 2>/dev/null | wc -l)
+       
+       if [ "$available_connections" -lt "$MAX_CONNECTIONS" ]; then
+         # Create new connection
+         local conn_id=$(date +%s%N)
+         echo "$conn_id" >> "$pool_file"
+         echo "$conn_id"
+       else
+         # Wait for available connection
+         while [ "$(cat "$pool_file" 2>/dev/null | wc -l)" -ge "$MAX_CONNECTIONS" ]; do
+           sleep 0.1
+         done
+         get_connection
+       fi
+     }
+     
+     release_connection() {
+       local conn_id="$1"
+       local pool_file=".db_connection_pool"
+       sed -i "/^$conn_id$/d" "$pool_file"
+     }
+     ```
+
+2. **Connection Lifecycle Management**:
+   - Establish connections at script start
+   - Reuse connections for multiple operations
+   - Close connections at script end
+   - Handle connection failures gracefully
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Connection lifecycle management
+     
+     # Initialize database connection
+     init_db_connection() {
+       export DB_CONNECTION_STRING="mysql://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}"
+       export DB_CONNECTION_ACTIVE=1
+       
+       # Test connection
+       if ! mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -e "SELECT 1" "$DB_NAME" > /dev/null 2>&1; then
+         echo "Failed to establish database connection" >&2
+         export DB_CONNECTION_ACTIVE=0
+         return 1
+       fi
+       
+       echo "Database connection established"
+     }
+     
+     # Cleanup database connection
+     cleanup_db_connection() {
+       if [ "${DB_CONNECTION_ACTIVE:-0}" -eq 1 ]; then
+         # Close any open connections
+         unset DB_CONNECTION_STRING
+         export DB_CONNECTION_ACTIVE=0
+         echo "Database connection closed"
+       fi
+     }
+     
+     # Trap to ensure cleanup on script exit
+     trap cleanup_db_connection EXIT
+     
+     # Initialize at start
+     init_db_connection
+     ```
+
+3. **Connection Retry Logic**:
+   - Implement exponential backoff for connection retries
+   - Handle transient connection failures
+   - Set maximum retry attempts
+   - Log retry attempts for monitoring
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Connection retry logic
+     
+     connect_with_retry() {
+       local max_attempts="${MAX_RETRY_ATTEMPTS:-5}"
+       local base_delay="${BASE_RETRY_DELAY:-1}"
+       local attempt=1
+       
+       while [ $attempt -le $max_attempts ]; do
+         if mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -e "SELECT 1" "$DB_NAME" > /dev/null 2>&1; then
+           echo "Database connection successful (attempt $attempt)"
+           return 0
+         fi
+         
+         if [ $attempt -lt $max_attempts ]; then
+           local delay=$((base_delay * (2 ** (attempt - 1))))
+           echo "Connection failed (attempt $attempt/$max_attempts), retrying in ${delay}s..."
+           sleep $delay
+         fi
+         
+         attempt=$((attempt + 1))
+       done
+       
+       echo "Failed to connect after $max_attempts attempts" >&2
+       return 1
+     }
+     ```
+
+#### Transaction Management Patterns
+
+1. **Explicit Transaction Control**:
+   - Use explicit BEGIN/COMMIT/ROLLBACK for critical operations
+   - Wrap related operations in single transactions
+   - Implement savepoints for partial rollbacks
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Explicit transaction management
+     
+     execute_transaction() {
+       local operations_file="$1"
+       
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       START TRANSACTION;
+       
+       -- Execute operations from file
+       SOURCE $operations_file;
+       
+       -- Commit if successful
+       COMMIT;
+       EOF
+       
+       if [ $? -ne 0 ]; then
+         echo "Transaction failed, rolling back..." >&2
+         mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "ROLLBACK;"
+         return 1
+       fi
+       
+       return 0
+     }
+     ```
+
+2. **Nested Transaction Support**:
+   - Use savepoints for nested transaction-like behavior
+   - Implement transaction nesting levels
+   - Handle savepoint rollbacks
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Nested transaction support with savepoints
+     
+     TRANSACTION_LEVEL=0
+     
+     begin_transaction() {
+       TRANSACTION_LEVEL=$((TRANSACTION_LEVEL + 1))
+       local savepoint_name="sp_${TRANSACTION_LEVEL}"
+       
+       if [ $TRANSACTION_LEVEL -eq 1 ]; then
+         mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "START TRANSACTION;"
+       else
+         mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "SAVEPOINT $savepoint_name;"
+       fi
+       
+       echo "$savepoint_name"
+     }
+     
+     rollback_to_savepoint() {
+       local savepoint_name="$1"
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "ROLLBACK TO SAVEPOINT $savepoint_name;"
+     }
+     
+     commit_transaction() {
+       if [ $TRANSACTION_LEVEL -eq 1 ]; then
+         mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "COMMIT;"
+       fi
+       TRANSACTION_LEVEL=$((TRANSACTION_LEVEL - 1))
+     }
+     ```
+
+3. **Long-Running Transaction Management**:
+   - Monitor transaction duration
+   - Implement transaction timeouts
+   - Handle lock timeouts gracefully
+   - Break large transactions into smaller chunks
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Long-running transaction management
+     
+     TRANSACTION_TIMEOUT="${TRANSACTION_TIMEOUT:-300}"  # 5 minutes
+     
+     execute_with_timeout() {
+       local query="$1"
+       local start_time=$(date +%s)
+       
+       # Set transaction timeout
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       SET SESSION innodb_lock_wait_timeout = $TRANSACTION_TIMEOUT;
+       SET SESSION max_execution_time = $((TRANSACTION_TIMEOUT * 1000));
+       
+       START TRANSACTION;
+       $query
+       COMMIT;
+       EOF
+       
+       local end_time=$(date +%s)
+       local duration=$((end_time - start_time))
+       
+       if [ $duration -gt $TRANSACTION_TIMEOUT ]; then
+         echo "Warning: Transaction exceeded timeout threshold" >&2
+       fi
+       
+       return $?
+     }
+     ```
+
+### Database Performance Monitoring in Scripts
+
+#### Query Performance Tracking
+
+1. **Slow Query Detection**:
+   - Monitor query execution time
+   - Log slow queries for analysis
+   - Set performance thresholds
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Slow query detection
+     
+     SLOW_QUERY_THRESHOLD="${SLOW_QUERY_THRESHOLD:-1.0}"  # seconds
+     
+     execute_with_timing() {
+       local query="$1"
+       local start_time=$(date +%s.%N)
+       
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$query" > /dev/null
+       local exit_code=$?
+       
+       local end_time=$(date +%s.%N)
+       local duration=$(echo "$end_time - $start_time" | bc)
+       
+       if (( $(echo "$duration > $SLOW_QUERY_THRESHOLD" | bc -l) )); then
+         echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) | SLOW QUERY | ${duration}s | $query" >> slow_queries.log
+       fi
+       
+       return $exit_code
+     }
+     ```
+
+2. **Query Plan Analysis**:
+   - Analyze query execution plans
+   - Detect full table scans
+   - Identify missing indexes
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Query plan analysis
+     
+     analyze_query_plan() {
+       local query="$1"
+       
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "EXPLAIN $query" | while read -r line; do
+         if echo "$line" | grep -q "ALL\|Full table scan"; then
+           echo "WARNING: Full table scan detected in query plan" >&2
+           echo "Query: $query" >&2
+         fi
+       done
+     }
+     ```
+
+#### Database Resource Monitoring
+
+1. **Connection Pool Monitoring**:
+   - Track active connections
+   - Monitor connection pool usage
+   - Alert on connection pool exhaustion
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Connection pool monitoring
+     
+     monitor_connections() {
+       local max_connections=$(mysql -u "$DB_USER" -p"$DB_PASS" -N -e \
+         "SHOW VARIABLES LIKE 'max_connections'" | awk '{print $2}')
+       local current_connections=$(mysql -u "$DB_USER" -p"$DB_PASS" -N -e \
+         "SHOW STATUS LIKE 'Threads_connected'" | awk '{print $2}')
+       local connection_usage=$(echo "scale=2; $current_connections * 100 / $max_connections" | bc)
+       
+       echo "Connection pool usage: ${connection_usage}% ($current_connections/$max_connections)"
+       
+       if (( $(echo "$connection_usage > 80" | bc -l) )); then
+         echo "WARNING: Connection pool usage exceeds 80%" >&2
+       fi
+     }
+     ```
+
+2. **Database Lock Monitoring**:
+   - Detect and report database locks
+   - Identify long-running transactions holding locks
+   - Monitor lock wait times
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Database lock monitoring
+     
+     check_locks() {
+       mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
+       SELECT 
+         r.trx_id waiting_trx_id,
+         r.trx_mysql_thread_id waiting_thread,
+         r.trx_query waiting_query,
+         b.trx_id blocking_trx_id,
+         b.trx_mysql_thread_id blocking_thread,
+         b.trx_query blocking_query
+       FROM information_schema.innodb_lock_waits w
+       INNER JOIN information_schema.innodb_trx b ON b.trx_id = w.blocking_trx_id
+       INNER JOIN information_schema.innodb_trx r ON r.trx_id = w.requesting_trx_id;
+       EOF
+     }
+     ```
+
+### Database Script Error Recovery Patterns
+
+#### Automatic Error Recovery
+
+1. **Transient Error Handling**:
+   - Identify transient database errors
+   - Implement automatic retry for transient errors
+   - Use exponential backoff for retries
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Transient error recovery
+     
+     is_transient_error() {
+       local error="$1"
+       # Common transient errors: connection lost, lock wait timeout, deadlock
+       echo "$error" | grep -qiE "connection lost|lock wait timeout|deadlock|temporary failure"
+     }
+     
+     execute_with_retry() {
+       local query="$1"
+       local max_retries="${MAX_RETRIES:-3}"
+       local attempt=1
+       
+       while [ $attempt -le $max_retries ]; do
+         local result=$(mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$query" 2>&1)
+         local exit_code=$?
+         
+         if [ $exit_code -eq 0 ]; then
+           echo "$result"
+           return 0
+         fi
+         
+         if is_transient_error "$result" && [ $attempt -lt $max_retries ]; then
+           local delay=$((2 ** (attempt - 1)))
+           echo "Transient error detected, retrying in ${delay}s (attempt $attempt/$max_retries)..." >&2
+           sleep $delay
+           attempt=$((attempt + 1))
+         else
+           echo "Error: $result" >&2
+           return $exit_code
+         fi
+       done
+       
+       return 1
+     }
+     ```
+
+2. **Deadlock Detection and Recovery**:
+   - Detect deadlock errors
+   - Automatically retry on deadlock
+   - Log deadlock occurrences
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Deadlock detection and recovery
+     
+     handle_deadlock() {
+       local query="$1"
+       local max_deadlock_retries="${MAX_DEADLOCK_RETRIES:-5}"
+       local attempt=1
+       
+       while [ $attempt -le $max_deadlock_retries ]; do
+         local result=$(mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$query" 2>&1)
+         local exit_code=$?
+         
+         if [ $exit_code -eq 0 ]; then
+           return 0
+         fi
+         
+         if echo "$result" | grep -qi "deadlock"; then
+           echo "Deadlock detected (attempt $attempt/$max_deadlock_retries), retrying..." >&2
+           echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) | DEADLOCK | $query" >> deadlocks.log
+           sleep $((RANDOM % 3 + 1))  # Random delay to avoid retry collision
+           attempt=$((attempt + 1))
+         else
+           echo "Error: $result" >&2
+           return $exit_code
+         fi
+       done
+       
+       echo "Failed after $max_deadlock_retries deadlock retries" >&2
+       return 1
+     }
+     ```
+
+### Database Script Security Enhancements
+
+#### Credential Rotation Support
+
+1. **Dynamic Credential Loading**:
+   - Load credentials from secure storage
+   - Support credential rotation without script changes
+   - Cache credentials with expiration
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Dynamic credential loading
+     
+     CREDENTIAL_CACHE_FILE=".db_credentials_cache"
+     CREDENTIAL_CACHE_TTL="${CREDENTIAL_CACHE_TTL:-3600}"  # 1 hour
+     
+     load_credentials() {
+       # Check cache
+       if [ -f "$CREDENTIAL_CACHE_FILE" ]; then
+         local cache_time=$(stat -f %m "$CREDENTIAL_CACHE_FILE" 2>/dev/null || stat -c %Y "$CREDENTIAL_CACHE_FILE" 2>/dev/null)
+         local current_time=$(date +%s)
+         local age=$((current_time - cache_time))
+         
+         if [ $age -lt $CREDENTIAL_CACHE_TTL ]; then
+           source "$CREDENTIAL_CACHE_FILE"
+           return 0
+         fi
+       fi
+       
+       # Load from secure storage (AWS Secrets Manager, HashiCorp Vault, etc.)
+       if command -v aws &> /dev/null; then
+         local secret=$(aws secretsmanager get-secret-value --secret-id db-credentials --query SecretString --output text)
+         DB_USER=$(echo "$secret" | jq -r '.username')
+         DB_PASS=$(echo "$secret" | jq -r '.password')
+         
+         # Cache credentials
+         echo "export DB_USER='$DB_USER'" > "$CREDENTIAL_CACHE_FILE"
+         echo "export DB_PASS='$DB_PASS'" >> "$CREDENTIAL_CACHE_FILE"
+       else
+         echo "Credential loading mechanism not available" >&2
+         return 1
+       fi
+     }
+     ```
+
+#### Query Result Sanitization
+
+1. **Sensitive Data Filtering**:
+   - Filter sensitive data from query results
+   - Sanitize output for logging
+   - Implement data masking
+   - Example:
+     ```bash
+     #!/bin/bash
+     # Query result sanitization
+     
+     sanitize_output() {
+       local output="$1"
+       # Mask sensitive fields (email, SSN, credit card, etc.)
+       echo "$output" | sed -E 's/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/***@***.***/g' \
+                        | sed -E 's/\b[0-9]{3}-[0-9]{2}-[0-9]{4}\b/***-**-****/g' \
+                        | sed -E 's/\b[0-9]{4}[ -]?[0-9]{4}[ -]?[0-9]{4}[ -]?[0-9]{4}\b/****-****-****-****/g'
+     }
+     
+     execute_sanitized_query() {
+       local query="$1"
+       local result=$(mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$query")
+       sanitize_output "$result"
+     }
+     ```
+
+### Database Script Checklist - Enhanced
+
+When creating database scripts, ensure:
+
+- [ ] **Connection Management**: Proper connection handling, pooling, cleanup, retry logic
+- [ ] **Transaction Management**: Explicit transaction control, savepoints, timeout handling
+- [ ] **Security**: Credentials from environment, parameterized queries, least privilege, credential rotation
+- [ ] **Error Handling**: Transaction rollback, error detection, logging, transient error recovery, deadlock handling
+- [ ] **Data Integrity**: Transaction boundaries, constraint validation, consistency checks
+- [ ] **Performance**: Query optimization, batch operations, index awareness, slow query detection
+- [ ] **Monitoring**: Connection pool monitoring, lock monitoring, query performance tracking
+- [ ] **Testing**: Test scripts in isolated environments, validate results
+- [ ] **Documentation**: Document script purpose, parameters, dependencies
+- [ ] **Idempotency**: Scripts can be run multiple times safely
+- [ ] **Rollback**: Ability to undo changes when possible
+- [ ] **Observability**: Logging, alerting, performance tracking, error reporting
+
 ---
 
 ## Review/Contribution
@@ -1317,5 +1828,10 @@ When designing script architecture, ensure:
 **Expertise**: Architecture (System Design, Scalability)  
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "Script Architecture and Infrastructure Patterns" section covering script architecture principles (modularity and reusability with composable modules and utility functions, layered architecture with presentation/business logic/data access/infrastructure layers, service-oriented script architecture with service discovery and orchestration), script infrastructure architecture (script execution environment with containerization and resource limits, script configuration management with environment-based configuration and validation, script dependency management with dependency declaration and resolution), script scalability architecture (horizontal scaling with parallel and distributed execution, script caching and state management with result caching and incremental execution, script queue and job management with priority management and retry logic), script deployment architecture (script deployment patterns with blue-green and canary deployment, script monitoring and observability with execution logging and performance metrics), script security architecture (script access control with authentication and audit logging, script input validation architecture with sanitization and boundary checking), script integration architecture (script API architecture with RESTful interfaces and orchestration, script event architecture with event listeners and handlers), script architecture best practices (separation of concerns, error handling architecture, testing architecture, documentation architecture, version control architecture), and comprehensive script architecture checklist covering modularity, scalability, security, monitoring, testing, documentation, deployment, error handling, configuration, and dependencies. This addition provides architectural guidance for designing scalable, maintainable, secure, and observable script infrastructure, ensuring scripts follow architectural best practices and can scale to meet production requirements.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Database-Specific Script Execution Considerations" section covering database connection management in scripts (connection pooling patterns with persistent connection management and connection pool configuration, connection lifecycle management with initialization and cleanup, connection retry logic with exponential backoff and transient failure handling), transaction management patterns (explicit transaction control with BEGIN/COMMIT/ROLLBACK, nested transaction support with savepoints, long-running transaction management with timeout handling and lock timeout management), database performance monitoring in scripts (query performance tracking with slow query detection and query plan analysis, database resource monitoring with connection pool monitoring and database lock monitoring), database script error recovery patterns (automatic error recovery with transient error handling and deadlock detection and recovery), database script security enhancements (credential rotation support with dynamic credential loading, query result sanitization with sensitive data filtering and data masking), and enhanced database script checklist covering connection management with retry logic, transaction management with timeout handling, security with credential rotation, error handling with transient error recovery and deadlock handling, performance with slow query detection, monitoring with connection pool and lock monitoring, and observability with logging and alerting. This addition provides production-ready database script patterns for connection management, transaction handling, performance monitoring, error recovery, and security, ensuring database scripts are robust, performant, and secure in production environments.
 
 ---

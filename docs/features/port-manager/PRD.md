@@ -443,6 +443,15 @@ async function reservePort(
 
 ## Technical Architecture
 
+### System Architecture Overview
+
+Port Manager follows a **layered architecture pattern** with clear separation of concerns:
+
+1. **Presentation Layer**: CLI interface for user interaction
+2. **Application Layer**: Core business logic (allocation, validation, configuration)
+3. **Data Access Layer**: Database abstraction with multiple backend support
+4. **Integration Layer**: Framework-specific adapters
+
 ### Package Structure
 
 ```
@@ -454,7 +463,7 @@ port-manager/
 │   │   │   ├── check.ts
 │   │   │   ├── allocate.ts
 │   │   │   ├── list.ts
-│   │   │   ├── release.ts
+│   │   │   │   ├── release.ts
 │   │   │   ├── validate.ts
 │   │   │   └── migrate.ts
 │   │   └── index.ts
@@ -464,11 +473,13 @@ port-manager/
 │   │   ├── validator.ts
 │   │   └── configurator.ts
 │   ├── database/
+│   │   ├── interfaces.ts
 │   │   ├── mysql.ts
 │   │   ├── sqlite.ts
 │   │   ├── postgresql.ts
 │   │   └── migrations/
 │   ├── frameworks/
+│   │   ├── interfaces.ts
 │   │   ├── nextjs.ts
 │   │   ├── angular.ts
 │   │   ├── express.ts
@@ -486,61 +497,501 @@ port-manager/
 └── README.md
 ```
 
-### Core Components
+### Architecture Patterns
+
+#### 1. Repository Pattern (Data Access Layer)
+
+**Purpose**: Abstract database operations behind a consistent interface
+
+**Implementation**:
+```typescript
+interface DatabaseRepository {
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
+  getPort(projectName: string, appType: string): Promise<PortAssignment | null>;
+  assignPort(assignment: PortAssignment): Promise<void>;
+  releasePort(projectName: string, appType: string): Promise<void>;
+  listPorts(filters: PortFilters): Promise<PortAssignment[]>;
+  checkAvailability(port: number): Promise<boolean>;
+  reservePort(port: number, purpose: string): Promise<void>;
+  getHistory(projectName?: string): Promise<PortHistory[]>;
+}
+```
+
+**Benefits**:
+- Database-agnostic business logic
+- Easy to swap database backends
+- Testable with mock implementations
+- Consistent API across all databases
+
+#### 2. Strategy Pattern (Database Backends)
+
+**Purpose**: Allow runtime selection of database implementation
+
+**Implementation**:
+```typescript
+class DatabaseFactory {
+  static create(config: DatabaseConfig): DatabaseRepository {
+    switch (config.type) {
+      case 'sqlite':
+        return new SQLiteRepository(config.sqlite);
+      case 'mysql':
+        return new MySQLRepository(config.mysql);
+      case 'postgresql':
+        return new PostgreSQLRepository(config.postgresql);
+      default:
+        throw new Error(`Unsupported database type: ${config.type}`);
+    }
+  }
+}
+```
+
+**Benefits**:
+- Flexible deployment options
+- Environment-specific optimization
+- Easy to add new database backends
+
+#### 3. Factory Pattern (Framework Detection)
+
+**Purpose**: Create framework-specific configuration handlers
+
+**Implementation**:
+```typescript
+interface FrameworkHandler {
+  detect(projectPath: string): boolean;
+  configure(projectPath: string, port: number): Promise<ConfigurationResult>;
+  validate(projectPath: string): Promise<ValidationResult>;
+}
+
+class FrameworkFactory {
+  static create(appType: AppType): FrameworkHandler {
+    switch (appType) {
+      case 'nextjs':
+        return new NextJSHandler();
+      case 'angular':
+        return new AngularHandler();
+      case 'express':
+        return new ExpressHandler();
+      // ... other frameworks
+    }
+  }
+}
+```
+
+**Benefits**:
+- Extensible framework support
+- Isolated framework logic
+- Easy to add new frameworks
+
+#### 4. Command Pattern (CLI Interface)
+
+**Purpose**: Encapsulate CLI operations as first-class objects
+
+**Implementation**:
+```typescript
+interface Command {
+  execute(args: CommandArgs): Promise<CommandResult>;
+  validate(args: CommandArgs): ValidationResult;
+}
+
+class InitCommand implements Command {
+  constructor(
+    private registry: RegistryManager,
+    private allocator: PortAllocator,
+    private configurator: ConfigurationManager
+  ) {}
+  
+  async execute(args: InitArgs): Promise<CommandResult> {
+    // Command implementation
+  }
+}
+```
+
+**Benefits**:
+- Consistent command interface
+- Easy to add new commands
+- Testable command logic
+- Undo/redo capability (future enhancement)
+
+### System Components and Responsibilities
 
 #### 1. Registry Manager
 
 **Responsibility**: Manage port assignments in database
 
+**Architecture Role**: Data Access Layer - Repository implementation
+
 **Key Methods**:
 - `getPort(projectName, appType)`: Get assigned port
 - `assignPort(projectName, appType, port)`: Assign port
 - `releasePort(projectName, appType)`: Release port
-- `listPorts(filters)`: List all ports
+- `listPorts(filters)`: List all ports with filtering
 - `checkAvailability(port)`: Check if port is available
+- `reservePort(port, purpose)`: Reserve port for special use
+- `getHistory(projectName?)`: Get port assignment history
+
+**Dependencies**:
+- DatabaseRepository (injected)
+- Configuration (port ranges, reserved ports)
+
+**Design Considerations**:
+- Thread-safe operations for concurrent access
+- Transaction support for atomic operations
+- Caching layer for frequently accessed ports (future)
 
 #### 2. Port Allocator
 
 **Responsibility**: Allocate available ports based on rules
 
+**Architecture Role**: Application Layer - Business logic
+
 **Key Methods**:
-- `allocate(projectName, appType, preferredPort?)`: Allocate port
-- `findAvailablePort(appType, startPort)`: Find available port
-- `validatePortRange(port, appType)`: Validate port in range
+- `allocate(projectName, appType, preferredPort?)`: Allocate port with conflict checking
+- `findAvailablePort(appType, startPort)`: Find next available port in range
+- `validatePortRange(port, appType)`: Validate port is in correct range
+- `checkSystemPort(port)`: Check if port is in use by system
+
+**Dependencies**:
+- RegistryManager (for port availability)
+- PortChecker (for system port checking)
+- Configuration (port ranges)
+
+**Design Considerations**:
+- Efficient port search algorithm (binary search for sorted ports)
+- Port range exhaustion handling
+- Preferred port fallback logic
 
 #### 3. Conflict Detector
 
-**Responsibility**: Detect port conflicts
+**Responsibility**: Detect port conflicts proactively
+
+**Architecture Role**: Application Layer - Validation logic
 
 **Key Methods**:
-- `detectConflicts(projectPath)`: Detect all conflicts
-- `checkPortInUse(port)`: Check if port is in use
-- `checkPortAssigned(port)`: Check if port is assigned
-- `validateConfiguration(projectPath)`: Validate project config
+- `detectConflicts(projectPath)`: Detect all conflicts in project
+- `checkPortInUse(port)`: Check if port is currently in use by process
+- `checkPortAssigned(port)`: Check if port is assigned to another project
+- `validateConfiguration(projectPath)`: Validate project config matches registry
+- `generateConflictReport(conflicts)`: Generate detailed conflict report
+
+**Dependencies**:
+- RegistryManager (for registry conflicts)
+- PortChecker (for system port checking)
+- FrameworkDetector (for configuration validation)
+
+**Design Considerations**:
+- Comprehensive conflict detection (registry, system, configuration)
+- Clear conflict reporting with resolution suggestions
+- Performance optimization for batch validation
 
 #### 4. Configuration Manager
 
 **Responsibility**: Update project configuration files
 
+**Architecture Role**: Application Layer - Integration logic
+
 **Key Methods**:
-- `configure(projectPath, port, appType)`: Configure project
+- `configure(projectPath, port, appType)`: Configure project with port
 - `updateEnvFile(projectPath, port)`: Update .env files
-- `updatePackageJson(projectPath, port)`: Update package.json
+- `updatePackageJson(projectPath, port)`: Update package.json scripts
 - `updateAngularJson(projectPath, port)`: Update angular.json
 - `updateDockerCompose(projectPath, port)`: Update docker-compose.yml
+- `backupConfiguration(projectPath)`: Backup before modification
+
+**Dependencies**:
+- FrameworkHandler (framework-specific configuration)
+- FileUpdater (file system operations)
+
+**Design Considerations**:
+- Atomic file updates (write to temp, then replace)
+- Backup before modification
+- Idempotent operations (safe to run multiple times)
+- Framework-specific configuration patterns
 
 #### 5. Framework Detector
 
 **Responsibility**: Detect project framework type
 
+**Architecture Role**: Application Layer - Detection logic
+
 **Key Methods**:
-- `detectFramework(projectPath)`: Detect framework
-- `detectAppType(projectPath)`: Detect app type
-- `getConfigFiles(projectPath, appType)`: Get config files
+- `detectFramework(projectPath)`: Detect framework from project files
+- `detectAppType(projectPath)`: Detect app type (node, python, php, etc.)
+- `getConfigFiles(projectPath, appType)`: Get relevant config files
+- `validateFramework(projectPath, appType)`: Validate framework detection
+
+**Dependencies**:
+- File system access
+- Framework-specific detection rules
+
+**Design Considerations**:
+- Fast detection (check common files first)
+- Fallback detection strategies
+- Confidence scoring for ambiguous cases
+
+### Data Flow and Interactions
+
+#### Port Allocation Flow
+
+```
+User Command (CLI)
+    ↓
+Command Handler
+    ↓
+Port Allocator
+    ├──→ Registry Manager (check availability)
+    ├──→ Port Checker (check system ports)
+    └──→ Configuration Manager (update files)
+    ↓
+Framework Handler (framework-specific config)
+    ↓
+File Updater (write configuration)
+    ↓
+Registry Manager (persist assignment)
+    ↓
+Success Response
+```
+
+#### Conflict Detection Flow
+
+```
+User Command (check/validate)
+    ↓
+Conflict Detector
+    ├──→ Registry Manager (check registry conflicts)
+    ├──→ Port Checker (check system ports)
+    ├──→ Framework Detector (get configuration)
+    └──→ Configuration Manager (validate config)
+    ↓
+Conflict Report Generator
+    ↓
+Detailed Conflict Report
+```
+
+### Technology Stack and Rationale
+
+#### Core Technologies
+
+1. **TypeScript**
+   - **Rationale**: Type safety, better IDE support, maintainability
+   - **Version**: 5.x (latest stable)
+
+2. **Node.js**
+   - **Rationale**: Cross-platform CLI tool, npm ecosystem integration
+   - **Version**: 18.x LTS (minimum)
+
+3. **Commander.js**
+   - **Rationale**: Mature CLI framework, command parsing, help generation
+   - **Alternative Considered**: Yargs (chose Commander for simplicity)
+
+#### Database Drivers
+
+1. **sqlite3** (SQLite)
+   - **Rationale**: Zero-configuration, file-based, perfect for local development
+   - **Performance**: Fast for single-user scenarios
+
+2. **mysql2** (MySQL)
+   - **Rationale**: Production-ready, team collaboration, connection pooling
+   - **Performance**: Optimized for concurrent access
+
+3. **pg** (PostgreSQL)
+   - **Rationale**: Advanced features, JSON support, enterprise adoption
+   - **Performance**: Excellent for complex queries
+
+#### File System Operations
+
+1. **fs-extra**
+   - **Rationale**: Promise-based, additional utilities, cross-platform
+   - **Features**: Atomic writes, directory operations
+
+2. **dotenv**
+   - **Rationale**: Standard .env file parsing, environment variable management
+
+#### CLI Enhancements
+
+1. **chalk**
+   - **Rationale**: Terminal colors, improved UX, error highlighting
+
+2. **inquirer**
+   - **Rationale**: Interactive prompts, user-friendly CLI experience
+
+### Infrastructure Requirements
+
+#### Local Development (SQLite)
+
+- **Storage**: ~1MB per 1000 port assignments
+- **Performance**: < 10ms per operation
+- **Concurrency**: Single-user (file locking)
+- **Backup**: File-based (copy database file)
+
+#### Team Collaboration (MySQL/PostgreSQL)
+
+- **Storage**: ~10MB per 10,000 port assignments
+- **Performance**: < 50ms per operation (with connection pooling)
+- **Concurrency**: Multi-user (database-level locking)
+- **Backup**: Database backup strategies
+- **Connection Pooling**: Required for production use
+- **Replication**: Optional for high availability
+
+### Integration Points
+
+#### 1. Framework Integration
+
+**Integration Method**: File-based configuration updates
+
+**Supported Frameworks**:
+- Next.js: `.env.local`, `package.json`, `next.config.js`
+- Angular: `angular.json`, `package.json`
+- Express: `.env.example`, `package.json`
+- React/Vite: `vite.config.js`, `package.json`
+- Docker: `docker-compose.yml`
+
+**Integration Strategy**:
+- Read existing configuration
+- Merge port settings (preserve other config)
+- Write updated configuration
+- Backup original files
+
+#### 2. CI/CD Integration
+
+**Integration Points**:
+- Pre-commit hooks: Validate port configuration
+- CI pipeline: Automated port conflict checks
+- Build scripts: Port allocation for test environments
+
+**Integration Methods**:
+- Git hooks (pre-commit, pre-push)
+- CI configuration files (GitHub Actions, GitLab CI, Jenkins)
+- npm scripts integration
+
+#### 3. System Integration
+
+**Port Checking**:
+- **Unix/Linux**: `lsof`, `netstat`, `/proc/net/tcp`
+- **macOS**: `lsof`, `netstat`
+- **Windows**: `netstat`, `Get-NetTCPConnection` (PowerShell)
+
+**File System**:
+- Cross-platform path handling
+- File locking for concurrent access
+- Atomic file operations
+
+### Scalability Considerations
+
+#### Horizontal Scaling
+
+**Current Architecture**: Single-instance CLI tool
+
+**Future Scalability Options**:
+1. **Shared Database**: Multiple CLI instances share MySQL/PostgreSQL database
+2. **API Server**: Central API server for port management (future enhancement)
+3. **Distributed Registry**: Multi-region port registry (future enhancement)
+
+**Scalability Limits**:
+- **SQLite**: ~1000 projects per database (file locking bottleneck)
+- **MySQL/PostgreSQL**: 10,000+ projects (with proper indexing)
+
+#### Performance Optimization
+
+1. **Database Indexing**:
+   - Index on `port` (unique constraint)
+   - Index on `project_name` + `app_type` (composite unique)
+   - Index on `status` (for filtering)
+
+2. **Caching Strategy**:
+   - In-memory cache for frequently accessed ports
+   - Cache invalidation on port assignment/release
+   - TTL-based cache expiration
+
+3. **Query Optimization**:
+   - Batch operations for multi-project validation
+   - Prepared statements for repeated queries
+   - Connection pooling for database backends
+
+4. **Port Allocation Algorithm**:
+   - Binary search for sorted port ranges
+   - Port range pre-allocation (reserve blocks)
+   - Lazy port checking (check only when needed)
+
+#### Database Scaling
+
+**SQLite Limitations**:
+- Single-writer limitation
+- File-based locking
+- Not suitable for high concurrency
+
+**MySQL/PostgreSQL Advantages**:
+- Row-level locking
+- Connection pooling
+- Read replicas for scaling reads
+- Partitioning for large datasets
+
+**Migration Path**:
+1. Start with SQLite (local development)
+2. Migrate to MySQL/PostgreSQL (team collaboration)
+3. Add read replicas (high-traffic scenarios)
+4. Implement caching layer (future optimization)
+
+### Dependency Analysis
+
+#### Component Dependencies
+
+```
+CLI Commands
+    ↓
+Core Components (Registry, Allocator, Validator, Configurator)
+    ↓
+Database Layer (Repository Interface)
+    ↓
+Database Implementations (SQLite, MySQL, PostgreSQL)
+    ↓
+Framework Handlers
+    ↓
+File System Operations
+```
+
+#### External Dependencies
+
+1. **System Dependencies**:
+   - Port checking tools (lsof, netstat)
+   - File system access
+   - Process management
+
+2. **npm Dependencies**:
+   - TypeScript compiler
+   - Database drivers
+   - CLI framework
+   - File system utilities
+
+3. **Runtime Dependencies**:
+   - Node.js runtime
+   - Database server (for MySQL/PostgreSQL)
+
+#### Build Order and Prerequisites
+
+**Phase 1: Foundation**
+1. Database layer (interfaces, SQLite implementation)
+2. Core components (Registry, Allocator)
+3. Basic CLI commands (init, allocate, list)
+
+**Phase 2: Validation**
+4. Conflict detection
+5. Port validation
+6. Configuration validation
+
+**Phase 3: Integration**
+7. Framework handlers
+8. Configuration manager
+9. Advanced CLI commands
+
+**Phase 4: Advanced Features**
+10. MySQL/PostgreSQL support
+11. Port history
+12. CI/CD integration
 
 ### Database Layer
 
-**Abstraction**: Database-agnostic interface
+**Abstraction**: Database-agnostic interface using Repository Pattern
 
 **Implementation**:
 - SQLite (default, local development)
@@ -551,6 +1002,13 @@ port-manager/
 - Versioned schema migrations
 - Automatic migration on startup
 - Rollback support
+- Migration history tracking
+
+**Connection Management**:
+- Connection pooling for MySQL/PostgreSQL
+- Lazy connection initialization
+- Connection retry logic
+- Graceful connection cleanup
 
 ## API Reference
 
@@ -900,14 +1358,118 @@ const assignment = await manager.getPort('my-project', 'nextjs');
 1. **Database Compatibility**: Medium risk
    - **Mitigation**: Start with SQLite, add MySQL/PostgreSQL incrementally
    - **Impact**: Limited to SQLite users initially
+   - **Architectural Mitigation**: Repository pattern ensures database-agnostic code, easy to add new backends
 
 2. **Framework Support**: Medium risk
    - **Mitigation**: Prioritize most common frameworks (Next.js, Angular)
    - **Impact**: Some frameworks may need manual configuration
+   - **Architectural Mitigation**: Factory pattern for framework handlers allows incremental framework support
 
 3. **Port Detection Accuracy**: Low risk
    - **Mitigation**: Use proven system-level port checking (lsof/netstat)
    - **Impact**: Rare false positives/negatives
+   - **Architectural Mitigation**: Multiple detection methods (registry + system check) for redundancy
+
+### Architectural Risks
+
+1. **Scalability Limitations**: Medium risk
+   - **Risk**: SQLite file locking limits concurrent access
+   - **Mitigation**: 
+     - Clear migration path to MySQL/PostgreSQL for teams
+     - Connection pooling for database backends
+     - Caching layer for frequently accessed data
+   - **Impact**: Single-user limitation for SQLite, multi-user requires MySQL/PostgreSQL
+
+2. **Concurrent Port Allocation**: Medium risk
+   - **Risk**: Race conditions when multiple processes allocate ports simultaneously
+   - **Mitigation**:
+     - Database-level locking (transactions)
+     - Atomic port allocation operations
+     - Retry logic for failed allocations
+   - **Impact**: Potential port conflicts if not properly handled
+
+3. **File System Race Conditions**: Low risk
+   - **Risk**: Multiple processes updating same configuration files
+   - **Mitigation**:
+     - Atomic file operations (write to temp, then replace)
+     - File locking mechanisms
+     - Backup before modification
+   - **Impact**: Potential configuration corruption if not handled
+
+4. **Framework Detection Accuracy**: Medium risk
+   - **Risk**: Incorrect framework detection leading to wrong configuration
+   - **Mitigation**:
+     - Multiple detection strategies (file presence, package.json analysis)
+     - Confidence scoring for ambiguous cases
+     - Manual override option
+   - **Impact**: Incorrect port configuration if detection fails
+
+5. **Database Migration Failures**: Low risk
+   - **Risk**: Schema migrations failing in production
+   - **Mitigation**:
+     - Versioned migrations with rollback support
+     - Migration testing in staging
+     - Backup before migration
+   - **Impact**: Database corruption or data loss if migration fails
+
+6. **Performance Degradation**: Low risk
+   - **Risk**: Slow port allocation with large number of projects
+   - **Mitigation**:
+     - Database indexing on critical columns
+     - Efficient port search algorithms
+     - Caching for frequently accessed data
+   - **Impact**: Slow CLI operations with 1000+ projects
+
+### Integration Challenges
+
+1. **Framework-Specific Configuration**: Medium complexity
+   - **Challenge**: Each framework has different configuration patterns
+   - **Mitigation**: Framework handler pattern isolates framework logic
+   - **Impact**: More code to maintain, but better separation of concerns
+
+2. **Cross-Platform Compatibility**: Low complexity
+   - **Challenge**: Different port checking tools on different platforms
+   - **Mitigation**: Platform-specific port checking implementations
+   - **Impact**: Additional testing required for each platform
+
+3. **CI/CD Integration Complexity**: Medium complexity
+   - **Challenge**: Different CI/CD systems have different integration points
+   - **Mitigation**: Standardized hooks and scripts, documentation for each system
+   - **Impact**: More documentation and examples needed
+
+### Performance Bottlenecks
+
+1. **Database Query Performance**: Low risk
+   - **Bottleneck**: Sequential port allocation queries
+   - **Optimization**: Batch operations, connection pooling, indexing
+   - **Impact**: < 50ms per operation with proper optimization
+
+2. **File System Operations**: Low risk
+   - **Bottleneck**: Multiple file reads/writes during configuration
+   - **Optimization**: Batch file operations, caching file contents
+   - **Impact**: < 100ms for full project configuration
+
+3. **Port Checking Performance**: Low risk
+   - **Bottleneck**: System-level port checking (lsof/netstat)
+   - **Optimization**: Cache port check results, parallel checking
+   - **Impact**: < 200ms for comprehensive conflict detection
+
+### Scalability Concerns
+
+1. **Single-Instance Limitation**: Medium concern
+   - **Current**: CLI tool runs as single process
+   - **Future**: API server for multi-instance access (future enhancement)
+   - **Impact**: Multiple developers can use shared database, but CLI is single-instance
+
+2. **Database Size Growth**: Low concern
+   - **Growth Rate**: ~1KB per port assignment
+   - **Scaling**: Database partitioning for 10,000+ projects
+   - **Impact**: Minimal with proper indexing
+
+3. **Port Range Exhaustion**: Low concern
+   - **Risk**: Running out of available ports in a range
+   - **Mitigation**: Configurable port ranges, automatic range expansion
+   - **Impact**: Manual intervention needed if all ports in range are used
 
 ### Business Risks
 
@@ -1011,4 +1573,9 @@ const assignment = await manager.getPort('my-project', 'nextjs');
 **Expertise**: Copywriting (App naming, section naming, website content)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this PRD with copywriting improvements to make it more engaging, clear, and user-focused. Improved the "Overview" section with a more compelling value proposition that emphasizes benefits over features. Enhanced "Pain Points" section with clearer formatting and more specific descriptions of developer frustrations. Transformed "Solution" section from a feature list into benefit-focused descriptions that explain what each feature does for the user. Changed all feature "Description" headers to "What It Does" for better clarity and user-centric language. Improved CLI command descriptions with clearer, more actionable language and better formatting. Enhanced framework integration descriptions to emphasize ease of use and automatic configuration. Improved advanced features descriptions with "What It Does" format and clearer use cases. Enhanced pricing tier descriptions with "Who It's For" and "What You Get" sections to make value propositions clearer. All changes focus on making the PRD more readable, engaging, and focused on user benefits rather than technical implementation details, while maintaining accuracy and completeness.
+
+**Expert**: Arthur Davis  
+**Expertise**: Architecture (System Design and Scalability)  
+**Date**: 2026-01-05  
+**Changes**: Significantly expanded the "Technical Architecture" section with comprehensive architectural design details. Added "System Architecture Overview" describing the layered architecture pattern (Presentation, Application, Data Access, Integration layers). Enhanced "Architecture Patterns" section with detailed implementations of Repository Pattern (database abstraction), Strategy Pattern (database backends), Factory Pattern (framework detection), and Command Pattern (CLI interface), including code examples and benefits for each pattern. Expanded "System Components and Responsibilities" section with detailed architectural roles, dependencies, and design considerations for each core component (Registry Manager, Port Allocator, Conflict Detector, Configuration Manager, Framework Detector). Added "Data Flow and Interactions" section with detailed flow diagrams for port allocation and conflict detection processes. Added "Technology Stack and Rationale" section explaining technology choices with justifications (TypeScript, Node.js, Commander.js, database drivers, file system operations, CLI enhancements). Added "Infrastructure Requirements" section covering local development (SQLite) and team collaboration (MySQL/PostgreSQL) requirements including storage, performance, concurrency, and backup considerations. Added "Integration Points" section detailing framework integration methods, CI/CD integration points, and system integration approaches. Added comprehensive "Scalability Considerations" section covering horizontal scaling options, performance optimization strategies (database indexing, caching, query optimization, port allocation algorithms), and database scaling migration paths. Added "Dependency Analysis" section with component dependency diagrams, external dependencies, and build order/prerequisites. Enhanced "Risk Assessment" section with new "Architectural Risks" subsection covering scalability limitations, concurrent port allocation, file system race conditions, framework detection accuracy, database migration failures, and performance degradation with mitigation strategies. Added "Integration Challenges" and "Performance Bottlenecks" subsections with detailed analysis and optimization strategies. Added "Scalability Concerns" subsection addressing single-instance limitations, database size growth, and port range exhaustion. These additions transform the technical architecture section from a basic package structure into a comprehensive architectural specification suitable for system design, scalability planning, and implementation guidance.
 

@@ -622,50 +622,63 @@ Port Manager follows a **layered architecture pattern** with clear separation of
 3. **Data Access Layer**: Database abstraction with multiple backend support
 4. **Integration Layer**: Framework-specific adapters
 
-### Package Structure
+### Package Structure (Within Core)
+
+Port Manager is structured as a feature module within the core package:
 
 ```
-port-manager/
+@your-org/core/
 ├── src/
-│   ├── cli/
-│   │   ├── commands/
-│   │   │   ├── init.ts
-│   │   │   ├── check.ts
-│   │   │   ├── allocate.ts
-│   │   │   ├── list.ts
-│   │   │   │   ├── release.ts
-│   │   │   ├── validate.ts
-│   │   │   └── migrate.ts
-│   │   └── index.ts
-│   ├── core/
-│   │   ├── registry.ts
-│   │   ├── allocator.ts
-│   │   ├── validator.ts
-│   │   └── configurator.ts
-│   ├── database/
-│   │   ├── interfaces.ts
-│   │   ├── mysql.ts
-│   │   ├── sqlite.ts
-│   │   ├── postgresql.ts
-│   │   └── migrations/
-│   ├── frameworks/
-│   │   ├── interfaces.ts
-│   │   ├── nextjs.ts
-│   │   ├── angular.ts
-│   │   ├── express.ts
-│   │   ├── react.ts
-│   │   └── docker.ts
-│   ├── utils/
-│   │   ├── port-checker.ts
-│   │   ├── file-updater.ts
-│   │   └── project-detector.ts
-│   └── index.ts
+│   ├── features/
+│   │   └── port-manager/        # Port Manager feature module
+│   │       ├── index.ts         # Public API export
+│   │       ├── cli/
+│   │       │   ├── commands/
+│   │       │   │   ├── init.ts
+│   │       │   │   ├── check.ts
+│   │       │   │   ├── allocate.ts
+│   │       │   │   ├── list.ts
+│   │       │   │   ├── release.ts
+│   │       │   │   ├── validate.ts
+│   │       │   │   └── migrate.ts
+│   │       │   └── index.ts
+│   │       ├── core/
+│   │       │   ├── registry.ts
+│   │       │   ├── allocator.ts
+│   │       │   ├── validator.ts
+│   │       │   └── configurator.ts
+│   │       ├── database/
+│   │       │   ├── interfaces.ts
+│   │       │   ├── mysql.ts
+│   │       │   ├── sqlite.ts
+│   │       │   ├── postgresql.ts
+│   │       │   └── migrations/
+│   │       ├── frameworks/
+│   │       │   ├── interfaces.ts
+│   │       │   ├── nextjs.ts
+│   │       │   ├── angular.ts
+│   │       │   ├── express.ts
+│   │       │   ├── react.ts
+│   │       │   └── docker.ts
+│   │       └── utils/
+│   │           ├── port-checker.ts
+│   │           ├── file-updater.ts
+│   │           └── project-detector.ts
+│   ├── shared/                  # Shared utilities (used by port-manager)
+│   │   ├── database/            # Database abstractions
+│   │   │   ├── repository.ts
+│   │   │   ├── sqlite.ts
+│   │   │   └── mysql.ts
+│   │   └── config/              # Configuration utilities
+│   └── index.ts                 # Core package exports
 ├── bin/
-│   └── port-manager
+│   └── port-manager             # CLI binary
 ├── package.json
 ├── tsconfig.json
 └── README.md
 ```
+
+**Note**: Port Manager uses core's shared database abstractions from `shared/database/` but can also have feature-specific database implementations if needed.
 
 ### Architecture Patterns
 
@@ -1184,27 +1197,32 @@ File System Operations
 
 ### CLI API
 
+The CLI is available via the core package's binary:
+
 ```bash
-# Initialize port manager in project
+# CLI available after installing @your-org/core
+npx @your-org/core port-manager init [--project-name <name>] [--app-type <type>] [--port <port>]
+
+# Or use the binary directly (if installed globally)
 port-manager init [--project-name <name>] [--app-type <type>] [--port <port>]
 
 # Check port status and conflicts
-port-manager check [--project-path <path>]
+npx @your-org/core port-manager check [--project-path <path>]
 
 # Allocate new port
-port-manager allocate --project-name <name> --app-type <type> [--port <port>]
+npx @your-org/core port-manager allocate --project-name <name> --app-type <type> [--port <port>]
 
 # List all port assignments
-port-manager list [--project <name>] [--type <type>] [--status <status>]
+npx @your-org/core port-manager list [--project <name>] [--type <type>] [--status <status>]
 
 # Release port assignment
-port-manager release --project-name <name> [--app-type <type>]
+npx @your-org/core port-manager release --project-name <name> [--app-type <type>]
 
 # Validate all projects
-port-manager validate [--project-path <path>]
+npx @your-org/core port-manager validate [--project-path <path>]
 
 # Migrate existing project
-port-manager migrate --project-path <path> [--port <port>]
+npx @your-org/core port-manager migrate --project-path <path> [--port <port>]
 ```
 
 ### Programmatic API
@@ -1454,22 +1472,32 @@ interface ConflictReport {
 
 ## Dependencies
 
-### Core Dependencies
+### Core Package Dependencies
 
+Port Manager, as part of `@your-org/core`, shares dependencies with the core package:
+
+**Core Package Dependencies**:
 - **TypeScript**: Type safety
-- **Commander**: CLI framework
-- **sqlite3** or **mysql2**: Database drivers
+- **Commander**: CLI framework (shared across core features)
+- **sqlite3** or **mysql2**: Database drivers (shared database abstractions)
 - **dotenv**: Environment variable management
 - **fs-extra**: File system operations
 - **chalk**: Terminal colors
 - **inquirer**: Interactive prompts
 
+**Port Manager Specific Dependencies**:
+- Uses core's shared database abstractions
+- May have feature-specific dependencies if needed
+
 ### Development Dependencies
 
-- **jest**: Testing framework
+**Core Package Development Dependencies**:
+- **jest**: Testing framework (shared across core)
 - **@types/node**: TypeScript types
 - **eslint**: Linting
 - **prettier**: Code formatting
+
+**Note**: Dependencies are managed at the core package level, not per-feature.
 
 ## Testing Strategy
 

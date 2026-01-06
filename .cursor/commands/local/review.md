@@ -235,6 +235,7 @@ Execute this command to run the expert review workflow:
 ### Step 5: Expert Review
 
 10. **Expert Review** (using expert from Step 2/4 and file from Step 3b/4/9)
+   - **Initialize Review Tracking**: Create a set to track reviewed files (to prevent infinite loops in recursive reviews)
    - **Standard Review** (always performed):
      - Ask the expert to review the selected file
      - **⚠️ CRITICAL REQUIREMENT**: Expert must ACTUALLY IMPROVE the file, not just describe what should be changed
@@ -256,6 +257,7 @@ Execute this command to run the expert review workflow:
        - Expert's name
        - Expertise
        - Date
+     - **Mark File as Reviewed**: Add the current file path to the reviewed files set
      - **Update Expert Reviews Tracker**: After review, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
        - Increment "Files Reviewed" count for the expert
        - Increment "Total Changes" count
@@ -270,9 +272,25 @@ Execute this command to run the expert review workflow:
        - Run `/local/sort` to sort the expert statistics table
        - Run `/local/statistics` command to calculate and update statistics rows
        - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
-     - **Update Tracker Status**: Before ending, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
-       - Replace "Current reviewer" with "Last reviewer"
-       - Replace "Current file" with "Last file"
+   - **Recursive Review of Related Documentation** (after standard review):
+     - **Check for Related Documentation Section**: After reviewing the file, check if it contains a "Related Documentation" section (look for heading "## Related Documentation" or "### Related Documentation" or similar variations)
+     - **Extract Referenced Files**: If "Related Documentation" section exists:
+       - Parse markdown links in the format `[text](path)` or `- [text](path)`
+       - Extract the file paths from the links
+       - Resolve relative paths to absolute paths (relative to the current file's directory)
+       - Filter out external URLs (http://, https://, mailto:, etc.)
+       - Filter out files that don't exist
+       - Filter out files already in the reviewed files set (to prevent loops)
+     - **Recursively Review Each Referenced File**: For each referenced file:
+       - **Update Tracker**: Update `docs/reference/EXPERT_REVIEWS_TRACKER.md` with current file being reviewed
+       - **Review File**: Use the same expert to review the referenced file (repeat Step 10 with the referenced file)
+       - **Mark as Reviewed**: Add the referenced file path to the reviewed files set
+       - **Continue Recursion**: After reviewing each referenced file, check if it also has a "Related Documentation" section and recursively review those files too (with loop prevention)
+     - **Note**: Recursive reviews should be depth-limited to prevent excessive reviews (suggest max depth of 3-5 levels)
+     - **Track Recursive Reviews**: All recursively reviewed files should be tracked in the same way as the primary review (update tracker, statistics, etc.)
+   - **Update Tracker Status**: Before ending, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+     - Replace "Current reviewer" with "Last reviewer"
+     - Replace "Current file" with "Last file"
    - **File Rearrangement** (if expert's expertise is appropriate):
      - If the expert's expertise is appropriate (e.g., Documentation Expert, Architecture Expert, or any expert whose expertise relates to file organization/structure):
        - Expert MUST also review and evaluate documentation structure in addition to the regular review
@@ -297,10 +315,11 @@ Execute this command to run the expert review workflow:
            - If expert reviewed documentation structure: Increment "Structure Reviewed" count for the expert
            - If expert rearranged files: Increment "Files Rearranged" count for the expert
    - **Commit Changes**: Stage all changes and commit with message:
-     - Message format: `Expert review: [Expert Name] reviewed [File Path]`
-     - Stage all modified files (reviewed file, tracker, reorganization documentation if applicable, any other files modified)
+     - Message format: `Expert review: [Expert Name] reviewed [File Path]` (include recursive reviews in commit message if applicable)
+     - Stage all modified files (reviewed file(s), tracker, reorganization documentation if applicable, any other files modified)
+     - If recursive reviews occurred, include all reviewed files in the commit
      - Commit with the generated message
-   - **Output**: Expert name and file name (full path)
+   - **Output**: Expert name and file name(s) (full path, including recursively reviewed files if any)
 
 ## Implementation Notes
 
@@ -320,6 +339,14 @@ Execute this command to run the expert review workflow:
   - Expert name validation: While the command assumes expert exists when provided, in practice, verify expert file exists at `.cursor/rules/experts/<expert_name>_expert.mdc` before proceeding
   - File existence validation: Always verify file exists before attempting to read or modify
   - Error handling: Implement graceful failure when expert or file cannot be found or accessed
+- **Recursive Review Implementation**:
+  - After reviewing a file, parse the file content to find "Related Documentation" sections
+  - Use regex or markdown parser to extract links: `\[([^\]]+)\]\(([^\)]+)\)`
+  - Resolve relative paths using the current file's directory as base
+  - Maintain a set/array of reviewed file paths to prevent loops
+  - Track recursion depth and limit to 3-5 levels
+  - For each referenced file: verify it exists, check if already reviewed, then review recursively
+  - All recursively reviewed files should be included in the same commit as the primary review
 - **Tracker Status Updates** (Dynamic Location):
   - When expert is selected: Find the line containing "**Last Updated**:" and add/update the next line with `**Current reviewer**: [Expert Name]`
   - When file is selected: Find the line containing "**Last Updated**:" and add/update the line after "Current reviewer" (or after "Last Updated" if no reviewer line) with `**Current file**: [File Name]`
@@ -411,6 +438,43 @@ Execute this command to run the expert review workflow:
   - **Update Statistics and Sort**: After updating tracker:
     - Run `/local/statistics` command to calculate and update statistics rows
     - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
+- **Recursive Review of Related Documentation** (after standard review):
+  - **Detection**: After reviewing a file, check if it contains a "Related Documentation" section
+  - **Pattern Matching**: Look for headings like:
+    - `## Related Documentation`
+    - `### Related Documentation`
+    - `## Related`
+    - `### Related`
+    - `## See Also`
+    - `### See Also`
+  - **Link Extraction**: Parse markdown links in the format:
+    - `[text](path)` - standard markdown link
+    - `- [text](path)` - list item with link
+    - Extract the path portion (between parentheses)
+  - **Path Resolution**:
+    - If path is relative (starts with `./` or `../` or no leading `/`), resolve relative to the current file's directory
+    - If path is absolute (starts with `/`), use as-is
+    - Convert to absolute path for consistency
+  - **Filtering**:
+    - Skip external URLs (http://, https://, mailto:, etc.)
+    - Skip files that don't exist
+    - Skip files already in reviewed files set (loop prevention)
+    - Only process markdown files (`.md`, `.mdc`) or files in `docs/` directory
+  - **Recursive Review Process**:
+    - For each valid referenced file:
+      - Check if file is already in reviewed files set (skip if yes)
+      - Add file to reviewed files set
+      - Update tracker with current file being reviewed
+      - Review the file with the same expert (repeat standard review process)
+      - After review, check if the referenced file also has "Related Documentation" section
+      - Recursively review those files too (with depth limit)
+    - **Depth Limiting**: Track recursion depth and limit to 3-5 levels to prevent excessive reviews
+    - **Loop Prevention**: Maintain a set of reviewed file paths to prevent infinite loops
+  - **Tracking**: All recursively reviewed files should be tracked the same way as primary review:
+    - Update expert statistics
+    - Update file review statistics
+    - Include in commit message
+    - Track in review details
 - **File Rearrangement** (if expert's expertise is appropriate):
   - If expert's expertise is appropriate (e.g., Documentation Expert, Architecture Expert, or any expert whose expertise relates to file organization/structure):
     - Expert MUST also review and evaluate documentation structure in addition to the regular review
@@ -466,6 +530,49 @@ At the end of documents, add:
 ---
 ```
 
+## Recursive Review Feature
+
+### Overview
+
+When reviewing a file, the command automatically detects and recursively reviews files referenced in "Related Documentation" sections. This ensures that related documentation stays synchronized and up-to-date.
+
+### How It Works
+
+1. **Detection**: After reviewing a file, the command checks for a "Related Documentation" section
+2. **Link Extraction**: Parses markdown links from the section (format: `[text](path)`)
+3. **Path Resolution**: Resolves relative paths to absolute paths
+4. **Filtering**: Skips external URLs, non-existent files, and already-reviewed files (loop prevention)
+5. **Recursive Review**: Reviews each referenced file with the same expert
+6. **Depth Limiting**: Limits recursion depth to 3-5 levels to prevent excessive reviews
+
+### Example
+
+If reviewing `docs/features/port-manager/PRD.md` which contains:
+```markdown
+## Related Documentation
+
+- [Port Management Strategy](../guides/PORT_MANAGEMENT_STRATEGY.md)
+- [Projects Ports Reference](../reference/PROJECTS_PORTS.md)
+```
+
+The command will:
+1. Review `docs/features/port-manager/PRD.md` (primary file)
+2. Automatically review `docs/guides/PORT_MANAGEMENT_STRATEGY.md` (recursive)
+3. Automatically review `docs/reference/PROJECTS_PORTS.md` (recursive)
+4. If those files also have "Related Documentation" sections, review those too (with depth limit)
+
+### Loop Prevention
+
+- Maintains a set of reviewed file paths
+- Skips files already in the reviewed set
+- Prevents infinite loops in circular references
+
+### Depth Limiting
+
+- Default maximum depth: 3-5 levels
+- Prevents excessive reviews of deeply nested documentation
+- Ensures reasonable review scope
+
 ## Expected Outputs
 
 ### Scenario 1: New Expert Created
@@ -489,7 +596,17 @@ Expert: [Name]
 File: [full/path/to/file.md]
 ```
 
-### Scenario 4: Files Rearranged (Exception)
+### Scenario 4: File Reviewed with Recursive Reviews
+```
+File reviewed
+Expert: [Name]
+File: [full/path/to/file.md]
+Recursive reviews:
+  - [full/path/to/related-file-1.md]
+  - [full/path/to/related-file-2.md]
+```
+
+### Scenario 5: Files Rearranged (Exception)
 ```
 File reviewed
 Expert: [Name]

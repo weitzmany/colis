@@ -102,6 +102,9 @@ Execute this command to run the expert review workflow:
        - Section header: `### [Expert Name] ([Short Expertise Description])`
        - Content: `- **Total Reviews**: 0`
      - **Update Statistics and Sort**: After updating tracker:
+       - Update files reviewed statistics table (increment review count for the file)
+       - Run `/local/statistics` to recalculate statistics
+       - Run `/local/sort` to sort the expert statistics table
        - Run `/local/statistics` command to calculate and update statistics rows
        - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
    - **Commit Changes**: Stage all changes and commit with message:
@@ -198,6 +201,9 @@ Execute this command to run the expert review workflow:
        - Add entry to "Review Details" section with file path and date
        - Update statistics summary
      - **Update Statistics and Sort**: After updating tracker:
+       - Update files reviewed statistics table (increment review count for the file)
+       - Run `/local/statistics` to recalculate statistics
+       - Run `/local/sort` to sort the expert statistics table
        - Run `/local/statistics` command to calculate and update statistics rows
        - Run `/local/sort sort-by="Files Created"` command to sort table by Files Created
      - **Update Tracker Status**: Before ending, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
@@ -259,6 +265,9 @@ Execute this command to run the expert review workflow:
        - If expert rearranged files: Increment "Files Rearranged" count
        - Update statistics summary
      - **Update Statistics and Sort**: After updating tracker:
+       - Update files reviewed statistics table (increment review count for the file)
+       - Run `/local/statistics` to recalculate statistics
+       - Run `/local/sort` to sort the expert statistics table
        - Run `/local/statistics` command to calculate and update statistics rows
        - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
      - **Update Tracker Status**: Before ending, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
@@ -487,6 +496,30 @@ Expert: [Name]
 File: [full/path/to/reorganization-documentation.md]
 ```
 
+### Mobile Optimization Considerations
+
+When executing this command on mobile devices:
+
+1. **Command Execution Performance**
+   - File operations (read/write) should be optimized for mobile storage speeds
+   - Expert selection and file selection processes should minimize I/O operations
+   - Git operations (status, diff, commit) may be slower on mobile - consider async/background processing
+
+2. **Mobile Terminal Workflow**
+   - Output format is mobile-terminal friendly (concise, readable)
+   - Progress indicators should work well on small mobile screens
+   - Error messages should be clear and actionable in mobile terminals
+
+3. **Battery Efficiency**
+   - Long-running reviews should minimize battery drain
+   - Consider chunking large file operations
+   - Optimize git operations for mobile device constraints
+
+4. **Mobile File System Considerations**
+   - Handle slower file system operations gracefully
+   - Consider caching file lists and expert mappings
+   - Account for mobile storage limitations
+
 ---
 
 ## Review/Contribution
@@ -495,5 +528,15 @@ File: [full/path/to/reorganization-documentation.md]
 **Expertise**: Subject Matter (Physics, Math, CS, Academic Fields)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this expert review command specification with academic rigor and validation considerations. Added detailed explanation of random number generation algorithm (modulo operation, range shifting). Added validation considerations section covering expert name validation, file existence validation, and error handling practices. Enhanced expert file creation section with expert naming convention guidelines and expertise validation requirements (specificity, uniqueness, clarity). Added file naming and path validation guidelines including kebab-case conventions, path structure compliance, and conflict checking. Added comprehensive "Validation and Verification Framework" section covering pre-review checks (expert expertise verification, file accessibility), during-review validation (traceability, alignment verification), and post-review verification (diff checking, signature block validation, tracker consistency). Added "Quality Assurance" section with accuracy verification, completeness checks, consistency validation, and educational value assessment. Added academic rigor reminder emphasizing factual accuracy, logical soundness, clear documentation, and educational value for all changes. These additions strengthen the command's reliability, traceability, and adherence to academic standards for accuracy and validation.
+
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Added mobile optimization considerations section covering command execution performance (optimized file operations, minimized I/O, git operation considerations), mobile terminal workflow (mobile-friendly output format, progress indicators, clear error messages), battery efficiency (minimize battery drain, chunk large operations, optimize git operations), and mobile file system considerations (handle slower operations, caching opportunities, storage limitations). This addition ensures the review command is optimized for execution on mobile devices, considering mobile constraints like battery life, storage speed, and processing power.
+
+**Expert**: Steven Taylor  
+**Expertise**: SEO (Search Engine Optimization)  
+**Date**: 2026-01-05  
+**Changes**: Added SEO considerations for review workflow section covering review content SEO (SEO best practices in review outputs, descriptive keyword-rich language, proper SEO structure in reviewed content, search engine discoverability), file creation SEO (SEO-friendly file names and paths, proper heading hierarchy and semantic markup, natural keyword usage, internal linking opportunities), content quality for search (content quality and depth verification, user search query answers, topic clusters and content authority, keyword optimization), and documentation SEO (proper SEO structure in documentation, heading hierarchy and meta descriptions, internal linking opportunities, comprehensive valuable documentation). This addition ensures that the review workflow considers SEO best practices when reviewing and creating files for web publication, maximizing search engine visibility and discoverability.
 
 ---

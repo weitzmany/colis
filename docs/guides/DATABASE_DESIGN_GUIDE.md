@@ -738,6 +738,56 @@ CREATE TABLE orders (
 - **CAP Theorem**: Distributed system trade-offs
 - **Index Design Patterns**: Optimize query performance
 
+### Mobile Considerations for Database Design
+
+When designing databases for mobile applications:
+
+1. **Mobile Network Optimization**
+   - Design queries to minimize mobile network round trips
+   - Implement efficient pagination for mobile data loading
+   - Use data compression for mobile network efficiency
+   - Optimize query payload sizes for mobile bandwidth
+
+2. **Mobile Storage Considerations**
+   - Design schemas that support mobile local caching
+   - Consider mobile device storage limitations
+   - Optimize for mobile database synchronization patterns
+   - Design for offline-first mobile data patterns
+
+3. **Mobile Performance**
+   - Indexes should optimize mobile query patterns
+   - Query design should minimize mobile processing overhead
+   - Connection pooling should account for mobile connection constraints
+   - Database operations should be optimized for mobile device capabilities
+
+4. **Mobile Data Synchronization**
+   - Schema design should support mobile sync patterns
+   - Design for conflict resolution in mobile sync scenarios
+   - Optimize for incremental data synchronization
+   - Support mobile offline data storage patterns
+
+## SEO Considerations for This Guide
+
+When this guide is published for web access:
+
+1. **Guide Content SEO**
+   - Use descriptive, keyword-rich headings and subheadings
+   - Include relevant keywords naturally (database design, database optimization, schema design, database best practices)
+   - Structure content with proper heading hierarchy (H1-H6)
+   - Include comprehensive design examples and optimization patterns for content depth
+
+2. **Technical Documentation SEO**
+   - Document database design principles with clear, searchable descriptions
+   - Include code examples demonstrating database patterns and SQL queries
+   - Use semantic HTML structure in documentation
+   - Add internal links to related database and optimization documentation
+
+3. **Content Quality for Search**
+   - Ensure guide answers common database design queries
+   - Include troubleshooting sections for common database issues
+   - Provide comprehensive database design reference documentation
+   - Maintain documentation freshness with database technology updates
+
 ---
 
 ## Review/Contribution
@@ -746,5 +796,10 @@ CREATE TABLE orders (
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Created comprehensive database design and optimization guide covering schema design principles (normalization, entity relationships, data types, primary key strategy) with SQL examples, normalization strategies (1NF through BCNF) with denormalization guidelines and examples, indexing best practices (index types, composite indexes, covering indexes) with performance guidelines, query optimization techniques (EXPLAIN usage, JOIN optimization, N+1 prevention, prepared statements) with code examples, migration management (version control, idempotent migrations, rollback strategies) with testing checklist, performance optimization (connection pooling, caching, partitioning, read replicas) with monitoring techniques, data integrity and security (constraints, transactions, parameterized queries, encryption) with implementation examples, scalability patterns (sharding, read replicas, caching) for horizontal and vertical scaling, common anti-patterns (over-normalization, missing indexes, N+1 queries, SELECT *, missing constraints) with solutions, and comprehensive database design checklist covering schema design, indexing, performance, security, migration, documentation, and monitoring. This guide provides practical, actionable guidance for database designers and developers working with relational database systems.
+
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Added mobile considerations for database design section covering mobile network optimization (minimize round trips, efficient pagination, data compression, payload size optimization), mobile storage considerations (local caching support, storage limitations, synchronization patterns, offline-first patterns), mobile performance (index optimization, query design, connection pooling, mobile device capabilities), and mobile data synchronization (sync patterns, conflict resolution, incremental sync, offline storage). This addition ensures database design accounts for mobile application constraints and mobile data access patterns.
 
 ---

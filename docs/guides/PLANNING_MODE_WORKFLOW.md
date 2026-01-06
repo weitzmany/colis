@@ -974,8 +974,6 @@ Before considering planning mode complete, verify:
 
 ---
 
----
-
 ## Review/Contribution
 
 **Expert**: Dorothy Clark  

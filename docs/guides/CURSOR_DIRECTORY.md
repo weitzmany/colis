@@ -264,6 +264,28 @@ When creating and maintaining `.cursor` directory files, keep accessibility in m
 **Last Updated**: 2026-01-05  
 **Status**: ACTIVE
 
+## SEO Considerations for This Guide
+
+When this guide is published for web access:
+
+1. **Guide Content SEO**
+   - Use descriptive, keyword-rich headings and subheadings
+   - Include relevant keywords naturally (Cursor IDE, Cursor configuration, development tools, IDE setup)
+   - Structure content with proper heading hierarchy (H1-H6)
+   - Include comprehensive setup examples and usage patterns for content depth
+
+2. **Technical Documentation SEO**
+   - Document .cursor directory structure with clear, searchable descriptions
+   - Include code examples demonstrating configuration patterns
+   - Use semantic HTML structure in documentation
+   - Add internal links to related Cursor and IDE configuration documentation
+
+3. **Content Quality for Search**
+   - Ensure guide answers common Cursor directory setup queries
+   - Include troubleshooting sections for common configuration issues
+   - Provide comprehensive directory structure reference documentation
+   - Maintain documentation freshness with Cursor IDE updates
+
 ---
 
 ## Review/Contribution
@@ -277,4 +299,9 @@ When creating and maintaining `.cursor` directory files, keep accessibility in m
 **Expertise**: Accessibility (WCAG Compliance, Inclusive Design)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this guide with comprehensive accessibility considerations for the .cursor directory. Added accessibility as a 5th best practice covering semantic structure, descriptive file names, plain language, alternative text, color independence, and consistent formatting. Added a new "Accessibility Considerations" section before Troubleshooting covering file organization and naming (descriptive names, consistent patterns, logical directory structure), documentation structure (semantic markdown, clear structure, table headers, list formatting), content accessibility (plain language, examples, code blocks, visual elements, color independence), command accessibility (clear descriptions, error messages, output format, documentation), and rule file accessibility (readable format, logical flow, definitions, examples). These additions ensure that .cursor directory files and documentation follow WCAG guidelines and support inclusive design for all users, including those using assistive technologies.
+
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Added mobile considerations for .cursor directory section covering mobile file system performance (directory depth impact, file organization for mobile storage, path length considerations), mobile development workflow (mobile terminal access, SSH workflows, mobile-friendly command execution), mobile storage constraints (directory size optimization, file organization efficiency), and mobile accessibility (mobile screen size considerations, touch-friendly navigation, mobile-responsive documentation). This addition ensures that the .cursor directory structure and contents are optimized for mobile device access and mobile development workflows, considering mobile constraints like storage speed, screen size, and processing power.
 

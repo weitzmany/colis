@@ -289,6 +289,57 @@ When organizing documentation from a product management perspective:
 - [ ] **Discoverability**: Documentation easy to find and navigate
 - [ ] **Maintenance Strategy**: Clear documentation maintenance and update process
 
+## Mobile Optimization Considerations for Documentation Structure
+
+When organizing documentation, consider mobile access and optimization:
+
+1. **Mobile-Friendly File Organization**
+   - Shallow directory structures (2-3 levels max) are easier to navigate on mobile
+   - Short, descriptive file names work better on small screens
+   - Clear directory names improve mobile navigation
+
+2. **Mobile Documentation Access**
+   - Documentation structure should support mobile-friendly documentation viewers
+   - Consider how documentation appears in mobile markdown readers
+   - File organization should enable quick mobile search and discovery
+
+3. **Mobile Performance**
+   - Flat directory structures load faster on mobile devices
+   - Avoid deeply nested directories that slow mobile file system operations
+   - Organize to minimize directory traversal time on mobile storage
+
+4. **Mobile Documentation Formatting**
+   - Markdown files should be mobile-readable (shorter paragraphs, clear headings)
+   - Documentation structure should support mobile-friendly rendering
+   - Consider mobile screen size when organizing content sections
+
+## Expert Reviews Tracker Maintenance
+
+When files are reviewed by experts, the `docs/reference/EXPERT_REVIEWS_TRACKER.md` file must be updated:
+
+1. **Expert Statistics Table**: Update expert review counts, dates, and metrics
+2. **Files Reviewed Statistics Table**: Update file review counts (increment count for each file reviewed)
+3. **Expert Summaries**: Add file review entries to expert summary sections
+4. **Statistics Summary**: Update overall statistics
+
+### Updating the Tracker
+
+After each file review:
+- Add the file to the expert's "Files Reviewed" list in their summary section
+- Increment the file's review count in the "Files Reviewed Statistics" table
+- Update expert statistics in the "Expert Review Statistics" table
+- Run `/local/update-tracker` periodically to ensure accuracy (scans all files and rebuilds tracker)
+
+### Automated Updates
+
+The `/local/update-tracker` command can scan all files and automatically update:
+- Expert statistics table
+- Files reviewed statistics table
+- Expert summaries
+- Statistics summary
+
+This ensures the tracker accurately reflects all review contributions across the project.
+
 ---
 
 ## Review/Contribution
@@ -297,5 +348,10 @@ When organizing documentation from a product management perspective:
 **Expertise**: Product Management (Conflict Resolution, Business Decisions)  
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "Product Management Considerations for Documentation Structure" section covering product roadmap alignment (roadmap-driven documentation with phased approach, feature priority in documentation with P1-P4 categorization, documentation investment by feature value), business value and documentation organization (revenue-generating features with business metrics and ROI tracking, user acquisition features with onboarding and conversion documentation, retention features with engagement and churn prevention documentation), stakeholder needs in documentation structure (stakeholder-specific documentation for executives/product/engineering/design/marketing/support/sales, documentation access by stakeholder with role-based navigation, cross-functional documentation with decision-making processes), product lifecycle and documentation maintenance (documentation lifecycle stages from planning to deprecation, documentation maintenance strategy for active/stable/legacy/deprecated features, documentation versioning with changelog and archiving), user journey and documentation discoverability (user journey mapping with workflow documentation, documentation discoverability with search-friendly structure, user-centric documentation organization with task-oriented guides), product metrics and documentation (feature success metrics with KPIs and measurement strategies, documentation analytics with usage tracking, business impact documentation with revenue and ROI tracking), product decision documentation (decision records with rationale and alternatives, trade-off documentation with cost-benefit analysis, stakeholder alignment documentation with conflict resolution), documentation structure for product planning (feature planning documentation with roadmap phases, product strategy documentation with market positioning, roadmap documentation with time horizons), and comprehensive product management documentation checklist covering roadmap alignment, feature prioritization, business value, stakeholder needs, user journey, lifecycle management, metrics integration, decision documentation, discoverability, and maintenance strategy. This addition ensures that documentation structure aligns with product management principles, supporting product roadmap, feature prioritization, stakeholder needs, and business value delivery.
+
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Added mobile optimization considerations for documentation structure section covering mobile-friendly file organization (shallow directory structures, short descriptive names, clear navigation), mobile documentation access (mobile-friendly viewers, markdown readers, search and discovery), mobile performance (flat structures, avoid deep nesting, minimize traversal time), and mobile documentation formatting (mobile-readable markdown, mobile-friendly rendering, screen size considerations). This addition ensures that documentation structure is optimized for mobile access and consumption, considering mobile constraints like screen size, storage speed, and navigation patterns.
 
 ---

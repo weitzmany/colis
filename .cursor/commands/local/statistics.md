@@ -253,3 +253,58 @@ Acceptance row updated
 - P-values are formatted as percentages with 2 decimal places
 - Only numeric columns (excluding dates and averages) get Acceptance p-values
 
+### Mobile Optimization Considerations
+
+When executing this command on mobile devices:
+
+1. **Computational Performance**
+   - Statistical calculations (Benford's Law, binomial p-values) require CPU processing
+   - For large tables, calculations may be slower on mobile processors
+   - Consider caching results or optimizing calculation algorithms for mobile
+
+2. **Memory Efficiency**
+   - Table data must be loaded into memory for calculations
+   - Statistical calculations require additional memory for intermediate values
+   - For very large tables, consider streaming or chunked processing
+
+3. **Battery Impact**
+   - CPU-intensive statistical calculations drain battery faster
+   - Minimize calculation frequency when possible
+   - Consider background processing or deferral for mobile devices
+
+4. **Mobile Terminal Compatibility**
+   - Works with mobile SSH clients and terminal apps
+   - Output format is mobile-terminal friendly
+   - Python scripts should work on mobile Python installations
+
+### SEO Considerations for Statistics Command
+
+When this command is used to generate statistics that will be published or made web-accessible:
+
+1. **Statistics Content SEO**
+   - Statistics outputs should be SEO-friendly if published
+   - Use descriptive, keyword-rich language in statistics summaries
+   - Ensure statistics tables maintain proper SEO structure (headings, semantic HTML)
+   - Consider search engine discoverability when presenting statistical data
+
+2. **Data Presentation for Search**
+   - Statistics should be presented in a way that's valuable for search queries
+   - Use clear, descriptive headings and labels for statistical data
+   - Ensure statistics contribute to content depth and authority
+   - Consider how statistics enhance content value for search engines
+
+3. **Content Quality for SEO**
+   - Statistics should demonstrate content quality and depth
+   - Ensure statistics answer user search queries about project metrics
+   - Verify statistics contribute to topic clusters and content authority
+   - Consider keyword optimization in statistics descriptions and labels
+
+---
+
+## Review/Contribution
+
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Added mobile optimization considerations section covering computational performance (CPU processing requirements, mobile processor limitations, optimization opportunities), memory efficiency (in-memory processing, intermediate value storage, streaming considerations), battery impact (CPU-intensive operations, calculation frequency, background processing), and mobile terminal compatibility (mobile SSH clients, output format, Python script compatibility). This addition ensures the command is optimized for execution on mobile devices, considering mobile constraints like battery life, memory limitations, and processing power for statistical calculations.
+

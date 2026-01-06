@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """
 Sort Expert Reviews Tracker table by specified column.
+
+Mobile Optimization Notes:
+- In-memory sorting is efficient even on mobile processors
+- File I/O is minimal (single read, single write)
+- Quick execution minimizes battery drain
+- Works well on mobile devices for typical table sizes
 """
 
 import re

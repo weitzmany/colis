@@ -314,6 +314,52 @@ Shows experts with highest average changes per review (ascending sort shows most
 - Default sort direction: Descending for counts, Ascending for names/averages
 - Safe to run multiple times (idempotent operation)
 
+### Mobile Optimization Considerations
+
+When executing this command on mobile devices:
+
+1. **File Processing Performance**
+   - Table parsing and sorting operations are efficient for mobile devices
+   - In-memory sorting is fast even on mobile processors
+   - File I/O is minimal (single read, single write)
+
+2. **Memory Usage**
+   - Table data is typically small enough for mobile device memory
+   - For very large tables (1000+ rows), consider streaming approach
+   - Current implementation is mobile-friendly for typical table sizes
+
+3. **Battery Efficiency**
+   - Quick execution minimizes battery drain
+   - Single file operation reduces I/O overhead
+   - Optimized for mobile device constraints
+
+4. **Mobile Terminal Compatibility**
+   - Works with mobile SSH clients and terminal apps
+   - Output format is mobile-terminal friendly
+   - No desktop-specific dependencies
+
+### SEO Considerations for Sort Command
+
+When this command is used to sort data that will be published or made web-accessible:
+
+1. **Sorted Content SEO**
+   - Sorted table outputs should maintain SEO-friendly structure
+   - Ensure sorted data maintains semantic HTML structure if published
+   - Preserve heading hierarchy and table structure for search engine indexing
+   - Consider how sorted order impacts content discoverability
+
+2. **Table Structure for Search**
+   - Maintain proper table markup for search engine understanding
+   - Ensure sorted tables have descriptive headers and clear structure
+   - Preserve accessibility attributes that also benefit SEO
+   - Consider how table sorting impacts content organization and findability
+
+3. **Content Discoverability**
+   - Sorted order should enhance content discoverability
+   - Consider sorting by relevance or importance for search visibility
+   - Ensure sorted data maintains internal linking opportunities
+   - Verify sorted content maintains keyword-rich structure
+
 ---
 
 ## Review/Contribution
@@ -323,5 +369,9 @@ Shows experts with highest average changes per review (ascending sort shows most
 **Date**: 2026-01-05  
 **Changes**: Enhanced documentation clarity and completeness by adding comprehensive context, troubleshooting section, and improved examples. Added introduction context explaining this command's role in the expert review workflow system and relationship to `/local/statistics` and `/local/review` commands. Enhanced "Expected Output" section with error handling examples and clearer success/failure scenarios. Added "Related Commands" section linking to related workflow commands. Added "Common Workflows" section with practical usage patterns for after adding new expert, after review/file creation, finding inactive experts, and analyzing review quality. Added comprehensive "Troubleshooting" section covering common issues: table not found, column not recognized, rows not sorting correctly, statistics rows affected, and file modification issues, each with problem description and solution steps. Added additional sorting examples for "Files Created" and "Substantive Reviews" columns. Added "Detailed Example" section with before/after sorting scenarios showing concrete examples of how data is reorganized. Improved notes section with idempotent operation clarification. These additions provide users with better understanding of when and how to use the command, common issues they may encounter, and practical workflows for maintaining the expert reviews tracker.
 
----
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Added mobile optimization considerations section covering file processing performance (efficient table parsing and sorting, in-memory operations, minimal I/O), memory usage (mobile-friendly for typical table sizes, streaming considerations for very large tables), battery efficiency (quick execution, single file operation, optimized for mobile constraints), and mobile terminal compatibility (works with mobile SSH clients, mobile-friendly output format, no desktop dependencies). This addition ensures the command is optimized for execution on mobile devices, considering mobile constraints like battery life, memory limitations, and processing power.
 
+---

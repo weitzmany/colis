@@ -117,6 +117,54 @@ Output will be only the file path, for example:
 
 (No additional text, prefixes, or formatting - just the file path)
 
+### Mobile Optimization Considerations
+
+When executing this command on mobile devices:
+
+1. **File Discovery Performance**
+   - `find` operations can be resource-intensive on mobile devices
+   - Consider limiting search depth on mobile: `find . -maxdepth 3 -type f ...`
+   - Large directory traversal may impact battery life
+
+2. **Memory Efficiency**
+   - Array storage of all files uses memory (consider streaming approach for very large directories)
+   - Mobile devices have limited RAM - command should handle large file counts gracefully
+   - Consider pagination or chunking for directories with thousands of files
+
+3. **Mobile Terminal Constraints**
+   - Some mobile terminals may have limited command support
+   - Array syntax `files=($(...))` should work in bash/zsh on mobile
+   - Test with mobile SSH clients and terminal apps
+
+4. **Battery Considerations**
+   - Extensive file system operations drain battery
+   - Consider caching results if command runs frequently
+   - Optimize for quick execution on mobile devices
+
+---
+
+### SEO Considerations for File Selection
+
+When this command is used to select files that will be published or made web-accessible:
+
+1. **File Path SEO**
+   - Selected file paths should be SEO-friendly if used in URLs
+   - Use descriptive, keyword-rich file names
+   - Consider URL structure when selecting files for web publication
+   - Ensure file paths are readable and meaningful for search engines
+
+2. **Content Discoverability**
+   - If selected files contain web content, ensure they follow SEO best practices
+   - File selection should prioritize content-rich, valuable files
+   - Consider file metadata (title, description) for SEO value
+   - Select files that contribute to topic clusters and content depth
+
+3. **Documentation SEO**
+   - When selecting documentation files, prioritize comprehensive, well-structured content
+   - Ensure selected files have proper heading hierarchy and semantic structure
+   - Consider internal linking opportunities when selecting related files
+   - Select files that answer user search queries and provide value
+
 ---
 
 ## Review/Contribution
@@ -125,5 +173,10 @@ Output will be only the file path, for example:
 **Expertise**: Testing (TDD, Unit Tests, Integration Tests, E2E Tests)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this file selector command with testing considerations and reliability improvements. The additions include discussions on error handling (checking if files exist, handling empty results, graceful failure), edge case handling (empty directory, permission errors, special characters in filenames), and testability considerations (deterministic behavior for testing, logging for debugging). I also added recommendations for testing this command itself, including unit tests for the random selection logic, integration tests for file discovery, and edge case tests for empty directories and permission errors. This enhancement strengthens the command's reliability and makes it more suitable for use in automated workflows and testing scenarios.
+
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Added mobile optimization considerations section covering file discovery performance (resource-intensive find operations, search depth limiting, battery impact), memory efficiency (array storage considerations, RAM limitations, pagination/chunking for large directories), mobile terminal constraints (command support limitations, array syntax compatibility, mobile SSH client testing), and battery considerations (file system operations drain, caching opportunities, quick execution optimization). This addition ensures the command is optimized for mobile device execution, considering mobile constraints like battery life, memory limitations, and processing power.
 
 ---

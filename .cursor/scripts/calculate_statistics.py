@@ -2,6 +2,12 @@
 """
 Calculate statistics for Expert Reviews Tracker.
 Updates Total, Benford, and Acceptance rows.
+
+Mobile Optimization Notes:
+- CPU-intensive statistical calculations (Benford's Law, binomial p-values)
+- For large tables, calculations may be slower on mobile processors
+- Memory usage is reasonable for typical table sizes
+- Consider optimizing calculations or caching results for mobile devices
 """
 
 import re

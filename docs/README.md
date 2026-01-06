@@ -36,15 +36,46 @@ See [Documentation Structure Guide](./guides/DOCUMENTATION_STRUCTURE.md) for com
 
 All feature documentation is located in the `features/` directory.
 
-_Features will be documented here as they are added._
+### Package PRDs (Placeholders / Early Ideas)
+
+**Rules & Consistency Packages:**
+- [Cursor Standards](./features/cursor-standards/PRD.md) - Main package for all Cursor rules, commands, and experts
+- [Cursor Standards Rules](./features/cursor-standards-rules/PRD.md) - Rules-only package
+- [Cursor Standards Commands](./features/cursor-standards-commands/PRD.md) - Commands-only package
+- [Full Review](./features/full-review/PRD.md) - Comprehensive review routine command
+- [Experts](./features/experts/PRD.md) - Expert personas package
+- [Git Workflow](./features/git-workflow/PRD.md) - Standardized git workflow rules and templates
+
+**Tool Packages:**
+- [Tasks](./features/tasks/PRD.md) - Task management and tracking utilities
+- [Documentation Validation](./features/documentation-validation/PRD.md) - Documentation validation tools
+- [Authentication Tool](./features/authentication-tool/PRD.md) - Reusable authentication system
+- [Database Migration Tool](./features/database-migration-tool/PRD.md) - Database migration utilities
+- [API Client Library](./features/api-client-library/PRD.md) - HTTP client library
+- [Validation Tool](./features/validation-tool/PRD.md) - Input and schema validation
+- [Testing Utilities](./features/testing-utilities/PRD.md) - Testing helpers and utilities
+
+**Template & Configuration Packages:**
+- [Project Template](./features/project-template/PRD.md) - Project starter templates
+- [TypeScript Config](./features/typescript-config/PRD.md) - Standardized TypeScript configuration
+- [CI/CD Templates](./features/cicd-templates/PRD.md) - CI/CD workflow templates
+
+_Note: These are placeholder PRDs with basic ideas. More details will be added as ideas develop._
 
 ## 📚 Documentation by Topic
 
 ### Project Overview
 - [Project Purpose](./reference/PROJECT_PURPOSE.md) - Main goal and purpose of this packages project
+- [Project Vision](./guides/PROJECT_VISION.md) - Long-term vision as central repository for all tools and helpers
 
 ### Guides
 - [Documentation Structure Guide](./guides/DOCUMENTATION_STRUCTURE.md) - How to organize documentation
+- [Documentation Standards Enforcement](./guides/DOCUMENTATION_STANDARDS_ENFORCEMENT.md) - How to ensure all projects follow documentation standards
+- [Command vs Script](./guides/COMMAND_VS_SCRIPT.md) - Decision guide for when to use commands vs scripts
+- [NPM Package Distribution](./guides/NPM_PACKAGE_DISTRIBUTION.md) - How npm packages can distribute rules, commands, and docs
+- [NPM Package Organization](./guides/NPM_PACKAGE_ORGANIZATION.md) - Strategies for organizing multiple related packages (monorepo, scoped packages)
+- [Cursor Package NPM](./guides/CURSOR_PACKAGE_NPM.md) - How to package Cursor rules and commands as an npm package
+- [Cursor Package Setup](./guides/CURSOR_PACKAGE_SETUP.md) - Step-by-step setup guide for the npm package
 - [Planning Mode Workflow](./guides/PLANNING_MODE_WORKFLOW.md) - How to work in planning mode
 - [.cursor Directory](./guides/CURSOR_DIRECTORY.md) - Cursor IDE configuration directory
 - [Security and Secrets](./guides/SECURITY_AND_SECRETS.md) - Rules for handling passwords, keys, tokens, and secrets

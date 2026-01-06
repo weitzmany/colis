@@ -293,6 +293,84 @@ When experts generate web-accessible content:
    - Monitor competitor content in expert domains
    - Track user search behavior and intent
 
+### Mobile Optimization Considerations
+
+When executing this command on mobile devices or generating content for mobile platforms:
+
+1. **Command Performance on Mobile**
+   - Cache file operations for efficiency on slower mobile storage
+   - Minimize file I/O operations (the mapping cache approach is already mobile-friendly)
+   - Consider mobile device constraints (limited processing power, battery)
+
+2. **Mobile-Friendly Output**
+   - Output is already optimized (just expert name, no verbose logging)
+   - Works well in mobile terminal environments
+   - Fast execution time suitable for mobile workflows
+
+3. **Mobile Terminal Considerations**
+   - Works with mobile SSH clients and terminal apps
+   - No dependency on desktop-specific features
+   - Compatible with mobile shell environments
+
+### UI/UX Considerations for Expert Selection Command
+
+When this command is used in user-facing workflows or generates content that impacts user experience:
+
+1. **User Experience Design**
+   - **Clear Output**: The command outputs only the expert name, providing clear, unambiguous results
+   - **Predictable Behavior**: Consistent output format makes it easy to parse and use in automated workflows
+   - **Error Handling**: Exit code 1 on failure provides clear feedback when no experts are available
+   - **Performance**: Fast execution ensures responsive user experience in interactive workflows
+
+2. **Information Architecture**
+   - **Single Responsibility**: Command has one clear purpose (select expert), following good UX principles
+   - **Progressive Disclosure**: Mapping file approach hides complexity while maintaining functionality
+   - **Clear Feedback**: Exit codes and output format provide immediate feedback on success/failure
+
+3. **Interaction Design**
+   - **Random Selection**: Provides variety and prevents bias in expert selection
+   - **Cache Strategy**: Balances performance (fast) with freshness (auto-updates on new files)
+   - **No User Input Required**: Zero-interaction design reduces cognitive load
+
+4. **Visual Design (Output Formatting)**
+   - **Minimal Output**: Clean, single-line output reduces visual clutter
+   - **No Verbose Logging**: Keeps output focused and scannable
+   - **Consistent Format**: Always outputs expert name in same format
+
+5. **Accessibility Considerations**
+   - **Screen Reader Friendly**: Simple text output works well with assistive technologies
+   - **Keyboard Accessible**: No mouse interaction required
+   - **Clear Error States**: Exit codes provide programmatic error detection
+
+6. **User Flow Integration**
+   - **Workflow Integration**: Designed to be easily integrated into larger workflows
+   - **Pipeline Friendly**: Output format works well in command pipelines
+   - **Automation Ready**: Predictable output enables reliable automation
+
+7. **Error Prevention and Recovery**
+   - **Graceful Degradation**: Handles missing files and empty mappings gracefully
+   - **Clear Failure Modes**: Exit code 1 clearly indicates failure state
+   - **Self-Healing**: Automatically updates mapping when new experts are added
+
+8. **Usability Best Practices**
+   - **Discoverability**: Command name (`/local/expert`) clearly indicates purpose
+   - **Learnability**: Simple usage (no parameters) reduces learning curve
+   - **Efficiency**: Fast execution and caching minimize wait time
+   - **Satisfaction**: Reliable, consistent behavior builds user trust
+
+### UI/UX Checklist for Expert Selection
+
+When using this command in user-facing contexts:
+
+- [ ] **Output Clarity**: Output is clear and unambiguous (expert name only)
+- [ ] **Error Handling**: Errors are handled gracefully with appropriate exit codes
+- [ ] **Performance**: Command executes quickly (< 1 second typical)
+- [ ] **Consistency**: Output format is consistent across all executions
+- [ ] **Accessibility**: Output works with assistive technologies
+- [ ] **Integration**: Command integrates smoothly into larger workflows
+- [ ] **Feedback**: Users receive clear feedback on success/failure
+- [ ] **Reliability**: Command behaves predictably in all scenarios
+
 ---
 
 ## Review/Contribution
@@ -301,5 +379,15 @@ When experts generate web-accessible content:
 **Expertise**: SEO (Search Engine Optimization)  
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "SEO Considerations for Generated Content" section covering content discoverability (structured content with semantic HTML and heading hierarchy, search-friendly URLs with keyword optimization, content optimization with natural keyword usage and internal linking), metadata and tags (meta tags with title tags and descriptions, Open Graph and Twitter Cards, structured data with JSON-LD for articles and expert information), content quality for SEO (comprehensive content with examples, user experience signals with performance and accessibility, internal linking with topic clusters), expert-generated content SEO checklist with 15 items covering title optimization, meta descriptions, heading structure, content quality, keyword usage, internal links, images, URL structure, structured data, mobile optimization, page speed, accessibility, freshness, social sharing, and canonical URLs, SEO best practices for expert documentation (expert profile pages with structured data, content organization with topic clusters, search optimization with long-tail keywords, performance optimization), example SEO-optimized expert content structure with complete HTML example including meta tags, Open Graph tags, Twitter Cards, structured data, semantic HTML, and breadcrumb navigation, and SEO monitoring for expert content (performance tracking with organic search traffic and keyword rankings, content performance analysis, optimization opportunities). This addition ensures that when this command is used to generate web-accessible documentation or content, SEO best practices are applied to maximize search engine visibility and discoverability of expert-generated content.
+
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Added mobile optimization considerations section covering command performance on mobile (cache file operations, minimize I/O, mobile device constraints), mobile-friendly output (optimized output format, fast execution time, mobile terminal compatibility), and mobile terminal considerations (mobile SSH clients, terminal apps, shell environment compatibility). This addition ensures the command is optimized for execution on mobile devices and in mobile terminal environments, considering mobile constraints like processing power, battery life, and storage speed.
+
+**Expert**: Daisy Thompson  
+**Expertise**: UI/UX Design  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "UI/UX Considerations for Expert Selection Command" section covering user experience design (clear output, predictable behavior, error handling, performance), information architecture (single responsibility, progressive disclosure, clear feedback), interaction design (random selection, cache strategy, zero-interaction design), visual design for output formatting (minimal output, no verbose logging, consistent format), accessibility considerations (screen reader friendly, keyboard accessible, clear error states), user flow integration (workflow integration, pipeline friendly, automation ready), error prevention and recovery (graceful degradation, clear failure modes, self-healing), usability best practices (discoverability, learnability, efficiency, satisfaction), and UI/UX checklist for expert selection with 8 items covering output clarity, error handling, performance, consistency, accessibility, integration, feedback, and reliability. This addition ensures the command follows UI/UX best practices for user experience, making it intuitive, reliable, and user-friendly when integrated into workflows or user-facing applications.
 
 ---

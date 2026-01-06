@@ -279,6 +279,28 @@ This rule is also implemented as a Cursor rule file:
 **Status**: ACTIVE  
 **Version**: 1.0
 
+## SEO Considerations for This Guide
+
+When this guide is published for web access:
+
+1. **Guide Content SEO**
+   - Use descriptive, keyword-rich headings and subheadings
+   - Include relevant keywords naturally (security, secrets management, API keys, password security, secure configuration)
+   - Structure content with proper heading hierarchy (H1-H6)
+   - Include comprehensive security examples and best practices for content depth
+
+2. **Technical Documentation SEO**
+   - Document security practices with clear, searchable descriptions
+   - Include code examples demonstrating secure configuration patterns
+   - Use semantic HTML structure in documentation
+   - Add internal links to related security and configuration documentation
+
+3. **Content Quality for Search**
+   - Ensure guide answers common security and secrets management queries
+   - Include troubleshooting sections for common security issues
+   - Provide comprehensive security best practices reference documentation
+   - Maintain documentation freshness with security best practices updates
+
 ---
 
 ## Review/Contribution

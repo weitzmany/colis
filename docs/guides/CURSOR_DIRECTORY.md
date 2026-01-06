@@ -182,6 +182,42 @@ All three should be consistent and reference each other.
 
 **Solution**: Create expert persona files (`.cursor/rules/experts/*.mdc`) that define how each expert should behave.
 
+## Accessibility Considerations
+
+When creating and maintaining `.cursor` directory files, keep accessibility in mind:
+
+### File Organization and Naming
+- **Descriptive Names**: Use clear, descriptive file names that indicate purpose
+  - ✅ Good: `documentation_structure.mdc`, `security_best_practices.mdc`
+  - ❌ Poor: `doc1.mdc`, `rules_v2.mdc`
+- **Consistent Patterns**: Follow consistent naming patterns for predictability
+- **Directory Structure**: Organize files logically to support navigation
+
+### Documentation Structure
+- **Semantic Markdown**: Use proper heading hierarchy (h1 → h2 → h3)
+- **Clear Structure**: Organize content with headings, lists, and tables
+- **Table Headers**: Always include header rows in tables
+- **List Formatting**: Use proper list syntax (ordered or unordered)
+
+### Content Accessibility
+- **Plain Language**: Write rules and commands in clear, understandable language
+- **Examples**: Provide concrete examples to illustrate concepts
+- **Code Blocks**: Use appropriate code block syntax with language identifiers
+- **Visual Elements**: Provide text alternatives for any visual information
+- **Color Independence**: Don't rely solely on color to convey information
+
+### Command Accessibility
+- **Clear Descriptions**: Provide clear, descriptive command descriptions
+- **Error Messages**: Ensure error messages are clear and actionable
+- **Output Format**: Structure command output for screen readers
+- **Documentation**: Document commands thoroughly with examples
+
+### Rule File Accessibility
+- **Readable Format**: Use clear, structured markdown format
+- **Logical Flow**: Organize rules in a logical, easy-to-follow structure
+- **Definitions**: Define technical terms when first introduced
+- **Examples**: Include practical examples for complex rules
+
 ## Troubleshooting
 
 ### Issue: Rule Not Being Applied
@@ -236,4 +272,9 @@ All three should be consistent and reference each other.
 **Expertise**: Educational Content (Learning Materials)  
 **Date**: 2026-01-05  
 **Changes**: Improved this guide by making it more accessible and educational: added clear explanations of what the .cursor directory is and why it matters (with analogies to help understanding), expanded the purpose section with detailed explanations and examples for each type of configuration file, enhanced the planning mode exception section with clearer explanations and practical implications, added a comprehensive "Allowed Activities" section with example directory structures, significantly expanded the "Relationship to Documentation" section with an integrated workflow example, added a "Best Practices" section covering organization, documentation, maintenance, and clarity, added a "Common Use Cases" section with practical scenarios and solutions, added a "Troubleshooting" section to help users solve common problems, added a "Quick Reference" table for easy lookup, and fixed the date format inconsistency. The guide is now more beginner-friendly, provides practical examples, and follows educational content best practices for clarity and accessibility.
+
+**Expert**: Allison Foster  
+**Expertise**: Accessibility (WCAG Compliance, Inclusive Design)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this guide with comprehensive accessibility considerations for the .cursor directory. Added accessibility as a 5th best practice covering semantic structure, descriptive file names, plain language, alternative text, color independence, and consistent formatting. Added a new "Accessibility Considerations" section before Troubleshooting covering file organization and naming (descriptive names, consistent patterns, logical directory structure), documentation structure (semantic markdown, clear structure, table headers, list formatting), content accessibility (plain language, examples, code blocks, visual elements, color independence), command accessibility (clear descriptions, error messages, output format, documentation), and rule file accessibility (readable format, logical flow, definitions, examples). These additions ensure that .cursor directory files and documentation follow WCAG guidelines and support inclusive design for all users, including those using assistive technologies.
 

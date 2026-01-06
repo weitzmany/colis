@@ -1,6 +1,6 @@
 # Calculate Statistics for Expert Reviews Tracker
 
-Calculate and update statistics rows (Total and Benford's Law MAD scores) in the expert review statistics table.
+Calculate and update statistics rows (Total, Benford's Law MAD scores, and Acceptance p-values) in the expert review statistics table.
 
 ## Usage
 
@@ -17,8 +17,8 @@ No parameters required.
    - Find the "## Expert Review Statistics" section
    - Find the header row (starts with "| Expert Name")
    - Find the separator row (next line after header, starts with "|-------------")
-   - Find all data rows (lines starting with "|" that are not "Total:" or "Benford:")
-   - Data rows end when we hit "| Total:", "| Benford:", or a section header ("##" or "###")
+   - Find all data rows (lines starting with "|" that are not "Total:", "Benford:", or "Acceptance:")
+   - Data rows end when we hit "| Total:", "| Benford:", "| Acceptance:", or a section header ("##" or "###")
 2. **Parse Data**: Extract all data rows (exclude Total and Benford rows)
 3. **Calculate Total Row**:
    - Sum numeric columns (Files Reviewed, Total Changes, Files Created, Structure Reviewed, Files Rearranged)
@@ -27,8 +27,15 @@ No parameters required.
 4. **Calculate Benford Row**:
    - Calculate MAD (Mean Absolute Deviation) scores for Benford's Law for numeric columns
    - Skip date columns and average columns
-5. **Update Table**: Insert/update Total and Benford rows after the data rows (before Review Details section)
-6. **Output**: Display confirmation message
+5. **Calculate Acceptance Row**:
+   - For each numeric column (excluding dates and averages):
+     - K = number of experts (number of rows)
+     - N = sum of column values
+     - x = minimum value in that column
+     - p = P(X ≤ x) where X ~ Binomial(N, 1/K)
+   - Format p-values as percentages with emojis based on breakpoints
+6. **Update Table**: Insert/update Total, Benford, and Acceptance rows after the data rows (before Review Details section)
+7. **Output**: Display confirmation message
 
 ## Statistics Calculations
 
@@ -95,6 +102,36 @@ Benford's Law states that in many naturally occurring collections of numbers, th
 - ⚠️ for 0.012 ≤ MAD < 0.015 (fair)
 - ❌ for MAD ≥ 0.015 (poor)
 
+### Acceptance Row (Binomial P-Values)
+
+For each numeric column (excluding dates and averages), calculate a binomial p-value to assess how evenly distributed the values are across experts.
+
+**Calculation**:
+- **K** = number of experts (number of data rows)
+- **N** = sum of all values in the column
+- **x** = minimum value in the column
+- **p** = P(X ≤ x) where X ~ Binomial(N, 1/K)
+
+This tests the null hypothesis that values are evenly distributed across experts. Lower p-values indicate more uneven distribution.
+
+**Acceptance Row**:
+- **Expert Name**: "Acceptance:"
+- **Expertise**: "" (empty)
+- **Files Reviewed**: p-value with emoji (formatted as percentage)
+- **Total Changes**: p-value with emoji
+- **Last Review Date**: "" (skip - not numeric)
+- **Files Created**: p-value with emoji
+- **Avg Changes per Review**: "" (skip - average column)
+- **Structure Reviewed**: p-value with emoji
+- **Files Rearranged**: p-value with emoji
+
+**Emoji Mapping** (higher p-value is better):
+- ✅ for p ≥ 10% (excellent - very even distribution)
+- ✓ for 5% ≤ p < 10% (good - reasonably even)
+- ⚠️ for 2% ≤ p < 5% (fair - somewhat uneven)
+- 🔶 for 1% ≤ p < 2% (poor - uneven distribution)
+- ❌ for p < 1% (very poor - highly uneven)
+
 ## Implementation Notes
 
 ### Table Structure (Dynamic Location)
@@ -102,7 +139,7 @@ Benford's Law states that in many naturally occurring collections of numbers, th
 - **Header Row**: First line starting with "| Expert Name" (after section header)
 - **Separator Row**: Next line after header (starts with "|-------------")
 - **Data Rows**: All lines starting with "|" that are NOT "Total:" or "Benford:" (until we hit statistics rows or next section)
-- **Statistics Rows**: Lines starting with "| Total:" and "| Benford:" (located dynamically)
+- **Statistics Rows**: Lines starting with "| Total:", "| Benford:", and "| Acceptance:" (located dynamically)
 - **Next Section**: First line starting with "##" or "###" after the table (usually "## Review Details" or "### [Expert Name]")
 
 ### Column Index Mapping
@@ -193,6 +230,7 @@ def calculate_benford_mad(values):
 Statistics calculated
 Total row updated
 Benford row updated
+Acceptance row updated
 ```
 
 ## Error Handling
@@ -211,4 +249,7 @@ Benford row updated
 - MAD scores are formatted to 4 decimal places
 - Only numeric columns (excluding dates and averages) get Benford scores
 - Leading digit extraction skips zero values
+- Acceptance p-values are calculated using binomial distribution (scipy.stats.binom or equivalent)
+- P-values are formatted as percentages with 2 decimal places
+- Only numeric columns (excluding dates and averages) get Acceptance p-values
 

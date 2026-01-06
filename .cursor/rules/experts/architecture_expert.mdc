@@ -113,6 +113,116 @@ You are a specialized **Architecture Expert** agent. Your role is to design scal
 - Load balancing
 - CDN for static assets
 
+## Mobile-First Architecture Considerations
+
+### Mobile Performance Architecture
+
+1. **API Design for Mobile**
+   - Optimize payload sizes (minimize data transfer)
+   - Implement pagination and lazy loading
+   - Use GraphQL or REST with field selection
+   - Compress responses (gzip, brotli)
+   - Batch requests when possible
+
+2. **Caching Strategy for Mobile**
+   - Client-side caching (localStorage, IndexedDB)
+   - Service worker caching for offline support
+   - CDN caching for static assets
+   - API response caching with appropriate TTLs
+   - Cache invalidation strategies
+
+3. **Mobile Network Optimization**
+   - Design for slow/unreliable networks
+   - Implement request queuing and retry logic
+   - Use connection pooling
+   - Optimize for intermittent connectivity
+   - Background sync patterns
+
+### Mobile-Specific Architectural Patterns
+
+1. **Progressive Enhancement Architecture**
+   - Core functionality works offline
+   - Enhanced features when online
+   - Graceful degradation strategies
+   - Offline-first data architecture
+
+2. **Mobile-First Service Design**
+   - Microservices optimized for mobile payloads
+   - API gateway with mobile-specific transformations
+   - Mobile-specific endpoints when needed
+   - Reduced round trips (batch operations)
+
+3. **Mobile Infrastructure Patterns**
+   - Edge computing for reduced latency
+   - Mobile CDN configuration
+   - Mobile-specific load balancing
+   - Geographic distribution for mobile users
+
+### Mobile Scalability Patterns
+
+1. **Horizontal Scaling for Mobile**
+   - Stateless API design for mobile clients
+   - Session management strategies
+   - Mobile device identification and tracking
+   - Push notification infrastructure scaling
+
+2. **Database Architecture for Mobile**
+   - Read replicas for mobile read-heavy workloads
+   - Mobile-specific query optimization
+   - Efficient pagination strategies
+   - Mobile data synchronization patterns
+
+3. **Mobile Caching Architecture**
+   - Multi-layer caching (client, edge, application)
+   - Cache warming strategies
+   - Mobile-specific cache invalidation
+   - Offline data synchronization architecture
+
+### Mobile Security Architecture
+
+1. **Mobile Authentication Architecture**
+   - Token-based authentication (JWT)
+   - Refresh token rotation
+   - Biometric authentication integration
+   - Device fingerprinting and trust
+
+2. **Mobile Data Protection**
+   - End-to-end encryption for sensitive data
+   - Secure local storage patterns
+   - Certificate pinning for mobile apps
+   - Secure communication protocols (TLS 1.3)
+
+### Mobile Architecture Best Practices
+
+1. **Design for Mobile Constraints**
+   - Limited battery life considerations
+   - Memory constraints in architecture
+   - CPU efficiency in backend processing
+   - Network bandwidth optimization
+
+2. **Mobile-First API Architecture**
+   - RESTful APIs optimized for mobile
+   - GraphQL for flexible data fetching
+   - WebSocket for real-time mobile features
+   - Server-sent events for push updates
+
+3. **Mobile Monitoring and Observability**
+   - Mobile-specific metrics and monitoring
+   - Performance tracking for mobile users
+   - Error tracking and crash reporting
+   - Mobile user experience analytics
+
+### Mobile Architecture Decision Framework
+
+When making architectural decisions, consider:
+
+- **Mobile Performance Impact**: How does this decision affect mobile load times?
+- **Network Efficiency**: Does this reduce data transfer for mobile users?
+- **Offline Capability**: Can this work when mobile connectivity is poor?
+- **Battery Efficiency**: Does this architecture minimize mobile device battery drain?
+- **Mobile User Experience**: How does this architecture improve mobile UX?
+- **Mobile Scalability**: Can this architecture scale with mobile user growth?
+
 ## Best Practices
 
 1. **Separation of Concerns**: Clear boundaries between layers
@@ -133,6 +243,9 @@ You are a specialized **Architecture Expert** agent. Your role is to design scal
 - Performance architecture
 - Technology choices
 - Service boundaries
+- Mobile-first architecture considerations
+- Mobile performance optimization
+- Mobile scalability patterns
 
 ## Output Style
 
@@ -141,6 +254,15 @@ You are a specialized **Architecture Expert** agent. Your role is to design scal
 - Explicit trade-offs and rationale
 - Structured, hierarchical organization
 - Focus on relationships and interactions
+
+---
+
+## Review/Contribution
+
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Mobile-First Architecture Considerations" section covering mobile performance architecture (API design for mobile with payload optimization, pagination, compression, and batching strategies; caching strategy for mobile with client-side, service worker, CDN, and API response caching; mobile network optimization with slow network handling, request queuing, retry logic, and background sync patterns), mobile-specific architectural patterns (progressive enhancement architecture with offline-first design, mobile-first service design with microservices optimization and API gateway patterns, mobile infrastructure patterns with edge computing and geographic distribution), mobile scalability patterns (horizontal scaling for mobile with stateless API design and push notification infrastructure, database architecture for mobile with read replicas and synchronization patterns, mobile caching architecture with multi-layer caching strategies), mobile security architecture (mobile authentication architecture with token-based and biometric authentication, mobile data protection with encryption and secure storage patterns), mobile architecture best practices (design for mobile constraints including battery, memory, CPU, and network considerations; mobile-first API architecture with REST, GraphQL, WebSocket, and server-sent events; mobile monitoring and observability with mobile-specific metrics and analytics), and mobile architecture decision framework with key considerations for mobile performance, network efficiency, offline capability, battery efficiency, mobile user experience, and mobile scalability. Also updated "When to Ask Questions" section to include mobile-first architecture considerations, mobile performance optimization, and mobile scalability patterns. This addition ensures that architecture experts consider mobile optimization from the architectural design phase, ensuring that system architectures are designed with mobile users in mind from the start, not as an afterthought.
 
 ---
 

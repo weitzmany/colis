@@ -345,6 +345,9 @@ interface ConfigurationResult {
 - **PostgreSQL**: Alternative option
 
 **Database Schema**:
+
+The schema follows database best practices with proper normalization, indexing, and data integrity:
+
 ```sql
 CREATE TABLE port_assignments (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -362,9 +365,144 @@ CREATE TABLE port_assignments (
   UNIQUE KEY unique_project (project_name, app_type),
   INDEX idx_project_name (project_name),
   INDEX idx_app_type (app_type),
-  INDEX idx_status (status)
-);
+  INDEX idx_status (status),
+  INDEX idx_port_status (port, status),
+  INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
+
+#### Schema Design Principles
+
+**1. Normalization**
+- **3NF Compliance**: All non-key attributes depend only on the primary key
+- **No Redundancy**: Project name and path stored once per assignment
+- **Atomic Values**: Each field contains a single value
+
+**2. Data Integrity**
+- **Primary Key**: Auto-incrementing ID for unique identification
+- **Unique Constraints**: 
+  - `unique_port`: Ensures no two assignments use the same port
+  - `unique_project`: Ensures no duplicate project/app_type combinations
+- **NOT NULL Constraints**: Required fields cannot be null
+- **ENUM Constraints**: Status limited to valid values
+
+**3. Indexing Strategy**
+
+**Primary Indexes**:
+- `PRIMARY KEY (id)`: Fast lookups by ID
+- `UNIQUE KEY unique_port (port)`: Fast port availability checks
+- `UNIQUE KEY unique_project (project_name, app_type)`: Fast project lookups
+
+**Secondary Indexes**:
+- `idx_project_name`: Optimize queries filtering by project name
+- `idx_app_type`: Optimize queries filtering by application type
+- `idx_status`: Optimize queries filtering by status
+- `idx_port_status`: Composite index for port availability queries (port + status)
+- `idx_created_at`: Optimize queries sorting by creation date
+
+**Index Selection Rationale**:
+- Indexes on frequently queried columns (project_name, app_type, status)
+- Composite index (port, status) for common query pattern: "find available port"
+- Covering index strategy for read-heavy workloads
+
+**4. Data Types Optimization**
+
+**String Types**:
+- `VARCHAR(255)`: Project names (reasonable max length)
+- `VARCHAR(512)`: File paths (accommodate long paths)
+- `VARCHAR(50)`: App types (limited enum-like values)
+- `TEXT`: Notes (unlimited length for flexibility)
+
+**Numeric Types**:
+- `INT`: Port numbers (0-65535 range, sufficient)
+- `INT AUTO_INCREMENT`: IDs (efficient auto-increment)
+
+**Temporal Types**:
+- `TIMESTAMP`: Created/updated timestamps (automatic management)
+
+**5. Character Set and Collation**
+- `utf8mb4`: Full UTF-8 support (emojis, international characters)
+- `utf8mb4_unicode_ci`: Case-insensitive Unicode collation
+
+#### Query Optimization
+
+**Common Query Patterns**:
+
+1. **Port Availability Check**:
+```sql
+-- Optimized with composite index (port, status)
+SELECT COUNT(*) FROM port_assignments 
+WHERE port = ? AND status = 'active';
+```
+
+2. **Find Available Port in Range**:
+```sql
+-- Optimized with index on port
+SELECT MIN(port) FROM port_assignments 
+WHERE app_type = ? AND port BETWEEN ? AND ? AND status = 'active';
+```
+
+3. **List Ports by Project**:
+```sql
+-- Optimized with index on project_name
+SELECT * FROM port_assignments 
+WHERE project_name = ? 
+ORDER BY created_at DESC;
+```
+
+4. **List Ports by App Type**:
+```sql
+-- Optimized with index on app_type
+SELECT * FROM port_assignments 
+WHERE app_type = ? AND status = 'active';
+```
+
+**Query Performance Targets**:
+- Port availability check: < 10ms
+- Port allocation query: < 50ms
+- List operations: < 100ms (with pagination)
+
+#### Migration Strategy
+
+**Versioned Migrations**:
+- Sequential migration files (001_initial_schema.sql, 002_add_history.sql, etc.)
+- Migration tracking table to record applied migrations
+- Rollback support for each migration
+
+**Migration Best Practices**:
+- **Backward Compatible**: Additive changes preferred
+- **Data Preservation**: Never drop columns without migration path
+- **Transaction Safety**: Migrations wrapped in transactions
+- **Testing**: Test migrations on staging before production
+
+**Example Migration Structure**:
+```sql
+-- migrations/001_initial_schema.sql
+CREATE TABLE port_assignments (...);
+
+-- migrations/002_add_history_table.sql
+CREATE TABLE port_history (...);
+
+-- migrations/003_add_composite_index.sql
+CREATE INDEX idx_port_status ON port_assignments(port, status);
+```
+
+#### Database-Specific Considerations
+
+**SQLite**:
+- Simpler schema (no AUTO_INCREMENT, use INTEGER PRIMARY KEY)
+- File-based, single-user access
+- Good for local development
+
+**MySQL**:
+- Full feature set (AUTO_INCREMENT, ENUM, etc.)
+- Connection pooling required
+- InnoDB engine for transactions
+
+**PostgreSQL**:
+- SERIAL instead of AUTO_INCREMENT
+- Better JSON support for metadata
+- Advanced indexing options (GIN, GiST)
 
 **Configuration**:
 ```json
@@ -1039,6 +1177,8 @@ port-manager migrate --project-path <path> [--port <port>]
 
 ### Programmatic API
 
+The Port Manager provides a clean, RESTful-inspired programmatic API that follows consistent design principles:
+
 ```typescript
 import { PortManager } from 'port-manager';
 
@@ -1049,18 +1189,123 @@ const manager = new PortManager({
   }
 });
 
-// Allocate port
+// Allocate port (POST-like operation: creates new assignment)
 const port = await manager.allocate('my-project', 'nextjs');
 
-// Check conflicts
+// Check conflicts (GET-like operation: retrieves information)
 const conflicts = await manager.detectConflicts('./my-project');
 
-// Configure project
+// Configure project (PUT-like operation: updates configuration)
 await manager.configure('./my-project', port, 'nextjs');
 
-// Get port assignment
+// Get port assignment (GET-like operation: retrieves resource)
 const assignment = await manager.getPort('my-project', 'nextjs');
+
+// List ports (GET-like operation: retrieves collection)
+const allPorts = await manager.listPorts({ appType: 'nextjs' });
+
+// Release port (DELETE-like operation: removes assignment)
+await manager.release('my-project', 'nextjs');
 ```
+
+#### API Design Principles
+
+**1. Resource-Based Operations**
+- Port assignments are treated as resources
+- Operations follow RESTful semantics (GET, POST, PUT, DELETE)
+- Clear separation between read and write operations
+
+**2. Consistent Error Handling**
+```typescript
+try {
+  const port = await manager.allocate('my-project', 'nextjs');
+} catch (error) {
+  if (error instanceof PortConflictError) {
+    // Handle conflict
+  } else if (error instanceof PortRangeExhaustedError) {
+    // Handle range exhaustion
+  } else {
+    // Handle other errors
+  }
+}
+```
+
+**3. Promise-Based Async API**
+- All operations return Promises
+- Consistent async/await support
+- Proper error propagation
+
+**4. Type Safety**
+- Full TypeScript support
+- Strongly typed interfaces
+- IntelliSense support
+
+**5. Configuration Options**
+- Flexible configuration object
+- Sensible defaults
+- Environment-specific overrides
+
+#### API Response Formats
+
+**Success Response**:
+```typescript
+interface PortAssignment {
+  id: number;
+  projectName: string;
+  appType: AppType;
+  port: number;
+  status: 'active' | 'inactive' | 'reserved';
+  createdAt: Date;
+  updatedAt: Date;
+  metadata?: {
+    configFile?: string;
+    envVar?: string;
+    notes?: string;
+  };
+}
+```
+
+**Error Response**:
+```typescript
+interface PortManagerError {
+  code: string;
+  message: string;
+  details?: {
+    port?: number;
+    projectName?: string;
+    conflictType?: string;
+  };
+}
+```
+
+**Conflict Report**:
+```typescript
+interface ConflictReport {
+  port: number;
+  conflictType: 'assigned' | 'in_use' | 'mismatch';
+  details: string;
+  resolution?: string;
+  severity: 'error' | 'warning' | 'info';
+}
+```
+
+#### API Versioning Strategy
+
+**Current Version**: v1 (implicit)
+
+**Future Versioning**:
+- Semantic versioning for npm package
+- API versioning via configuration option
+- Backward compatibility guarantees
+- Migration guides for breaking changes
+
+#### API Documentation Standards
+
+**OpenAPI/Swagger Support** (Future):
+- Auto-generated API documentation
+- Interactive API explorer
+- Request/response examples
+- Error code reference
 
 ## Configuration
 
@@ -1551,6 +1796,65 @@ const assignment = await manager.getPort('my-project', 'nextjs');
 - ✅ 50+ weekly downloads
 - ✅ Community contributions
 
+## Mobile Development Considerations
+
+### Mobile Development Scenarios
+
+Port Manager should support developers working on mobile development projects and developers using mobile devices for development:
+
+1. **Mobile App Development**: Managing ports for mobile app backends, APIs, and development servers
+2. **Mobile Device Development**: Developers using tablets or mobile devices for development work
+3. **Mobile Network Constraints**: Port management that works efficiently on mobile networks
+4. **Mobile Terminal Usage**: CLI tool optimized for mobile terminal applications
+
+### Mobile-Specific Port Ranges
+
+**Mobile Development Port Ranges**:
+- **React Native Metro Bundler**: 8081 (default)
+- **Expo Development Server**: 19000, 19001, 19002
+- **Flutter Development Server**: 5000-5099
+- **Ionic Development Server**: 8100-8199
+- **Mobile API Backends**: 3000-3099 (shared with web)
+
+**Mobile Device Testing Ports**:
+- **iOS Simulator**: Uses host machine ports
+- **Android Emulator**: Uses host machine ports (forwarded)
+- **Physical Device Testing**: Requires network-accessible ports
+
+### Mobile Development Workflow
+
+**Port Manager should support**:
+1. **Mobile Framework Detection**: Auto-detect React Native, Flutter, Ionic, Expo projects
+2. **Mobile-Specific Port Allocation**: Allocate ports in mobile development ranges
+3. **Device Port Forwarding**: Manage port forwarding for Android emulators
+4. **Network-Accessible Ports**: Ensure ports are accessible from mobile devices on local network
+
+### Mobile Terminal Optimization
+
+**CLI Tool Considerations**:
+- **Concise Output**: Minimize output for small mobile screens
+- **Touch-Friendly Prompts**: Interactive prompts that work well on mobile terminals
+- **Battery Efficiency**: Minimize CPU usage and network operations
+- **Offline Capability**: Basic operations work without network (local SQLite)
+- **Fast Startup**: Quick command execution on mobile devices
+
+### Mobile Network Optimization
+
+**Performance Considerations**:
+- **Minimal Network Calls**: Cache port registry locally
+- **Efficient Database Operations**: Optimize for slower mobile storage
+- **Batch Operations**: Group operations to reduce I/O
+- **Connection Pooling**: Efficient database connections on mobile
+
+### Mobile Development Integration
+
+**Framework-Specific Mobile Support**:
+- **React Native**: Metro bundler port (8081) management
+- **Expo**: Expo development server ports (19000-19002)
+- **Flutter**: Flutter development server port allocation
+- **Ionic**: Ionic serve port management
+- **Mobile Backends**: API server port management for mobile apps
+
 ## Related Documentation
 
 - [Port Management Strategy](../guides/PORT_MANAGEMENT_STRATEGY.md)
@@ -1578,4 +1882,19 @@ const assignment = await manager.getPort('my-project', 'nextjs');
 **Expertise**: Architecture (System Design and Scalability)  
 **Date**: 2026-01-05  
 **Changes**: Significantly expanded the "Technical Architecture" section with comprehensive architectural design details. Added "System Architecture Overview" describing the layered architecture pattern (Presentation, Application, Data Access, Integration layers). Enhanced "Architecture Patterns" section with detailed implementations of Repository Pattern (database abstraction), Strategy Pattern (database backends), Factory Pattern (framework detection), and Command Pattern (CLI interface), including code examples and benefits for each pattern. Expanded "System Components and Responsibilities" section with detailed architectural roles, dependencies, and design considerations for each core component (Registry Manager, Port Allocator, Conflict Detector, Configuration Manager, Framework Detector). Added "Data Flow and Interactions" section with detailed flow diagrams for port allocation and conflict detection processes. Added "Technology Stack and Rationale" section explaining technology choices with justifications (TypeScript, Node.js, Commander.js, database drivers, file system operations, CLI enhancements). Added "Infrastructure Requirements" section covering local development (SQLite) and team collaboration (MySQL/PostgreSQL) requirements including storage, performance, concurrency, and backup considerations. Added "Integration Points" section detailing framework integration methods, CI/CD integration points, and system integration approaches. Added comprehensive "Scalability Considerations" section covering horizontal scaling options, performance optimization strategies (database indexing, caching, query optimization, port allocation algorithms), and database scaling migration paths. Added "Dependency Analysis" section with component dependency diagrams, external dependencies, and build order/prerequisites. Enhanced "Risk Assessment" section with new "Architectural Risks" subsection covering scalability limitations, concurrent port allocation, file system race conditions, framework detection accuracy, database migration failures, and performance degradation with mitigation strategies. Added "Integration Challenges" and "Performance Bottlenecks" subsections with detailed analysis and optimization strategies. Added "Scalability Concerns" subsection addressing single-instance limitations, database size growth, and port range exhaustion. These additions transform the technical architecture section from a basic package structure into a comprehensive architectural specification suitable for system design, scalability planning, and implementation guidance.
+
+**Expert**: Michael Brown  
+**Expertise**: Mobile Optimization  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Mobile Development Considerations" section covering mobile development scenarios (mobile app development, mobile device development, mobile network constraints, mobile terminal usage), mobile-specific port ranges (React Native Metro Bundler 8081, Expo 19000-19002, Flutter 5000-5099, Ionic 8100-8199, mobile API backends), mobile development workflow (mobile framework detection, mobile-specific port allocation, device port forwarding, network-accessible ports), mobile terminal optimization (concise output, touch-friendly prompts, battery efficiency, offline capability, fast startup), mobile network optimization (minimal network calls, efficient database operations, batch operations, connection pooling), and mobile development integration (React Native, Expo, Flutter, Ionic, mobile backends). These additions ensure Port Manager supports mobile development workflows and is optimized for use on mobile devices, considering mobile constraints like battery life, network speed, and terminal screen size.
+
+**Expert**: Andrew Lee  
+**Expertise**: RESTful API Design  
+**Date**: 2026-01-05  
+**Changes**: Enhanced the "Programmatic API" section with comprehensive RESTful API design principles. Added "API Design Principles" subsection covering resource-based operations (treating port assignments as resources with RESTful semantics), consistent error handling (typed error classes with proper error propagation), promise-based async API (consistent async/await support), type safety (full TypeScript support with strongly typed interfaces), and configuration options (flexible configuration with sensible defaults). Added "API Response Formats" subsection with detailed TypeScript interfaces for PortAssignment (success response), PortManagerError (error response), and ConflictReport (conflict information) including all fields and types. Added "API Versioning Strategy" subsection covering current version (v1 implicit), future versioning approach (semantic versioning, API versioning via configuration, backward compatibility guarantees, migration guides). Added "API Documentation Standards" subsection covering future OpenAPI/Swagger support (auto-generated documentation, interactive API explorer, request/response examples, error code reference). These additions transform the programmatic API section from basic code examples into a comprehensive API design specification following RESTful principles and best practices for developer-friendly APIs.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Significantly enhanced the "Database Schema" section with comprehensive database design best practices. Added "Schema Design Principles" subsection covering normalization (3NF compliance, no redundancy, atomic values), data integrity (primary key, unique constraints, NOT NULL constraints, ENUM constraints), indexing strategy (primary indexes for fast lookups, secondary indexes for query optimization, composite index for port availability queries, covering index strategy), data types optimization (string types with appropriate lengths, numeric types, temporal types), and character set and collation (utf8mb4 for full UTF-8 support). Added "Query Optimization" subsection with common query patterns (port availability check, find available port in range, list ports by project, list ports by app type) with optimized SQL examples and query performance targets (< 10ms for availability check, < 50ms for allocation, < 100ms for list operations). Added "Migration Strategy" subsection covering versioned migrations (sequential migration files, migration tracking table, rollback support), migration best practices (backward compatible, data preservation, transaction safety, testing), and example migration structure. Added "Database-Specific Considerations" subsection covering SQLite (simpler schema, file-based, single-user), MySQL (full feature set, connection pooling, InnoDB engine), and PostgreSQL (SERIAL, JSON support, advanced indexing). These additions transform the database schema from a basic table definition into a comprehensive database design specification with optimization strategies and migration planning.
 

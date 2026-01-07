@@ -21,6 +21,7 @@ yarn-error.log*
 .env.*.local
 
 # IDE
+.githooks/
 .vscode/
 .vscode/settings.json
 .idea/
@@ -40,4 +41,7 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+
+
+
 

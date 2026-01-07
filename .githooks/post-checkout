@@ -10,7 +10,7 @@ MAIN_INACTIVE="#f38b82cc"
 MAIN_BG="#f38b82" 
 
 PROJECT_COLOR="#062015"     # your project color
-PROJEVT_INACTIVE="#81ca95cc"
+PROJECT_INACTIVE="#81ca95cc"
 PROJECT_BG="#81ca95"
 
 BORDER="#5aa978"
@@ -18,11 +18,13 @@ DARKER_BG="#0b1f17"
 DARK_BG="#071a13"
 ACTIVE_COLOR="#ffffff"
 
+echo "BRANCH: $BRANCH"
+
 mkdir -p .vscode
 
 if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
   COLOR="$MAIN_COLOR"
-  INACTIVE="$MAIN_INACTIBE"
+  INACTIVE="$MAIN_INACTIVE"
   BG="$MAIN_BG"
 else
   COLOR="$PROJECT_COLOR"

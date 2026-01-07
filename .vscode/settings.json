@@ -1,9 +1,21 @@
 {
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#062015",
+    "titleBar.activeForeground": "#0b0b0b",
+    "statusBar.background": "#062015",
+    "statusBar.foreground": "#0b0b0b",
+    "editorGroup.border": "#062015",
+    "panel.border": "#062015",
+    "focusBorder": "#062015"
+  }
+}
+
+{
     "workbench.colorCustomizations": {
       /* Title bar */
       "titleBar.activeBackground": "#81ca95",
       "titleBar.activeForeground": "#062015",
-      "titleBar.inactiveBackground": "#81ca95cc",
+      "titleBar.inactiveBackground": "",
       "titleBar.inactiveForeground": "#062015",
   
       /* Status bar */

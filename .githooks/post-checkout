@@ -6,8 +6,8 @@ SETTINGS_FILE=".vscode/settings.json"
 
 # 🔧 CHANGE THESE TWO COLORS
 MAIN_COLOR="#0b0b0b"        # red for main
-MAIN_INACTIVE="#f38b82cc"
-MAIN_BG="#f38b82" 
+MAIN_BG="#f38b82cc"
+MAIN_INACTIVE="#f38b82" 
 
 PROJECT_COLOR="#062015"     # your project color
 PROJECT_INACTIVE="#81ca95cc"
@@ -19,12 +19,13 @@ DARK_BG="#071a13"
 ACTIVE_COLOR="#ffffff"
 
 echo "BRANCH: $BRANCH"
+echo "Current branch is: $BRANCH"
 
 mkdir -p .vscode
 
 if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
   COLOR="$MAIN_COLOR"
-  INACTIVE="$MAIN_INACTIBE"
+  INACTIVE="$MAIN_INACTIVE"
   BG="$MAIN_BG"
 else
   COLOR="$PROJECT_COLOR"
@@ -33,7 +34,6 @@ else
 fi
 
 cat > "$SETTINGS_FILE" <<EOF
-
 {
     "workbench.colorCustomizations": {
       /* Title bar */

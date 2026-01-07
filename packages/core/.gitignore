@@ -23,6 +23,7 @@ yarn-error.log*
 # IDE
 .githooks/
 .vscode/
+.vscode/settings.json
 .idea/
 *.swp
 *.swo

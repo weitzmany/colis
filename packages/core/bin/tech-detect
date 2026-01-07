@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+/**
+ * Tech Detect CLI Entry Point
+ */
+
+const { program } = require('commander');
+const { detectCommand } = require('../dist/features/tech-detector/cli/commands/detect');
+
+program
+  .name('tech-detect')
+  .description('Detect technology stack of a project')
+  .version('1.0.0');
+
+program
+  .command('detect')
+  .alias('scan')
+  .description('Detect technology stack')
+  .option('-p, --path <path>', 'Project path (default: current directory)')
+  .option('-s, --save', 'Save detected tech stack to config files')
+  .option('-f, --format <format>', 'Output format (text, json, table)', 'text')
+  .option('-u, --update', 'Update existing tech stack')
+  .action(detectCommand);
+
+// Default command
+program
+  .option('-p, --path <path>', 'Project path (default: current directory)')
+  .option('-s, --save', 'Save detected tech stack to config files')
+  .option('-f, --format <format>', 'Output format (text, json, table)', 'text')
+  .option('-u, --update', 'Update existing tech stack')
+  .action(detectCommand);
+
+program.parse();
+

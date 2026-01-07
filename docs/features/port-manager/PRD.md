@@ -4,7 +4,7 @@
 **Type**: Core Feature (part of `@your-org/core` package)  
 **Status**: Planning  
 **Priority**: P1 (High)  
-**Created**: 2026-01-05  
+**Created**: 2026-01-05
 **Package Architecture**: Core Package Feature
 
 ## Package Context

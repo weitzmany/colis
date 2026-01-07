@@ -1,0 +1,97 @@
+#!/usr/bin/env node
+
+/**
+ * Port Manager CLI Entry Point
+ */
+
+const { program } = require('commander');
+const { initCommand } = require('../dist/features/port-manager/cli/commands/init');
+const { allocateCommand } = require('../dist/features/port-manager/cli/commands/allocate');
+const { checkCommand } = require('../dist/features/port-manager/cli/commands/check');
+const { listCommand } = require('../dist/features/port-manager/cli/commands/list');
+const { releaseCommand } = require('../dist/features/port-manager/cli/commands/release');
+const { validateCommand } = require('../dist/features/port-manager/cli/commands/validate');
+const { migrateCommand } = require('../dist/features/port-manager/cli/commands/migrate');
+
+program
+  .name('port-manager')
+  .description('Automatically manage port assignments across all your projects')
+  .version('1.0.0');
+
+program
+  .command('init')
+  .description('Initialize Port Manager in the current project')
+  .option('-p, --project-name <name>', 'Project name')
+  .option('-t, --app-type <type>', 'App type (nextjs, angular, react, node, etc.)')
+  .option('--no-auto-configure', 'Skip automatic configuration file updates')
+  .option('--skip-tech-detect', 'Skip automatic technology stack detection')
+  .option('--setup-domain', 'Set up local domain with Caddy reverse proxy')
+  .action(initCommand);
+
+program
+  .command('allocate')
+  .description('Allocate a port for a project')
+  .requiredOption('-p, --project-name <name>', 'Project name')
+  .requiredOption('-t, --app-type <type>', 'App type')
+  .option('--port <port>', 'Preferred port number')
+  .option('--path <path>', 'Project path (default: current directory)')
+  .option('--no-auto-configure', 'Skip automatic configuration file updates')
+  .action(allocateCommand);
+
+program
+  .command('check')
+  .description('Check port availability and conflicts')
+  .option('-p, --project-name <name>', 'Project name')
+  .option('--port <port>', 'Port number to check')
+  .action(checkCommand);
+
+program
+  .command('list')
+  .description('List all port assignments')
+  .option('-p, --project-name <name>', 'Filter by project name')
+  .option('-t, --app-type <type>', 'Filter by app type')
+  .option('--status <status>', 'Filter by status (active, inactive, reserved)')
+  .action(listCommand);
+
+program
+  .command('release')
+  .description('Release a port assignment')
+  .requiredOption('-p, --project-name <name>', 'Project name')
+  .requiredOption('-t, --app-type <type>', 'App type')
+  .action(releaseCommand);
+
+program
+  .command('validate')
+  .description('Validate all port assignments and detect conflicts')
+  .option('-p, --project-name <name>', 'Validate specific project')
+  .action(validateCommand);
+
+program
+  .command('migrate')
+  .description('Run database migrations')
+  .action(migrateCommand);
+
+program
+  .command('detect')
+  .description('Detect all port configurations in the project (code, env files, docs)')
+  .option('--path <path>', 'Project path (default: current directory)')
+  .option('--format <format>', 'Output format (text or json)', 'text')
+  .action((options) => {
+    const { detectCommand } = require('../dist/features/port-manager/cli/commands/detect');
+    detectCommand(options);
+  });
+
+program
+  .command('fix')
+  .description('Automatically fix port configurations to use Port Manager assigned ports')
+  .option('-p, --project-name <name>', 'Project name')
+  .option('-t, --app-type <type>', 'App type')
+  .option('--path <path>', 'Project path (default: current directory)')
+  .option('-y, --yes', 'Skip confirmation prompt')
+  .option('--dry-run', 'Show what would be fixed without making changes')
+  .action((options) => {
+    const { fixCommand } = require('../dist/features/port-manager/cli/commands/fix');
+    fixCommand(options);
+  });
+
+program.parse();

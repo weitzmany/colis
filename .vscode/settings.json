@@ -4,7 +4,7 @@
       /* Title bar */
       "titleBar.activeBackground": "#81ca95",
       "titleBar.activeForeground": "#062015",
-      "titleBar.inactiveBackground": "",
+      "titleBar.inactiveBackground": "#81ca95cc",
       "titleBar.inactiveForeground": "#062015",
   
       /* Status bar */

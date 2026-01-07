@@ -50,3 +50,6 @@ export const CREATE_PORT_HISTORY_INDEXES = `
   CREATE INDEX IF NOT EXISTS idx_timestamp ON ${PORT_HISTORY_TABLE}(timestamp);
 `;
 
+
+
+

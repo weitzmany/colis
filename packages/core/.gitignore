@@ -21,6 +21,7 @@ yarn-error.log*
 .env.*.local
 
 # IDE
+.githooks/
 .vscode/
 .idea/
 *.swp
@@ -39,4 +40,7 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+
+
+
 

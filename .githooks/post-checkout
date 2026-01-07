@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+set -e
+
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+SETTINGS_FILE=".vscode/settings.json"
+
+# 🔧 CHANGE THESE TWO COLORS
+MAIN_COLOR="#0b0b0b"        # red for main
+MAIN_INACTIVE="#f38b82cc"
+MAIN_BG="#f38b82" 
+
+PROJECT_COLOR="#062015"     # your project color
+PROJEVT_INACTIVE="#81ca95cc"
+PROJECT_BG="#81ca95"
+
+BORDER="#5aa978"
+DARKER_BG="#0b1f17"
+DARK_BG="#071a13"
+ACTIVE_COLOR="#ffffff"
+
+mkdir -p .vscode
+
+if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+  COLOR="$MAIN_COLOR"
+  INACTIVE="$MAIN_INACTIBE"
+  BG="$MAIN_BG"
+else
+  COLOR="$PROJECT_COLOR"
+  INACTIVE="$PROJECT_INACTIVE"
+  BG="$PROJECT_BG"
+fi
+
+cat > "$SETTINGS_FILE" <<EOF
+{
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "$COLOR",
+    "titleBar.activeForeground": "#0b0b0b",
+    "statusBar.background": "$COLOR",
+    "statusBar.foreground": "#0b0b0b",
+    "editorGroup.border": "$COLOR",
+    "panel.border": "$COLOR",
+    "focusBorder": "$COLOR"
+  }
+}
+
+{
+    "workbench.colorCustomizations": {
+      /* Title bar */
+      "titleBar.activeBackground": "$BG",
+      "titleBar.activeForeground": "$COLOR",
+      "titleBar.inactiveBackground": "$INACTIVE",
+      "titleBar.inactiveForeground": "$COLOR",
+  
+      /* Status bar */
+      "statusBar.background": "$PROJECT_BG",
+      "statusBar.foreground": "$PROJECT_COLOR",
+      "statusBar.border": "$BORDER",
+  
+      /* Activity bar */
+      "activityBar.background": "$DARKER_BG",
+      "activityBar.foreground": "$PROJECT_BG",
+      "activityBar.activeBorder": "$PROJECT_BG",
+  
+      /* Sidebar */
+      "sideBar.background": "$DARK_BG",
+      "sideBar.border": "$BORDER",
+  
+      /* Editor & panels frame */
+      "editorGroup.border": "$BORDER",
+      "panel.border": "$BORDER",
+  
+      /* Focus & highlights */
+      "focusBorder": "$PROJECT_BG",
+  
+      /* Tabs */
+      "tab.activeBorderTop": "$PROJECT_BG",
+      "tab.activeForeground": "$ACTIVE_COLOR"
+    }
+  }
+  
+EOF

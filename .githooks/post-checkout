@@ -32,18 +32,6 @@ fi
 
 cat > "$SETTINGS_FILE" <<EOF
 {
-  "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "$COLOR",
-    "titleBar.activeForeground": "#0b0b0b",
-    "statusBar.background": "$COLOR",
-    "statusBar.foreground": "#0b0b0b",
-    "editorGroup.border": "$COLOR",
-    "panel.border": "$COLOR",
-    "focusBorder": "$COLOR"
-  }
-}
-
-{
     "workbench.colorCustomizations": {
       /* Title bar */
       "titleBar.activeBackground": "$BG",

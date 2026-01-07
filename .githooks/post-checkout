@@ -1,4 +1,35 @@
 #!/usr/bin/env bash
+
+### THIS IS A GIT HOOK THAT SETS THE COLOR SCHEME BASED ON THE BRANCH ###
+### 1. Go to repository root directory
+### cd /path/to/your/repo
+### 2. Create .githooks directory if it doesn't exist
+### mkdir -p .githooks
+### 3. Set the .githooks directory as the core.hooksPath
+### git config core.hooksPath .githooks
+### 4. Verify the core.hooksPath
+### git config core.hooksPath
+### expected output: .githooks
+### 5. Copy the post-checkout hook to the .githooks directory
+### cp /path/to/this/repo/.githooks/post-checkout .githooks/post-checkout
+### 6. copy the colors from the .vscode/settings.json file to the post-checkout hook
+### 7. Make the hook executable
+### chmod +x .githooks/post-checkout
+### 8. Verify the hook
+### ls -l .githooks/post-checkout
+### expected output: -rwxr-xr-x ... (important: -x permission)
+### 9. verify settings.json is ignored by git
+### git check-ignore .vscode/settings.json
+### expected output: .vscode/settings.json
+### 10. if the file is not ignored, remove it:
+### git rm --cached .vscode/settings.json
+### 11. verify the file is ignored:
+### git check-ignore .vscode/settings.json
+### expected output: .vscode/settings.json
+### 12. verify the hook is working:
+### git checkout <branch>
+### expected output: the color scheme is set based on the branch
+
 set -e
 
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"

@@ -19,6 +19,7 @@ DARK_BG="#071a13"
 ACTIVE_COLOR="#ffffff"
 
 echo "BRANCH: $BRANCH"
+echo "Current branch is: $BRANCH"
 
 mkdir -p .vscode
 

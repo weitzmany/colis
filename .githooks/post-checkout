@@ -6,8 +6,8 @@ SETTINGS_FILE=".vscode/settings.json"
 
 # 🔧 CHANGE THESE TWO COLORS
 MAIN_COLOR="#0b0b0b"        # red for main
-MAIN_INACTIVE="#f38b82cc"
-MAIN_BG="#f38b82" 
+MAIN_BG="#f38b82cc"
+MAIN_INACTIVE="#f38b82" 
 
 PROJECT_COLOR="#062015"     # your project color
 PROJECT_INACTIVE="#81ca95cc"

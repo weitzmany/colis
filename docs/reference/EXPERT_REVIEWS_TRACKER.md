@@ -3,9 +3,9 @@
 This document tracks all expert reviews and contributions across the project.
 
 **Last Updated**: 2026-01-05
-**Current reviewer**: Carol Williams
-**Current mode**: Full review - Expert suggestions
-**Last reviewer**: Lisa Garcia
+**Current reviewer**: Dorothy Clark
+**Current mode**: Full review
+**Last reviewer**: Carol Williams
 **Last file**: docs/features/question-bank-content-library/PRD.md (created)
 
 ## Expert Review Statistics

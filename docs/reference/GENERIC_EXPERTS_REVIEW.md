@@ -490,5 +490,118 @@ When implementing expert personas in cloud infrastructure, ensure:
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "Cloud Infrastructure Considerations for Expert Personas" section covering infrastructure requirements by expert type (high-compute experts requiring auto-scaling compute instances and container orchestration, low-compute experts using serverless functions and standard compute, network-intensive experts requiring load balancers and API gateways), cloud deployment patterns for expert systems (serverless architecture pattern with AWS Lambda/Azure Functions/Google Cloud Functions for lightweight experts, container-based architecture pattern with Docker and Kubernetes for complex experts, microservices architecture pattern with independent services per expert type, hybrid architecture pattern optimizing for each expert's needs), cloud scalability considerations (horizontal scaling with auto-scaling configuration based on queue depth and request rate, vertical scaling with right-sized instances and burstable/spot instances, load distribution with health checks and geographic distribution), cloud cost optimization for expert systems (resource optimization with right-sizing and monitoring, cost management strategies with reserved/spot instances and serverless, cost allocation with tagging strategy per expert type), cloud security for expert personas (access control with IAM roles per expert and least privilege, network security with VPCs and security groups, data security with encryption at rest and in transit), cloud monitoring and observability for expert systems (expert performance monitoring with execution time and success rates, expert health monitoring with availability and error rate tracking, expert cost monitoring with cost per execution and trends), cloud infrastructure checklist for expert personas covering infrastructure requirements, deployment patterns, auto-scaling, load balancing, cost optimization, security, monitoring, disaster recovery, compliance, and documentation, cloud infrastructure best practices for expert systems (start with serverless, implement auto-scaling, use managed services, monitor everything, optimize costs continuously, secure by default, design for failure, version control infrastructure, test infrastructure changes, document architecture), and cloud infrastructure recommendations by expert type with specific patterns for serverless, containers, microservices, and hybrid architectures. Also fixed the date from 2025-01-05 to 2026-01-05. This addition ensures that expert personas are designed with cloud infrastructure considerations from the start, enabling scalable, reliable, and cost-effective expert systems that can grow with project needs.
 
+## Documentation Standards for Expert Persona Files
+
+When creating or reviewing expert persona files, follow these documentation standards to ensure clarity, consistency, and maintainability:
+
+### File Structure Standards
+
+1. **Frontmatter Section**
+   - Include all required metadata (description, globs, alwaysApply, name, age, personality, motto, etc.)
+   - Use consistent formatting across all expert files
+   - Ensure metadata is accurate and up-to-date
+
+2. **Expert Definition Section**
+   - Clear title with expert name and expertise area
+   - Comprehensive "Your Expertise" section covering knowledge areas
+   - Project-specific context when applicable
+   - Clear "Your Responsibilities" section
+
+3. **Content Organization**
+   - Use consistent heading hierarchy (H2 for main sections, H3 for subsections)
+   - Group related information together
+   - Use lists and tables for structured information
+   - Include code examples when relevant
+
+4. **Code Examples**
+   - Use appropriate language tags for syntax highlighting
+   - Include comments explaining complex logic
+   - Provide complete, runnable examples when possible
+   - Document parameters and return types
+
+### Documentation Quality Standards
+
+1. **Clarity**
+   - Use clear, concise language
+   - Avoid jargon unless necessary (and define it)
+   - Write for the target audience
+   - Use active voice when possible
+
+2. **Completeness**
+   - Document all responsibilities
+   - Include all relevant knowledge areas
+   - Provide examples for complex concepts
+   - Link to related documentation
+
+3. **Consistency**
+   - Use consistent terminology across files
+   - Follow the same structure for similar sections
+   - Use consistent formatting (markdown, code blocks, etc.)
+   - Maintain consistent tone and style
+
+4. **Accuracy**
+   - Ensure technical information is correct
+   - Keep examples up-to-date with current practices
+   - Verify code examples work as documented
+   - Update documentation when practices change
+
+### Expert Persona Documentation Checklist
+
+When creating or reviewing an expert persona file, ensure:
+
+- [ ] **Frontmatter Complete**: All required metadata fields present
+- [ ] **Expert Definition Clear**: Expert role and expertise clearly defined
+- [ ] **Responsibilities Documented**: All responsibilities listed with examples
+- [ ] **Knowledge Areas Covered**: All relevant knowledge areas documented
+- [ ] **Code Examples Included**: Examples provided for complex concepts
+- [ ] **Project Context**: Project-specific context included when applicable
+- [ ] **Best Practices**: Best practices and guidelines documented
+- [ ] **When to Ask Questions**: Clear guidance on when to ask questions
+- [ ] **Review Section**: Review/Contribution section present and up-to-date
+- [ ] **Formatting Consistent**: Consistent with other expert persona files
+- [ ] **Links Valid**: All links are valid and point to correct resources
+- [ ] **No Broken Code**: All code examples are syntactically correct
+- [ ] **Spelling/Grammar**: No spelling or grammar errors
+
+### Documentation Maintenance
+
+1. **Regular Reviews**
+   - Review expert persona files periodically
+   - Update when practices or tools change
+   - Remove outdated information
+   - Add new knowledge areas as needed
+
+2. **Version Control**
+   - Track changes in Review/Contribution section
+   - Document why changes were made
+   - Maintain change history
+   - Link to related discussions or decisions
+
+3. **Cross-References**
+   - Link to related expert personas
+   - Reference relevant documentation
+   - Link to external resources when helpful
+   - Maintain consistent linking structure
+
+### Documentation Best Practices for Expert Personas
+
+1. **Start with Purpose**: Clearly state the expert's purpose and role
+2. **Be Specific**: Provide specific examples and use cases
+3. **Show, Don't Tell**: Use code examples and practical scenarios
+4. **Keep It Updated**: Regularly review and update documentation
+5. **Make It Scannable**: Use headings, lists, and tables for easy scanning
+6. **Include Context**: Provide project-specific context when relevant
+7. **Document Decisions**: Explain why certain approaches are recommended
+8. **Link Resources**: Link to external documentation and resources
+9. **Maintain Consistency**: Follow the same structure across all expert files
+10. **Review Regularly**: Periodically review and improve documentation
+
+---
+
+**Expert**: Dorothy Clark  
+**Expertise**: Documentation (Code, API, User Documentation)  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Documentation Standards for Expert Persona Files" section covering file structure standards (frontmatter section with required metadata, expert definition section with clear structure, content organization with consistent heading hierarchy, code examples with appropriate language tags), documentation quality standards (clarity with clear concise language, completeness with all responsibilities documented, consistency with consistent terminology and structure, accuracy with correct technical information), expert persona documentation checklist (14 items covering frontmatter, expert definition, responsibilities, knowledge areas, code examples, project context, best practices, review section, formatting, links, code correctness, spelling/grammar), documentation maintenance (regular reviews with periodic updates, version control with change tracking, cross-references with linking structure), and documentation best practices for expert personas (10 best practices covering purpose, specificity, examples, updates, scannability, context, decisions, resources, consistency, reviews). This addition ensures that expert persona files follow consistent documentation standards, making them easier to understand, maintain, and use effectively across projects.
+
 ---
 

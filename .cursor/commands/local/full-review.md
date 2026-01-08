@@ -24,6 +24,11 @@ Execute this command to run a comprehensive review workflow:
 - `true` - Skip scanning other projects
 - Empty/omitted - Scan other projects (default)
 
+#### `limit` (optional)
+- `<number>` - Number of times to call `/local/review` command (default: 10)
+- Each call may review a different file or skip files
+- Total files reviewed may be less than limit (due to skips, irrelevant files, etc.)
+
 ### Examples
 
 ```bash
@@ -41,6 +46,10 @@ Execute this command to run a comprehensive review workflow:
 
 # Full review with all options
 /local/full-review expert="Arthur Davis" skip-suggestions=false skip-scan=false
+
+# Full review with limit
+/local/full-review expert="Sarah Johnson" limit=20
+/local/full-review limit=5
 ```
 
 ## Workflow
@@ -67,26 +76,32 @@ Execute this command to run a comprehensive review workflow:
      - Binary files (if detectable)
      - Very large files (optional, configurable)
 
-### Step 3: Review All Files
+### Step 3: Review Files (with Limit)
 
-4. **Review Each File**:
-   - For each file in the detected list:
-     - Execute `/local/review expert=[EXPERT] file=[FILE_PATH]`
-     - Wait for review to complete
-     - **CRITICAL: Update Tracker Immediately**: After each file review completes, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
-       - Add the reviewed file to the expert's "Files Reviewed" list
-       - Update the expert's "Total Reviews" count
-       - Update the "Last Review Date" if needed
-       - Add a brief description of changes made
-       - Update the "Files Reviewed Statistics" table (increment review count for the file)
-     - Continue to next file
-   - Track progress (optional: show progress indicator)
+4. **Review Files with Limit**:
+   - Get `limit` parameter (default: 10 if not specified)
+   - **Execute `/local/review` Command LIMIT Times**:
+     - For i = 1 to LIMIT:
+       - Execute `/local/review expert=[EXPERT] limit=[LIMIT]`
+       - Wait for review to complete
+       - Each call may:
+         - Review a file (if file is relevant and not reviewed today)
+         - Skip a file (if irrelevant, already reviewed today, or not found)
+         - Mark a file as irrelevant (if expert determines it's not relevant)
+       - **Note**: The `/local/review` command handles its own tracker updates internally
+       - Track progress: Show "Review attempt [i]/[LIMIT]" (optional: show progress indicator)
+   - **Summary After All Attempts**:
+     - Collect summaries from each `/local/review` call
+     - Aggregate results:
+       - Total files reviewed
+       - Total files skipped (with reasons)
+       - Total files marked as irrelevant
+       - Total attempts made
    
-   **⚠️ IMPORTANT**: The tracker must be updated after EACH file review, not at the end. This ensures:
-   - Progress is saved incrementally
-   - If the review is interrupted, progress is not lost
-   - The tracker accurately reflects current review status
-   - Statistics remain accurate throughout the review process
+   **⚠️ IMPORTANT**: 
+   - Each `/local/review` call updates the tracker internally (no need to update here)
+   - The `/local/review` command handles file selection, relevance checking, and skipping
+   - This step simply calls `/local/review` LIMIT times and aggregates results
 
 ### Step 4: Expert Suggestions
 

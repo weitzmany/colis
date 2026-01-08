@@ -39,6 +39,11 @@ Execute this command to run the expert review workflow:
 - `"new"` - Create a new file
 - Empty/omitted - Use `/local/file` to randomly select a file
 
+#### `limit` (optional)
+- `<number>` - Maximum number of attempts to find a reviewable file (default: 10)
+- Used when skipping files (irrelevant, already reviewed today, not found)
+- When limit is reached, command stops and shows summary
+
 ### Examples
 
 ```bash
@@ -53,6 +58,10 @@ Execute this command to run the expert review workflow:
 
 # Specific expert, specific file
 /local/review expert="Arthur Davis" file="API_STRUCTURE_REVIEW.md"
+
+# With limit parameter
+/local/review limit=5
+/local/review expert="Sarah Johnson" limit=20
 
 # Create new expert
 /local/review expert="new"
@@ -232,9 +241,70 @@ Execute this command to run the expert review workflow:
      - If "Last file" exists, replace it with "Current file"
    - Continue to Step 5 (Expert Review)
 
-### Step 5: Expert Review
+### Step 5: File Pre-Review Checks
 
-10. **Expert Review** (using expert from Step 2/4 and file from Step 3b/4/9)
+10. **File Pre-Review Checks** (using expert from Step 2/4 and file from Step 3b/4/9)
+   - **Initialize Attempt Tracking**: Set attempt counter to 0, max attempts from `limit` parameter (default: 10)
+   - **Initialize Skip Tracking**: Track reasons for skipping files (irrelevant, already reviewed, not found, etc.)
+   - **File Selection Loop**: Repeat until a reviewable file is found or limit is reached:
+     - **Check 1: Irrelevant Mark** (FIRST CHECK):
+       - Read the file content
+       - Search for `<!-- IRRELEVANT FOR ME -->` mark in the file
+       - If mark found:
+         - Skip this file (count++)
+         - Add to skip tracking: "File [path] skipped: Already marked as irrelevant"
+         - If file was randomly selected: Find another random file (maintain random selection logic)
+         - If file was specified: Exit with summary (user specified this file, cannot find another)
+         - Continue loop
+     - **Check 2: Reviewed Today** (SECOND CHECK - only if no irrelevant mark):
+       - Read the file content
+       - Search for review contribution section dated today (YYYY-MM-DD format) by this expert
+       - Look for pattern: `**Expert**: [Expert Name]` and `**Date**: [Today's Date]` in review contribution section
+       - If reviewed today by this expert:
+         - Skip this file (count++)
+         - Add to skip tracking: "File [path] skipped: Already reviewed today by [Expert Name]"
+         - If file was randomly selected: Find another random file (maintain random selection logic)
+         - If file was specified: Exit with summary (user specified this file, cannot find another)
+         - Continue loop
+     - **Check 3: Relevance Check** (THIRD CHECK - only if no mark and not reviewed today):
+       - Expert evaluates if file is relevant to their expertise
+       - If file is IRRELEVANT:
+         - Expert adds brief note at end explaining why (per lines 252-254)
+         - Expert adds mark: `<!-- IRRELEVANT FOR ME -->` right after the note
+         - **Update Expert Reviews Tracker**: Update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+           - Increment "Files Reviewed" count for the expert
+           - Do NOT increment "Total Changes" (0 changes - file marked as irrelevant)
+           - Update "Last Review Date" to today
+           - Add entry to "Review Details" section: "File [path] - Marked as irrelevant (no changes)"
+         - **Update Statistics and Sort**: After updating tracker:
+           - Run `/local/statistics` command to calculate and update statistics rows
+           - Run `/local/sort` command (defaults to "Files Reviewed") to sort table
+         - **Update Tracker Status**: Update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+           - Replace "Current reviewer" with "Last reviewer"
+           - Replace "Current file" with "Last file"
+         - **Commit Changes**: Stage all changes and commit with message:
+           - Message format: `Expert review: [Expert Name] marked [File Path] as irrelevant`
+           - Stage all modified files (file with mark, tracker)
+           - Commit with the generated message
+         - **Exit Successfully** (exit code 0): Show summary:
+           - "File marked as irrelevant"
+           - Expert name
+           - File path
+           - Reason (brief explanation from expert's note)
+         - **Stop**: End command here
+       - If file is RELEVANT: Continue to Step 6 (Expert Review)
+     - **Increment Attempt Counter**: count++
+     - **Check Limit**: If attempt counter >= limit:
+       - **Exit with Summary**: Show comprehensive summary:
+         - Number of attempts made
+         - Files checked
+         - Reasons for skipping (irrelevant, already reviewed, not found, etc.)
+         - Final status (reviewed X files, skipped Y files, marked Z as irrelevant)
+       - **Stop**: End command here
+
+### Step 6: Expert Review
+
+11. **Expert Review** (using expert from Step 2/4 and file from Step 3b/4/9 that passed all checks)
    - **Initialize Review Tracking**: Create a set to track reviewed files (to prevent infinite loops in recursive reviews)
    - **Standard Review** (always performed):
      - Ask the expert to review the selected file
@@ -252,6 +322,9 @@ Execute this command to run the expert review workflow:
      - If expert has no professional connection to the content:
        - Expert should directly admit they have nothing to contribute
        - Still add a brief note at the end
+       - Add mark: `<!-- IRRELEVANT FOR ME -->` right after the note
+       - Update tracker as reviewed but with 0 changes (see Step 5 for tracker update details)
+       - Exit successfully (this should have been caught in Step 5, but handle here as fallback)
      - Expert should add a brief description of changes at the end of the document with:
        - Description of changes made (what was actually added, fixed, deleted, or improved in the file)
        - Expert's name

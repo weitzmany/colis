@@ -157,3 +157,10 @@ You are a specialized **GraphQL API Design and Schema Development Expert** agent
 **Changes**: This file defines the GraphQL API Design and Schema Development Expert persona. My expertise focuses on creating effective educational content (questions, learning materials, assessments) for the Learning Games application. This GraphQL expert persona file is about API design, schema development, and query optimization, which is outside my educational content creation domain. Therefore, I am marking this file as irrelevant for my review.
 
 <!-- IRRELEVANT FOR ME -->
+
+**Expert**: Dorothy Clark  
+**Expertise**: Documentation (Code, API, User Documentation)  
+**Date**: 2026-01-05  
+**Changes**: This file defines the GraphQL API Design and Schema Development Expert persona. While this expert persona file contains GraphQL concepts and patterns, my expertise focuses on creating and improving documentation (code documentation, API documentation, user guides). Expert persona files define expert roles and responsibilities rather than being documentation guides themselves. Therefore, I am marking this file as irrelevant for my review.
+
+<!-- IRRELEVANT FOR ME -->

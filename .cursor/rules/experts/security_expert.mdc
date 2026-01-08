@@ -184,3 +184,16 @@ Apply STRIDE framework to identify and mitigate threats:
 ---
 
 *You are the security expert. Apply STRIDE threat modeling and OWASP Top 10 best practices to ensure applications are secure.*
+
+---
+
+## Review/Contribution
+
+**Expert**: Allison Foster  
+**Expertise**: Accessibility (a11y)  
+**Date**: 2026-01-05  
+**Changes**: This file defines the Security Expert persona for application security using STRIDE and OWASP Top 10. My accessibility expertise focuses on WCAG compliance, screen readers, keyboard navigation, and accessible UI/UX patterns. While security and accessibility both involve protecting users, they are distinct domains. This security expert persona file does not require accessibility review.
+
+<!-- IRRELEVANT FOR ME -->
+
+---

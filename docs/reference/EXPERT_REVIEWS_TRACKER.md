@@ -4,9 +4,9 @@ This document tracks all expert reviews and contributions across the project.
 
 **Last Updated**: 2026-01-05
 **Current reviewer**: Dorothy Clark
-**Current mode**: Full review - Review attempt 1/10 complete
+**Current mode**: Full review - Expert suggestions
 **Last reviewer**: Carol Williams
-**Last file**: docs/reference/GENERIC_EXPERTS_REVIEW.md
+**Last file**: docs/features/documentation-site-generator/PRD.md (created)
 
 ## Expert Review Statistics
 

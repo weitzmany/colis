@@ -16,7 +16,7 @@ from pathlib import Path
 from math import comb, pow
 
 def parse_table(lines):
-    """Parse markdown table and extract data rows."""
+    """Parse Expert Review Statistics table and extract data rows."""
     header = None
     separator = None
     data_rows = []
@@ -51,6 +51,47 @@ def parse_table(lines):
             elif line.startswith('| Acceptance:'):
                 stats_rows['acceptance'] = (i, line.strip())
             elif not any(line.startswith(f'| {stat}:') for stat in ['Total', 'Benford', 'Acceptance']):
+                if not line.startswith('##') and not line.startswith('###'):
+                    data_rows.append((i, line.strip()))
+    
+    return header, separator, data_rows, stats_rows
+
+def parse_files_table(lines):
+    """Parse Files Reviewed Statistics table and extract data rows and stats rows."""
+    header = None
+    separator = None
+    data_rows = []
+    stats_rows = {'total': None, 'benford': None, 'acceptance': None}
+    
+    in_table = False
+    for i, line in enumerate(lines):
+        if line.startswith('## Files Reviewed Statistics'):
+            in_table = True
+            continue
+        
+        # Stop if we hit a new section (after starting the table)
+        if in_table and line.startswith('##') and not line.startswith('## Files Reviewed Statistics'):
+            break
+        
+        if in_table and line.startswith('| File Path'):
+            header = line.strip()
+            continue
+        
+        if header and line.startswith('|-----------'):
+            separator = line.strip()
+            continue
+        
+        if separator and line.startswith('|'):
+            # Stop if we hit a new section
+            if line.startswith('##') or line.startswith('###'):
+                break
+            if line.startswith('| **Total**'):
+                stats_rows['total'] = (i, line.strip())
+            elif line.startswith('| Benford:'):
+                stats_rows['benford'] = (i, line.strip())
+            elif line.startswith('| Acceptance:'):
+                stats_rows['acceptance'] = (i, line.strip())
+            elif not line.startswith('| **Total**') and not line.startswith('| Benford:') and not line.startswith('| Acceptance:'):
                 if not line.startswith('##') and not line.startswith('###'):
                     data_rows.append((i, line.strip()))
     
@@ -435,38 +476,109 @@ def main():
             # Add blank line before section header
             new_lines.insert(insert_idx, '\n')
     
-    # Update Files Reviewed Statistics table total
-    files_total_updated = False
-    for i, line in enumerate(new_lines):
-        if line.strip().startswith('| **Total**'):
-            # Extract current total if present
-            parts = [p.strip() for p in line.split('|')[1:-1]]
-            if len(parts) >= 2:
-                # Find the Files Reviewed Statistics section
-                files_section_start = None
-                for j in range(i, max(0, i-100), -1):
-                    if new_lines[j].strip().startswith('## Files Reviewed Statistics'):
-                        files_section_start = j
-                        break
-                
-                if files_section_start is not None:
-                    # Find all data rows in Files Reviewed Statistics table
-                    files_total = 0
-                    for j in range(files_section_start, min(len(new_lines), files_section_start + 200)):
-                        if new_lines[j].strip().startswith('| `') and not new_lines[j].strip().startswith('| **Total**'):
-                            # Extract review count (second column)
-                            parts = [p.strip() for p in new_lines[j].split('|')[1:-1]]
-                            if len(parts) >= 2:
-                                try:
-                                    count = int(parts[1])
-                                    files_total += count
-                                except ValueError:
-                                    pass
-                    
-                    # Update the total row
-                    new_lines[i] = f'| **Total** | **{files_total}** |\n'
-                    files_total_updated = True
+    # Parse Files Reviewed Statistics table (use new_lines since expert stats may have changed line numbers)
+    files_header, files_separator, files_data_rows, files_stats_rows = parse_files_table(new_lines)
+    
+    # Calculate and update Files Reviewed Statistics table
+    if files_header and files_data_rows:
+        # Calculate files total
+        files_total = sum(extract_numeric(parse_row(row[1])[1]) for row in files_data_rows if len(parse_row(row[1])) > 1)
+        
+        # Calculate Benford MAD for Reviews column
+        reviews_values = [extract_numeric(parse_row(row[1])[1]) for row in files_data_rows if len(parse_row(row[1])) > 1]
+        benford_mad = calculate_benford_mad(reviews_values)
+        benford_emoji = get_mad_emoji(benford_mad) if benford_mad is not None else '❌'
+        benford_value = f'{benford_emoji} {benford_mad:.4f}' if benford_mad is not None else '❌ -'
+        
+        # Calculate Acceptance p-value for Reviews column
+        k = len(files_data_rows)  # Number of files
+        acceptance_pvalue = calculate_acceptance_pvalue(reviews_values, k)
+        acceptance_emoji = get_acceptance_emoji(acceptance_pvalue) if acceptance_pvalue is not None else '❌'
+        acceptance_percent = f'{acceptance_pvalue * 100:.2f}%' if acceptance_pvalue is not None else '-'
+        acceptance_value = f'{acceptance_emoji} {acceptance_percent}' if acceptance_pvalue is not None else '❌ -'
+        
+        # Find Files Reviewed Statistics section and locate Total row
+        files_section_start = None
+        files_total_row_idx = None
+        
+        for i, line in enumerate(new_lines):
+            if line.strip().startswith('## Files Reviewed Statistics'):
+                files_section_start = i
+                continue
+            
+            if files_section_start is not None:
+                # Find Total row
+                if line.strip().startswith('| **Total**'):
+                    files_total_row_idx = i
                     break
+        
+        # Remove existing Benford and Acceptance rows if they exist
+        indices_to_remove = []
+        if files_section_start is not None:
+            for i in range(files_section_start, min(len(new_lines), files_section_start + 250)):
+                if new_lines[i].strip().startswith('| Benford:') or new_lines[i].strip().startswith('| Acceptance:'):
+                    indices_to_remove.append(i)
+        
+        # Remove in reverse order
+        for idx in sorted(indices_to_remove, reverse=True):
+            if idx < len(new_lines):
+                new_lines.pop(idx)
+        
+        # Find last data row before Total or section end
+        last_data_idx = None
+        if files_section_start is not None:
+            search_end = files_total_row_idx if files_total_row_idx is not None else min(len(new_lines), files_section_start + 250)
+            for i in range(files_section_start, search_end):
+                line_stripped = new_lines[i].strip()
+                # Check if it's a data row (starts with | ` or | .cursor or | docs or | packages)
+                if line_stripped.startswith('|') and not line_stripped.startswith('| File Path') and not line_stripped.startswith('|-----------'):
+                    if (line_stripped.startswith('| `') or 
+                        line_stripped.startswith('| .cursor') or 
+                        line_stripped.startswith('| docs') or 
+                        line_stripped.startswith('| packages')):
+                        last_data_idx = i
+        
+        # Determine insertion point
+        if files_total_row_idx is not None:
+            # Insert before Total row
+            insert_idx = files_total_row_idx
+            # Adjust for removed lines
+            removed_before = sum(1 for idx in indices_to_remove if idx < insert_idx)
+            insert_idx = insert_idx - removed_before
+        elif last_data_idx is not None:
+            # Insert after last data row
+            insert_idx = last_data_idx + 1
+            # Adjust for removed lines
+            removed_before = sum(1 for idx in indices_to_remove if idx < insert_idx)
+            insert_idx = insert_idx - removed_before
+        else:
+            insert_idx = None
+        
+        # Insert/update statistics rows
+        if insert_idx is not None and insert_idx < len(new_lines):
+            # Insert Benford row
+            benford_row_str = f'| Benford: | {benford_value} |'
+            new_lines.insert(insert_idx, benford_row_str + '\n')
+            insert_idx += 1
+            
+            # Insert Acceptance row
+            acceptance_row_str = f'| Acceptance: | {acceptance_value} |'
+            new_lines.insert(insert_idx, acceptance_row_str + '\n')
+            insert_idx += 1
+            
+            # Update or insert Total row
+            if files_total_row_idx is not None:
+                # Adjust for inserted lines and removed lines
+                adjusted_total_idx = files_total_row_idx - removed_before + 2  # +2 for Benford and Acceptance rows
+                if adjusted_total_idx < len(new_lines):
+                    # Format total as integer if it's a whole number
+                    total_str = str(int(files_total)) if files_total == int(files_total) else str(files_total)
+                    new_lines[adjusted_total_idx] = f'| **Total** | **{total_str}** |\n'
+            else:
+                # Add Total row if it doesn't exist
+                # Format total as integer if it's a whole number
+                total_str = str(int(files_total)) if files_total == int(files_total) else str(files_total)
+                new_lines.insert(insert_idx, f'| **Total** | **{total_str}** |\n')
     
     # Write back
     with open(tracker_path, 'w') as f:
@@ -477,12 +589,14 @@ def main():
     print('  Total row updated')
     print('  Benford row updated')
     print('  Acceptance row updated')
-    if files_total_updated:
+    if files_header and files_data_rows:
         print('Files Reviewed Statistics:')
         print('  Total row updated')
+        print('  Benford row updated')
+        print('  Acceptance row updated')
     else:
         print('Files Reviewed Statistics:')
-        print('  Total row not found or already updated')
+        print('  Table not found or no data rows')
 
 if __name__ == '__main__':
     main()

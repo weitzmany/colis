@@ -1,2 +1,4 @@
 .DS_Store
 .cursor/.DS_Store
+.vscode/
+.vscode/settings.json

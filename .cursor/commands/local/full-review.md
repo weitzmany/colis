@@ -80,9 +80,28 @@ Execute this command to run a comprehensive review workflow:
 
 4. **Review Files with Limit**:
    - Get `limit` parameter (default: 10 if not specified)
+   - **⚠️ CRITICAL: Smart File Selection Based on Expert**:
+     - **Structure Review Files MUST NOT be randomly selected**
+     - Structure review files should be intelligently selected based on expert's expertise
+     - **Structure Review File Identification**:
+       - Files with "STRUCTURE" in filename (e.g., `*STRUCTURE*.md`, `*STRUCTURE_REVIEW.md`)
+       - Files with "documentation_structure" in path (e.g., `**/documentation_structure.mdc`)
+       - Files that review or define documentation structure, file organization, or project structure
+     - **Expert-Based Structure Review Selection**:
+       - **Documentation Expert**: Should review ALL structure review files (documentation structure, API structure, component structure, testing structure, project structure)
+       - **Architecture Expert**: Should review project structure, component structure, API structure files
+       - **Other Experts**: Should review structure files relevant to their expertise (e.g., Testing Expert → testing structure, API Design Expert → API structure)
+     - **Structure Review Priority**:
+       - Structure review files are HIGH PRIORITY for relevant experts
+       - Structure reviews should be done BEFORE or ALONGSIDE regular file reviews
+       - Structure review files should be explicitly identified and prioritized
    - **Execute `/local/review` Command LIMIT Times**:
      - For i = 1 to LIMIT:
-       - Execute `/local/review expert=[EXPERT] limit=[LIMIT]`
+       - **Smart File Selection**:
+         - First, check if there are structure review files relevant to the expert that haven't been reviewed today
+         - If yes, prioritize structure review files (select from structure review files first)
+         - If no structure review files available, then use random selection from all files
+         - Execute `/local/review expert=[EXPERT] file=[SELECTED_FILE] limit=[LIMIT]`
        - Wait for review to complete
        - Each call may:
          - Review a file (if file is relevant and not reviewed today)
@@ -94,6 +113,7 @@ Execute this command to run a comprehensive review workflow:
      - Collect summaries from each `/local/review` call
      - Aggregate results:
        - Total files reviewed
+       - Total structure review files reviewed (if any)
        - Total files skipped (with reasons)
        - Total files marked as irrelevant
        - Total attempts made
@@ -101,7 +121,8 @@ Execute this command to run a comprehensive review workflow:
    **⚠️ IMPORTANT**: 
    - Each `/local/review` call updates the tracker internally (no need to update here)
    - The `/local/review` command handles file selection, relevance checking, and skipping
-   - This step simply calls `/local/review` LIMIT times and aggregates results
+   - **Structure review files MUST be smartly selected based on expert expertise, NOT randomly**
+   - Structure reviews are critical for maintaining documentation quality and consistency
 
 ### Step 4: Expert Suggestions
 

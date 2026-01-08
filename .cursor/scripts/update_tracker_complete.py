@@ -171,28 +171,35 @@ def generate_expert_summary(expert_name, stats):
     lines = []
     lines.append(f"### {expert_name} ({stats['expertise'] or 'Unknown'})")
     lines.append("")
+    # Summary: bullet points with bold labels
     lines.append(f"- **Total Reviews**: {stats['total_changes']}")
     lines.append(f"- **Files Reviewed**: {len(stats['files_reviewed'])}")
     if stats['files_created']:
         lines.append(f"- **Files Created**: {len(stats['files_created'])}")
-        for file_path in sorted(stats['files_created']):
-            lines.append(f"  - `{file_path}`")
     if stats['files_rearranged']:
         lines.append(f"- **Files Rearranged**: {len(stats['files_rearranged'])}")
+    lines.append("")
+    # Files Created: names only
+    if stats['files_created']:
+        lines.append("**Files Created:**")
+        for file_path in sorted(stats['files_created']):
+            lines.append(f"  - `{file_path}`")
+        lines.append("")
+    # Files Rearranged: names only
+    if stats['files_rearranged']:
+        lines.append("**Files Rearranged:**")
         for file_path in sorted(stats['files_rearranged']):
             lines.append(f"  - `{file_path}`")
-    lines.append("")
+        lines.append("")
+    # Files Reviewed: names only (no descriptions)
     lines.append("**Files Reviewed:**")
-    for i, review in enumerate(sorted(stats['reviews'], key=lambda x: (x['file'], x['date'])), 1):
-        lines.append(f"  {i}. `{review['file']}` ({review['date']})")
-        # Add brief description if available
-        changes_preview = review['changes'][:100] + "..." if len(review['changes']) > 100 else review['changes']
-        lines.append(f"     - {changes_preview}")
+    for file_path in sorted(stats['files_reviewed']):
+        lines.append(f"  - `{file_path}`")
     lines.append("")
     return "\n".join(lines)
 
 
-def update_tracker_file(expert_stats, file_counts):
+def update_tracker_file(expert_stats, file_counts, all_files_list):
     """Update the tracker file with complete statistics."""
     # Read current tracker to preserve header and other sections
     try:
@@ -225,7 +232,20 @@ def update_tracker_file(expert_stats, file_counts):
     table_lines.append("")
     
     # Generate files reviewed statistics table
-    sorted_files = sorted(file_counts.items(), key=lambda x: (-x[1], x[0]))
+    # Include all scanned files, not just ones with reviews
+    all_file_paths = set(all_files_list)
+    
+    # Build complete file counts (including 0 reviews)
+    complete_file_counts = {}
+    for file_path in sorted(all_file_paths):
+        complete_file_counts[file_path] = file_counts.get(file_path, 0)
+    
+    # Sort: files with reviews first (by count descending), then files with 0 reviews (alphabetically)
+    sorted_files = sorted(
+        complete_file_counts.items(),
+        key=lambda x: (-x[1], x[0])
+    )
+    
     files_table_lines = []
     files_table_lines.append("## Files Reviewed Statistics")
     files_table_lines.append("")
@@ -341,9 +361,10 @@ def main():
     
     print(f"Found {len(expert_stats)} experts with reviews")
     print(f"Found {len(file_counts)} files with reviews")
+    print(f"Found {len(all_files)} total files to track (including {len(all_files) - len(file_counts)} with 0 reviews)")
     
     # Update tracker
-    if update_tracker_file(expert_stats, file_counts):
+    if update_tracker_file(expert_stats, file_counts, all_files):
         print("\n✅ Tracker updated successfully")
     else:
         print("\n❌ Failed to update tracker")

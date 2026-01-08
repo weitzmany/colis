@@ -325,9 +325,11 @@ When files are reviewed by experts, the `docs/reference/EXPERT_REVIEWS_TRACKER.m
 ### Updating the Tracker
 
 After each file review:
-- Add the file to the expert's "Files Reviewed" list in their summary section
+- Add the file to the expert's "Files Reviewed" list in their summary section (file name only, no descriptions)
 - Increment the file's review count in the "Files Reviewed Statistics" table
+- The "Files Reviewed Statistics" table includes ALL tracked files (with 0 reviews shown as well)
 - Update expert statistics in the "Expert Review Statistics" table
+- Expert summary format: Start with summary (numbers only), then lists with file names only (no descriptions)
 - Run `/local/update-tracker` periodically to ensure accuracy (scans all files and rebuilds tracker)
 
 ### Automated Updates

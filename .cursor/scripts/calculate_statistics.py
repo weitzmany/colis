@@ -28,6 +28,10 @@ def parse_table(lines):
             in_table = True
             continue
         
+        # Stop if we hit a new section (after starting the table)
+        if in_table and line.startswith('##') and not line.startswith('## Expert Review Statistics'):
+            break
+        
         if in_table and line.startswith('| Expert Name'):
             header = line.strip()
             continue
@@ -37,6 +41,9 @@ def parse_table(lines):
             continue
         
         if separator and line.startswith('|'):
+            # Stop if we hit a new section
+            if line.startswith('##') or line.startswith('###'):
+                break
             if line.startswith('| Total:'):
                 stats_rows['total'] = (i, line.strip())
             elif line.startswith('| Benford:'):
@@ -404,21 +411,13 @@ def main():
     if last_data_idx is not None:
         insert_idx = last_data_idx + 1
         
-        # Skip blank lines after last data row
+        # Skip blank lines after last data row - statistics should be directly connected to table
         while insert_idx < len(new_lines) and not new_lines[insert_idx].strip():
-            insert_idx += 1
+            # Remove blank lines - we want statistics directly after data rows
+            new_lines.pop(insert_idx)
+            # Don't increment insert_idx since we removed a line
         
-        # If next line is a section header, insert before it
-        if insert_idx < len(new_lines) and (new_lines[insert_idx].startswith('##') or new_lines[insert_idx].startswith('###')):
-            # Insert before section header
-            pass
-        else:
-            # Ensure we have a blank line before stats
-            if insert_idx > 0 and new_lines[insert_idx - 1].strip():
-                new_lines.insert(insert_idx, '\n')
-                insert_idx += 1
-        
-        # Insert statistics rows
+        # Insert statistics rows directly after last data row (no blank line)
         if total_row:
             new_lines.insert(insert_idx, total_row + '\n')
             insert_idx += 1
@@ -429,8 +428,11 @@ def main():
             new_lines.insert(insert_idx, acceptance_row + '\n')
             insert_idx += 1
         
-        # Add blank line after stats if next line is not blank
-        if insert_idx < len(new_lines) and new_lines[insert_idx].strip():
+        # Add blank line after stats (before next section)
+        if insert_idx < len(new_lines) and new_lines[insert_idx].strip() and not new_lines[insert_idx].startswith('##'):
+            new_lines.insert(insert_idx, '\n')
+        elif insert_idx < len(new_lines) and new_lines[insert_idx].startswith('##'):
+            # Add blank line before section header
             new_lines.insert(insert_idx, '\n')
     
     # Update Files Reviewed Statistics table total

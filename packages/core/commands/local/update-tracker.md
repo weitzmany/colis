@@ -42,15 +42,17 @@ No parameters required.
 
 6. **Update Files Reviewed Statistics Table**:
    - Update or create the files table
+   - Include ALL scanned files (with `.md`, `.mdc`, `.sh`, `.py` extensions), not just files with reviews
+   - Files with 0 reviews are included in the table
    - Sort by review count (descending), then by file path
-   - Include total row
+   - Include total row (showing total reviews, not total files)
 
 7. **Update Expert Summary Sections**:
    - For each expert, update or create summary section
-   - List all files reviewed with dates and change descriptions
-   - Update "Total Reviews" count
-   - List files created (if any)
-   - List files rearranged (if any)
+   - **Summary section**: Start with numbers only (Total Reviews, Files Reviewed, Files Created, Files Rearranged)
+   - **Lists**: Show file names only (no descriptions, no dates)
+   - Lists include: Files Created, Files Rearranged, Files Reviewed
+   - All lists show only file paths, no additional details
 
 8. **Update Statistics Summary**:
    - Calculate total experts

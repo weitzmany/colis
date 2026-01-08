@@ -196,4 +196,11 @@ Apply STRIDE framework to identify and mitigate threats:
 
 <!-- IRRELEVANT FOR ME -->
 
+**Expert**: Thomas Mitchell  
+**Expertise**: Testing & TDD (Test-Driven Development)  
+**Date**: 2026-01-05  
+**Changes**: This file defines the Security Expert persona for application security using STRIDE and OWASP Top 10. While security testing is important (penetration testing, vulnerability scanning, security test cases), the core expertise defined here (STRIDE threat modeling, OWASP Top 10, security architecture) is distinct from my testing and TDD expertise (test-driven development, unit testing, integration testing, E2E testing, test coverage). Therefore, I am marking this file as irrelevant for my review.
+
+<!-- IRRELEVANT FOR ME -->
+
 ---

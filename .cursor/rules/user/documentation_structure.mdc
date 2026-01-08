@@ -313,6 +313,54 @@ When organizing documentation, consider mobile access and optimization:
    - Documentation structure should support mobile-friendly rendering
    - Consider mobile screen size when organizing content sections
 
+## Accessibility Considerations for Documentation Structure
+
+### Accessible Documentation Formatting
+
+1. **Heading Hierarchy**
+   - Use proper heading levels (H1, H2, H3) in logical order
+   - Don't skip heading levels (e.g., H1 → H3)
+   - Clear heading structure helps screen reader navigation
+   - Headings should be descriptive and meaningful
+
+2. **Semantic Structure**
+   - Use lists (ul, ol) for lists, not just formatting
+   - Use proper markdown list syntax
+   - Use tables for tabular data with proper headers
+   - Use code blocks for code examples
+
+3. **Link Accessibility**
+   - Use descriptive link text (not "click here" or "read more")
+   - Links should make sense out of context
+   - Example: `[Documentation Structure Guide](path)` not `[click here](path)`
+
+4. **Image Accessibility**
+   - Include alt text for all images in documentation
+   - Use descriptive alt text that explains the image content
+   - Mark decorative images appropriately
+
+5. **Code Block Accessibility**
+   - Use language tags for syntax highlighting
+   - Provide context for code examples
+   - Ensure code examples are readable by screen readers
+
+6. **Table Accessibility**
+   - Use proper table headers
+   - Ensure tables are readable when linearized
+   - Provide table captions when helpful
+
+### Accessibility Checklist for Documentation
+
+- [ ] Proper heading hierarchy (H1 → H2 → H3, no skipping)
+- [ ] Descriptive link text (not "click here")
+- [ ] Alt text for all images
+- [ ] Semantic HTML structure (lists, tables, etc.)
+- [ ] Code blocks with language tags
+- [ ] Tables with proper headers
+- [ ] Clear, readable language
+- [ ] Sufficient color contrast (if using colored text)
+- [ ] Keyboard navigation support (if interactive elements)
+
 ## Expert Reviews Tracker Maintenance
 
 When files are reviewed by experts, the `docs/reference/EXPERT_REVIEWS_TRACKER.md` file must be updated:
@@ -355,5 +403,10 @@ This ensures the tracker accurately reflects all review contributions across the
 **Expertise**: Mobile Optimization  
 **Date**: 2026-01-05  
 **Changes**: Added mobile optimization considerations for documentation structure section covering mobile-friendly file organization (shallow directory structures, short descriptive names, clear navigation), mobile documentation access (mobile-friendly viewers, markdown readers, search and discovery), mobile performance (flat structures, avoid deep nesting, minimize traversal time), and mobile documentation formatting (mobile-readable markdown, mobile-friendly rendering, screen size considerations). This addition ensures that documentation structure is optimized for mobile access and consumption, considering mobile constraints like screen size, storage speed, and navigation patterns.
+
+**Expert**: Allison Foster  
+**Expertise**: Accessibility (a11y)  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Accessibility Considerations for Documentation Structure" section covering accessible documentation formatting (heading hierarchy with proper H1-H3 order and no skipping, semantic structure with proper lists and tables, link accessibility with descriptive text not "click here", image accessibility with alt text, code block accessibility with language tags, table accessibility with proper headers), and comprehensive accessibility checklist for documentation (9 items covering heading hierarchy, link text, alt text, semantic HTML, code blocks, tables, readable language, color contrast, keyboard navigation). This addition ensures that documentation structure follows accessibility best practices, making documentation accessible to users with disabilities who rely on screen readers, keyboard navigation, and other assistive technologies.
 
 ---

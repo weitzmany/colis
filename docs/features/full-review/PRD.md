@@ -148,6 +148,19 @@ When implemented, the full review command should:
 - **Mobile Progress Display**: Mobile-friendly progress indicators and output formatting
 - **Mobile State Management**: Resume capability optimized for mobile device interruptions
 
+## Accessibility Requirements
+
+When implementing the full review command interface (if a UI is created), ensure:
+
+- **Keyboard Navigation**: All review operations accessible via keyboard
+- **Screen Reader Support**: Review progress and status announced by screen readers
+- **Color Contrast**: Progress indicators meet WCAG AA contrast requirements (4.5:1)
+- **Focus Indicators**: Clear focus indicators for all interactive elements
+- **Error Messages**: Accessible error messages with clear descriptions
+- **Progress Announcements**: Review progress announced to assistive technologies
+- **Alternative Formats**: Review summaries available in accessible formats
+- **WCAG Compliance**: Interface meets WCAG 2.1 Level AA minimum standards
+
 ## SEO Considerations for Package Documentation
 
 When documenting this command for web publication:

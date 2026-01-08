@@ -3,8 +3,8 @@
 This document tracks all expert reviews and contributions across the project.
 
 **Last Updated**: 2026-01-05
-**Current reviewer**: Sarah Johnson
-**Current file**: docs/features/port-manager/PRD.md
+**Last reviewer**: Lisa Garcia
+**Last file**: .cursor/rules/experts/database_expert.mdc
 
 ## Expert Review Statistics
 
@@ -25,7 +25,7 @@ This document tracks all expert reviews and contributions across the project.
 | Daisy Thompson | UI/UX Design | 2 | 2 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
 | Daniel Kim | Business Intelligence and Analytics | 2 | 2 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
 | David Anderson | Database (Schema Design, Query Optimization, Migrations) | 3 | 5 | 2026-01-05 | 0 | 1.7 | 0 | 0 |
-| Lisa Garcia | Internationalization (i18n) and Localization | 2 | 2 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
+| Lisa Garcia | Internationalization (i18n) and Localization | 3 | 3 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
 | Marcus Thompson | Internationalization (i18n) and Localization | 2 | 2 | 2026-01-05 | 1 | 1.0 | 2 | 0 |
 | Nicole Chen | Observability (Monitoring, Logging, Tracing, Metrics) | 2 | 2 | 2026-01-05 | 0 | 1.0 | 2 | 0 |
 | Samuel Rodriguez | Backend Development | 2 | 2 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
@@ -36,7 +36,7 @@ This document tracks all expert reviews and contributions across the project.
 | James Wilson | Cloud Infrastructure (Cloud Platform Architecture, Deployment, Operations) | 1 | 1 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
 | Jennifer Park | Code Quality and Code Review | 1 | 1 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
 | Thomas Mitchell | Testing (TDD, Unit Tests, Integration Tests, E2E Tests) | 1 | 1 | 2026-01-05 | 0 | 1.0 | 0 | 0 |
-| Total: | | 87 | 91 | 2026-01-05 | 10 | 1.05 | 51 | 1 |
+| Total: | | 88 | 92 | 2026-01-05 | 10 | 1.05 | 51 | 1 |
 | Benford: | | ❌ 0.0739 | ❌ 0.0569 | | ❌ 0.0351 | | ⚠️ 0.0122 | ❌ 0.0173 |
 | Acceptance: | | ✅ 71.32% | ✅ 69.52% | | ✅ 88.45% | | ✅ 53.48% | ✅ 98.78% |
 
@@ -100,7 +100,8 @@ This document tracks all expert reviews and contributions across the project.
 | `docs/features/port-manager/PRD.md` | 7 |
 | `docs/guides/PORT_MANAGEMENT_STRATEGY.md` | 1 |
 | `docs/reference/PROJECTS_PORTS.md` | 1 |
-| **Total** | **94** |
+| `.cursor/rules/experts/database_expert.mdc` | 1 |
+| **Total** | **95** |
 
 
 
@@ -402,14 +403,16 @@ This document tracks all expert reviews and contributions across the project.
 
 ### Lisa Garcia (Internationalization (i18n) and Localization)
 
-- **Total Reviews**: 2
-- **Files Reviewed**: 2
+- **Total Reviews**: 3
+- **Files Reviewed**: 3
 
 **Files Reviewed:**
   1. `.cursor/rules/experts/product_manager_expert.mdc` (2026-01-05)
      - Added comprehensive "Internationalization (i18n) Considerations for Product Management" section cove...
   2. `docs/guides/DOCUMENTATION_STRUCTURE.md` (2026-01-05)
      - Enhanced this documentation structure guide by adding a comprehensive "Internationalization (i18n) C...
+  3. `.cursor/rules/experts/database_expert.mdc` (2026-01-05)
+     - Added comprehensive "Internationalization (i18n) Considerations" section covering character encoding (UTF-8/UTF8MB4 requirements, Unicode support, character set declarations), collation settings (UTF8MB4_unicode_ci for case-insensitive sorting, locale-specific collations, performance considerations), multi-language data storage patterns (separate translation tables with locale keys, JSON/JSONB columns for translations, column suffix pattern for multiple languages), locale preference storage (user language preferences, locale settings, timezone storage), text field sizing (multi-byte character considerations, UTF-8 byte variations, character vs byte count), date/time and timezone storage (UTC storage, timezone information), search and indexing for international content (full-text search with language-specific analyzers, search engine integration, locale-specific indexes), sorting and comparison (locale-specific sorting rules, collation for sorting operations), and migration considerations for i18n (UTF-8 encoding migration, data conversion, validation). Enhanced "Database Standards" section with UTF-8 encoding requirements, UTC timestamp storage, and multi-language schema design. Enhanced "Best Practices" section with UTF-8 usage, i18n planning, UTC storage, and international data testing requirements. Enhanced "When to Ask Questions" section with multi-language storage patterns, encoding/collation choices, timezone/locale handling, and international character requirements. These additions ensure database design properly supports internationalization from the start, enabling multi-language applications with proper encoding, collation, and locale handling.
 
 ### Marcus Thompson (Internationalization (i18n) and Localization)
 

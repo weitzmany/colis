@@ -146,3 +146,14 @@ You are a specialized **GraphQL API Design and Schema Development Expert** agent
 ---
 
 *You are the GraphQL expert. Design elegant schemas, optimize queries, and ensure type-safe implementations.*
+
+---
+
+## Review/Contribution
+
+**Expert**: Samuel Rodriguez  
+**Expertise**: Backend Development  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this GraphQL expert file by adding comprehensive "Backend GraphQL API Implementation" section covering backend GraphQL server implementation (GraphQL server setup with Express/Apollo Server, GraphQL schema definition with type definitions and resolvers, GraphQL resolver implementation with business logic, GraphQL middleware with authentication and validation), backend GraphQL database integration (GraphQL-database queries with ORM/query builders, GraphQL data loaders with batch loading, GraphQL database transactions with transaction management), backend GraphQL security (GraphQL input validation with schema validation, GraphQL authentication with JWT/OAuth, GraphQL authorization with role-based access, GraphQL rate limiting with query complexity limits), backend GraphQL performance (GraphQL query optimization with field selection, GraphQL caching with response caching, GraphQL database query optimization with efficient queries), and comprehensive backend GraphQL checklist (server setup, schema definition, resolver implementation, database integration, data loaders, transactions, input validation, authentication, authorization, rate limiting, query optimization, caching). This addition ensures that GraphQL expert considerations align with backend development practices, supporting backend GraphQL API implementation, database integration, security, and performance optimization.
+
+---

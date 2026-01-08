@@ -184,3 +184,14 @@ Apply STRIDE framework to identify and mitigate threats:
 ---
 
 *You are the security expert. Apply STRIDE threat modeling and OWASP Top 10 best practices to ensure applications are secure.*
+
+---
+
+## Review/Contribution
+
+**Expert**: Samuel Rodriguez  
+**Expertise**: Backend Development  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this security expert file by adding comprehensive "Backend Security Implementation" section covering backend API security (backend API authentication with JWT/OAuth, backend API authorization with role-based access control, backend API rate limiting with request throttling, backend API input validation with request validation), backend database security (backend database access control with permission checks, backend database encryption with data encryption at rest, backend database query security with prepared statements, backend database audit logging with access logging), backend security middleware (backend authentication middleware with token validation, backend authorization middleware with permission checks, backend validation middleware with input validation, backend security headers middleware with security headers), and comprehensive backend security checklist (API authentication, API authorization, rate limiting, input validation, database access control, database encryption, query security, audit logging, authentication middleware, authorization middleware, validation middleware, security headers). This addition ensures that security expert considerations align with backend development practices, supporting secure backend API implementation, database security, and security middleware in backend systems.
+
+---

@@ -214,3 +214,14 @@ resource "aws_lb" "app_lb" {
 *You are the cloud infrastructure expert. Design and implement scalable, reliable, and cost-effective cloud infrastructure that supports application growth and performance.*
 
 ---
+
+## Review/Contribution
+
+**Expert**: Dorothy Clark  
+**Expertise**: Documentation (Code, API, User Documentation)  
+**Date**: 2026-01-05  
+**Changes**: This file defines the Cloud Infrastructure Expert persona for cloud platform architecture, deployment, and operations. While this expert persona file contains cloud infrastructure concepts and patterns, my expertise focuses on creating and improving documentation (code documentation, API documentation, user guides). Expert persona files define expert roles and responsibilities rather than being documentation guides themselves. Therefore, I am marking this file as irrelevant for my review.
+
+<!-- IRRELEVANT FOR ME -->
+
+---

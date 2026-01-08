@@ -4,9 +4,9 @@ This document tracks all expert reviews and contributions across the project.
 
 **Last Updated**: 2026-01-05
 **Current reviewer**: Lisa Garcia
-**Current mode**: Full review - Review attempt 1/10
+**Current mode**: Full review - Review attempts 1-10 complete
 **Last reviewer**: Constance White
-**Last file**: docs/reference/TESTING_STRUCTURE_REVIEW.md
+**Last file**: .cursor/rules/experts/content_expert.mdc
 
 ## Expert Review Statistics
 

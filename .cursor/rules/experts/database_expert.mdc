@@ -355,4 +355,11 @@ CREATE TABLE student_records (
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "Compliance Requirements for Database Design" section covering data privacy compliance (GDPR compliance with data storage location documentation, encryption at rest AES-256 minimum, data retention policies, right to deletion support, data portability, FERPA compliance with access controls for educational records, audit logging, data security, backup security, COPPA compliance with data minimization, separate storage consideration, strong encryption, shorter retention), compliance implementation with SQL code examples showing GDPR data deletion design, data retention with automatic expiration, and encrypted sensitive data storage, and comprehensive compliance checklist for database design (14 items covering GDPR, FERPA, COPPA, backup encryption, access logging). Updated "Best Practices" section to include compliance by design, encrypt sensitive data, audit logging, and data retention. Updated "When to Ask Questions" section to include data privacy compliance, data encryption and security, data retention policies, and compliance implementation. Updated the closing statement to explicitly mention data privacy regulations (GDPR, FERPA, COPPA) and data security through encryption, access controls, and audit logging. This addition ensures that database designs comply with all relevant data privacy regulations, protecting student and user data through proper schema design, encryption, and access controls.
 
+**Expert**: Carol Williams  
+**Expertise**: Educational Content (Learning Materials)  
+**Date**: 2026-01-05  
+**Changes**: This file defines the Database Expert persona for database design, optimization, and migrations. My expertise focuses on creating effective educational content (questions, learning materials, assessments) for the Learning Games application. This database expert persona file is about database schema design, query optimization, and data modeling, which is outside my educational content creation domain. Therefore, I am marking this file as irrelevant for my review.
+
+<!-- IRRELEVANT FOR ME -->
+
 ---

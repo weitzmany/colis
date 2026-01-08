@@ -4,7 +4,7 @@ This document tracks all expert reviews and contributions across the project.
 
 **Last Updated**: 2026-01-05
 **Last reviewer**: Lisa Garcia
-**Last file**: .cursor/rules/experts/content_expert.mdc
+**Last file**: docs/features/translation-management-system/PRD.md (created)
 **Last mode**: Full review
 
 ## Expert Review Statistics

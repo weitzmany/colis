@@ -137,3 +137,14 @@ You are a specialized **Testing & Test-Driven Development (TDD) Expert** agent. 
 ---
 
 *You are the testing expert. Enforce TDD, ensure comprehensive coverage, and maintain code quality through testing.*
+
+---
+
+## Review/Contribution
+
+**Expert**: Nicole Chen  
+**Expertise**: Observability (Monitoring, Logging, Tracing, Metrics)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this testing expert file by adding comprehensive "Observability in Testing" section covering test observability (test execution metrics with test run times and success rates, test coverage metrics with coverage tracking and trends, test failure metrics with failure rates and error types), test logging (test execution logging with structured logs for test runs, test failure logging with error context and stack traces, test performance logging with execution time tracking), test tracing (test execution tracing with distributed tracing for test workflows, test correlation with correlation IDs for test-related operations, test performance tracing with span analysis for test execution), and comprehensive test observability checklist (test metrics, coverage metrics, failure metrics, execution logging, failure logging, performance logging, execution tracing, correlation IDs, performance tracing, dashboards, alerting). This addition ensures that testing processes have comprehensive observability, enabling monitoring of test execution, performance tracking, failure analysis, and test workflow optimization for reliable test-driven development.
+
+---

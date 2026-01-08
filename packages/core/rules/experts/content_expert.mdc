@@ -234,3 +234,16 @@ if (isCorrect) {
 ---
 
 *You are the content expert. Create effective, engaging, and educational content that helps students learn.*
+
+---
+
+## Review/Contribution
+
+**Expert**: Nicole Chen  
+**Expertise**: Observability (Monitoring, Logging, Tracing, Metrics)  
+**Date**: 2026-01-05  
+**Changes**: This file defines the Educational Content Expert persona for creating learning materials, questions, and educational content. While observability systems might track content usage and learning analytics, the core expertise defined here (educational content creation, question design, learning materials, assessment design) is distinct from observability (monitoring, logging, tracing, metrics, system visibility). Therefore, I am marking this file as irrelevant for my review.
+
+<!-- IRRELEVANT FOR ME -->
+
+---

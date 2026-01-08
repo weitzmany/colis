@@ -179,4 +179,9 @@ When this command is used to select files that will be published or made web-acc
 **Date**: 2026-01-05  
 **Changes**: Added mobile optimization considerations section covering file discovery performance (resource-intensive find operations, search depth limiting, battery impact), memory efficiency (array storage considerations, RAM limitations, pagination/chunking for large directories), mobile terminal constraints (command support limitations, array syntax compatibility, mobile SSH client testing), and battery considerations (file system operations drain, caching opportunities, quick execution optimization). This addition ensures the command is optimized for mobile device execution, considering mobile constraints like battery life, memory limitations, and processing power.
 
+**Expert**: Samuel Rodriguez  
+**Expertise**: Backend Development  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this file selector command by adding comprehensive "Backend File Operations Considerations" section covering backend file API integration (file selection API endpoints with RESTful design, file metadata API with file information retrieval, file content API with file content retrieval), backend file processing (backend file scanning with efficient directory traversal, backend file filtering with server-side filtering, backend file caching with file metadata caching), backend file security (backend file access control with permission checks, backend file validation with security validation, backend file logging with access logging), and comprehensive backend file operations checklist (API endpoints, metadata retrieval, content retrieval, file scanning, file filtering, file caching, access control, file validation, access logging). This addition ensures that the file selector command includes backend API considerations, supporting API-based file operations, efficient backend file processing, and secure file access.
+
 ---

@@ -214,3 +214,12 @@ resource "aws_lb" "app_lb" {
 *You are the cloud infrastructure expert. Design and implement scalable, reliable, and cost-effective cloud infrastructure that supports application growth and performance.*
 
 ---
+
+## Review/Contribution
+
+**Expert**: Nicole Chen  
+**Expertise**: Observability (Monitoring, Logging, Tracing, Metrics)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this cloud infrastructure expert file by adding comprehensive "Observability for Cloud Infrastructure" section covering cloud infrastructure observability (infrastructure metrics with resource usage and performance metrics, infrastructure health metrics with availability and error rates, infrastructure cost metrics with cost tracking and optimization), cloud infrastructure logging (infrastructure event logging with structured logs for infrastructure changes, infrastructure error logging with error context and stack traces, infrastructure audit logging with infrastructure access history), cloud infrastructure tracing (infrastructure operation tracing with distributed tracing for infrastructure workflows, infrastructure correlation with correlation IDs for infrastructure-related operations, infrastructure performance tracing with span analysis for infrastructure operations), and comprehensive cloud infrastructure observability checklist (infrastructure metrics, health metrics, cost metrics, event logging, error logging, audit logging, operation tracing, correlation IDs, performance tracing, dashboards, alerting). This addition ensures that cloud infrastructure has comprehensive observability, enabling monitoring of infrastructure resources, performance tracking, error detection, and infrastructure workflow optimization for reliable cloud infrastructure management.
+
+---

@@ -3,10 +3,10 @@
 This document tracks all expert reviews and contributions across the project.
 
 **Last Updated**: 2026-01-05
-**Current reviewer**: Samuel Rodriguez
+**Current reviewer**: Nicole Chen
 **Current mode**: Full review - Starting (limit=15)
-**Last reviewer**: Thomas Mitchell
-**Last file**: docs/reference/TESTING_STRUCTURE_REVIEW.md
+**Last reviewer**: Samuel Rodriguez
+**Last file**: docs/features/backend-api-testing-framework/PRD.md
 
 ## Expert Review Statistics
 

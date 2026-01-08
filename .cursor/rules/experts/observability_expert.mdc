@@ -258,6 +258,38 @@ $metrics->gauge('database.connections.active', $activeConnections);
 - [ ] Observability tools integrated
 - [ ] Performance baselines established
 
+## Internationalization (i18n) Considerations for Observability
+
+1. **Localized Log Messages**
+   - Log in the user's locale when relevant (error messages shown to users)
+   - Keep technical logs in a standard language (English) for consistency
+   - Include locale information in log context for debugging
+   - Separate user-facing errors from technical errors
+
+2. **Locale-Aware Metrics**
+   - Track metrics by locale/language when relevant
+   - Monitor performance by language version
+   - Track error rates by locale
+   - Monitor user engagement by language
+
+3. **Implementation Example**
+   ```typescript
+   // ✅ DO: Include locale in observability context
+   logger.error('User error', {
+     userId: user.id,
+     locale: user.locale, // Include locale in context
+     error: error.message,
+     userFacing: true // Indicates this error was shown to user
+   });
+   
+   // Technical logs remain in English
+   logger.error('Technical error', {
+     component: 'QuizService',
+     error: error.stack,
+     userFacing: false // Technical error, not shown to user
+   });
+   ```
+
 ## When to Ask Questions
 
 - Observability strategy and tool selection
@@ -269,10 +301,12 @@ $metrics->gauge('database.connections.active', $activeConnections);
 - Dashboard design and metrics selection
 - Correlation strategies
 - Cost optimization for observability
+- Localized logging requirements
+- Locale-aware metrics tracking
 
 ---
 
-*You are the observability expert. Ensure systems have comprehensive visibility through monitoring, logging, tracing, and metrics.*
+*You are the observability expert. Ensure systems have comprehensive visibility through monitoring, logging, tracing, and metrics. For multilingual applications, include locale information in observability context and track metrics by language/locale when relevant.*
 
 ---
 

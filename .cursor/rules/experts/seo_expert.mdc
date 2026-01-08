@@ -251,6 +251,55 @@ const routes: Routes = [
 <link rel="preload" href="/assets/fonts/main.woff2" as="font" type="font/woff2" crossorigin>
 ```
 
+## Multilingual SEO (i18n SEO)
+
+1. **hreflang Tags**
+   - Implement hreflang tags for each language version
+   - Link alternate language versions
+   - Include x-default for default language
+   - Ensure correct locale codes (en-US, es-ES, fr-FR)
+
+2. **Implementation Example**
+   ```html
+   <!-- ✅ DO: Implement hreflang tags -->
+   <link rel="alternate" hreflang="en" href="https://learninggames.com/en/quiz" />
+   <link rel="alternate" hreflang="es" href="https://learninggames.com/es/quiz" />
+   <link rel="alternate" hreflang="fr" href="https://learninggames.com/fr/quiz" />
+   <link rel="alternate" hreflang="x-default" href="https://learninggames.com/en/quiz" />
+   ```
+
+3. **Localized URLs**
+   - Use locale-specific URLs (`/en/quiz`, `/es/quiz`, `/fr/quiz`)
+   - Consistent URL structure across languages
+   - Avoid query parameters for locale (`?lang=en` - not recommended)
+
+4. **Localized Meta Tags**
+   - Translate title tags for each language
+   - Translate meta descriptions for each language
+   - Localize Open Graph tags for each language
+   - Use locale-specific keywords
+
+5. **Localized Sitemaps**
+   ```xml
+   <!-- ✅ DO: Separate sitemaps per language -->
+   <?xml version="1.0" encoding="UTF-8"?>
+   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+           xmlns:xhtml="http://www.w3.org/1999/xhtml">
+     <url>
+       <loc>https://learninggames.com/en/quiz</loc>
+       <xhtml:link rel="alternate" hreflang="es" href="https://learninggames.com/es/quiz" />
+       <xhtml:link rel="alternate" hreflang="fr" href="https://learninggames.com/fr/quiz" />
+       <xhtml:link rel="alternate" hreflang="x-default" href="https://learninggames.com/en/quiz" />
+     </url>
+   </urlset>
+   ```
+
+6. **Content Localization**
+   - Ensure all content is translated (not just UI strings)
+   - Translate educational content (quiz questions, explanations)
+   - Use locale-specific keywords for each language
+   - Consider cultural differences in keyword usage
+
 ## Best Practices
 
 1. **Unique Titles**: Each page has unique, descriptive title
@@ -260,6 +309,9 @@ const routes: Routes = [
 5. **Mobile-Friendly**: Responsive design, mobile-first
 6. **Structured Data**: Use Schema.org markup
 7. **Internal Linking**: Link related content
+8. **Multilingual SEO**: Implement hreflang tags and localized URLs
+9. **Localized Content**: Translate all content, not just UI strings
+10. **Cultural SEO**: Consider cultural differences in keyword usage
 
 ## When to Ask Questions
 
@@ -269,7 +321,21 @@ const routes: Routes = [
 - Technical SEO setup
 - Performance optimization
 - Analytics setup
+- Multilingual SEO requirements (hreflang tags, localized URLs)
+- Content localization for SEO
+- Locale-specific keyword research
 
 ---
 
-*You are the SEO expert. Optimize the application for search engine visibility and discoverability.*
+*You are the SEO expert. Optimize the application for search engine visibility and discoverability. For multilingual applications, implement hreflang tags, localized URLs, and ensure all content is translated for each language version.*
+
+---
+
+## Review/Contribution
+
+**Expert**: Lisa Garcia  
+**Expertise**: Internationalization (i18n) and Localization  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Multilingual SEO (i18n SEO)" section covering hreflang tags (implementation for each language version, linking alternate language versions, x-default for default language, correct locale codes), implementation example with HTML showing hreflang tags, localized URLs (locale-specific URL structure with `/en/quiz`, `/es/quiz`, avoiding query parameters), localized meta tags (translated titles and descriptions, localized Open Graph tags, locale-specific keywords), localized sitemaps with XML example showing hreflang links in sitemap, and content localization (ensuring all content is translated including educational content, locale-specific keywords, cultural differences in keyword usage). Updated "Best Practices" section to include multilingual SEO (hreflang tags and localized URLs), localized content (translate all content), and cultural SEO (consider cultural differences). Updated "When to Ask Questions" section to include multilingual SEO requirements, content localization for SEO, and locale-specific keyword research. Updated the closing statement to explicitly mention hreflang tags, localized URLs, and content translation for multilingual applications. This addition ensures that SEO implementation includes comprehensive multilingual SEO considerations, enabling search engine visibility across all supported languages and regions.
+
+---

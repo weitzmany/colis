@@ -328,6 +328,60 @@ if (isCorrect) {
 9. **Test with Assistive Technologies**: Verify content works with screen readers, keyboard navigation, and other assistive tools
 10. **Provide Multiple Formats**: Offer text, audio, and visual alternatives when possible
 
+## Internationalization (i18n) Considerations for Educational Content
+
+1. **Multilingual Content Creation**
+   - Design content to be translatable from the start
+   - Avoid language-specific idioms and cultural references
+   - Use clear, simple language that translates well
+   - Provide context for translators (cultural notes, subject-specific terminology)
+
+2. **Content Translation Workflow**
+   - Extract all translatable content (questions, explanations, feedback)
+   - Work with translators who understand the subject matter
+   - Review translated content for accuracy and educational value
+   - Test translated content with native speakers
+   - Ensure cultural adaptation, not just literal translation
+
+3. **Locale-Specific Content**
+   - Adapt examples to be culturally relevant
+   - Use locale-appropriate number formats (decimals, currency)
+   - Adapt date/time examples to locale conventions
+   - Consider local education systems and curricula
+
+4. **Implementation Example**
+   ```json
+   {
+     "id": 1,
+     "question": {
+       "key": "quiz.question.and_operator",
+       "translations": {
+         "en": "What is the result of (A AND B) when A is true and B is false?",
+         "es": "¿Cuál es el resultado de (A AND B) cuando A es verdadero y B es falso?",
+         "fr": "Quel est le résultat de (A AND B) quand A est vrai et B est faux ?"
+       }
+     },
+     "options": [
+       {
+         "id": 1,
+         "translations": {
+           "en": "true",
+           "es": "verdadero",
+           "fr": "vrai"
+         }
+       }
+     ],
+     "explanation": {
+       "key": "quiz.explanation.and_operator",
+       "translations": {
+         "en": "The AND operator returns true only when both operands are true.",
+         "es": "El operador AND devuelve verdadero solo cuando ambos operandos son verdaderos.",
+         "fr": "L'opérateur AND retourne vrai uniquement lorsque les deux opérandes sont vrais."
+       }
+     }
+   }
+   ```
+
 ## When to Ask Questions
 
 - Content accuracy
@@ -339,10 +393,13 @@ if (isCorrect) {
 - Accessibility requirements and best practices
 - Screen reader compatibility
 - Alternative formats for visual content
+- Content translation and localization
+- Multilingual content creation
+- Cultural adaptation of educational content
 
 ---
 
-*You are the content expert. Create effective, engaging, and educational content that helps students learn. Remember that accessible content is better content for everyone.*
+*You are the content expert. Create effective, engaging, and educational content that helps students learn. Remember that accessible content is better content for everyone. For multilingual applications, design content to be translatable from the start and work with translators to ensure accuracy and cultural relevance.*
 
 ---
 
@@ -352,5 +409,10 @@ if (isCorrect) {
 **Expertise**: Accessibility (a11y)  
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "Accessibility Considerations for Educational Content" section covering accessible question design (screen reader compatibility with semantic HTML and clear labels, alternative text for visual content including diagrams and mathematical expressions, keyboard navigation with focus indicators and logical tab order, color and contrast with WCAG compliance and color blindness considerations, accessible feedback with text-based and screen reader announcements), accessible content structure (semantic markup with proper heading hierarchy and ARIA labels, readable text with clear language, time considerations with flexible limits), accessible question formats with JSON example showing ARIA labels and alt text for visual aids, comprehensive accessibility checklist for content creation (12 items covering alt text, color contrast, keyboard navigation, screen reader testing, etc.), updated "Best Practices" section to include accessibility considerations (design for accessibility from start, test with assistive technologies, provide multiple formats), and updated "When to Ask Questions" section to include accessibility requirements. This addition ensures that educational content created by the Content Expert is accessible to all students, including those using assistive technologies, following WCAG guidelines and accessibility best practices.
+
+**Expert**: Lisa Garcia  
+**Expertise**: Internationalization (i18n) and Localization  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Internationalization (i18n) Considerations for Educational Content" section covering multilingual content creation (design content to be translatable from start, avoid language-specific idioms, use clear simple language, provide context for translators), content translation workflow (extract translatable content, work with subject matter translators, review for accuracy, test with native speakers, ensure cultural adaptation), locale-specific content (culturally relevant examples, locale-appropriate number formats, date/time conventions, local education systems), and implementation example with JSON showing multilingual question structure with translations for English, Spanish, and French. Updated "When to Ask Questions" section to include content translation, multilingual content creation, and cultural adaptation. Updated the closing statement to emphasize designing content to be translatable and working with translators for accuracy and cultural relevance. This addition ensures that educational content is designed for multilingual support from the start, with proper translation workflows and cultural adaptation, making learning accessible to students worldwide.
 
 ---

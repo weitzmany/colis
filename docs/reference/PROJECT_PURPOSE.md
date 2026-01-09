@@ -55,6 +55,23 @@ Packages that maintain consistency across projects:
 - Run as standalone tools
 
 ### For Rules & Consistency:
+**Automated Setup (Recommended)**:
+```bash
+# Install core package
+npm install @your-org/core
+
+# Initialize project (automatically copies rules and commands)
+npx @your-org/core init
+```
+
+This automatically:
+- Copies all expert personas to `.cursor/rules/experts/`
+- Copies all user rules to `.cursor/rules/user/`
+- Copies general commands to `.cursor/commands/general/`
+- Excludes local commands (for packages repo only)
+- Initializes Port Manager (mandatory)
+
+**Manual Setup (Not Recommended)**:
 - Copy rules to `.cursor/rules/` in projects
 - Copy commands to `.cursor/commands/` in projects
 - Copy experts to `.cursor/rules/experts/` or `.cursor/rules/agents/`

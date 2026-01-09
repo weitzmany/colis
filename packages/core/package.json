@@ -7,13 +7,15 @@
   "bin": {
     "port-manager": "./bin/port-manager",
     "tech-detect": "./bin/tech-detect",
-    "domain-manager": "./bin/domain-manager"
+    "domain-manager": "./bin/domain-manager",
+    "@your-org/core": "./bin/init"
   },
   "exports": {
     ".": "./dist/index.js",
     "./features/port-manager": "./dist/features/port-manager/index.js",
     "./features/tech-detector": "./dist/features/tech-detector/index.js",
     "./features/domain-manager": "./dist/features/domain-manager/index.js",
+    "./features/project-initialization": "./dist/features/project-initialization/index.js",
     "./rules": "./rules",
     "./commands": "./commands"
   },

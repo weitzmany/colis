@@ -14,6 +14,9 @@ export * from './features/tech-detector';
 // Export Domain Manager feature
 export * from './features/domain-manager';
 
+// Export Project Initialization feature
+export * from './features/project-initialization';
+
 // Export shared utilities (if needed)
 export * from './shared/database';
 export { GlobalConfigManager, ProjectConfigManager, ConfigValidator } from './shared/config';

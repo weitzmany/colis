@@ -5,10 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
+    "@your-org/core": "./bin/core",
     "port-manager": "./bin/port-manager",
     "tech-detect": "./bin/tech-detect",
-    "domain-manager": "./bin/domain-manager",
-    "@your-org/core": "./bin/init"
+    "domain-manager": "./bin/domain-manager"
   },
   "exports": {
     ".": "./dist/index.js",

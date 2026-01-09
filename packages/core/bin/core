@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+/**
+ * Core Package CLI Entry Point
+ * 
+ * Handles main package commands like `npx @your-org/core init`
+ */
+
+const { program } = require('commander');
+const { initCommand } = require('../dist/features/project-initialization/cli/commands/init');
+
+program
+  .name('@your-org/core')
+  .description('Core package with features, rules, experts, and commands')
+  .version('1.0.0');
+
+program
+  .command('init')
+  .description('Initialize project with rules, commands, and Port Manager')
+  .option('-p, --project-name <name>', 'Project name (auto-detected if not provided)')
+  .option('-t, --app-type <type>', 'App type (auto-detected if not provided)')
+  .option('--overwrite', 'Overwrite existing files')
+  .option('--skip-existing', 'Skip existing files (default)')
+  .option('--skip-port-manager', 'Skip Port Manager initialization (not recommended)')
+  .option('--skip-rules', 'Skip copying rules')
+  .option('--skip-commands', 'Skip copying commands')
+  .option('--dry-run', 'Show what would be done without making changes')
+  .action(initCommand);
+
+program.parse();

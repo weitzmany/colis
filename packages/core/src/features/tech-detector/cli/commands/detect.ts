@@ -6,6 +6,9 @@
 
 import { TechDetector } from '../../tech-detector';
 import { PackageJsonMapper } from '../../mappers/package-json-mapper';
+import { StandardsLoader } from '../../standards/standards-loader';
+import { WarningDetector } from '../../standards/warning-detector';
+import { WarningHandler } from '../../standards/warning-handler';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
@@ -15,6 +18,9 @@ export async function detectCommand(options: {
   save?: boolean;
   format?: string;
   update?: boolean;
+  'check-standards'?: boolean;
+  'skip-warnings'?: boolean;
+  interactive?: boolean;
 }) {
   try {
     const projectPath = options.path ? path.resolve(options.path) : process.cwd();
@@ -33,6 +39,26 @@ export async function detectCommand(options: {
     } else {
       console.log(chalk.blue('🔍 Detecting technology stack...'));
       techStack = await detector.detect(projectPath);
+    }
+
+    // Check standards and show warnings (if enabled)
+    const checkStandards = options['check-standards'] !== false;
+    const skipWarnings = options['skip-warnings'] === true;
+    const interactive = options.interactive !== false;
+
+    if (checkStandards && !skipWarnings) {
+      const standardsLoader = new StandardsLoader();
+      const warningDetector = new WarningDetector();
+      const warningHandler = new WarningHandler();
+
+      const standards = await standardsLoader.loadStandards(projectPath);
+      const userChoices = await standardsLoader.loadUserChoices(projectPath);
+
+      const warnings = await warningDetector.detectWarnings(techStack, standards, userChoices);
+
+      if (warnings.length > 0) {
+        await warningHandler.handleWarnings(warnings, projectPath, interactive);
+      }
     }
 
     // Output based on format

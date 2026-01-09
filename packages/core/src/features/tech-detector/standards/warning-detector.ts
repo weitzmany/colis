@@ -6,7 +6,7 @@
 
 import { TechStack, FrameworkInfo, LanguageInfo, BuildToolInfo, PackageManagerInfo, RuntimeInfo } from '../types';
 import { TechStandards, UserChoices } from './standards-loader';
-import semver from 'semver';
+import * as semver from 'semver';
 
 export interface Warning {
   type: 'non-recommended' | 'outdated-version';

@@ -20,6 +20,9 @@ program
   .option('-s, --save', 'Save detected tech stack to config files')
   .option('-f, --format <format>', 'Output format (text, json, table)', 'text')
   .option('-u, --update', 'Update existing tech stack')
+  .option('--check-standards', 'Check against standards and show warnings (default: true)', true)
+  .option('--skip-warnings', 'Skip standards warnings')
+  .option('--no-interactive', 'Non-interactive mode (no prompts)')
   .action(detectCommand);
 
 // Default command
@@ -28,6 +31,9 @@ program
   .option('-s, --save', 'Save detected tech stack to config files')
   .option('-f, --format <format>', 'Output format (text, json, table)', 'text')
   .option('-u, --update', 'Update existing tech stack')
+  .option('--check-standards', 'Check against standards and show warnings (default: true)', true)
+  .option('--skip-warnings', 'Skip standards warnings')
+  .option('--no-interactive', 'Non-interactive mode (no prompts)')
   .action(detectCommand);
 
 program.parse();

@@ -8,6 +8,7 @@
 
 const { program } = require('commander');
 const { initCommand } = require('../dist/features/project-initialization/cli/commands/init');
+const { updateCommand } = require('../dist/features/project-initialization/cli/commands/update');
 const { colorsCommand } = require('../dist/features/project-initialization/cli/commands/colors');
 
 program
@@ -29,6 +30,21 @@ program
   .option('--skip-colors', 'Skip IDE color setup')
   .option('--dry-run', 'Show what would be done without making changes')
   .action(initCommand);
+
+program
+  .command('update')
+  .description('Update project initialization - checks for gaps and updates as needed')
+  .option('-p, --project-name <name>', 'Project name (auto-detected if not provided)')
+  .option('-t, --app-type <type>', 'App type (auto-detected if not provided)')
+  .option('--overwrite', 'Overwrite existing files (default: only add missing files)')
+  .option('--skip-port-manager', 'Skip Port Manager check/update')
+  .option('--skip-domain', 'Skip automatic domain setup with Caddy')
+  .option('--skip-rules', 'Skip updating rules')
+  .option('--skip-commands', 'Skip updating commands')
+  .option('--skip-colors', 'Skip IDE color check/update')
+  .option('--dry-run', 'Show what would be done without making changes')
+  .option('--check-only', 'Only check status, do not make any changes')
+  .action(updateCommand);
 
 program
   .command('colors')

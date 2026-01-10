@@ -1,0 +1,77 @@
+#!/usr/bin/env node
+
+/**
+ * Setup Script
+ * 
+ * One-command setup for new projects.
+ * Creates package.json if needed, installs @your-org/core, and runs init.
+ */
+
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+const projectRoot = process.cwd();
+const packageJsonPath = path.join(projectRoot, 'package.json');
+
+console.log('🚀 Setting up new project with @your-org/core...\n');
+
+// Step 1: Create package.json if it doesn't exist
+if (!fs.existsSync(packageJsonPath)) {
+  console.log('📦 Creating package.json...');
+  try {
+    execSync('npm init -y', { stdio: 'inherit', cwd: projectRoot });
+    console.log('✅ package.json created\n');
+  } catch (error) {
+    console.error('❌ Failed to create package.json');
+    process.exit(1);
+  }
+} else {
+  console.log('✅ package.json already exists\n');
+}
+
+// Step 2: Check if @your-org/core is installed
+const nodeModulesPath = path.join(projectRoot, 'node_modules', '@your-org', 'core');
+const isInstalled = fs.existsSync(nodeModulesPath);
+
+if (!isInstalled) {
+  console.log('📥 Installing @your-org/core...');
+  console.log('   (Using local development version)\n');
+  
+  // Try to find the packages directory
+  const packagesPath = path.resolve(projectRoot, '../../packages/packages/core');
+  if (fs.existsSync(packagesPath)) {
+    try {
+      execSync(`npm install file:${path.relative(projectRoot, packagesPath)}`, {
+        stdio: 'inherit',
+        cwd: projectRoot
+      });
+      console.log('✅ @your-org/core installed\n');
+    } catch (error) {
+      console.error('❌ Failed to install @your-org/core');
+      console.error('   Please install manually: npm install file:../../packages/packages/core');
+      process.exit(1);
+    }
+  } else {
+    console.error('❌ Could not find local packages directory');
+    console.error('   Please install manually: npm install @your-org/core');
+    process.exit(1);
+  }
+} else {
+  console.log('✅ @your-org/core already installed\n');
+}
+
+// Step 3: Run init
+console.log('🔧 Initializing project...\n');
+try {
+  const coreBinPath = path.join(nodeModulesPath, 'bin', 'core');
+  execSync(`node "${coreBinPath}" init`, {
+    stdio: 'inherit',
+    cwd: projectRoot
+  });
+  console.log('\n✅ Project setup complete!');
+} catch (error) {
+  console.error('\n❌ Initialization failed');
+  console.error('   Try running manually: npx @your-org/core init');
+  process.exit(1);
+}

@@ -4,7 +4,7 @@
  * Handles interactive warnings and user choices.
  */
 
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 import chalk from 'chalk';
 import { Warning } from './warning-detector';
 import { StandardsLoader, UserChoices } from './standards-loader';

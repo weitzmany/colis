@@ -18,6 +18,7 @@ program
   .option('--skip-port-manager', 'Skip Port Manager initialization (not recommended)')
   .option('--skip-rules', 'Skip copying rules')
   .option('--skip-commands', 'Skip copying commands')
+  .option('--skip-defaults', 'Skip prompting to install default frameworks')
   .option('--dry-run', 'Show what would be done without making changes')
   .action(initCommand);
 

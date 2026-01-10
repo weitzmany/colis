@@ -128,35 +128,93 @@ Tech Detector Standards Warnings solves these problems by:
 **Structure**:
 ```json
 {
+  "newProjectDefaults": {
+    "framework": "angular",
+    "language": "typescript",
+    "buildTool": "webpack",
+    "packageManager": "npm",
+    "runtime": "node",
+    "versions": {
+      "angular": "latest",
+      "typescript": "latest",
+      "webpack": "latest",
+      "npm": "latest",
+      "node": "20.0.0"
+    },
+    "backendDefaults": {
+      "framework": "slim",
+      "language": "php",
+      "packageManager": "composer",
+      "runtime": "php",
+      "versions": {
+        "slim": "4.0.0",
+        "php": "8.3.0",
+        "composer": "latest"
+      }
+    }
+  },
   "frameworks": {
-    "recommended": ["nextjs", "angular", "react", "express"],
+    "recommended": ["nextjs", "angular", "react", "express", "laravel", "django", "flask", "fastapi", "symfony", "spring-boot", "slim", "laminas"],
     "minimumVersions": {
       "nextjs": "14.0.0",
       "angular": "17.0.0",
       "react": "18.0.0",
-      "express": "4.18.0"
+      "express": "4.18.0",
+      "laravel": "10.0.0",
+      "django": "4.2.0",
+      "flask": "2.3.0",
+      "fastapi": "0.100.0",
+      "symfony": "6.3.0",
+      "spring-boot": "3.1.0",
+      "slim": "4.0.0",
+      "laminas": "3.0.0"
     }
   },
   "languages": {
-    "recommended": ["typescript", "javascript"],
+    "recommended": ["typescript", "javascript", "php", "python", "java", "go", "rust"],
     "minimumVersions": {
       "typescript": "5.0.0",
-      "node": "18.0.0"
+      "node": "18.0.0",
+      "php": "8.1.0",
+      "python": "3.10.0",
+      "java": "17.0.0",
+      "go": "1.21.0",
+      "rust": "1.70.0"
     }
   },
   "buildTools": {
-    "recommended": ["vite", "webpack", "esbuild"],
+    "recommended": ["vite", "webpack", "esbuild", "maven", "gradle", "cargo"],
     "minimumVersions": {
       "vite": "5.0.0",
-      "webpack": "5.0.0"
+      "webpack": "5.0.0",
+      "maven": "3.9.0",
+      "gradle": "8.0.0",
+      "cargo": "1.70.0"
     }
   },
   "packageManagers": {
-    "recommended": ["npm", "pnpm", "yarn"],
+    "recommended": ["npm", "pnpm", "yarn", "composer", "pip", "poetry", "maven", "gradle", "go", "cargo"],
     "minimumVersions": {
       "npm": "9.0.0",
       "pnpm": "8.0.0",
-      "yarn": "3.0.0"
+      "yarn": "3.0.0",
+      "composer": "2.6.0",
+      "pip": "23.0.0",
+      "poetry": "1.5.0",
+      "maven": "3.9.0",
+      "gradle": "8.0.0",
+      "go": "1.21.0",
+      "cargo": "1.70.0"
+    }
+  },
+  "runtimes": {
+    "recommended": ["node", "php", "python", "java", "go"],
+    "minimumVersions": {
+      "node": "18.0.0",
+      "php": "8.1.0",
+      "python": "3.10.0",
+      "java": "17.0.0",
+      "go": "1.21.0"
     }
   }
 }
@@ -166,6 +224,24 @@ Tech Detector Standards Warnings solves these problems by:
 - Default standards in core package
 - Project-specific overrides in `.core-tech-standards.json`
 - Merge project overrides with defaults
+
+**New Project Defaults**:
+The `newProjectDefaults` section specifies recommended defaults for new projects. These are the "go-to" choices when starting a fresh project:
+
+**Frontend Defaults**:
+- **Framework**: Angular (comprehensive frontend framework)
+- **Language**: TypeScript (type-safe JavaScript, required by Angular)
+- **Build Tool**: Webpack (Angular's default build tool)
+- **Package Manager**: npm (standard Node.js package manager)
+- **Runtime**: Node.js 20.0.0+ (LTS version)
+
+**Backend Defaults** (optional `backendDefaults` section):
+- **Framework**: Slim (lightweight PHP micro-framework)
+- **Language**: PHP 8.3.0+ (latest stable PHP version)
+- **Package Manager**: Composer (PHP dependency manager)
+- **Runtime**: PHP 8.3.0+
+
+These defaults can be overridden per-project in `.core-tech-standards.json` if different defaults are preferred for specific project types.
 
 ### Feature 2: Non-Recommended Tech Warning
 

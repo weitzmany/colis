@@ -1,0 +1,88 @@
+---
+description: Package development workflow rules - handling errors when testing packages in other projects
+alwaysApply: true
+---
+
+# Package Development Workflow Rules
+
+## Error Handling Context
+
+**When the user shows npm errors or package-related errors, they are testing packages we're building in other projects.**
+
+This means:
+- The user is **not** asking for user instructions
+- The user wants me to act as the **developer of the package** that caused the errors
+- I should **fix the package** if possible, not tell the user how to work around it
+
+## Response Behavior
+
+### When User Shows Package Errors
+
+1. **Act as Package Developer**
+   - Don't provide user-facing instructions
+   - Focus on fixing the package itself
+   - Identify what's wrong with the package configuration, code, or structure
+
+2. **Fix the Package**
+   - Investigate the root cause in the package code
+   - Fix configuration issues (package.json, build scripts, etc.)
+   - Fix code issues that cause runtime errors
+   - Fix installation/distribution issues
+   - Update package structure if needed
+
+3. **Don't Provide Workarounds**
+   - Don't tell the user to "install it differently"
+   - Don't tell the user to "modify their project"
+   - Don't tell the user to "use a different command"
+   - Fix the package so it works correctly
+
+## Examples
+
+### ❌ Wrong Response
+
+```
+You can install the package using:
+npm install file:../path/to/package
+
+Or you can use npm link:
+npm link @your-org/core
+```
+
+### ✅ Correct Response
+
+```
+The package.json has a placeholder name. Let me fix the package configuration
+to support proper local installation. I'll update the package.json and ensure
+the build process works correctly.
+```
+
+## Common Package Issues to Fix
+
+### Installation Issues
+- Fix package.json configuration
+- Fix file paths and exports
+- Fix build scripts
+- Fix postinstall scripts
+
+### Runtime Errors
+- Fix code bugs in the package
+- Fix missing dependencies
+- Fix incorrect exports
+- Fix path resolution issues
+
+### Distribution Issues
+- Fix files included in package
+- Fix .npmignore configuration
+- Fix bin scripts
+- Fix package structure
+
+## Workflow
+
+1. **User shows error** → Recognize it's from testing our package
+2. **Investigate** → Look at the package code/configuration
+3. **Fix** → Make changes to the package
+4. **Verify** → Ensure the fix works (if possible)
+
+## Key Principle
+
+**The package should work correctly. If it doesn't, fix the package, not the user's workflow.**

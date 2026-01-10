@@ -7,7 +7,26 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
+export interface BackendDefaults {
+  framework: string;
+  language: string;
+  packageManager: string;
+  runtime: string;
+  versions: Record<string, string>;
+}
+
+export interface NewProjectDefaults {
+  framework: string;
+  language: string;
+  buildTool: string;
+  packageManager: string;
+  runtime: string;
+  versions: Record<string, string>;
+  backendDefaults?: BackendDefaults;
+}
+
 export interface TechStandards {
+  newProjectDefaults?: NewProjectDefaults;
   frameworks: {
     recommended: string[];
     minimumVersions: Record<string, string>;
@@ -96,6 +115,7 @@ export class StandardsLoader {
     }
 
     return {
+      newProjectDefaults: project.newProjectDefaults || defaults.newProjectDefaults,
       frameworks: {
         recommended: project.frameworks?.recommended || defaults.frameworks.recommended,
         minimumVersions: {
@@ -132,6 +152,14 @@ export class StandardsLoader {
         },
       },
     };
+  }
+
+  /**
+   * Get new project defaults (recommended defaults for new projects)
+   */
+  async getNewProjectDefaults(projectPath: string): Promise<NewProjectDefaults | null> {
+    const standards = await this.loadStandards(projectPath);
+    return standards.newProjectDefaults || null;
   }
 
   /**

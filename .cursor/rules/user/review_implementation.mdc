@@ -1,0 +1,88 @@
+---
+description: Rule for review processes - always implement changes, not just recommend
+globs: **/*.md, **/*.mdc, **/PRD.md, **/TASKS.md
+alwaysApply: true
+---
+
+# Review Implementation Rule
+
+## ⚠️ CRITICAL RULE
+
+**When asked to review (by AI agent or experts), ALWAYS implement the changes directly, not just provide recommendations.**
+
+## Rule Details
+
+### When Reviewing Files
+
+1. **Read and Understand**: Understand the content being reviewed
+2. **Identify Improvements**: Identify what needs to be changed or added
+3. **Implement Changes**: **Directly modify the file** with the improvements
+4. **Document Changes**: Add a review/contribution section documenting what was changed
+
+### When Expert Reviews Are Requested
+
+1. **Expert Reviews**: When experts review a file, they should:
+   - **Make the changes** they recommend
+   - **Update the file** with their improvements
+   - **Document their changes** in a review section
+
+2. **Not Just Recommendations**: Experts should NOT just say "you should add X" - they should **actually add X** to the file
+
+### Implementation Pattern
+
+**❌ WRONG** - Just recommending:
+```
+Recommendations: Add success metrics section, include testing strategy, add security considerations.
+```
+
+**✅ CORRECT** - Actually implementing:
+```
+Changes: Added comprehensive "Success Metrics" section with quantitative and qualitative metrics. Added detailed "Testing Strategy" section with unit, integration, and E2E test requirements targeting 80%+ coverage. Added "Security Considerations" section covering STRIDE threat modeling and OWASP Top 10 compliance.
+```
+
+Then actually add those sections to the file.
+
+### Review Section Format
+
+When adding expert reviews, use this format:
+
+```markdown
+**Expert**: [Name]
+**Expertise**: [Area]
+**Date**: [Date]
+**Changes**: [What was actually changed/added, not just recommended]
+```
+
+The "Changes" field should describe what was **actually implemented**, not what "should be" implemented.
+
+### Exception: Planning Mode
+
+During planning mode, if the file is documentation-only and changes would require implementation:
+- Still implement documentation changes
+- Add implementation notes for future work
+- Mark clearly as "documentation updates" vs "implementation changes"
+
+## Benefits
+
+- **Actionable Reviews**: Reviews result in actual improvements, not just suggestions
+- **Immediate Value**: Files are improved immediately upon review
+- **Clear Documentation**: Review sections show what was actually changed
+- **No Follow-up Needed**: No need to ask "can you implement these recommendations?"
+
+## Examples
+
+### Code Review
+- **Don't**: "Consider adding error handling here"
+- **Do**: Add error handling code with try-catch blocks
+
+### Documentation Review
+- **Don't**: "You should add a security section"
+- **Do**: Add a comprehensive security section with all details
+
+### Architecture Review
+- **Don't**: "Consider adding scalability considerations"
+- **Do**: Add a scalability section with specific strategies and requirements
+
+---
+
+**This rule ensures that reviews are immediately actionable and result in improved files, not just lists of recommendations.**

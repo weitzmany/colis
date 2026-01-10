@@ -6,9 +6,8 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import chalk from 'chalk';
 
-export interface ValidationResult {
+export interface InitValidationResult {
   success: boolean;
   rulesValid: boolean;
   commandsValid: boolean;
@@ -21,8 +20,8 @@ export async function validateSetup(
   projectPath: string,
   expectedRules: { experts: number; user: number },
   expectedCommands: { general: number }
-): Promise<ValidationResult> {
-  const result: ValidationResult = {
+): Promise<InitValidationResult> {
+  const result: InitValidationResult = {
     success: true,
     rulesValid: false,
     commandsValid: false,
@@ -70,7 +69,6 @@ export async function validateSetup(
     const generalPath = path.join(commandsPath, 'general');
 
     if (await fs.pathExists(generalPath)) {
-      const generalFiles = (await fs.readdir(generalPath)).filter((f) => f.endsWith('.md'));
       // General commands are optional, so we just check if directory exists
       result.commandsValid = true;
     } else {

@@ -10,8 +10,16 @@ import * as fs from 'fs-extra';
 import chalk from 'chalk';
 import { copyRules, CopyRulesResult } from './rules-copier';
 import { copyCommands, CopyCommandsResult } from './commands-copier';
-import { validateSetup, ValidationResult } from './setup-validator';
+import { validateSetup, InitValidationResult } from './setup-validator';
 import { initCommand as portManagerInit } from '../port-manager/cli/commands/init';
+import { DefaultsInstaller } from '../tech-detector/standards/defaults-installer';
+import { generateProjectName } from '../port-manager/utils/project-name';
+import { generateColorPalette, ensureUniqueColor } from './color-manager';
+import {
+  generatePostCheckoutHook,
+  setupGitHooksPath,
+  ensureSettingsIgnored,
+} from './hook-generator';
 
 export interface InitOptions {
   projectName?: string;
@@ -21,6 +29,9 @@ export interface InitOptions {
   skipRules?: boolean;
   skipCommands?: boolean;
   skipPortManager?: boolean;
+  skipDefaults?: boolean;
+  skipDomain?: boolean;
+  skipColors?: boolean;
   dryRun?: boolean;
 }
 
@@ -28,7 +39,7 @@ export interface InitResult {
   success: boolean;
   rulesResult?: CopyRulesResult;
   commandsResult?: CopyCommandsResult;
-  validationResult?: ValidationResult;
+  validationResult?: InitValidationResult;
   portManagerInitialized: boolean;
   errors: string[];
   warnings: string[];
@@ -119,14 +130,21 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
       }
     }
 
+    // Determine project name (needed for color generation)
+    let projectName = options.projectName;
+    if (!projectName) {
+      projectName = generateProjectName(projectPath);
+    }
+
     // Initialize Port Manager (mandatory unless skipped)
     if (!options.skipPortManager) {
       console.log(chalk.blue('🔌 Initializing Port Manager...'));
       try {
         await portManagerInit({
-          projectName: options.projectName,
+          projectName: projectName,
           appType: options.appType,
           autoConfigure: true,
+          setupDomain: !options.skipDomain, // Automatically set up domain unless explicitly skipped
         });
         result.portManagerInitialized = true;
         console.log(chalk.green('  ✓ Port Manager initialized'));
@@ -137,6 +155,58 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
       }
     } else {
       result.warnings.push('Port Manager initialization was skipped (not recommended)');
+    }
+
+    // Setup IDE colors and git hooks (unless skipped)
+    if (!options.skipColors && result.success && !options.dryRun) {
+      console.log(chalk.blue('🎨 Setting up IDE colors...'));
+      try {
+        // Generate color palette for this project
+        const palette = generateColorPalette(projectName);
+        
+        // Generate and install post-checkout hook
+        await generatePostCheckoutHook(projectPath, palette);
+        console.log(chalk.green(`  ✓ Generated post-checkout hook with KEY_COLOR: ${palette.keyColor}`));
+        
+        // Setup git hooks path
+        await setupGitHooksPath(projectPath);
+        console.log(chalk.green('  ✓ Configured git hooks path'));
+        
+        // Ensure .vscode/settings.json is ignored
+        await ensureSettingsIgnored(projectPath);
+        console.log(chalk.green('  ✓ Ensured .vscode/settings.json is in .gitignore'));
+        
+        // Run the hook immediately to set initial colors
+        try {
+          const { execSync } = require('child_process');
+          execSync('bash .githooks/post-checkout', { cwd: projectPath, stdio: 'ignore' });
+          console.log(chalk.green('  ✓ Applied initial color scheme'));
+        } catch (hookError) {
+          // Hook might fail if git isn't initialized yet - that's okay
+          result.warnings.push('Could not run post-checkout hook (git may not be initialized yet)');
+        }
+      } catch (error: any) {
+        // Don't fail initialization if color setup fails
+        result.warnings.push(`Color setup failed: ${error.message}`);
+        console.log(chalk.yellow(`  ⚠ Color setup failed: ${error.message}`));
+      }
+    }
+
+    // Check for new project and prompt to install defaults
+    if (result.success && !options.dryRun && !options.skipDefaults) {
+      try {
+        const defaultsInstaller = new DefaultsInstaller();
+        const installResult = await defaultsInstaller.checkAndPromptForDefaults(projectPath, true);
+        
+        if (installResult.installed && installResult.framework) {
+          console.log(chalk.green(`  ✓ Installed default framework: ${installResult.framework}`));
+        } else if (installResult.errors.length > 0) {
+          result.warnings.push(...installResult.errors);
+        }
+      } catch (error: any) {
+        // Don't fail initialization if defaults installation fails
+        result.warnings.push(`Defaults installation check failed: ${error.message}`);
+      }
     }
 
     // Validate setup

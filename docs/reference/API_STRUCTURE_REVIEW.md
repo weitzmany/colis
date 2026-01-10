@@ -1089,6 +1089,248 @@ When reviewing API structure, consider:
 - [ ] **API Maintainability Quality**: API structure supports easy maintenance and extension
 - [ ] **API Documentation Quality**: API structure is well-documented and easy to understand
 
+## Cloud Infrastructure Considerations for API Structure
+
+### API Deployment Architecture
+
+1. **API Gateway Structure**:
+   - **API Gateway Pattern**: Use API Gateway (AWS API Gateway, Azure API Management, GCP API Gateway) as single entry point
+   - **Route Organization**: Organize API routes to map to API Gateway resources
+   - **Stage Management**: Structure APIs for multiple deployment stages (dev, staging, production)
+   - **Version Management**: Organize API versions for API Gateway versioning and canary deployments
+   ```
+   api/
+   ├── v1/              # API Gateway stage v1
+   │   ├── products/
+   │   └── orders/
+   ├── v2/              # API Gateway stage v2
+   │   ├── products/
+   │   └── orders/
+   └── gateway-config/  # API Gateway configuration
+       ├── dev.yml
+       ├── staging.yml
+       └── production.yml
+   ```
+
+2. **Serverless API Structure**:
+   - **Lambda Function Organization**: Organize API handlers for serverless functions (AWS Lambda, Azure Functions, Cloud Functions)
+   - **Function-Per-Endpoint**: Structure APIs with one function per endpoint for independent scaling
+   - **Shared Code**: Organize shared code (utilities, models) for reuse across functions
+   ```
+   api/
+   ├── functions/       # Serverless functions
+   │   ├── get-product/
+   │   │   ├── index.js
+   │   │   └── package.json
+   │   ├── create-product/
+   │   │   ├── index.js
+   │   │   └── package.json
+   │   └── shared/      # Shared code
+   │       ├── models/
+   │       └── utils/
+   └── serverless.yml   # Serverless framework config
+   ```
+
+3. **Container-Based API Structure**:
+   - **Docker Organization**: Structure APIs for containerized deployments (Docker, Kubernetes)
+   - **Microservices Structure**: Organize APIs as separate microservices with independent deployment
+   - **Service Mesh**: Structure APIs for service mesh integration (Istio, Linkerd)
+   ```
+   api/
+   ├── services/        # Microservices
+   │   ├── product-service/
+   │   │   ├── src/
+   │   │   ├── Dockerfile
+   │   │   └── k8s/
+   │   └── order-service/
+   │       ├── src/
+   │       ├── Dockerfile
+   │       └── k8s/
+   └── infrastructure/  # Infrastructure as Code
+       ├── terraform/
+       └── kubernetes/
+   ```
+
+### API Scaling and Load Balancing
+
+1. **Stateless API Design**:
+   - **Stateless Structure**: Design APIs to be stateless for horizontal scaling
+   - **Session Management**: Organize session handling for external storage (Redis, DynamoDB)
+   - **State Management**: Structure APIs to avoid server-side state for scalability
+   ```
+   api/
+   ├── handlers/        # Stateless handlers
+   ├── sessions/        # External session management
+   │   ├── redis/
+   │   └── dynamodb/
+   └── state/           # External state storage
+   ```
+
+2. **Load Balancing Structure**:
+   - **Health Check Endpoints**: Structure health check endpoints for load balancer monitoring
+   - **Readiness Probes**: Organize readiness endpoints for Kubernetes/container orchestration
+   - **Liveness Probes**: Structure liveness endpoints for automatic recovery
+   ```
+   api/
+   ├── health/          # Health check endpoints
+   │   ├── liveness/
+   │   └── readiness/
+   └── endpoints/        # API endpoints
+   ```
+
+3. **Auto-Scaling Configuration**:
+   - **Scaling Metrics**: Structure APIs to expose metrics for auto-scaling (CPU, memory, request rate)
+   - **Scaling Policies**: Organize scaling configuration for cloud auto-scaling groups
+   - **Resource Limits**: Structure resource limits for container/Kubernetes deployments
+   ```
+   api/
+   ├── config/
+   │   ├── scaling.yml  # Auto-scaling configuration
+   │   └── resources.yml # Resource limits
+   └── metrics/         # Metrics endpoints
+   ```
+
+### API Monitoring and Observability
+
+1. **Cloud Monitoring Integration**:
+   - **Metrics Structure**: Organize API metrics for cloud monitoring (CloudWatch, Azure Monitor, Stackdriver)
+   - **Logging Structure**: Structure API logs for cloud log aggregation (CloudWatch Logs, Azure Log Analytics, Cloud Logging)
+   - **Tracing Structure**: Organize distributed tracing for cloud tracing services (X-Ray, Application Insights, Cloud Trace)
+   ```
+   api/
+   ├── monitoring/
+   │   ├── metrics/     # Custom metrics
+   │   ├── logs/        # Structured logging
+   │   └── traces/      # Distributed tracing
+   └── config/
+       ├── cloudwatch.yml
+       └── xray.yml
+   ```
+
+2. **Alerting Structure**:
+   - **Alert Configuration**: Structure alert rules for cloud alerting services
+   - **SLA Monitoring**: Organize SLA monitoring endpoints and metrics
+   - **Error Tracking**: Structure error tracking for cloud error services
+   ```
+   api/
+   ├── alerts/
+   │   ├── cloudwatch-alarms.yml
+   │   └── azure-alerts.yml
+   └── sla/            # SLA monitoring
+   ```
+
+### API Security in Cloud
+
+1. **IAM and Authentication Structure**:
+   - **IAM Integration**: Structure APIs for cloud IAM integration (AWS IAM, Azure AD, GCP IAM)
+   - **Token Validation**: Organize token validation for cloud token services (Cognito, Azure AD, Firebase Auth)
+   - **Role-Based Access**: Structure APIs for role-based access control (RBAC) with cloud IAM
+   ```
+   api/
+   ├── auth/
+   │   ├── iam/        # IAM integration
+   │   ├── tokens/      # Token validation
+   │   └── roles/       # Role-based access
+   └── middleware/
+       └── auth.js
+   ```
+
+2. **Network Security Structure**:
+   - **VPC Configuration**: Structure APIs for VPC deployment (private APIs, VPC endpoints)
+   - **Security Groups**: Organize security group rules for API access
+   - **WAF Integration**: Structure APIs for Web Application Firewall (WAF) integration
+   ```
+   api/
+   ├── network/
+   │   ├── vpc.yml     # VPC configuration
+   │   ├── security-groups.yml
+   │   └── waf.yml     # WAF rules
+   └── config/
+   ```
+
+3. **Secrets Management**:
+   - **Secrets Structure**: Organize API secrets for cloud secrets management (Secrets Manager, Key Vault, Secret Manager)
+   - **Encryption**: Structure encryption configuration for API data
+   - **Key Rotation**: Organize key rotation for API keys and certificates
+   ```
+   api/
+   ├── secrets/
+   │   ├── aws-secrets-manager/
+   │   └── azure-key-vault/
+   └── encryption/
+   ```
+
+### API Cost Optimization
+
+1. **Resource Optimization**:
+   - **Caching Structure**: Organize caching layers (CloudFront, Azure CDN, Cloud CDN) for API responses
+   - **CDN Configuration**: Structure CDN configuration for static API responses
+   - **Request Optimization**: Organize APIs to minimize cloud resource usage
+   ```
+   api/
+   ├── cache/
+   │   ├── cloudfront.yml
+   │   └── redis.yml
+   └── optimization/
+   ```
+
+2. **Cost Monitoring**:
+   - **Cost Tracking**: Structure cost tracking for API usage (CloudWatch Billing, Azure Cost Management, GCP Billing)
+   - **Resource Tagging**: Organize resource tagging for cost allocation
+   - **Cost Alerts**: Structure cost alerts for API spending
+   ```
+   api/
+   ├── cost/
+   │   ├── tags.yml    # Resource tagging
+   │   └── alerts.yml  # Cost alerts
+   └── monitoring/
+   ```
+
+### Multi-Region API Structure
+
+1. **Regional Deployment**:
+   - **Region-Specific Structure**: Organize APIs for multi-region deployment
+   - **Regional Configuration**: Structure regional configuration files
+   - **Cross-Region Replication**: Organize APIs for cross-region data replication
+   ```
+   api/
+   ├── regions/
+   │   ├── us-east-1/
+   │   ├── eu-west-1/
+   │   └── ap-southeast-1/
+   └── config/
+       └── multi-region.yml
+   ```
+
+2. **Global Load Balancing**:
+   - **Route53/DNS Structure**: Organize DNS configuration for global API access
+   - **Geographic Routing**: Structure APIs for geographic routing
+   - **Failover Configuration**: Organize failover for regional API failures
+   ```
+   api/
+   ├── dns/
+   │   └── route53.yml
+   └── failover/
+   ```
+
+### Cloud Infrastructure API Structure Checklist
+
+- [ ] **API Gateway Structure**: APIs organized for API Gateway deployment
+- [ ] **Serverless Structure**: APIs structured for serverless deployment (if applicable)
+- [ ] **Container Structure**: APIs organized for containerized deployment (if applicable)
+- [ ] **Stateless Design**: APIs designed to be stateless for horizontal scaling
+- [ ] **Health Check Endpoints**: Health check endpoints structured for load balancer monitoring
+- [ ] **Auto-Scaling Configuration**: Scaling configuration organized for cloud auto-scaling
+- [ ] **Cloud Monitoring Integration**: Metrics, logs, and traces structured for cloud monitoring
+- [ ] **IAM Integration**: APIs structured for cloud IAM integration
+- [ ] **Network Security**: Network security configuration organized for VPC/WAF
+- [ ] **Secrets Management**: Secrets organized for cloud secrets management
+- [ ] **Caching Structure**: Caching layers organized for CDN/cloud caching
+- [ ] **Cost Monitoring**: Cost tracking and alerts structured for cloud cost management
+- [ ] **Multi-Region Structure**: APIs organized for multi-region deployment (if applicable)
+- [ ] **Infrastructure as Code**: Infrastructure configuration version controlled
+- [ ] **Disaster Recovery**: Disaster recovery configuration organized for API availability
+
 ## Notes
 
 - API structure patterns are framework-specific but concepts are universal
@@ -1149,5 +1391,10 @@ When reviewing API structure, consider:
 **Expertise**: Code Quality and Code Review  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this API structure review document by adding comprehensive "Code Quality Considerations for API Structure" section covering API code quality standards (API code readability with clear endpoint names and consistent naming patterns, API code maintainability with DRY principles and reusable middleware, API code consistency with consistent error handling and request/response formats, API code documentation with OpenAPI/Swagger and inline comments), API structure quality metrics (API organization quality with clear directory structure and resource-based organization, API endpoint quality with focused endpoints and appropriate HTTP methods, API code coverage quality with adequate test coverage and meaningful tests, API maintainability quality with minimal duplication and clear dependencies), code review checklist for API structure (API organization review with directory structure evaluation, API endpoint review with endpoint structure and naming evaluation, API code review with code quality standards, API testing review with endpoint coverage analysis, API maintainability review with duplication and dependency analysis), API structure refactoring (identifying API structure issues with code smells and anti-patterns, refactoring API organization with improved directory structure, refactoring API endpoints with better endpoint organization, refactoring API code with improved code quality), and comprehensive code quality checklist for API structure (API code quality, API organization quality, API endpoint quality, API testing quality, API maintainability quality, API documentation quality). Updated the "Notes" section to include code quality considerations (API code quality importance, API structure support for code quality goals, code review including API structure evaluation). This addition ensures that API structure documentation includes code quality considerations, making API code quality an integral part of API structure standards, ensuring that API organization supports code quality goals, and providing code review guidelines for evaluating API structure quality.
+
+**Expert**: James Wilson  
+**Expertise**: Cloud Infrastructure (Cloud Platform Architecture, Deployment, Operations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this API structure review document by adding comprehensive "Cloud Infrastructure Considerations for API Structure" section covering API deployment architecture (API Gateway structure with route organization and stage management, serverless API structure with Lambda function organization and shared code, container-based API structure with Docker organization and microservices structure), API scaling and load balancing (stateless API design with session management and state management, load balancing structure with health check endpoints and readiness/liveness probes, auto-scaling configuration with scaling metrics and resource limits), API monitoring and observability (cloud monitoring integration with metrics/logging/tracing structure, alerting structure with alert configuration and SLA monitoring), API security in cloud (IAM and authentication structure with IAM integration and token validation, network security structure with VPC configuration and WAF integration, secrets management with secrets structure and encryption), API cost optimization (resource optimization with caching structure and CDN configuration, cost monitoring with cost tracking and resource tagging), multi-region API structure (regional deployment with region-specific structure and cross-region replication, global load balancing with Route53/DNS structure and failover configuration), and comprehensive cloud infrastructure API structure checklist covering API Gateway, serverless, container, stateless design, health checks, auto-scaling, cloud monitoring, IAM, network security, secrets management, caching, cost monitoring, multi-region deployment, Infrastructure as Code, and disaster recovery. This addition ensures that API structure patterns incorporate cloud infrastructure best practices, enabling scalable, reliable, and cost-effective API deployment on cloud platforms with proper monitoring, security, and cost optimization.
 
 ---

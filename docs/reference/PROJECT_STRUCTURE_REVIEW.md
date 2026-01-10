@@ -194,4 +194,171 @@ This document lists useful project structure patterns found in other projects th
 **Date**: 2026-01-05  
 **Changes**: Enhanced this project structure review document by adding comprehensive "Backend Project Structure Considerations" section covering backend-specific structure patterns (backend directory organization with API routes, controllers, services, repositories, backend separation patterns with clear backend/frontend boundaries, backend configuration structure with environment-based configuration), backend API structure (API route organization with RESTful conventions, API versioning structure with version directories, API middleware structure with authentication and validation), backend database structure (database migration structure with version control, database seed structure with test data, database connection structure with connection pooling), backend testing structure (backend test organization with unit/integration/E2E tests, backend test utilities with test fixtures and helpers, backend test database structure with isolated test databases), backend security structure (authentication structure with JWT/OAuth, authorization structure with role-based access, input validation structure with validation rules), and comprehensive backend project structure checklist (backend directory organization, API structure, database structure, testing structure, security structure, configuration structure). This addition provides essential backend development perspective on project structure, ensuring that project structure patterns support clean backend architecture, API organization, database management, testing, and security in backend implementations.
 
+## Cloud Infrastructure Project Structure Considerations
+
+### Cloud Infrastructure Directory Structure
+
+1. **Infrastructure as Code Organization**:
+   ```
+   project/
+   ├── infrastructure/
+   │   ├── terraform/          # Terraform configurations
+   │   │   ├── environments/   # Environment-specific configs
+   │   │   │   ├── staging/
+   │   │   │   └── production/
+   │   │   ├── modules/        # Reusable Terraform modules
+   │   │   └── main.tf         # Main infrastructure definition
+   │   ├── cloudformation/     # CloudFormation templates
+   │   │   ├── templates/      # CloudFormation templates
+   │   │   └── parameters/    # Parameter files
+   │   └── pulumi/             # Pulumi configurations
+   │       └── environments/   # Environment-specific configs
+   ```
+
+2. **Cloud Deployment Configuration**:
+   ```
+   project/
+   ├── .github/
+   │   └── workflows/          # CI/CD workflows
+   │       ├── deploy-staging.yml
+   │       └── deploy-production.yml
+   ├── deployment/             # Deployment configurations
+   │   ├── kubernetes/         # Kubernetes manifests
+   │   │   ├── staging/
+   │   │   └── production/
+   │   ├── docker/            # Docker configurations
+   │   └── scripts/           # Deployment scripts
+   ```
+
+3. **Cloud Environment Structure**:
+   ```
+   project/
+   ├── environments/
+   │   ├── staging/
+   │   │   ├── config.yml     # Staging configuration
+   │   │   └── secrets.yml     # Staging secrets (encrypted)
+   │   └── production/
+   │       ├── config.yml     # Production configuration
+   │       └── secrets.yml     # Production secrets (encrypted)
+   ```
+
+### Multi-Cloud Project Structure
+
+1. **Cloud Provider Abstraction**:
+   ```
+   project/
+   ├── infrastructure/
+   │   ├── aws/               # AWS-specific infrastructure
+   │   ├── azure/             # Azure-specific infrastructure
+   │   ├── gcp/               # GCP-specific infrastructure
+   │   └── common/            # Cloud-agnostic configurations
+   ```
+
+2. **Cloud-Specific Configurations**:
+   ```
+   project/
+   ├── config/
+   │   ├── aws/
+   │   │   ├── staging.yml
+   │   │   └── production.yml
+   │   ├── azure/
+   │   │   ├── staging.yml
+   │   │   └── production.yml
+   │   └── gcp/
+   │       ├── staging.yml
+   │       └── production.yml
+   ```
+
+### Cloud Monitoring and Observability Structure
+
+1. **Monitoring Configuration**:
+   ```
+   project/
+   ├── monitoring/
+   │   ├── dashboards/        # CloudWatch/Azure Monitor/Stackdriver dashboards
+   │   ├── alerts/            # Alert configurations
+   │   └── metrics/           # Custom metrics definitions
+   ```
+
+2. **Observability Structure**:
+   ```
+   project/
+   ├── observability/
+   │   ├── logging/           # Log aggregation configs
+   │   ├── tracing/           # Distributed tracing configs
+   │   └── metrics/           # Metrics collection configs
+   ```
+
+### Cloud Security Structure
+
+1. **Security Configuration**:
+   ```
+   project/
+   ├── security/
+   │   ├── iam/               # IAM policies and roles
+   │   ├── network/           # Network security configs
+   │   └── compliance/        # Compliance documentation
+   ```
+
+2. **Secrets Management**:
+   ```
+   project/
+   ├── secrets/
+   │   ├── .gitignore         # Exclude secrets from git
+   │   └── templates/         # Secret templates (no actual secrets)
+   ```
+
+### Cloud Cost Management Structure
+
+1. **Cost Optimization**:
+   ```
+   project/
+   ├── cost/
+   │   ├── budgets/          # Budget configurations
+   │   ├── reports/          # Cost analysis reports
+   │   └── optimization/     # Cost optimization strategies
+   ```
+
+### Recommended Cloud Infrastructure Structure Patterns
+
+1. **Infrastructure as Code First**:
+   - Separate infrastructure code from application code
+   - Version control all infrastructure changes
+   - Environment-specific configurations
+   - Reusable infrastructure modules
+
+2. **Cloud-Native Organization**:
+   - Organize by cloud provider (if multi-cloud)
+   - Separate staging and production configurations
+   - Centralize deployment configurations
+   - Isolate secrets and sensitive data
+
+3. **Monitoring and Observability**:
+   - Separate monitoring configurations
+   - Centralize alert definitions
+   - Organize dashboards by environment
+   - Document metrics and logging strategies
+
+### Cloud Infrastructure Project Structure Checklist
+
+- [ ] Infrastructure as Code directory structure
+- [ ] Cloud deployment configuration organization
+- [ ] Environment-specific structure (staging/production)
+- [ ] Multi-cloud structure (if applicable)
+- [ ] Monitoring and observability structure
+- [ ] Security configuration structure
+- [ ] Secrets management structure
+- [ ] Cost management structure
+- [ ] CI/CD workflow organization
+- [ ] Documentation for infrastructure
+
+---
+
+## Review/Contribution
+
+**Expert**: James Wilson  
+**Expertise**: Cloud Infrastructure (Cloud Platform Architecture, Deployment, Operations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this project structure review document by adding comprehensive "Cloud Infrastructure Project Structure Considerations" section covering cloud infrastructure directory structure (Infrastructure as Code organization with Terraform/CloudFormation/Pulumi, cloud deployment configuration with CI/CD workflows and Kubernetes/Docker configs, cloud environment structure with staging/production configurations), multi-cloud project structure (cloud provider abstraction with AWS/Azure/GCP-specific directories, cloud-specific configurations with environment-based configs), cloud monitoring and observability structure (monitoring configuration with dashboards and alerts, observability structure with logging/tracing/metrics), cloud security structure (security configuration with IAM policies and network security, secrets management with templates and gitignore), cloud cost management structure (cost optimization with budgets and reports), recommended cloud infrastructure structure patterns (Infrastructure as Code first with version control and reusable modules, cloud-native organization with provider separation and environment isolation, monitoring and observability with centralized configurations), and comprehensive cloud infrastructure project structure checklist covering IaC structure, deployment configuration, environment structure, multi-cloud support, monitoring, security, secrets management, cost management, CI/CD workflows, and documentation. This addition ensures that project structure patterns incorporate cloud infrastructure best practices, enabling scalable, reliable, and maintainable cloud infrastructure organization with proper separation of concerns, security, and observability.
+
 ---

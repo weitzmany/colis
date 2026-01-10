@@ -1810,6 +1810,241 @@ When creating database scripts, ensure:
 - [ ] **Rollback**: Ability to undo changes when possible
 - [ ] **Observability**: Logging, alerting, performance tracking, error reporting
 
+## DevOps Best Practices for Scripts
+
+### CI/CD Integration with Scripts
+
+1. **Script Execution in CI/CD Pipelines**:
+   - Integrate scripts into CI/CD workflows (GitHub Actions, GitLab CI, Jenkins)
+   - Use scripts for build, test, and deployment steps
+   - Execute scripts in isolated CI/CD environments
+   - Cache script dependencies and outputs
+   - Parallelize script execution where possible
+   - Use script exit codes for CI/CD pipeline control
+   - Document script requirements and dependencies
+
+2. **CI/CD Script Patterns**:
+   - **Build Scripts**: Compile, bundle, and package applications
+   - **Test Scripts**: Run unit, integration, and E2E tests
+   - **Deployment Scripts**: Deploy to staging and production
+   - **Database Migration Scripts**: Run migrations in CI/CD
+   - **Linting Scripts**: Code quality checks in pipelines
+   - **Security Scanning Scripts**: Vulnerability and secret scanning
+   - **Notification Scripts**: Send deployment notifications
+
+3. **CI/CD Script Best Practices**:
+   - Use idempotent scripts (safe to run multiple times)
+   - Implement script retry logic for transient failures
+   - Use environment variables for configuration
+   - Log script execution for debugging
+   - Fail fast on script errors
+   - Use script timeouts to prevent hanging
+   - Document script execution requirements
+
+### Script Automation and Orchestration
+
+1. **Script Orchestration Patterns**:
+   - Use workflow orchestration tools (Airflow, Temporal, Prefect)
+   - Chain scripts together with dependencies
+   - Implement script workflows with error handling
+   - Use script scheduling for periodic tasks
+   - Implement script retry and backoff strategies
+   - Monitor script workflow execution
+   - Document script dependencies and order
+
+2. **Script Automation Tools**:
+   - **Make**: Build automation and script orchestration
+   - **Task**: Task runner for project automation
+   - **Just**: Command runner for project tasks
+   - **Invoke**: Python-based task execution
+   - **Gulp/Grunt**: JavaScript task runners
+   - **Rake**: Ruby task automation
+   - **Bazel**: Build and test automation
+
+3. **Script Scheduling and Cron Jobs**:
+   - Use cron for scheduled script execution
+   - Implement cron job monitoring and alerting
+   - Use systemd timers for modern Linux systems
+   - Schedule scripts with appropriate frequency
+   - Handle script failures in scheduled jobs
+   - Log scheduled script execution
+   - Document cron job schedules and purposes
+
+### Script Monitoring and Observability
+
+1. **Script Execution Monitoring**:
+   - Log script execution start, end, and duration
+   - Track script success and failure rates
+   - Monitor script resource usage (CPU, memory, disk)
+   - Alert on script failures or anomalies
+   - Use structured logging for script events
+   - Integrate script logs with monitoring systems
+   - Generate script execution reports
+
+2. **Script Performance Metrics**:
+   - Track script execution time
+   - Monitor script resource consumption
+   - Measure script throughput and latency
+   - Identify slow scripts and optimize
+   - Set performance budgets for scripts
+   - Track script execution frequency
+   - Monitor script queue depth and wait times
+
+3. **Script Observability Best Practices**:
+   - Use correlation IDs for script execution tracking
+   - Implement distributed tracing for script workflows
+   - Log script inputs and outputs (sanitized)
+   - Track script dependencies and relationships
+   - Monitor script health and availability
+   - Generate script execution dashboards
+   - Alert on script performance degradation
+
+### Script Deployment and Versioning
+
+1. **Script Deployment Strategies**:
+   - Use blue-green deployment for script updates
+   - Implement canary deployments for script changes
+   - Version control all scripts
+   - Use semantic versioning for script versions
+   - Automate script deployment in CI/CD
+   - Test script deployments in staging
+   - Document script deployment procedures
+
+2. **Script Version Management**:
+   - Track script versions in version control
+   - Tag script releases
+   - Maintain script changelogs
+   - Document script version compatibility
+   - Support multiple script versions simultaneously
+   - Automate script version updates
+   - Notify team of script version changes
+
+3. **Script Rollback Procedures**:
+   - Implement script rollback mechanisms
+   - Maintain previous script versions
+   - Test rollback procedures regularly
+   - Document rollback steps
+   - Automate rollback where possible
+   - Monitor rollback success
+   - Learn from rollback incidents
+
+### Script Infrastructure Management
+
+1. **Script Execution Environment**:
+   - Use containers for script execution isolation
+   - Configure resource limits for scripts
+   - Use dedicated execution environments
+   - Implement script environment provisioning
+   - Maintain consistent execution environments
+   - Document script environment requirements
+   - Test scripts in production-like environments
+
+2. **Script Configuration Management**:
+   - Use environment variables for configuration
+   - Separate configuration from script code
+   - Use configuration files (YAML, JSON, TOML)
+   - Implement configuration validation
+   - Version control configuration templates
+   - Use secrets management for sensitive config
+   - Document configuration options
+
+3. **Script Dependency Management**:
+   - Declare script dependencies explicitly
+   - Use dependency management tools
+   - Lock script dependency versions
+   - Document script dependencies
+   - Automate dependency updates
+   - Test dependency updates before deployment
+   - Monitor dependency vulnerabilities
+
+### Script Security Best Practices
+
+1. **Script Security Hardening**:
+   - Validate all script inputs
+   - Sanitize script outputs
+   - Use least-privilege execution
+   - Implement script access controls
+   - Audit script execution
+   - Scan scripts for vulnerabilities
+   - Use secure script execution practices
+
+2. **Script Secrets Management**:
+   - Never hardcode secrets in scripts
+   - Use secrets management services
+   - Rotate secrets regularly
+   - Use environment variables for secrets
+   - Implement secret injection at runtime
+   - Audit secret access
+   - Document secret requirements
+
+3. **Script Security Scanning**:
+   - Scan scripts for security vulnerabilities
+   - Check for hardcoded credentials
+   - Validate script permissions
+   - Review script security regularly
+   - Use security linting tools
+   - Implement security testing for scripts
+   - Document security requirements
+
+### DevOps Tools and Technologies for Scripts
+
+1. **CI/CD Platforms**:
+   - **GitHub Actions**: CI/CD workflows with script execution
+   - **GitLab CI**: Comprehensive CI/CD with script support
+   - **Jenkins**: Self-hosted CI/CD automation
+   - **CircleCI**: Cloud-based CI/CD platform
+   - **Travis CI**: CI/CD with script integration
+
+2. **Script Orchestration Tools**:
+   - **Apache Airflow**: Workflow orchestration platform
+   - **Temporal**: Durable execution engine
+   - **Prefect**: Modern workflow orchestration
+   - **Luigi**: Python workflow management
+   - **Make**: Build automation tool
+
+3. **Monitoring and Observability Tools**:
+   - **CloudWatch**: AWS monitoring and logging
+   - **Datadog**: Comprehensive monitoring platform
+   - **Prometheus + Grafana**: Metrics and dashboards
+   - **ELK Stack**: Log analysis and visualization
+   - **Splunk**: Log analysis and monitoring
+
+4. **Script Execution Environments**:
+   - **Docker**: Containerization for script isolation
+   - **Kubernetes**: Container orchestration
+   - **AWS Lambda**: Serverless script execution
+   - **Azure Functions**: Serverless compute
+   - **Google Cloud Functions**: Serverless execution
+
+### DevOps Workflow Best Practices for Scripts
+
+1. **Script Development Workflow**:
+   - Develop scripts in version control
+   - Test scripts locally before committing
+   - Use code review for script changes
+   - Automate script testing in CI/CD
+   - Document script purpose and usage
+   - Maintain script changelogs
+   - Version script releases
+
+2. **Script Maintenance Workflow**:
+   - Regularly review and update scripts
+   - Monitor script execution and performance
+   - Optimize slow or resource-intensive scripts
+   - Remove obsolete scripts
+   - Document script maintenance procedures
+   - Track script usage and effectiveness
+   - Iterate on script improvements
+
+3. **Script Collaboration Workflow**:
+   - Share scripts across teams and projects
+   - Maintain script library or repository
+   - Document script usage and examples
+   - Provide script templates and examples
+   - Review scripts for best practices
+   - Standardize script patterns and conventions
+   - Foster script knowledge sharing
+
 ---
 
 ## Review/Contribution
@@ -1833,5 +2068,10 @@ When creating database scripts, ensure:
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "Database-Specific Script Execution Considerations" section covering database connection management in scripts (connection pooling patterns with persistent connection management and connection pool configuration, connection lifecycle management with initialization and cleanup, connection retry logic with exponential backoff and transient failure handling), transaction management patterns (explicit transaction control with BEGIN/COMMIT/ROLLBACK, nested transaction support with savepoints, long-running transaction management with timeout handling and lock timeout management), database performance monitoring in scripts (query performance tracking with slow query detection and query plan analysis, database resource monitoring with connection pool monitoring and database lock monitoring), database script error recovery patterns (automatic error recovery with transient error handling and deadlock detection and recovery), database script security enhancements (credential rotation support with dynamic credential loading, query result sanitization with sensitive data filtering and data masking), and enhanced database script checklist covering connection management with retry logic, transaction management with timeout handling, security with credential rotation, error handling with transient error recovery and deadlock handling, performance with slow query detection, monitoring with connection pool and lock monitoring, and observability with logging and alerting. This addition provides production-ready database script patterns for connection management, transaction handling, performance monitoring, error recovery, and security, ensuring database scripts are robust, performant, and secure in production environments.
+
+**Expert**: Devin Patel  
+**Expertise**: DevOps, CI/CD, and Deployment  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this scripts review document by adding a comprehensive "DevOps Best Practices for Scripts" section covering CI/CD integration with scripts (script execution in CI/CD pipelines with GitHub Actions/GitLab CI/Jenkins integration, CI/CD script patterns for build/test/deployment/migration/linting/security/notification, CI/CD script best practices with idempotency and retry logic), script automation and orchestration (script orchestration patterns with workflow tools, script automation tools like Make/Task/Just/Invoke, script scheduling and cron jobs with monitoring), script monitoring and observability (script execution monitoring with logging and alerting, script performance metrics with execution time and resource tracking, script observability best practices with correlation IDs and distributed tracing), script deployment and versioning (script deployment strategies with blue-green and canary deployments, script version management with semantic versioning, script rollback procedures), script infrastructure management (script execution environment with containers and resource limits, script configuration management with environment variables and secrets, script dependency management with version locking), script security best practices (script security hardening with input validation, script secrets management with rotation, script security scanning), DevOps tools and technologies (CI/CD platforms, script orchestration tools, monitoring and observability tools, script execution environments), and DevOps workflow best practices (script development workflow, script maintenance workflow, script collaboration workflow). This enhancement provides essential DevOps perspective on scripts, ensuring that scripts are integrated with CI/CD pipelines, automated, monitored, deployed, and managed using DevOps best practices.
 
 ---

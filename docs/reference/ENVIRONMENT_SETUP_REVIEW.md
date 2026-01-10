@@ -2,7 +2,7 @@
 
 This document lists useful environment setup patterns found in other projects.
 
-**Last Updated**: 2025-01-05
+**Last Updated**: 2026-01-05
 
 ## Environment Setup Patterns Found
 
@@ -257,6 +257,219 @@ This document lists useful environment setup patterns found in other projects.
    - Track dependency size growth
    - Alert on performance regressions
 
+## DevOps Best Practices for Environment Setup
+
+### Infrastructure as Code (IaC) for Environments
+
+1. **Environment Provisioning**:
+   - Use Terraform, CloudFormation, or Pulumi for infrastructure definition
+   - Version control all infrastructure configurations
+   - Define environments as code (dev, staging, prod)
+   - Use modules/templates for consistent environment creation
+   - Automate environment provisioning and teardown
+   - Implement infrastructure testing and validation
+   - Use state management for infrastructure tracking
+
+2. **Container Orchestration**:
+   - Use Kubernetes for production container orchestration
+   - Implement Helm charts for application deployment
+   - Configure namespace isolation per environment
+   - Use ConfigMaps and Secrets for environment configuration
+   - Implement resource quotas and limits per environment
+   - Use service mesh (Istio, Linkerd) for service communication
+   - Configure ingress controllers for external access
+
+3. **Multi-Environment Management**:
+   - Maintain environment parity (dev/staging/prod similarity)
+   - Use environment-specific configuration files
+   - Implement environment promotion workflows
+   - Automate environment synchronization where possible
+   - Use feature flags for environment-specific features
+   - Maintain separate infrastructure per environment
+   - Document environment differences and rationale
+
+### CI/CD Integration with Environment Setup
+
+1. **Automated Environment Provisioning**:
+   - Provision environments as part of CI/CD pipeline
+   - Use infrastructure pipelines for environment creation
+   - Automate environment setup in deployment workflows
+   - Implement environment validation in CI/CD
+   - Use environment-specific deployment configurations
+   - Automate environment cleanup and resource management
+   - Integrate environment provisioning with testing pipelines
+
+2. **Environment-Specific Deployment Strategies**:
+   - Use blue-green deployments for zero-downtime updates
+   - Implement canary deployments for gradual rollouts
+   - Configure rolling updates for containerized services
+   - Use feature flags for environment-specific feature toggles
+   - Implement automated rollback mechanisms
+   - Configure health checks and deployment verification
+   - Monitor deployment success rates per environment
+
+3. **Environment Promotion Workflows**:
+   - Automate promotion from dev → staging → production
+   - Implement approval gates for production deployments
+   - Use deployment pipelines with environment gates
+   - Automate database migrations per environment
+   - Configure environment-specific secrets and credentials
+   - Implement deployment verification and smoke tests
+   - Track deployment history and changes per environment
+
+### Secrets Management Across Environments
+
+1. **Secrets Management Best Practices**:
+   - Use AWS Secrets Manager, HashiCorp Vault, or Azure Key Vault
+   - Never commit secrets to version control
+   - Use different secrets per environment
+   - Rotate secrets regularly (automated rotation)
+   - Implement least-privilege access to secrets
+   - Use secret injection at runtime (not build time)
+   - Audit secret access and usage
+
+2. **Environment Variable Management**:
+   - Use .env files for local development only
+   - Use secrets management services for remote environments
+   - Implement environment variable validation
+   - Document required environment variables
+   - Use .env.example templates (without secrets)
+   - Automate environment variable injection in CI/CD
+   - Monitor for exposed secrets in logs and code
+
+3. **Configuration Management**:
+   - Separate configuration from code
+   - Use configuration management tools (Ansible, Chef, Puppet)
+   - Implement configuration versioning
+   - Use configuration templates for consistency
+   - Automate configuration deployment
+   - Validate configurations before deployment
+   - Document configuration changes and rationale
+
+### Monitoring and Observability for Environments
+
+1. **Environment Monitoring**:
+   - Set up monitoring for each environment (dev/staging/prod)
+   - Use CloudWatch, Datadog, or Prometheus for metrics
+   - Implement log aggregation (CloudWatch Logs, ELK Stack)
+   - Configure alerting for environment health
+   - Monitor resource usage per environment
+   - Track deployment frequency and success rates
+   - Implement distributed tracing across environments
+
+2. **Environment Health Checks**:
+   - Configure health check endpoints for all services
+   - Implement readiness and liveness probes
+   - Use automated health check validation in CI/CD
+   - Monitor service dependencies and connectivity
+   - Track environment availability and uptime
+   - Implement automated recovery mechanisms
+   - Document health check procedures and thresholds
+
+3. **Observability Best Practices**:
+   - Implement structured logging across environments
+   - Use correlation IDs for request tracing
+   - Configure metrics collection and dashboards
+   - Implement alerting for critical issues
+   - Use APM tools for application performance monitoring
+   - Monitor infrastructure metrics (CPU, memory, disk, network)
+   - Track business metrics and KPIs per environment
+
+### Disaster Recovery and Backup Strategies
+
+1. **Backup Strategies**:
+   - Automate database backups per environment
+   - Implement point-in-time recovery capabilities
+   - Store backups in separate regions/accounts
+   - Test backup restoration procedures regularly
+   - Document backup retention policies
+   - Monitor backup success and failures
+   - Implement backup encryption and security
+
+2. **Disaster Recovery Planning**:
+   - Document disaster recovery procedures per environment
+   - Implement automated failover mechanisms
+   - Use multi-region deployments for high availability
+   - Test disaster recovery procedures regularly
+   - Maintain runbooks for common failure scenarios
+   - Configure automated recovery workflows
+   - Document RTO (Recovery Time Objective) and RPO (Recovery Point Objective)
+
+3. **Environment Resilience**:
+   - Implement circuit breakers for service resilience
+   - Use retry mechanisms with exponential backoff
+   - Configure timeout and connection pooling
+   - Implement graceful degradation strategies
+   - Use load balancing and auto-scaling
+   - Monitor and alert on failure rates
+   - Document resilience patterns and practices
+
+### DevOps Tools and Technologies for Environment Setup
+
+1. **Container Technologies**:
+   - **Docker**: Containerization for consistent environments
+   - **Docker Compose**: Local development environment orchestration
+   - **Kubernetes**: Production container orchestration
+   - **Helm**: Kubernetes package management
+   - **Docker Swarm**: Alternative container orchestration
+
+2. **Infrastructure as Code Tools**:
+   - **Terraform**: Multi-cloud infrastructure provisioning
+   - **CloudFormation**: AWS-native infrastructure as code
+   - **Pulumi**: Infrastructure as code with programming languages
+   - **Ansible**: Configuration management and automation
+   - **Chef/Puppet**: Configuration management tools
+
+3. **CI/CD Platforms**:
+   - **GitHub Actions**: CI/CD workflows integrated with GitHub
+   - **GitLab CI**: Comprehensive DevOps platform
+   - **Jenkins**: Self-hosted CI/CD automation
+   - **CircleCI**: Cloud-based CI/CD platform
+   - **AWS CodePipeline**: AWS-native CI/CD service
+
+4. **Secrets Management**:
+   - **AWS Secrets Manager**: AWS-native secrets management
+   - **HashiCorp Vault**: Secrets and encryption management
+   - **Azure Key Vault**: Azure secrets management
+   - **Google Secret Manager**: GCP secrets management
+   - **Kubernetes Secrets**: Native Kubernetes secrets (with encryption)
+
+5. **Monitoring and Observability**:
+   - **CloudWatch**: AWS monitoring and logging
+   - **Datadog**: Comprehensive monitoring platform
+   - **Prometheus + Grafana**: Open-source monitoring stack
+   - **ELK Stack**: Elasticsearch, Logstash, Kibana for log analysis
+   - **New Relic**: Application performance monitoring
+
+### DevOps Workflow Best Practices
+
+1. **Environment Setup Automation**:
+   - Automate all environment setup procedures
+   - Use scripts and IaC for reproducible environments
+   - Document manual steps that cannot be automated
+   - Implement environment setup validation
+   - Use environment setup in CI/CD pipelines
+   - Automate environment cleanup and teardown
+   - Track environment setup time and success rates
+
+2. **Environment Consistency**:
+   - Maintain consistency across environments
+   - Use same tools and versions across environments
+   - Implement environment parity checks
+   - Automate environment synchronization
+   - Document environment differences
+   - Use configuration management for consistency
+   - Validate environment consistency in CI/CD
+
+3. **Developer Experience**:
+   - Provide one-command environment setup
+   - Use Docker Compose for local development
+   - Document setup procedures clearly
+   - Provide troubleshooting guides
+   - Automate common developer tasks
+   - Use development environment templates
+   - Implement fast local development workflows
+
 ## Notes
 
 - Docker setup patterns are highly reusable
@@ -280,5 +493,10 @@ This document lists useful environment setup patterns found in other projects.
 **Expertise**: Performance Optimization  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this environment setup review document by adding a comprehensive "Performance Optimization for Environment Setup" section that covers development environment performance (fast startup times, resource efficiency, build performance), local development optimization (hot module replacement, database performance, network and API performance), build and compilation performance (compilation speed, asset optimization, dependency management), environment-specific performance tuning (development mode optimizations, staging environment performance, production environment performance), and performance monitoring in development (development metrics, performance profiling, performance budgets). This enhancement provides practical guidance for optimizing development environments to improve developer productivity and reduce iteration time.
+
+**Expert**: Devin Patel  
+**Expertise**: DevOps, CI/CD, and Deployment  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this environment setup review document by adding a comprehensive "DevOps Best Practices for Environment Setup" section covering Infrastructure as Code (IaC) for environments (environment provisioning with Terraform/CloudFormation, container orchestration with Kubernetes, multi-environment management with environment parity and promotion workflows), CI/CD integration with environment setup (automated environment provisioning in pipelines, environment-specific deployment strategies with blue-green/canary/rolling deployments, environment promotion workflows with approval gates), secrets management across environments (secrets management best practices with AWS Secrets Manager/Vault, environment variable management with validation and injection, configuration management with versioning and templates), monitoring and observability for environments (environment monitoring with CloudWatch/Datadog, environment health checks with readiness/liveness probes, observability best practices with structured logging and tracing), disaster recovery and backup strategies (backup strategies with automated backups and point-in-time recovery, disaster recovery planning with multi-region deployments, environment resilience with circuit breakers and graceful degradation), DevOps tools and technologies (container technologies, Infrastructure as Code tools, CI/CD platforms, secrets management, monitoring and observability), and DevOps workflow best practices (environment setup automation, environment consistency, developer experience). This enhancement provides essential DevOps perspective on environment setup, ensuring that environments are provisioned, managed, and monitored using DevOps best practices, automation, and infrastructure as code principles.
 
 ---

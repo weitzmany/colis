@@ -6,17 +6,30 @@ Expert-driven file review and creation workflow. Randomly selects or creates exp
 
 **EXPERTS MUST ACTUALLY IMPROVE FILES, NOT JUST DESCRIBE WHAT SHOULD BE CHANGED.**
 
+### Core Principle: DO, DON'T SUGGEST
+
+**When you are told to review, this means CHANGE THE FILE where the expert thinks it needs changes. Add things the expert thinks are worth adding. DO NOT suggest what to do - DO IT.**
+
 - ❌ **FORBIDDEN**: Adding only a review contribution section that describes what "should be added" or "should be fixed"
 - ❌ **FORBIDDEN**: Describing changes without actually making them
+- ❌ **FORBIDDEN**: Suggesting experts - CREATE them
+- ❌ **FORBIDDEN**: Giving suggestions without implementations
+- ❌ **FORBIDDEN**: Assuming someone will read and perform - assume the next step is BUILDING something with those files
 - ✅ **REQUIRED**: Actually making changes to improve the file:
   - **Adding**: New sections, expanding existing content, including examples, code snippets, best practices, procedures, tools, methodologies, or detailed explanations
   - **Fixing**: Correcting errors, fixing mistakes, improving accuracy
   - **Deleting**: Removing wrong, outdated, or incorrect content
   - **Improving**: Enhancing clarity, structure, organization, or quality
+- ✅ **REQUIRED**: Create experts when needed - don't suggest them, create them
+- ✅ **REQUIRED**: Create files when needed - don't suggest them, create them
+- ✅ **REQUIRED**: Move files when needed - don't suggest moving, actually move them
+- ✅ **REQUIRED**: Do whatever is needed to make everything better - don't just suggest improvements
 - ✅ **REQUIRED**: The file must be visibly changed before any review contribution section is added
 - ✅ **REQUIRED**: The review contribution section should describe what was ACTUALLY CHANGED in the file (added, fixed, deleted, improved), not what should be changed
 
 **This is a critical requirement. Experts should actively improve files by adding, fixing, deleting, or improving content as needed. Failure to make actual changes defeats the purpose of the review workflow.**
+
+**Remember: Always assume the next step is BUILDING something with these files. Make them ready for implementation, not just planning.**
 
 ## Usage
 
@@ -309,16 +322,37 @@ Execute this command to run the expert review workflow:
    - **Standard Review** (always performed):
      - Ask the expert to review the selected file
      - **⚠️ CRITICAL REQUIREMENT**: Expert must ACTUALLY IMPROVE the file, not just describe what should be changed
+     - **⚠️ DO, DON'T SUGGEST**: When reviewing, CHANGE THE FILE where the expert thinks it needs changes. Add things the expert thinks are worth adding. DO NOT suggest what to do - DO IT.
      - **⚠️ THE FILE MUST BE VISIBLY CHANGED**: The file must be improved before any review contribution section is added
      - **⚠️ FORBIDDEN**: Do NOT add only a review contribution section that describes what "should be added" or "should be fixed" - this is not acceptable
      - **⚠️ FORBIDDEN**: Do NOT describe changes without actually making them to the file
+     - **⚠️ FORBIDDEN**: Do NOT suggest experts - CREATE them if needed
+     - **⚠️ FORBIDDEN**: Do NOT give suggestions without implementations - implement them
+     - **⚠️ FORBIDDEN**: Do NOT assume someone will read and perform - assume the next step is BUILDING something with those files
+     - **⚠️ REQUIRED**: Create experts when needed - don't suggest them, create them
+     - **⚠️ REQUIRED**: Create files when needed - don't suggest them, create them
+     - **⚠️ REQUIRED**: Move files when needed - don't suggest moving, actually move them
+     - **⚠️ REQUIRED**: Do whatever is needed to make everything better - don't just suggest improvements
      - Expert MUST improve the file according to their professional opinion by:
        - **Adding**: New sections with actual content, expanding existing sections, including examples, code snippets, best practices, procedures, tools, methodologies, or detailed explanations (actual content, not descriptions)
        - **Fixing**: Correcting errors, fixing mistakes, improving accuracy, correcting typos, fixing broken links, correcting factual errors
        - **Deleting**: Removing wrong, outdated, incorrect, or redundant content
        - **Improving**: Enhancing clarity, improving structure, better organization, improving formatting, refining language
-     - **⚠️ VERIFICATION**: Before adding the review contribution section, verify that the file has been visibly changed (added, fixed, deleted, or improved)
+     - **⚠️ VERIFICATION STEP 1**: Before adding the review contribution section, verify that the file has been visibly changed (added, fixed, deleted, or improved)
+     - **⚠️ VERIFICATION STEP 2**: After expert adds review contribution section, compare all suggestions/descriptions in the review contribution to the actual file content:
+       - Read the review contribution section carefully
+       - Extract all suggestions, additions, fixes, or improvements mentioned
+       - Check if each suggestion is actually implemented in the file content
+       - If a suggestion is mentioned but NOT implemented in the file:
+         - **IMPLEMENT IT**: Actually add/fix/improve the file to match the suggestion
+         - Do not leave suggestions unimplemented
+       - If all suggestions are reflected in the file:
+         - Mark file as "Ready" in tracker (if applicable)
+       - If suggestions are only partially implemented:
+         - Implement remaining suggestions
+         - Mark file as "Probably Ready" in tracker
      - The review contribution section should describe what was ACTUALLY CHANGED in the file (added, fixed, deleted, improved), not what should be changed
+     - **⚠️ CRITICAL**: Every suggestion in the review contribution MUST be reflected in the actual file content. If it's not, implement it immediately.
      - If expert has no professional connection to the content:
        - Expert should directly admit they have nothing to contribute
        - Still add a brief note at the end
@@ -330,14 +364,36 @@ Execute this command to run the expert review workflow:
        - Expert's name
        - Expertise
        - Date
+     - **⚠️ POST-REVIEW VERIFICATION**: After expert adds review contribution section, verify all suggestions are implemented:
+       - Read the review contribution section carefully
+       - Extract all suggestions, additions, fixes, or improvements mentioned in the "Changes" field
+       - Check if each suggestion is actually implemented in the file content:
+         - If suggestion mentions "added section X" → verify section X exists in file
+         - If suggestion mentions "fixed Y" → verify Y is actually fixed in file
+         - If suggestion mentions "improved Z" → verify Z is actually improved in file
+         - If suggestion mentions "deleted W" → verify W is actually deleted from file
+       - **If suggestion is mentioned but NOT implemented**:
+         - **IMPLEMENT IT IMMEDIATELY**: Actually add/fix/improve/delete in the file to match the suggestion
+         - Do not leave suggestions unimplemented
+         - Update the file content to reflect all suggestions
+       - **If all suggestions are reflected in the file**:
+         - Mark file as "✅ Ready" in tracker (if file has 2+ reviews)
+       - **If suggestions are only partially implemented**:
+         - Implement remaining suggestions
+         - Mark file as "⚠️ Probably Ready" in tracker
      - **Mark File as Reviewed**: Add the current file path to the reviewed files set
-     - **Update Expert Reviews Tracker**: After review, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
+     - **Update Expert Reviews Tracker**: After review and verification, update `docs/reference/EXPERT_REVIEWS_TRACKER.md`:
        - Increment "Files Reviewed" count for the expert
        - Increment "Total Changes" count
        - Update "Last Review Date"
        - Add entry to "Review Details" section with file path and date
        - If expert reviewed documentation structure (Documentation Expert, Architecture Expert, etc.): Increment "Structure Reviewed" count
        - If expert rearranged files: Increment "Files Rearranged" count
+       - **Update "Ready for Implementation" status** in Files Reviewed Statistics table:
+         - If file has 2+ reviews AND all suggestions from all reviews are verified as implemented: Mark as "✅ Ready"
+         - If file has 2+ reviews but suggestions not yet verified: Mark as "⚠️ Probably Ready"
+         - If file has 1 review: Mark as "⚠️ Needs Review"
+         - If file has 0 reviews: Mark as "❌ Not Ready"
        - Update statistics summary
      - **Update Statistics and Sort**: After updating tracker:
        - Update files reviewed statistics table (increment review count for the file)

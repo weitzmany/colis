@@ -18,6 +18,7 @@ import {
   PortFilters,
   ValidationResult,
   ConfigurationResult,
+  ConflictReport,
 } from './types';
 
 export class PortManager {
@@ -126,20 +127,92 @@ export class PortManager {
 
   /**
    * Configure project with port assignment
+   * 
+   * Updates project configuration files with the assigned port.
+   * Can be called with either projectName/appType or projectPath.
+   * 
+   * @param projectNameOrPath - Project name (if using registry) or project path (if configuring directly)
+   * @param appTypeOrPort - App type (if using registry) or port number (if configuring directly)
+   * @param portOrAppType - Port number (if using registry) or app type (if configuring directly)
+   * @param autoConfigureOrUndefined - Auto-configure flag (if using registry) or undefined (if configuring directly)
    */
   async configure(
-    projectName: string,
-    appType: AppType,
-    port: number,
-    autoConfigure: boolean = true
+    projectNameOrPath: string,
+    appTypeOrPort: AppType | number,
+    portOrAppType?: number | AppType,
+    autoConfigureOrUndefined?: boolean
   ): Promise<ConfigurationResult> {
-    const assignment = await this.repository.getPort(projectName, appType);
-    if (!assignment) {
-      throw new Error(`Port assignment not found for ${projectName} (${appType})`);
+    // Overload 1: configure(projectName, appType, port, autoConfigure?)
+    if (typeof appTypeOrPort === 'string' && typeof portOrAppType === 'number') {
+      const projectName = projectNameOrPath;
+      const appType = appTypeOrPort as AppType;
+      const port = portOrAppType;
+      const autoConfigure = autoConfigureOrUndefined !== false;
+
+      const assignment = await this.repository.getPort(projectName, appType);
+      if (!assignment) {
+        throw new Error(`Port assignment not found for ${projectName} (${appType})`);
+      }
+
+      const configurator = new ConfigurationManager(assignment.projectPath);
+      return configurator.configure(projectName, appType, port, autoConfigure);
     }
 
-    const configurator = new ConfigurationManager(assignment.projectPath);
-    return configurator.configure(projectName, appType, port, autoConfigure);
+    // Overload 2: configure(projectPath, port, appType) - matches PRD API example
+    if (typeof appTypeOrPort === 'number' && typeof portOrAppType === 'string') {
+      const projectPath = projectNameOrPath;
+      const port = appTypeOrPort;
+      const appType = portOrAppType as AppType;
+
+      // Try to find assignment by project path
+      const assignments = await this.repository.listPorts({});
+      const assignment = assignments.find(
+        (a) => a.projectPath === projectPath && a.appType === appType && a.port === port
+      );
+
+      if (!assignment) {
+        throw new Error(
+          `Port assignment not found for path "${projectPath}" with port ${port} (${appType}). ` +
+          `Use allocate() first or provide projectName/appType.`
+        );
+      }
+
+      const configurator = new ConfigurationManager(projectPath);
+      return configurator.configure(assignment.projectName, appType, port, true);
+    }
+
+    throw new Error('Invalid configure() arguments. Use configure(projectName, appType, port) or configure(projectPath, port, appType)');
+  }
+
+  /**
+   * Detect conflicts for a project path
+   * 
+   * This method scans a project directory and detects all port conflicts,
+   * including registry conflicts, system port usage, and configuration mismatches.
+   * 
+   * @param projectPath - Path to the project directory
+   * @returns Array of conflict reports
+   */
+  async detectConflicts(projectPath: string): Promise<ConflictReport[]> {
+    // Find all port assignments for this project path
+    const assignments = await this.repository.listPorts({});
+    const projectAssignments = assignments.filter(
+      (a) => a.projectPath === projectPath
+    );
+
+    const allConflicts: ConflictReport[] = [];
+
+    for (const assignment of projectAssignments) {
+      const validation = await this.detector.validate(
+        assignment.projectName,
+        assignment.projectPath,
+        assignment.appType,
+        assignment.port
+      );
+      allConflicts.push(...validation.conflicts);
+    }
+
+    return allConflicts;
   }
 
   /**
@@ -158,6 +231,46 @@ export class PortManager {
       return this.detector.validate(assignment.projectName, assignment.projectPath, assignment.appType, assignment.port);
     }
     return this.detector.validateAll();
+  }
+
+  /**
+   * Reserve a port for special purposes
+   * 
+   * Reserves a port in the registry to prevent it from being allocated
+   * to other projects. Useful for reserving ports for future projects,
+   * service ports (databases, Redis), or testing environments.
+   * 
+   * @param port - Port number to reserve
+   * @param purpose - Purpose for the reservation (e.g., "Future project", "MySQL service")
+   * @param notes - Optional additional notes about the reservation
+   */
+  async reservePort(port: number, purpose: string, notes?: string): Promise<void> {
+    // Check if port is already assigned to an active project
+    const existing = await this.repository.getByPort(port);
+    if (existing && existing.status === 'active') {
+      throw new Error(
+        `Port ${port} is already assigned to project "${existing.projectName}" (${existing.appType}). ` +
+        `Release it first before reserving.`
+      );
+    }
+
+    // Check if port is in use on the system
+    const inUse = await this.detector.checkPortInUse(port);
+    if (inUse) {
+      throw new Error(
+        `Port ${port} is currently in use by another process. ` +
+        `Stop the process before reserving this port.`
+      );
+    }
+
+    const notesText = notes ? `${purpose}. ${notes}` : purpose;
+    await this.repository.reservePort(port, notesText);
+    
+    // Add history entry
+    const reserved = await this.repository.getByPort(port);
+    if (reserved) {
+      await this.repository.addHistory(reserved.id, 'reserved', undefined, `Reserved: ${notesText}`);
+    }
   }
 
   /**

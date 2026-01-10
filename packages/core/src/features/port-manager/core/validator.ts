@@ -71,7 +71,7 @@ export class ConflictDetector {
   /**
    * Check if port is in use on the system
    */
-  private async checkPortInUse(port: number): Promise<boolean> {
+  async checkPortInUse(port: number): Promise<boolean> {
     return new Promise((resolve) => {
       const server = net.createServer();
       server.listen(port, () => {

@@ -11,7 +11,7 @@
  * These serve as inspiration for generating harmonious palettes
  * All new project colors are generated from this palette
  */
-const BASE_PALETTE = {
+export const BASE_PALETTE = {
   lightGray: '#DBDCE0',    // Light gray/blue
   lightBlue: '#8AB4F9',    // Light blue
   coral: '#F38B82',        // Coral/salmon
@@ -21,7 +21,7 @@ const BASE_PALETTE = {
   purple: '#C58AFA',       // Purple
   cyan: '#78D9ED',         // Cyan
   orange: '#FCAD70',       // Orange/peach
-};
+} as const;
 
 /**
  * Generate a hash from a string (consistent across runs)

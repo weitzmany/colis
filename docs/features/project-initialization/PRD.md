@@ -59,9 +59,10 @@ Project Initialization solves these problems with a single command that:
 1. **Automatically Copies Rules**: Copies all expert personas and user rules to `.cursor/rules/`
 2. **Automatically Copies Commands**: Copies general commands (excludes local commands for packages repo)
 3. **Initializes Port Manager**: Automatically initializes Port Manager (mandatory)
-4. **Validates Setup**: Verifies all files were copied correctly
-5. **Single Command**: One command (`npx @your-org/core init`) does everything
-6. **Smart Filtering**: Automatically excludes "local" commands/rules meant only for the packages repo
+4. **Configures IDE Colors**: Sets up unique project colors with branch-based themes (automatic)
+5. **Validates Setup**: Verifies all files were copied correctly
+6. **Single Command**: One command (`npx @your-org/core init`) does everything
+7. **Smart Filtering**: Automatically excludes "local" commands/rules meant only for the packages repo
 
 ## Goals
 
@@ -70,8 +71,9 @@ Project Initialization solves these problems with a single command that:
 1. **Automate Project Setup**: Eliminate manual copying of rules and commands
 2. **Ensure Consistency**: All projects have the same rules and commands
 3. **Mandatory Port Manager**: Ensure Port Manager is initialized in all projects
-4. **Single Command Setup**: One command initializes everything
-5. **Error Prevention**: Prevent setup errors through automation
+4. **Visual Project Distinction**: Provide unique IDE colors per project with branch-based themes
+5. **Single Command Setup**: One command initializes everything
+6. **Error Prevention**: Prevent setup errors through automation
 
 ### Success Metrics
 
@@ -80,6 +82,7 @@ Project Initialization solves these problems with a single command that:
 - **Setup Time**: Project setup time reduced from 5-10 minutes to < 30 seconds (target: 95% reduction)
 - **Setup Success Rate**: 100% of projects successfully initialized (target: 100%)
 - **Port Manager Adoption**: 100% of projects have Port Manager initialized (target: 100%)
+- **IDE Color Adoption**: 100% of projects have IDE colors configured (target: 100%)
 - **Consistency Rate**: 100% of projects have identical rules/commands (target: 100%)
 - **Error Rate**: Zero setup errors (target: 0%)
 
@@ -140,6 +143,18 @@ Project Initialization solves these problems with a single command that:
 - Project files are automatically configured with port
 - No separate Port Manager init command needed
 
+### Story 4: IDE Color Configuration
+**As a** developer  
+**I want** unique IDE colors for each project that change based on branch  
+**So that** I can visually distinguish projects and know which branch I'm on
+
+**Acceptance Criteria**:
+- Each project gets a unique KEY_COLOR generated automatically
+- Colors change automatically when switching git branches
+- Main branch shows RED, dev branch shows ORANGE, feature branches show project color
+- Colors are configured automatically during initialization
+- Settings file is ignored by git to prevent conflicts
+
 ## Core Features
 
 ### Feature 1: Automatic Rules Copying
@@ -198,7 +213,86 @@ Project Initialization solves these problems with a single command that:
 - `--skip-port-manager`: Skip Port Manager initialization (not recommended, but available for edge cases)
 - Default: Port Manager is always initialized
 
-### Feature 4: Setup Validation
+### Feature 4: IDE Color Manager
+
+**Description**: Automatically configures unique IDE colors for each project with branch-based color themes. Generates a unique KEY_COLOR for each project and creates a git hook that updates IDE colors based on the current git branch.
+
+**What Gets Configured**:
+- **Unique Project KEY_COLOR**: Generated from project name using curated color palette
+- **Post-Checkout Git Hook**: `.githooks/post-checkout` hook that updates colors on branch switch
+- **VS Code Settings**: `.vscode/settings.json` with branch-specific color scheme
+- **Git Configuration**: Git hooks path set to `.githooks`, `settings.json` added to `.gitignore`
+
+**Color Scheme by Branch**:
+- **Main/Master Branch**: 🔴 RED (`#ed3535`) - Production/main branch indicator
+- **Development/Dev Branch**: 🟠 ORANGE (`#FF8C00`) - Development branch indicator
+- **Other Branches**: 🎨 Project KEY_COLOR - Unique color per project for feature branches
+
+**Color Generation Algorithm**:
+1. **Project Name Hash**: Uses DJB2 hash algorithm for deterministic color generation
+2. **Base Palette Selection**: Selects from curated 70's inspired color palette (9 colors)
+3. **Hue Adjustment**: Applies -30 to +30 degree hue shift for uniqueness
+4. **Saturation Adjustment**: Adjusts saturation by -15% to +15% for variation
+5. **Uniqueness Check**: Ensures minimum color distance (30 units) from other project colors
+
+**Base Color Palette**:
+- Light Gray (`#DBDCE0`), Light Blue (`#8AB4F9`), Coral (`#F38B82`)
+- Yellow (`#FDD664`), Green (`#80CA95`), Pink (`#FF8BCC`)
+- Purple (`#C58AFA`), Cyan (`#78D9ED`), Orange (`#FCAD70`)
+
+**Generated Color Palette**:
+Each project gets a complete color palette derived from KEY_COLOR:
+- `keyColor`: Unique project color
+- `mainColor`: Dark text color for main branch (`#0b0b0b`)
+- `mainBg`: Red background for main branch (`#ed3535`)
+- `mainInactive`: Inactive state for main branch (`#ec7272cc`)
+- `devColor`: Dark text color for dev branch (`#0b0b0b`)
+- `devBg`: Orange background for dev branch (`#FF8C00`)
+- `devInactive`: Inactive state for dev branch (`#FFA500cc`)
+- `projectColor`: Darkened KEY_COLOR for text (70% darker)
+- `projectBg`: KEY_COLOR for project branches
+- `projectInactive`: KEY_COLOR with transparency (`cc` alpha)
+- `border`: Lightened KEY_COLOR (15% lighter)
+- `darkerBg`: Darkened KEY_COLOR (85% darker)
+- `darkBg`: Darkened KEY_COLOR (90% darker)
+- `activeColor`: White for contrast (`#ffffff`)
+
+**IDE UI Elements Styled**:
+- Title bar (active/inactive) - Uses branch color
+- Status bar - Uses branch color
+- Activity bar - Dark background with branch color accent
+- Sidebar - Dark background with branch color border
+- Editor borders - Branch color border
+- Panel borders - Branch color border
+- Focus border - Branch color
+- Active tab border - Branch color
+- Tab text - White for contrast
+
+**Implementation**:
+- Generate KEY_COLOR using `generateKeyColor(projectName)` function
+- Generate complete color palette using `generateColorPalette(projectName, keyColor)` function
+- Create `.githooks/post-checkout` hook with color variables
+- Configure git hooks path: `git config core.hooksPath .githooks`
+- Ensure `.vscode/settings.json` is in `.gitignore`
+- Remove `settings.json` from git tracking if previously tracked
+- Initialize `settings.json` with current branch colors
+- Hook runs automatically on `git checkout` to update colors
+
+**Options**:
+- `--skip-colors`: Skip IDE color setup (default: colors are set up)
+- Default: IDE colors are always configured during initialization
+
+**Important Notes**:
+- **Colors are only assigned during initialization** - Existing projects keep their current colors
+- Colors update automatically when switching git branches via post-checkout hook
+- Settings file is ignored by git to prevent conflicts
+- Each project gets a unique color to visually distinguish projects
+
+**See Also**:
+- [IDE Colors Usage Guide](../../guides/IDE_COLORS_USAGE.md) - User guide for IDE colors
+- [IDE Colors Reference](../../reference/IDE_COLORS_REFERENCE.md) - Complete color reference
+
+### Feature 5: Setup Validation
 
 **Description**: Validates that all files were copied correctly and Port Manager is initialized.
 
@@ -209,6 +303,10 @@ Project Initialization solves these problems with a single command that:
 - No local commands were copied
 - Port Manager is initialized and working
 - Port is allocated and configured
+- IDE color hook (`.githooks/post-checkout`) exists and is executable
+- Git hooks path is configured correctly
+- `.vscode/settings.json` is in `.gitignore`
+- Color settings are initialized in `settings.json`
 
 **Error Handling**:
 - Report missing files
@@ -216,7 +314,7 @@ Project Initialization solves these problems with a single command that:
 - Report Port Manager initialization failures
 - Provide clear error messages with solutions
 
-### Feature 5: Conflict Resolution
+### Feature 6: Conflict Resolution
 
 **Description**: Handles conflicts when files already exist in the project.
 
@@ -246,6 +344,7 @@ npx @your-org/core init [options]
 - `--skip-existing`: Skip existing files (default)
 - `--interactive`: Ask user for each conflict
 - `--skip-port-manager`: Skip Port Manager initialization (not recommended)
+- `--skip-colors`: Skip IDE color setup (default: colors are configured)
 - `--skip-rules`: Skip copying rules
 - `--skip-commands`: Skip copying commands
 - `--dry-run`: Show what would be done without making changes
@@ -257,11 +356,14 @@ packages/core/src/features/project-initialization/
 ├── project-initializer.ts      # Main initialization logic
 ├── rules-copier.ts             # Rules copying logic
 ├── commands-copier.ts          # Commands copying logic
+├── color-manager.ts            # Color generation and palette management
+├── hook-generator.ts           # Git hook generation for color updates
 ├── setup-validator.ts          # Setup validation logic
 ├── conflict-resolver.ts        # Conflict resolution logic
 └── cli/
     └── commands/
-        └── init.ts             # CLI command implementation
+        ├── init.ts             # CLI command implementation
+        └── colors.ts           # Colors command for viewing color palettes
 ```
 
 ### Data Flow
@@ -275,6 +377,8 @@ Project Initializer
     ├── Rules Copier → Copy rules to .cursor/rules/
     ├── Commands Copier → Copy commands to .cursor/commands/
     ├── Port Manager Init → Initialize Port Manager
+    ├── Color Manager → Generate KEY_COLOR and color palette
+    ├── Hook Generator → Create post-checkout hook for color updates
     └── Setup Validator → Validate setup
     ↓
 Report Results
@@ -305,6 +409,11 @@ npx @your-org/core init
   ✓ Detected app type: nextjs
   ✓ Allocated port: 3000
   ✓ Configured project files
+✓ Setting up IDE colors...
+  ✓ Generated KEY_COLOR: #81ca95
+  ✓ Created post-checkout hook
+  ✓ Configured git hooks path
+  ✓ Initialized .vscode/settings.json with color scheme
 ✓ Validating setup...
   ✓ All rules copied successfully
   ✓ All commands copied successfully
@@ -322,6 +431,9 @@ npx @your-org/core init --overwrite
 # Skip Port Manager (not recommended)
 npx @your-org/core init --skip-port-manager
 
+# Skip IDE colors
+npx @your-org/core init --skip-colors
+
 # Dry run (see what would be done)
 npx @your-org/core init --dry-run
 ```
@@ -334,6 +446,25 @@ Project Initialization integrates with Port Manager by:
 2. **Mandatory Requirement**: Port Manager initialization cannot be skipped (unless `--skip-port-manager` is used)
 3. **Error Handling**: If Port Manager initialization fails, project initialization fails
 4. **Validation**: Verifies Port Manager is working after initialization
+
+## Integration with IDE Color Manager
+
+Project Initialization integrates with IDE Color Manager by:
+
+1. **Automatic Configuration**: Generates unique KEY_COLOR and configures IDE colors automatically
+2. **Branch-Based Themes**: Creates git hook that updates colors based on current branch
+3. **Project Uniqueness**: Ensures each project gets a unique color from curated palette
+4. **Git Integration**: Configures git hooks path and ensures settings file is ignored
+5. **Optional Feature**: Can be skipped with `--skip-colors` flag (default: enabled)
+
+**Color Manager Functions**:
+- `generateKeyColor(projectName)`: Generates unique KEY_COLOR from project name
+- `generateColorPalette(projectName, keyColor?)`: Generates complete color palette
+- `ensureUniqueColor(projectName, keyColor, existingColors)`: Ensures color uniqueness across projects
+
+**See Also**:
+- [IDE Colors Usage Guide](../../guides/IDE_COLORS_USAGE.md) - Complete user guide
+- [IDE Colors Reference](../../reference/IDE_COLORS_REFERENCE.md) - Color reference documentation
 
 ## Error Handling
 
@@ -348,6 +479,13 @@ Project Initialization integrates with Port Manager by:
 - **Database Connection Errors**: Report error, suggest checking database configuration
 - **Port Allocation Errors**: Report error, suggest manual port allocation
 - **Configuration Errors**: Report error, suggest manual configuration
+
+### IDE Color Errors
+
+- **Git Not Initialized**: Colors still configured, will apply when git is initialized
+- **Hook Creation Errors**: Report error, suggest checking file permissions
+- **Settings File Errors**: Report error, suggest checking `.vscode/` directory permissions
+- **Color Generation Errors**: Report error, suggest using `--skip-colors` as workaround
 
 ### Validation Errors
 
@@ -377,6 +515,7 @@ Project Initialization integrates with Port Manager by:
 ## Dependencies
 
 - **Port Manager**: Required (mandatory initialization)
+- **Color Manager**: Built-in color generation and palette management
 - **fs-extra**: For file operations
 - **chalk**: For colored output
 - **inquirer**: For interactive prompts (if interactive mode)
@@ -387,6 +526,8 @@ Project Initialization integrates with Port Manager by:
 
 - Test rules copying logic
 - Test commands copying logic
+- Test color generation (KEY_COLOR uniqueness, palette generation)
+- Test hook generation (post-checkout hook creation)
 - Test conflict resolution
 - Test validation logic
 
@@ -394,6 +535,8 @@ Project Initialization integrates with Port Manager by:
 
 - Test full initialization flow
 - Test Port Manager integration
+- Test IDE color configuration and hook creation
+- Test branch switching and color updates
 - Test error handling
 - Test conflict resolution strategies
 
@@ -428,6 +571,8 @@ Project Initialization integrates with Port Manager by:
 - ✅ Automatically copy general commands to `.cursor/commands/`
 - ✅ Exclude local commands (packages repo only)
 - ✅ Automatically initialize Port Manager (mandatory)
+- ✅ Automatically configure IDE colors with unique KEY_COLOR
+- ✅ Create post-checkout hook for branch-based color updates
 - ✅ Validate setup after initialization
 - ✅ Handle file conflicts
 - ✅ Single command setup
@@ -452,5 +597,9 @@ Project Initialization integrates with Port Manager by:
 **Expert**: System Architect  
 **Date**: 2026-01-05  
 **Changes**: Created comprehensive PRD for Project Initialization feature that automates project setup by copying rules and commands from core package and initializing Port Manager. This feature eliminates manual setup steps, ensures consistency across projects, and makes Port Manager initialization mandatory. The PRD includes detailed problem statement, solution design, technical architecture, usage examples, error handling, and success criteria. Key features: automatic rules copying (all expert personas and user rules), automatic commands copying (general commands only, excludes local commands for packages repo), mandatory Port Manager initialization, setup validation, and conflict resolution strategies.
+
+**Expert**: Documentation Expert  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive IDE Color Manager documentation to Project Initialization PRD. Added Feature 4: IDE Color Manager section covering color generation algorithm, base color palette, generated color palette structure, IDE UI elements styled, implementation details, options, and important notes. Updated overview, solution, goals, success metrics, user stories, technical architecture, usage examples, integration sections, error handling, dependencies, testing strategy, and success criteria to include IDE color management. Added references to IDE Colors Usage Guide and IDE Colors Reference documentation. This ensures the PRD comprehensively documents the complete project initialization feature including IDE color configuration.
 
 ---

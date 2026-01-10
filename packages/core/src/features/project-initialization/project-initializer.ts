@@ -245,13 +245,21 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         general: result.commandsResult?.copied.length || 0,
       };
 
-      result.validationResult = await validateSetup(projectPath, expectedRules, expectedCommands);
+      result.validationResult = await validateSetup(
+        projectPath,
+        expectedRules,
+        expectedCommands,
+        { checkColors: !options.skipColors }
+      );
 
       if (result.validationResult.success) {
         console.log(chalk.green('  ✓ All rules copied successfully'));
         console.log(chalk.green('  ✓ All commands copied successfully'));
         if (result.portManagerInitialized) {
           console.log(chalk.green('  ✓ Port Manager initialized successfully'));
+        }
+        if (result.validationResult.colorsValid && !options.skipColors) {
+          console.log(chalk.green('  ✓ IDE colors configured successfully'));
         }
       } else {
         result.warnings.push(...result.validationResult.errors);

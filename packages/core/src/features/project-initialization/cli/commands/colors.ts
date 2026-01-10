@@ -5,7 +5,7 @@
  */
 
 import chalk from 'chalk';
-import { generateColorPalette, generateKeyColor } from '../../color-manager';
+import { generateColorPalette, generateKeyColor, BASE_PALETTE } from '../../color-manager';
 import { generateProjectName } from '../../../port-manager/utils/project-name';
 import { PortManager } from '../../../port-manager';
 import { GlobalConfigManager } from '../../../../shared/config/global-config';
@@ -116,19 +116,7 @@ export async function colorsCommand(options: {
     console.log(chalk.bold('\n🎨 Base Color Palette'));
     console.log(chalk.gray('─'.repeat(60)));
     
-    const basePalette = {
-      lightGray: '#DBDCE0',
-      lightBlue: '#8AB4F9',
-      coral: '#F38B82',
-      yellow: '#FDD664',
-      green: '#80CA95',
-      pink: '#FF8BCC',
-      purple: '#C58AFA',
-      cyan: '#78D9ED',
-      orange: '#FCAD70',
-    };
-    
-    Object.entries(basePalette).forEach(([name, color]) => {
+    Object.entries(BASE_PALETTE).forEach(([name, color]) => {
       const capitalized = name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1').trim();
       console.log(displayColorBlock(color, capitalized, 15));
     });

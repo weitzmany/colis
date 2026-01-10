@@ -11,3 +11,4 @@ export * from './setup-validator';
 export * from './color-manager';
 export * from './hook-generator';
 export * from './cli/commands/init';
+export * from './cli/commands/colors';

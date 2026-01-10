@@ -2,26 +2,25 @@
  * Color Manager
  * 
  * Generates unique color palettes for projects based on KEY_COLOR
- * Uses 70's color palette as inspiration for harmonious color schemes
+ * Uses a curated color palette for harmonious color schemes
+ * Colors are only assigned during project initialization (init command)
  */
 
 /**
- * 70's inspired color palette base colors
+ * Base color palette
  * These serve as inspiration for generating harmonious palettes
+ * All new project colors are generated from this palette
  */
-const SEVENTIES_PALETTE = {
-  mustard: '#FFDB58',      // Mustard Yellow
-  burntOrange: '#CC5500',   // Burnt Orange
-  avocado: '#568203',      // Avocado Green
-  rust: '#B7410E',         // Rust Red
-  harvest: '#DA9100',      // Harvest Gold
-  earth: '#8B4513',        // Saddle Brown
-  terracotta: '#E2725B',    // Terracotta
-  olive: '#808000',        // Olive
-  amber: '#FFBF00',        // Amber
-  copper: '#B87333',       // Copper
-  sage: '#87AE73',         // Sage Green
-  coral: '#FF7F50',        // Coral
+const BASE_PALETTE = {
+  lightGray: '#DBDCE0',    // Light gray/blue
+  lightBlue: '#8AB4F9',    // Light blue
+  coral: '#F38B82',        // Coral/salmon
+  yellow: '#FDD664',       // Yellow
+  green: '#80CA95',        // Green
+  pink: '#FF8BCC',         // Pink
+  purple: '#C58AFA',       // Purple
+  cyan: '#78D9ED',         // Cyan
+  orange: '#FCAD70',       // Orange/peach
 };
 
 /**
@@ -61,18 +60,6 @@ function rgbToHex(r: number, g: number, b: number): string {
 }
 
 /**
- * Blend two colors
- */
-function blendColors(color1: string, color2: string, ratio: number = 0.5): string {
-  const rgb1 = hexToRgb(color1);
-  const rgb2 = hexToRgb(color2);
-  const r = rgb1.r + (rgb2.r - rgb1.r) * ratio;
-  const g = rgb1.g + (rgb2.g - rgb1.g) * ratio;
-  const b = rgb1.b + (rgb2.b - rgb1.b) * ratio;
-  return rgbToHex(r, g, b);
-}
-
-/**
  * Darken a color
  */
 function darken(color: string, amount: number = 0.2): string {
@@ -106,13 +93,13 @@ function adjustSaturation(color: string, amount: number): string {
 
 /**
  * Generate a unique KEY_COLOR for a project based on project name
- * Uses 70's palette as inspiration but ensures uniqueness
+ * Uses base palette as inspiration but ensures uniqueness
  */
 export function generateKeyColor(projectName: string): string {
   const hash = djb2Hash(projectName);
   
-  // Select a base color from 70's palette based on hash
-  const paletteColors = Object.values(SEVENTIES_PALETTE);
+  // Select a base color from palette based on hash
+  const paletteColors = Object.values(BASE_PALETTE);
   const baseColor = paletteColors[hash % paletteColors.length];
   
   // Generate variations to ensure uniqueness

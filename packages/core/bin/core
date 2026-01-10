@@ -8,6 +8,7 @@
 
 const { program } = require('commander');
 const { initCommand } = require('../dist/features/project-initialization/cli/commands/init');
+const { colorsCommand } = require('../dist/features/project-initialization/cli/commands/colors');
 
 program
   .name('@your-org/core')
@@ -25,7 +26,16 @@ program
   .option('--skip-domain', 'Skip automatic domain setup with Caddy')
   .option('--skip-rules', 'Skip copying rules')
   .option('--skip-commands', 'Skip copying commands')
+  .option('--skip-colors', 'Skip IDE color setup')
   .option('--dry-run', 'Show what would be done without making changes')
   .action(initCommand);
+
+program
+  .command('colors')
+  .description('Display IDE colors - shows 70\'s palette and project colors')
+  .option('-p, --project-name <name>', 'Project name (auto-detected if not provided)')
+  .option('--path <path>', 'Project path (default: current directory)')
+  .option('--all', 'Show colors for all projects')
+  .action(colorsCommand);
 
 program.parse();

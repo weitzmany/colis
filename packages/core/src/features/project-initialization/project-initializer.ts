@@ -14,11 +14,12 @@ import { validateSetup, InitValidationResult } from './setup-validator';
 import { initCommand as portManagerInit } from '../port-manager/cli/commands/init';
 import { DefaultsInstaller } from '../tech-detector/standards/defaults-installer';
 import { generateProjectName } from '../port-manager/utils/project-name';
-import { generateColorPalette, ensureUniqueColor } from './color-manager';
+import { generateColorPalette } from './color-manager';
 import {
   generatePostCheckoutHook,
   setupGitHooksPath,
   ensureSettingsIgnored,
+  initializeSettingsJson,
 } from './hook-generator';
 
 export interface InitOptions {
@@ -172,18 +173,42 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         await setupGitHooksPath(projectPath);
         console.log(chalk.green('  ✓ Configured git hooks path'));
         
-        // Ensure .vscode/settings.json is ignored
+        // Ensure .vscode/settings.json is ignored and remove from git tracking
         await ensureSettingsIgnored(projectPath);
-        console.log(chalk.green('  ✓ Ensured .vscode/settings.json is in .gitignore'));
+        console.log(chalk.green('  ✓ Ensured .vscode/settings.json is ignored and removed from git tracking'));
         
-        // Run the hook immediately to set initial colors
+        // Initialize settings.json with colors by running the hook
         try {
           const { execSync } = require('child_process');
-          execSync('bash .githooks/post-checkout', { cwd: projectPath, stdio: 'ignore' });
-          console.log(chalk.green('  ✓ Applied initial color scheme'));
-        } catch (hookError) {
-          // Hook might fail if git isn't initialized yet - that's okay
-          result.warnings.push('Could not run post-checkout hook (git may not be initialized yet)');
+          // Try to get current branch, default to 'main' if git not initialized
+          let branchName = 'main';
+          try {
+            branchName = execSync('git rev-parse --abbrev-ref HEAD', {
+              cwd: projectPath,
+              encoding: 'utf-8',
+              stdio: 'pipe',
+            }).trim();
+          } catch {
+            // Git not initialized, use default
+          }
+          
+          // Try to run the hook first
+          try {
+            execSync('bash .githooks/post-checkout', { cwd: projectPath, stdio: 'ignore' });
+            console.log(chalk.green('  ✓ Initialized .vscode/settings.json with color scheme'));
+          } catch {
+            // Hook failed, generate settings.json directly
+            await initializeSettingsJson(projectPath, palette, branchName);
+            console.log(chalk.green('  ✓ Initialized .vscode/settings.json with color scheme'));
+          }
+        } catch (error: any) {
+          // Fallback: generate settings.json directly
+          try {
+            await initializeSettingsJson(projectPath, palette, 'main');
+            console.log(chalk.green('  ✓ Initialized .vscode/settings.json with color scheme'));
+          } catch (initError: any) {
+            result.warnings.push(`Could not initialize settings.json: ${initError.message}`);
+          }
         }
       } catch (error: any) {
         // Don't fail initialization if color setup fails

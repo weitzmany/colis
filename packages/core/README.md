@@ -24,6 +24,7 @@ npx @your-org/core init
 - ✅ General commands in `.cursor/commands/`
 - ✅ Port Manager initialized and configured
 - ✅ Technology stack detected and saved
+- ✅ **IDE colors configured** - Unique colors per project with branch-based themes
 
 ### 📝 Complete Example
 
@@ -94,9 +95,61 @@ npx @your-org/core init
 - Copies all rules (expert personas, user rules) to `.cursor/rules/`
 - Copies general commands to `.cursor/commands/` (excludes local commands)
 - Initializes Port Manager automatically (mandatory)
+- **Sets up IDE colors** - Generates unique color scheme per project
 - Validates everything is set up correctly
 
 See [Project Initialization PRD](../../docs/features/project-initialization/PRD.md) for details.
+
+### IDE Colors
+
+Automatically configure unique IDE colors for each project with branch-based themes:
+
+```bash
+npx @your-org/core init
+```
+
+**What it does**:
+- Generates a unique **KEY_COLOR** for your project (from curated color palette)
+- Creates a `.githooks/post-checkout` hook that changes colors based on branch
+- Initializes `.vscode/settings.json` with the color scheme
+- Removes `settings.json` from git tracking (keeps it in `.gitignore`)
+
+**Color Scheme by Branch**:
+- **Main/Master branch** → 🔴 **RED** (`#ed3535`)
+- **Development/Dev branch** → 🟠 **ORANGE** (`#FF8C00`)
+- **Other branches** → 🎨 **Project KEY_COLOR** (unique color from palette)
+
+**How it works**:
+1. Each project gets a unique KEY_COLOR based on its name (using curated color palette)
+2. All UI colors (title bar, status bar, activity bar, borders, tabs) are derived from KEY_COLOR
+3. When you switch branches, the post-checkout hook automatically updates colors
+4. Colors are applied to VS Code/Cursor IDE automatically
+5. **Colors are only assigned during initialization** - existing projects keep their current colors
+
+**Example**:
+```bash
+# Initialize a new project
+cd ~/Documents/Projects/my-new-project
+npm init -y
+npm link @your-org/core
+npx @your-org/core init
+
+# The init command will:
+# ✓ Generate post-checkout hook with KEY_COLOR: #81ca95
+# ✓ Configured git hooks path
+# ✓ Ensured .vscode/settings.json is ignored and removed from git tracking
+# ✓ Initialized .vscode/settings.json with color scheme
+
+# Now when you switch branches:
+git checkout main        # IDE turns RED
+git checkout development # IDE turns ORANGE
+git checkout feature-x  # IDE uses project KEY_COLOR
+```
+
+**Skip colors** (if you don't want IDE colors):
+```bash
+npx @your-org/core init --skip-colors
+```
 
 ### Port Manager
 

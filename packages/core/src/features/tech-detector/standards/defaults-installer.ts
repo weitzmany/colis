@@ -286,7 +286,6 @@ export class DefaultsInstaller {
    * Install Laravel
    */
   private async installLaravel(projectPath: string, version: string): Promise<void> {
-    const projectName = path.basename(projectPath);
     const command = `composer create-project laravel/laravel:${version} .`;
     
     console.log(chalk.gray(`Running: ${command}`));

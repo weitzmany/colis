@@ -41,7 +41,7 @@ set -e
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 SETTINGS_FILE=".vscode/settings.json"
 
-# KEY_COLOR - Unique color for this project (70's inspired palette)
+# KEY_COLOR - Unique color for this project (assigned only during init)
 KEY_COLOR="${palette.keyColor}"
 
 # Main branch colors (red-based for distinction)
@@ -170,12 +170,90 @@ export async function setupGitHooksPath(projectPath: string): Promise<void> {
 }
 
 /**
- * Ensure .vscode/settings.json is in .gitignore
+ * Initialize settings.json with colors (for when git is not available)
+ */
+export async function initializeSettingsJson(
+  projectPath: string,
+  palette: ProjectColorPalette,
+  branchName: string = 'main'
+): Promise<void> {
+  const settingsPath = path.join(projectPath, '.vscode', 'settings.json');
+  await fs.ensureDir(path.dirname(settingsPath));
+  
+  // Determine colors based on branch
+  
+  // Determine colors based on branch
+  let color: string;
+  let inactive: string;
+  let bg: string;
+  let statusBg: string;
+  let statusColor: string;
+  let activityFg: string;
+  let focusBorder: string;
+  let tabBorder: string;
+  
+  if (branchName === 'main' || branchName === 'master') {
+    color = palette.mainColor;
+    inactive = palette.mainInactive;
+    bg = palette.mainBg;
+    statusBg = palette.mainBg;
+    statusColor = palette.mainColor;
+    activityFg = palette.mainBg;
+    focusBorder = palette.mainBg;
+    tabBorder = palette.mainBg;
+  } else if (branchName === 'development' || branchName === 'dev') {
+    color = palette.devColor;
+    inactive = palette.devInactive;
+    bg = palette.devBg;
+    statusBg = palette.devBg;
+    statusColor = palette.devColor;
+    activityFg = palette.devBg;
+    focusBorder = palette.devBg;
+    tabBorder = palette.devBg;
+  } else {
+    color = palette.projectColor;
+    inactive = palette.projectInactive;
+    bg = palette.projectBg;
+    statusBg = palette.projectBg;
+    statusColor = palette.projectColor;
+    activityFg = palette.projectBg;
+    focusBorder = palette.projectBg;
+    tabBorder = palette.projectBg;
+  }
+  
+  const settingsContent = {
+    'workbench.colorCustomizations': {
+      'titleBar.activeBackground': bg,
+      'titleBar.activeForeground': color,
+      'titleBar.inactiveBackground': inactive,
+      'titleBar.inactiveForeground': color,
+      'statusBar.background': statusBg,
+      'statusBar.foreground': statusColor,
+      'statusBar.border': palette.border,
+      'activityBar.background': palette.darkerBg,
+      'activityBar.foreground': activityFg,
+      'activityBar.activeBorder': activityFg,
+      'sideBar.background': palette.darkBg,
+      'sideBar.border': palette.border,
+      'editorGroup.border': palette.border,
+      'panel.border': palette.border,
+      'focusBorder': focusBorder,
+      'tab.activeBorderTop': tabBorder,
+      'tab.activeForeground': palette.activeColor,
+    },
+  };
+  
+  await fs.writeFile(settingsPath, JSON.stringify(settingsContent, null, 2) + '\n');
+}
+
+/**
+ * Ensure .vscode/settings.json is in .gitignore and remove from git tracking
  */
 export async function ensureSettingsIgnored(projectPath: string): Promise<void> {
   const gitignorePath = path.join(projectPath, '.gitignore');
   const ignoreEntry = '.vscode/settings.json';
   
+  // Add to .gitignore if not already there
   let gitignoreContent = '';
   if (await fs.pathExists(gitignorePath)) {
     gitignoreContent = await fs.readFile(gitignorePath, 'utf-8');
@@ -189,5 +267,30 @@ export async function ensureSettingsIgnored(projectPath: string): Promise<void> 
       : `${ignoreEntry}\n`;
     
     await fs.writeFile(gitignorePath, newContent);
+  }
+  
+  // Remove from git tracking if it's currently tracked
+  try {
+    const gitDir = path.join(projectPath, '.git');
+    if (await fs.pathExists(gitDir)) {
+      // Check if file is tracked by git
+      try {
+        execSync(`git ls-files --error-unmatch "${ignoreEntry}"`, {
+          cwd: projectPath,
+          stdio: 'pipe',
+        });
+        // File is tracked, remove it from git
+        execSync(`git rm --cached "${ignoreEntry}"`, {
+          cwd: projectPath,
+          stdio: 'pipe',
+        });
+      } catch (error: any) {
+        // File is not tracked or doesn't exist - that's fine
+        // The error code will be non-zero if file is not tracked
+      }
+    }
+  } catch (error) {
+    // Git not initialized or command failed - that's okay
+    // The file will still be ignored via .gitignore
   }
 }

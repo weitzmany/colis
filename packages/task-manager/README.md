@@ -182,6 +182,59 @@ This package works alongside taskmaster-ai:
 
 For a detailed step-by-step workflow guide including installation, usage examples, and manual testing instructions, see [WORKFLOW.md](../../docs/features/task-manager/WORKFLOW.md).
 
+## Development
+
+### Building
+
+```bash
+npm run build
+```
+
+### Type Checking
+
+```bash
+npm run typecheck
+```
+
+### Testing
+
+```bash
+npm test
+npm run test:watch
+npm run test:coverage
+```
+
+### Linting
+
+```bash
+npm run lint
+npm run lint:fix
+```
+
+### Formatting
+
+```bash
+npm run format
+npm run format:check
+```
+
+## Manual Testing
+
+Comprehensive manual test documentation is available:
+
+- **[TEST_PLAN.md](./TEST_PLAN.md)** - Detailed test plan with 50+ test cases
+- **[QUICK_TEST_CHECKLIST.md](./QUICK_TEST_CHECKLIST.md)** - Quick 5-minute test checklist
+- **[TEST_CHEATSHEET.md](./TEST_CHEATSHEET.md)** - One-page quick reference
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Run `npm run build && npm run typecheck && npm test`
+6. Submit a pull request
+
 ## License
 
 MIT

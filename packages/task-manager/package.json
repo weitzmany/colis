@@ -10,17 +10,49 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "lib",
+    "bin"
   ],
   "scripts": {
     "build": "tsc",
+    "build:watch": "tsc --watch",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
     "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm run typecheck",
     "postinstall": "node lib/init-taskmaster.js"
   },
   "bin": {
     "task-manager-init": "./bin/init-taskmaster.js"
+  },
+  "keywords": [
+    "task-management",
+    "taskmaster",
+    "task-tracker",
+    "project-management",
+    "todo",
+    "tasks",
+    "productivity",
+    "workflow"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "engines": {
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@your-org/core": "^1.0.0",

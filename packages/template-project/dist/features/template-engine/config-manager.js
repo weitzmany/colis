@@ -1,12 +1,46 @@
 /**
  * Configuration Manager
  *
- * Collects user configuration via interactive prompts
+ * Collects user configuration via interactive CLI prompts.
+ * Handles both interactive prompts and pre-filled options.
+ *
+ * @example
+ * ```typescript
+ * const manager = new ConfigManager();
+ * const config = await manager.collectConfig({
+ *   projectName: 'my-app',
+ *   templateType: 'angular'
+ * });
+ * ```
  */
 import inquirer from 'inquirer';
+/**
+ * Manages collection of project configuration from users.
+ *
+ * Uses Inquirer.js to provide interactive prompts for missing configuration
+ * values, while respecting pre-filled options.
+ */
 export class ConfigManager {
     /**
-     * Collect configuration from user
+     * Collect configuration from user via interactive prompts.
+     *
+     * Prompts for any missing required or optional fields. If options are
+     * already provided, those values are used instead of prompting.
+     *
+     * @param options - Partial configuration object with pre-filled values
+     * @returns Complete ProjectConfig object with all required fields
+     *
+     * @example
+     * ```typescript
+     * // Fully interactive
+     * const config = await manager.collectConfig();
+     *
+     * // Pre-fill some values
+     * const config = await manager.collectConfig({
+     *   projectName: 'my-app',
+     *   packageManager: 'npm'
+     * });
+     * ```
      */
     async collectConfig(options) {
         const config = { ...options };

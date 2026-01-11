@@ -155,6 +155,54 @@ Generated projects follow standard best practices:
 - README with getting started instructions
 - Proper directory structure
 
+## API Documentation
+
+### Programmatic Usage
+
+You can use the template engine programmatically in your own code:
+
+```typescript
+import { createCommand } from '@your-org/template-project';
+import { TemplateRegistry, FileGenerator, ConfigManager } from '@your-org/template-project/features/template-engine';
+
+// Using the high-level create command
+await createCommand({
+  projectName: 'my-app',
+  template: 'angular',
+  packageManager: 'npm'
+});
+
+// Using individual components
+const registry = new TemplateRegistry();
+const templates = await registry.discoverTemplates();
+const template = await registry.getTemplate('angular');
+
+const generator = new FileGenerator();
+const result = await generator.generateProject({
+  outputPath: './my-project',
+  templatePath: template.path,
+  context: {
+    projectName: 'my-app',
+    packageManager: 'npm',
+    port: 4200
+  }
+});
+```
+
+### Type Definitions
+
+All types are exported from the package:
+
+```typescript
+import type {
+  TemplateContext,
+  TemplateMetadata,
+  ProjectConfig,
+  GenerationOptions,
+  GenerationResult
+} from '@your-org/template-project/features/template-engine';
+```
+
 ## Development
 
 ### Building
@@ -174,6 +222,38 @@ npm test
 ```bash
 npm run lint
 ```
+
+### Code Documentation
+
+This package uses TypeScript with JSDoc comments for API documentation.
+Generate documentation using TypeDoc:
+
+```bash
+npx typedoc src/index.ts
+```
+
+## Architecture
+
+The template-project package follows a modular architecture:
+
+- **Template Engine** (`src/features/template-engine/`): Core template processing
+  - `TemplateProcessor`: Handlebars template processing
+  - `TemplateRegistry`: Template discovery and metadata management
+  - `ConfigManager`: Interactive configuration collection
+  - `FileGenerator`: Project structure generation
+- **CLI** (`src/cli/commands/`): Command-line interface
+  - `create.ts`: Main create command implementation
+- **Templates** (`src/templates/`): Template files organized by type
+
+## Contributing
+
+When adding new templates:
+
+1. Create a new directory in `src/templates/<template-name>/`
+2. Add a `template.json` file with metadata
+3. Create template files with `.hbs` extension
+4. Use Handlebars syntax for variable substitution: `{{projectName}}`
+5. Test the template by creating a project
 
 ## License
 

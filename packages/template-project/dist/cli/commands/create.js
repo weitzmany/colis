@@ -1,7 +1,21 @@
 /**
  * Create Command
  *
- * CLI command for creating new projects from templates
+ * CLI command for creating new projects from templates.
+ *
+ * This command orchestrates the entire project creation workflow:
+ * 1. Collects user configuration (interactive or via options)
+ * 2. Selects and loads the appropriate template
+ * 3. Allocates a port via Port Manager (if available)
+ * 4. Generates project structure from template
+ * 5. Links @your-org/core for Project Initialization
+ * 6. Runs Project Initialization (rules, commands, Port Manager, colors)
+ * 7. Installs dependencies (if not skipped)
+ * 8. Initializes Task Manager (if not skipped)
+ * 9. Initializes git repository (if not skipped)
+ * 10. Opens project in Cursor IDE
+ *
+ * @module
  */
 import * as path from 'path';
 import fs from 'fs-extra';
@@ -11,6 +25,29 @@ import { TemplateRegistry } from '../../features/template-engine/template-regist
 import { ConfigManager } from '../../features/template-engine/config-manager.js';
 import { FileGenerator } from '../../features/template-engine/file-generator.js';
 import { initializeProject } from '@your-org/core/features/project-initialization';
+/**
+ * Create a new project from a template.
+ *
+ * This is the main entry point for project creation. It handles the complete
+ * workflow from configuration collection to project generation and initialization.
+ *
+ * @param options - Configuration options for project creation
+ * @throws {Error} If project creation fails (template not found, file system errors, etc.)
+ *
+ * @example
+ * ```typescript
+ * // Basic usage
+ * await createCommand({ projectName: 'my-app' });
+ *
+ * // With options
+ * await createCommand({
+ *   projectName: 'my-app',
+ *   template: 'angular',
+ *   packageManager: 'pnpm',
+ *   skipDeps: true
+ * });
+ * ```
+ */
 export async function createCommand(options = {}) {
     try {
         console.log(chalk.blue('🚀 Creating new project...\n'));

@@ -1,7 +1,21 @@
 /**
  * Create Command
  * 
- * CLI command for creating new projects from templates
+ * CLI command for creating new projects from templates.
+ * 
+ * This command orchestrates the entire project creation workflow:
+ * 1. Collects user configuration (interactive or via options)
+ * 2. Selects and loads the appropriate template
+ * 3. Allocates a port via Port Manager (if available)
+ * 4. Generates project structure from template
+ * 5. Links @your-org/core for Project Initialization
+ * 6. Runs Project Initialization (rules, commands, Port Manager, colors)
+ * 7. Installs dependencies (if not skipped)
+ * 8. Initializes Task Manager (if not skipped)
+ * 9. Initializes git repository (if not skipped)
+ * 10. Opens project in Cursor IDE
+ * 
+ * @module
  */
 
 import * as path from 'path';
@@ -14,22 +28,72 @@ import { FileGenerator } from '../../features/template-engine/file-generator.js'
 import { ProjectConfig, TemplateContext } from '../../features/template-engine/types.js';
 import { initializeProject } from '@your-org/core/features/project-initialization';
 
+/**
+ * Options for the create command.
+ * These options can be provided via CLI flags or programmatically.
+ * 
+ * @example
+ * ```typescript
+ * await createCommand({
+ *   projectName: 'my-app',
+ *   template: 'angular',
+ *   packageManager: 'npm',
+ *   skipDeps: false
+ * });
+ * ```
+ */
 export interface CreateOptions {
+  /** Project name (will prompt if not provided) */
   projectName?: string;
+  /** Template type (default: 'angular') */
   template?: string;
+  /** Package manager (default: 'npm') */
   packageManager?: 'npm' | 'yarn' | 'pnpm';
+  /** Skip dependency installation */
   skipDeps?: boolean;
+  /** Skip git repository initialization */
   skipGit?: boolean;
+  /** Skip Project Initialization (not recommended) */
   skipInit?: boolean;
+  /** Skip Task Manager initialization */
   skipTaskManager?: boolean;
+  /** Overwrite existing files */
   overwrite?: boolean;
+  /** Skip existing files instead of overwriting */
   skipExisting?: boolean;
+  /** Show what would be created without making changes */
   dryRun?: boolean;
+  /** Project description */
   description?: string;
+  /** Author name */
   author?: string;
+  /** License type (e.g., 'MIT', 'Apache-2.0') */
   license?: string;
 }
 
+/**
+ * Create a new project from a template.
+ * 
+ * This is the main entry point for project creation. It handles the complete
+ * workflow from configuration collection to project generation and initialization.
+ * 
+ * @param options - Configuration options for project creation
+ * @throws {Error} If project creation fails (template not found, file system errors, etc.)
+ * 
+ * @example
+ * ```typescript
+ * // Basic usage
+ * await createCommand({ projectName: 'my-app' });
+ * 
+ * // With options
+ * await createCommand({
+ *   projectName: 'my-app',
+ *   template: 'angular',
+ *   packageManager: 'pnpm',
+ *   skipDeps: true
+ * });
+ * ```
+ */
 export async function createCommand(options: CreateOptions = {}): Promise<void> {
   try {
     console.log(chalk.blue('🚀 Creating new project...\n'));

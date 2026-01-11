@@ -1,0 +1,34 @@
+<?php
+
+declare(strict_types=1);
+
+use DI\ContainerBuilder;
+use Slim\Factory\AppFactory;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+// Build container
+$containerBuilder = new ContainerBuilder();
+$containerBuilder->addDefinitions(__DIR__ . '/../config/container.php');
+$container = $containerBuilder->build();
+
+// Create app
+AppFactory::setContainer($container);
+$app = AppFactory::create();
+
+// Add middleware
+$app->addBodyParsingMiddleware();
+$app->addRoutingMiddleware();
+$app->addErrorMiddleware(true, true, true);
+
+// Setup logger
+$logger = new Logger('{{projectName}}');
+$logger->pushHandler(new StreamHandler(__DIR__ . '/../logs/app.log', Logger::DEBUG));
+$container->set('logger', $logger);
+
+// Register routes
+require __DIR__ . '/../src/routes/routes.php';
+
+$app->run();

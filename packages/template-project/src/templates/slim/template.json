@@ -1,0 +1,17 @@
+{
+  "name": "slim",
+  "description": "Slim PHP framework application template",
+  "type": "backend",
+  "version": "1.0.0",
+  "dependencies": {
+    "slim/slim": "^4.12.0",
+    "slim/psr7": "^1.6.0",
+    "php-di/php-di": "^6.1.0",
+    "monolog/monolog": "^3.5.0"
+  },
+  "devDependencies": {
+    "phpunit/phpunit": "^10.5.0",
+    "phpstan/phpstan": "^1.10.0",
+    "squizlabs/php_codesniffer": "^3.7.0"
+  }
+}

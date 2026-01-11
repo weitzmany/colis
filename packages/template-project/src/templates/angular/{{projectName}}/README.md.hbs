@@ -1,0 +1,27 @@
+# {{projectName}}
+
+{{#if projectDescription}}
+{{projectDescription}}
+{{/if}}
+
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0.
+
+## Development server
+
+Run `{{#if_eq packageManager "npm"}}npm start{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn start{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm start{{/if_eq}}` for a dev server. Navigate to `http://localhost:{{port}}/`. The application will automatically reload if you change any of the source files.
+
+## Code scaffolding
+
+Run `{{#if_eq packageManager "npm"}}npm run ng generate component component-name{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn ng generate component component-name{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm ng generate component component-name{{/if_eq}}` to generate a new component. You can also use `{{#if_eq packageManager "npm"}}npm run ng generate{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn ng generate{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm ng generate{{/if_eq}}` directive|pipe|service|class|guard|interface|enum|module`.
+
+## Build
+
+Run `{{#if_eq packageManager "npm"}}npm run build{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn build{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm build{{/if_eq}}` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+## Running unit tests
+
+Run `{{#if_eq packageManager "npm"}}npm test{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn test{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm test{{/if_eq}}` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Further help
+
+To get more help on the Angular CLI use `{{#if_eq packageManager "npm"}}npm run ng help{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn ng help{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm ng help{{/if_eq}}` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

@@ -1,0 +1,61 @@
+# {{projectName}}
+
+{{#if projectDescription}}
+{{projectDescription}}
+{{/if}}
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- {{#if_eq packageManager "npm"}}npm{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm{{/if_eq}} package manager
+
+### Installation
+
+```bash
+{{#if_eq packageManager "npm"}}npm install{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn install{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm install{{/if_eq}}
+```
+
+### Development
+
+Run the development server:
+
+```bash
+{{#if_eq packageManager "npm"}}npm run dev{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn dev{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm dev{{/if_eq}}
+```
+
+The API server will be running on [http://localhost:{{port}}](http://localhost:{{port}})
+
+### Build
+
+Build for production:
+
+```bash
+{{#if_eq packageManager "npm"}}npm run build{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn build{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm build{{/if_eq}}
+```
+
+### Start Production Server
+
+```bash
+{{#if_eq packageManager "npm"}}npm start{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn start{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm start{{/if_eq}}
+```
+
+## Project Structure
+
+```
+{{projectName}}/
+├── src/
+│   ├── routes/       # API routes
+│   ├── controllers/  # Route controllers
+│   ├── models/       # Data models
+│   ├── utils/        # Utility functions
+│   └── index.ts      # Entry point
+├── tests/            # Test files
+└── package.json
+```
+
+## Learn More
+
+- [Express Documentation](https://expressjs.com/)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/)

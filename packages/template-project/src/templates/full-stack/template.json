@@ -1,0 +1,24 @@
+{
+  "name": "full-stack",
+  "description": "Full-stack application template with Next.js frontend and Express backend",
+  "type": "full-stack",
+  "version": "1.0.0",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "next": "^14.0.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.0.0"
+  }
+}

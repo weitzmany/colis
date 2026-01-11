@@ -1,0 +1,45 @@
+# {{projectName}}
+
+{{#if projectDescription}}
+{{projectDescription}}
+{{/if}}
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- {{#if_eq packageManager "npm"}}npm{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm{{/if_eq}} package manager
+
+### Installation
+
+```bash
+{{#if_eq packageManager "npm"}}npm install{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn install{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm install{{/if_eq}}
+```
+
+### Development
+
+Run the development server:
+
+```bash
+{{#if_eq packageManager "npm"}}npm run dev{{/if_eq}}{{#if_eq packageManager "yarn"}}yarn dev{{/if_eq}}{{#if_eq packageManager "pnpm"}}pnpm dev{{/if_eq}}
+```
+
+Open [http://localhost:{{port}}](http://localhost:{{port}}) with your browser to see the result.
+
+## Project Structure
+
+```
+{{projectName}}/
+├── src/
+│   ├── components/   # React components
+│   ├── pages/        # Next.js pages
+│   └── app/          # Next.js app directory
+├── public/           # Static assets
+└── package.json
+```
+
+## Learn More
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Documentation](https://react.dev/)

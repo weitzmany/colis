@@ -1,0 +1,86 @@
+# {{projectName}}
+
+{{#if projectDescription}}
+{{projectDescription}}
+{{/if}}
+
+A Slim PHP framework application.
+
+## Requirements
+
+- PHP 8.1 or higher
+- Composer
+
+## Installation
+
+Install dependencies:
+
+```bash
+composer install
+```
+
+## Development
+
+Start the development server:
+
+```bash
+composer start
+```
+
+Or manually:
+
+```bash
+php -S localhost:{{port}} -t public public/index.php
+```
+
+The API server will be running on [http://localhost:{{port}}](http://localhost:{{port}})
+
+## Project Structure
+
+```
+{{projectName}}/
+├── config/          # Configuration files
+├── public/          # Public web root
+│   └── index.php    # Entry point
+├── src/
+│   ├── controllers/ # Route controllers
+│   ├── middleware/  # Middleware classes
+│   ├── models/      # Data models
+│   ├── routes/      # Route definitions
+│   └── utils/       # Utility classes
+├── tests/           # Test files
+└── composer.json
+```
+
+## Testing
+
+Run tests:
+
+```bash
+composer test
+```
+
+## Code Quality
+
+Run static analysis:
+
+```bash
+composer analyse
+```
+
+Check code style:
+
+```bash
+composer cs-check
+```
+
+Fix code style:
+
+```bash
+composer cs-fix
+```
+
+## Learn More
+
+- [Slim Framework Documentation](https://www.slimframework.com/docs/)
+- [PHP-DI Documentation](https://php-di.org/doc/)

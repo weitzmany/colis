@@ -83,6 +83,133 @@ the build process works correctly.
 3. **Fix** → Make changes to the package
 4. **Verify** → Ensure the fix works (if possible)
 
+## Test Documentation Requirements
+
+**When creating or updating a package or feature, ALWAYS create comprehensive test instructions.**
+
+### Required Test Documentation
+
+Every package or feature must include test documentation that enables manual verification. This documentation should be created **during development**, not as an afterthought.
+
+#### Required Test Files
+
+Create the following test documentation files in the package root:
+
+1. **`TEST_PLAN.md`** - Comprehensive detailed test plan with:
+   - Multiple test cases covering all functionality
+   - Step-by-step verification procedures
+   - Expected results and success criteria
+   - Error scenarios and edge cases
+   - Integration point verification
+   - Regression testing guidelines
+
+2. **`QUICK_TEST_CHECKLIST.md`** - Quick reference checklist for rapid verification:
+   - 5-minute quick check procedures
+   - Essential verification steps
+   - Common commands and checks
+   - Red flags to watch for
+   - Success criteria summary
+
+3. **`TEST_WORKFLOW.md`** (Optional but recommended) - Visual workflow guide:
+   - Step-by-step workflow diagrams
+   - Detailed verification commands
+   - File-by-file content checks
+   - Automated test scripts
+   - Test results logging template
+
+4. **`TEST_CHEATSHEET.md`** (Optional but recommended) - One-page quick reference:
+   - Essential commands
+   - Key file locations
+   - Critical checks
+   - Quick verification script
+
+### Test Documentation Standards
+
+#### Structure Requirements
+
+- **Clear Sections**: Organize by test case or verification area
+- **Step-by-Step**: Numbered or bulleted steps for clarity
+- **Commands Included**: Provide exact commands to run
+- **Expected Results**: Specify what success looks like
+- **Failure Indicators**: List red flags and common issues
+
+#### Content Requirements
+
+Test documentation must cover:
+
+1. **Setup/Prerequisites**
+   - Required tools and dependencies
+   - Environment setup instructions
+   - Pre-test configuration
+
+2. **Basic Functionality Tests**
+   - Core feature verification
+   - Happy path scenarios
+   - Expected outputs
+
+3. **Integration Tests**
+   - Integration with other packages/features
+   - Port Manager integration (if applicable)
+   - Project Initialization integration (if applicable)
+   - IDE colors integration (if applicable)
+
+4. **Configuration Verification**
+   - File structure checks
+   - Configuration file content verification
+   - Template variable substitution (if applicable)
+   - Port allocation verification
+
+5. **Error Scenarios**
+   - Invalid input handling
+   - Missing dependencies
+   - Configuration errors
+   - Edge cases
+
+6. **Build and Runtime Tests**
+   - Build process verification
+   - Runtime behavior verification
+   - Performance checks (if applicable)
+
+### When to Create Test Documentation
+
+- **During Initial Development**: Create test docs alongside code
+- **When Adding Features**: Update test docs with new test cases
+- **When Fixing Bugs**: Add regression tests to prevent recurrence
+- **Before Marking Complete**: Verify test docs are comprehensive
+
+### Test Documentation Checklist
+
+Before marking a package/feature as complete, verify:
+
+- [ ] `TEST_PLAN.md` exists with comprehensive test cases
+- [ ] `QUICK_TEST_CHECKLIST.md` exists for rapid verification
+- [ ] Test documentation covers all major functionality
+- [ ] Test documentation includes integration points
+- [ ] Test documentation includes error scenarios
+- [ ] Test documentation includes build/run verification
+- [ ] Test documentation is clear and actionable
+- [ ] Test documentation includes expected results
+- [ ] Test documentation includes failure indicators
+
+### Example Test Documentation Structure
+
+Reference the `template-project` package for a complete example:
+- `packages/template-project/TEST_PLAN.md` - Comprehensive test plan
+- `packages/template-project/QUICK_TEST_CHECKLIST.md` - Quick checklist
+- `packages/template-project/TEST_WORKFLOW.md` - Workflow guide
+- `packages/template-project/TEST_CHEATSHEET.md` - Quick reference
+
+### Integration with Development Workflow
+
+1. **Plan Phase**: Include test documentation requirements in PRD
+2. **Development Phase**: Create test docs alongside implementation
+3. **Review Phase**: Verify test docs completeness
+4. **Completion Phase**: Run through test documentation before marking done
+
+### Key Principle
+
+**Test documentation is not optional. Every package and feature must have comprehensive, actionable test instructions that enable manual verification of functionality, integration points, and error handling.**
+
 ## Key Principle
 
 **The package should work correctly. If it doesn't, fix the package, not the user's workflow.**

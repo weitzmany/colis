@@ -6,6 +6,7 @@
 
 import { PortRepository } from '../database/port-repository';
 import { AppType, PortRange } from '../types';
+import { PortConflictError, PortRangeExhaustedError, PortInUseError } from '../errors';
 import * as net from 'net';
 
 export class PortAllocator {
@@ -49,13 +50,32 @@ export class PortAllocator {
     if (preferredPort) {
       // Reject if it's a reserved default port
       if (this.reservedDefaultPorts.includes(preferredPort)) {
-        throw new Error(
+        throw new PortConflictError(
           `Port ${preferredPort} is a default port and is reserved for projects not using Port Manager. ` +
-          `Please use a different port (e.g., ${preferredPort + 1})`
+          `Please use a different port (e.g., ${preferredPort + 1})`,
+          preferredPort,
+          undefined,
+          'reserved'
         );
       }
       const available = await this.repository.checkAvailability(preferredPort);
-      if (available && (await this.checkPortInUse(preferredPort))) {
+      if (!available) {
+        const existing = await this.repository.getByPort(preferredPort);
+        throw new PortConflictError(
+          `Port ${preferredPort} is already assigned to project "${existing?.projectName || 'unknown'}"`,
+          preferredPort,
+          existing?.projectName,
+          'assigned'
+        );
+      }
+      const portAvailable = await this.checkPortInUse(preferredPort);
+      if (!portAvailable) {
+        throw new PortInUseError(
+          `Port ${preferredPort} is currently in use on the system`,
+          preferredPort
+        );
+      }
+      if (portAvailable) {
         return preferredPort;
       }
     }
@@ -65,8 +85,10 @@ export class PortAllocator {
     let port = await this.repository.findAvailablePortInRange(range.start, range.end);
 
     if (!port) {
-      throw new Error(
-        `No available ports in range ${range.start}-${range.end} for app type ${appType}`
+      throw new PortRangeExhaustedError(
+        `No available ports in range ${range.start}-${range.end} for app type ${appType}`,
+        appType,
+        range
       );
     }
 
@@ -75,16 +97,22 @@ export class PortAllocator {
       // Try to find next available port
       port = await this.repository.findAvailablePortInRange(port + 1, range.end);
       if (!port) {
-        throw new Error(
+        throw new PortRangeExhaustedError(
           `No available ports in range ${range.start}-${range.end} for app type ${appType} ` +
-          `(default ports are reserved for unmanaged projects)`
+          `(default ports are reserved for unmanaged projects)`,
+          appType,
+          range
         );
       }
     }
 
     // Check if port is actually in use on the system
-    if (!(await this.checkPortInUse(port))) {
-      throw new Error(`Port ${port} is already in use on the system`);
+    const portAvailable = await this.checkPortInUse(port);
+    if (!portAvailable) {
+      throw new PortInUseError(
+        `Port ${port} is already in use on the system`,
+        port
+      );
     }
 
     return port;

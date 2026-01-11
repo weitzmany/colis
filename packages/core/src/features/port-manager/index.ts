@@ -12,4 +12,5 @@ export * from './core/validator';
 export * from './core/configurator';
 export * from './frameworks/interfaces';
 export * from './frameworks/factory';
+export * from './errors';
 

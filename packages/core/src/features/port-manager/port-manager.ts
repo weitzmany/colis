@@ -20,6 +20,12 @@ import {
   ConfigurationResult,
   ConflictReport,
 } from './types';
+import {
+  PortConflictError,
+  PortRangeExhaustedError,
+  PortInUseError,
+  PortAssignmentNotFoundError,
+} from './errors';
 
 export class PortManager {
   private db: DatabaseRepository;
@@ -151,7 +157,11 @@ export class PortManager {
 
       const assignment = await this.repository.getPort(projectName, appType);
       if (!assignment) {
-        throw new Error(`Port assignment not found for ${projectName} (${appType})`);
+        throw new PortAssignmentNotFoundError(
+          `Port assignment not found for ${projectName} (${appType})`,
+          projectName,
+          appType
+        );
       }
 
       const configurator = new ConfigurationManager(assignment.projectPath);
@@ -171,7 +181,7 @@ export class PortManager {
       );
 
       if (!assignment) {
-        throw new Error(
+        throw new PortAssignmentNotFoundError(
           `Port assignment not found for path "${projectPath}" with port ${port} (${appType}). ` +
           `Use allocate() first or provide projectName/appType.`
         );
@@ -248,18 +258,22 @@ export class PortManager {
     // Check if port is already assigned to an active project
     const existing = await this.repository.getByPort(port);
     if (existing && existing.status === 'active') {
-      throw new Error(
+      throw new PortConflictError(
         `Port ${port} is already assigned to project "${existing.projectName}" (${existing.appType}). ` +
-        `Release it first before reserving.`
+        `Release it first before reserving.`,
+        port,
+        existing.projectName,
+        'assigned'
       );
     }
 
     // Check if port is in use on the system
     const inUse = await this.detector.checkPortInUse(port);
     if (inUse) {
-      throw new Error(
+      throw new PortInUseError(
         `Port ${port} is currently in use by another process. ` +
-        `Stop the process before reserving this port.`
+        `Stop the process before reserving this port.`,
+        port
       );
     }
 

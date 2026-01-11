@@ -92,6 +92,8 @@ Execute this command to review a specific package:
 
 ## Workflow
 
+**⚠️ IMPORTANT**: Step 4 (Check for Relevant New Features) is MANDATORY and must be performed before package review. Do NOT skip this step.
+
 ### Step 1: Validate Package Parameter
 
 1. **Check if `package` parameter is provided**:
@@ -168,48 +170,67 @@ Execute this command to review a specific package:
    - If not found: Fall back to general review (your point of view)
    - Continue to Step 4
 
-### Step 4: Check for Relevant New Features to Implement
+### Step 4: ⚠️ REQUIRED - Check for Relevant New Features to Implement
 
-1. **Scan `docs/features/` Directory**:
+**⚠️ CRITICAL: This step MUST be performed before reviewing the package. Do NOT skip this step.**
+
+**Purpose**: Before reviewing a package, check if there are planned features in `docs/features/` that should be implemented in this package. If a relevant feature is found, implement it. If no feature is found, suggest planning a new one.
+
+**Process**:
+
+1. **Scan `docs/features/` Directory** (REQUIRED):
    - Look for feature PRDs in `docs/features/` that are relevant to this package
    - Check if any features are planned but not yet implemented
    - Match features to package based on:
      - Feature name matching package name or purpose
      - Feature description matching package functionality
      - Feature requirements matching package capabilities
+   - **Check ALL features in `docs/features/` directory** - don't skip any
 
-2. **If Relevant Feature Found**:
-   - **Implement the Feature**:
-     - Read the feature PRD and TASKS
+2. **If Relevant Feature Found** (MUST IMPLEMENT):
+   - **⚠️ STOP HERE - Implement the Feature**:
+     - Read the feature PRD and TASKS completely
      - Implement the feature in `packages/<package>/src/features/<feature-name>/`
      - Follow the same implementation process as feature review
      - Make actual changes (add code, fix issues, improve structure)
+     - Create all necessary files and functionality
    - **Exit with Success**:
      - Output: "Feature implemented: [feature-name] in package [package]"
      - Exit with code 0
-     - **DO NOT** continue to package review
+     - **DO NOT** continue to package review (review is complete after feature implementation)
 
-3. **If No Relevant Feature Found**:
-   - **Suggest New Feature**:
+3. **If No Relevant Feature Found** (MUST SUGGEST):
+   - **⚠️ STOP HERE - Suggest New Feature**:
      - Analyze package functionality and identify gaps
      - Propose a new feature that would enhance the package
-     - Prompt user: "Would you like to plan a new feature '[feature-name]' for package '[package]'? (yes/no)"
+     - Be specific about what the feature would do and why it's needed
+     - Prompt user: "Would you like to plan a new feature '[feature-name]' for package '[package]'? This feature would [description]. (yes/no)"
    
-4. **If User Agrees to New Feature**:
-   - **Plan Feature into PRD**:
-     - Create `docs/features/<feature-name>/PRD.md`
-     - Create `docs/features/<feature-name>/TASKS.md`
+4. **If User Agrees to New Feature** (MUST PLAN):
+   - **⚠️ STOP HERE - Plan Feature into PRD**:
+     - Create `docs/features/<feature-name>/PRD.md` with complete requirements
+     - Create `docs/features/<feature-name>/TASKS.md` with implementation tasks
      - Plan the feature with requirements, architecture, tasks
      - Follow PRD creation best practices
+     - Make it comprehensive and ready for implementation
    - **Exit with Success**:
      - Output: "Feature planned: [feature-name] for package [package]"
      - Exit with code 0
-     - **DO NOT** continue to package review
+     - **DO NOT** continue to package review (review is complete after feature planning)
 
-5. **If User Declines New Feature**:
+5. **If User Declines New Feature** (ONLY THEN CONTINUE):
+   - Only after user explicitly declines the new feature suggestion
    - Continue to Step 5 (Review Package)
+   - **Note**: This is the only path that leads to package review
+
+**Summary**: 
+- ✅ **Feature Found** → Implement it → Exit (no package review)
+- ✅ **No Feature Found** → Suggest new feature → If user agrees, plan it → Exit (no package review)
+- ✅ **User Declines** → Continue to package review
 
 ### Step 5: Analyze Package Implementation
+
+**⚠️ NOTE: This step only runs if Step 4 did not result in feature implementation or planning (user declined new feature).**
 
 1. **Read Package Code**:
    - Read all TypeScript/JavaScript files in package directory
@@ -391,27 +412,50 @@ Execute this command to review a specific package:
 - Try variations: `docs/features/<package-name-dashed>/`, `docs/features/<package-name-underscored>/`
 - Search `docs/features/` for matching PRD files
 
-### Feature Detection Logic (Step 4)
+### Feature Detection Logic (Step 4) - ⚠️ REQUIRED STEP
 
-**Relevance Matching**:
+**⚠️ CRITICAL: This step MUST be performed before package review. Do NOT skip it.**
+
+**Relevance Matching** (check ALL features):
 1. **Name Matching**: Feature name contains package name or vice versa
 2. **Description Matching**: Feature description mentions package or related functionality
 3. **Requirement Matching**: Feature requirements align with package capabilities
 4. **Status Matching**: Feature PRD exists but feature not implemented in package
+5. **Directory Check**: Verify feature doesn't already exist in `packages/<package>/src/features/<feature-name>/`
 
-**Feature Implementation Process** (if feature found):
-1. Read feature PRD and TASKS
-2. Create feature directory: `packages/<package>/src/features/<feature-name>/`
-3. Implement feature following feature review process
-4. Make actual changes (add code, fix issues, improve structure)
-5. Exit with success (do not continue to package review)
+**Feature Implementation Process** (if feature found - MUST IMPLEMENT):
+1. **Read feature PRD and TASKS completely** - understand all requirements
+2. **Create feature directory**: `packages/<package>/src/features/<feature-name>/`
+3. **Implement feature following feature review process**:
+   - Add all required files and functionality
+   - Implement core logic, CLI commands, utilities
+   - Add proper exports and integration
+   - Make actual changes (add code, fix issues, improve structure)
+4. **Create feature review documentation**: `packages/<package>/src/features/<feature-name>/REVIEW.md`
+5. **Exit with success** (do not continue to package review)
+6. **Output**: "Feature implemented: [feature-name] in package [package]"
 
-**Feature Planning Process** (if user agrees to new feature):
-1. Analyze package gaps and propose feature
-2. Create `docs/features/<feature-name>/PRD.md` with requirements
-3. Create `docs/features/<feature-name>/TASKS.md` with implementation tasks
-4. Plan feature architecture and API
-5. Exit with success (do not continue to package review)
+**Feature Planning Process** (if user agrees to new feature - MUST PLAN):
+1. **Analyze package gaps** and propose feature with clear justification
+2. **Create `docs/features/<feature-name>/PRD.md`** with complete requirements:
+   - Problem statement
+   - Solution design
+   - Technical architecture
+   - Success criteria
+   - Usage examples
+3. **Create `docs/features/<feature-name>/TASKS.md`** with implementation tasks:
+   - Break down into actionable tasks
+   - Include dependencies and priorities
+   - Provide clear implementation guidance
+4. **Plan feature architecture and API** - make it comprehensive
+5. **Exit with success** (do not continue to package review)
+6. **Output**: "Feature planned: [feature-name] for package [package]"
+
+**⚠️ IMPORTANT**: 
+- Step 4 is MANDATORY - always check for features before reviewing
+- If feature found, implement it completely before exiting
+- If no feature found, suggest a new one and plan it if user agrees
+- Only proceed to package review if user explicitly declines new feature
 
 ### Review Process
 

@@ -129,7 +129,7 @@ export class WarningDetector {
 
     // Check if ignored (check custom recommendations and ignored warnings)
     const isIgnored = userChoices.customRecommendations?.languages?.includes(languageName) ||
-                     userChoices.ignoredWarnings?.languages?.[languageName];
+      userChoices.ignoredWarnings?.languages?.[languageName];
     if (isIgnored) {
       return warnings;
     }
@@ -185,7 +185,7 @@ export class WarningDetector {
 
     // Check if ignored (check custom recommendations and ignored warnings)
     const isIgnored = userChoices.customRecommendations?.buildTools?.includes(toolName) ||
-                     userChoices.ignoredWarnings?.buildTools?.[toolName];
+      userChoices.ignoredWarnings?.buildTools?.[toolName];
     if (isIgnored) {
       return warnings;
     }
@@ -241,7 +241,7 @@ export class WarningDetector {
 
     // Check if ignored (check custom recommendations and ignored warnings)
     const isIgnored = userChoices.customRecommendations?.packageManagers?.includes(pmName) ||
-                     userChoices.ignoredWarnings?.packageManagers?.[pmName];
+      userChoices.ignoredWarnings?.packageManagers?.[pmName];
     if (isIgnored) {
       return warnings;
     }
@@ -297,7 +297,7 @@ export class WarningDetector {
 
     // Check if ignored (check custom recommendations and ignored warnings)
     const isIgnored = userChoices.customRecommendations?.runtimes?.includes(runtimeName) ||
-                     userChoices.ignoredWarnings?.runtimes?.[runtimeName];
+      userChoices.ignoredWarnings?.runtimes?.[runtimeName];
     if (isIgnored) {
       return warnings;
     }
@@ -366,7 +366,7 @@ export class WarningDetector {
       // Clean versions for semver comparison
       const cleanCurrent = currentVersion.replace(/^[\^~<>=!]+/, '').trim();
       const cleanMin = minVersion.replace(/^[\^~<>=!]+/, '').trim();
-      
+
       // Use semver for proper version comparison
       return semver.lt(cleanCurrent, cleanMin);
     } catch (error) {

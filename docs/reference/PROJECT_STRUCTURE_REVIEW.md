@@ -42,18 +42,24 @@ This document lists useful project structure patterns found in other projects th
   ├── frontend/          # Angular frontend
   │   ├── src/
   │   └── e2e/
+  ├── mobile/            # Mobile app (iOS & Android)
+  │   ├── ios/           # iOS native code
+  │   ├── android/        # Android native code
+  │   ├── src/           # Shared mobile code
+  │   └── package.json    # Mobile dependencies
   ├── docs/              # Documentation
   ├── scripts/           # Build/deployment scripts
   └── docker-compose.yml
   ```
-- **Description**: Full-stack application with clear backend/frontend separation
-- **Usefulness**: ⭐⭐⭐⭐⭐ Excellent pattern for full-stack projects
+- **Description**: Full-stack application with clear backend/frontend/mobile separation
+- **Usefulness**: ⭐⭐⭐⭐⭐ Excellent pattern for full-stack projects with mobile support
 - **Notes**: 
-  - Clear separation: backend and frontend in separate directories
+  - Clear separation: backend, frontend, and mobile in separate directories
+  - Mobile app supports both iOS and Android platforms
   - Shared scripts directory at root
   - Documentation organized separately
   - Docker configuration at root
-  - Each part has its own dependency management (composer.json, package.json)
+  - Each part has its own dependency management (composer.json, package.json, mobile package.json)
 
 ### ✅ Next.js App Router Pattern (spoon-me)
 
@@ -130,9 +136,11 @@ This document lists useful project structure patterns found in other projects th
 ### For Full-Stack Applications:
 2. ✅ **Full-Stack Split** (games example)
    - `backend/` and `frontend/` directories
+   - `mobile/` directory for mobile app (iOS & Android)
    - Shared `scripts/` and `docs/` at root
    - Docker configuration at root
    - Clear separation of concerns
+   - **Standard Structure**: All full-stack projects should include backend, frontend, and mobile components
 
 ### For Next.js Applications:
 3. ✅ **App Router Pattern** (spoon-me example)
@@ -156,11 +164,12 @@ This document lists useful project structure patterns found in other projects th
 ## Structure Best Practices Observed
 
 ### Common Patterns:
-1. **Clear separation**: Backend/frontend, packages, features
-2. **Documentation**: `docs/` directory at root
-3. **Scripts**: `scripts/` directory for automation
-4. **Configuration**: Config files at appropriate levels (root, package, etc.)
-5. **Testing**: Tests co-located with source or in `tests/` directory
+1. **Clear separation**: Backend/frontend/mobile, packages, features
+2. **Mobile Apps**: All full-stack projects should include a `mobile/` directory for mobile app (iOS & Android)
+3. **Documentation**: `docs/` directory at root
+4. **Scripts**: `scripts/` directory for automation
+5. **Configuration**: Config files at appropriate levels (root, package, etc.)
+6. **Testing**: Tests co-located with source or in `tests/` directory
 
 ### Directory Naming:
 - Use lowercase, kebab-case for directories
@@ -172,13 +181,80 @@ This document lists useful project structure patterns found in other projects th
 - README files in feature/package directories
 - Config files at appropriate levels
 
+## Mobile App Structure Standard
+
+### Standard Mobile App Structure
+
+**All full-stack projects should include a mobile app component** in addition to backend and frontend:
+
+```
+project/
+├── backend/              # Backend API/service
+├── frontend/            # Web frontend
+├── mobile/              # Mobile app (iOS & Android)
+│   ├── ios/             # iOS native code (Xcode project)
+│   │   ├── App/
+│   │   ├── Info.plist
+│   │   └── project.pbxproj
+│   ├── android/         # Android native code (Gradle project)
+│   │   ├── app/
+│   │   ├── build.gradle
+│   │   └── AndroidManifest.xml
+│   ├── src/             # Shared mobile code
+│   │   ├── components/   # React Native/Flutter components
+│   │   ├── screens/     # App screens
+│   │   ├── services/    # API services
+│   │   ├── navigation/  # Navigation configuration
+│   │   └── utils/       # Utility functions
+│   ├── package.json     # Mobile dependencies (React Native)
+│   ├── pubspec.yaml     # Flutter dependencies (if using Flutter)
+│   └── README.md        # Mobile app documentation
+```
+
+### Mobile App Requirements
+
+1. **Cross-Platform Support**: 
+   - Support both iOS and Android platforms
+   - Use React Native, Flutter, or native development
+
+2. **Backend Integration**:
+   - Integrate with the same backend API as web frontend
+   - Share authentication and data models
+   - Synchronize data between mobile and web
+
+3. **Offline Capabilities**:
+   - Support offline mode with local data storage
+   - Sync data when connection is restored
+   - Queue actions when offline
+
+4. **Native Features**:
+   - Push notifications
+   - Biometric authentication
+   - Camera/GPS access (if needed)
+   - Native UI components
+
+5. **Mobile-Specific Features**:
+   - Mobile-optimized UI/UX
+   - Touch gestures and interactions
+   - Mobile navigation patterns
+   - Performance optimization for mobile devices
+
+### Mobile App Technology Options
+
+- **React Native**: Cross-platform with JavaScript/TypeScript
+- **Flutter**: Cross-platform with Dart
+- **Native**: Separate iOS (Swift) and Android (Kotlin/Java) codebases
+- **Ionic**: Web-based mobile app framework
+
 ## Notes
 
 - Structure patterns are highly reusable across projects
 - Choose pattern based on project type (library, full-stack, etc.)
+- **All full-stack projects should include backend, frontend, and mobile components**
 - Consistency within a project is key
 - Documentation structure should match code structure
 - Scripts and configs should be at appropriate levels
+- Mobile apps should integrate with the same backend as web frontend
 
 ---
 

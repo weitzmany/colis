@@ -58,6 +58,41 @@ When creating a new project in `/Users/yoavweitzman/Documents/Projects/`:
 
 New projects should follow this structure:
 
+### Full-Stack Projects
+
+For full-stack applications, the standard structure includes backend, frontend, and mobile components:
+
+```
+/Users/yoavweitzman/Documents/Projects/
+├── project-name-1/
+│   ├── backend/          # Backend API/service
+│   │   ├── src/
+│   │   ├── tests/
+│   │   └── package.json  # or composer.json, etc.
+│   ├── frontend/         # Web frontend
+│   │   ├── src/
+│   │   ├── public/
+│   │   └── package.json
+│   ├── mobile/           # Mobile app (iOS & Android)
+│   │   ├── ios/          # iOS native code
+│   │   ├── android/      # Android native code
+│   │   ├── src/          # Shared mobile code (React Native/Flutter)
+│   │   └── package.json  # Mobile dependencies
+│   ├── .cursor/
+│   │   ├── rules/
+│   │   └── commands/
+│   ├── docs/             # Documentation
+│   ├── scripts/          # Build/deployment scripts
+│   └── docker-compose.yml
+├── project-name-2/
+│   └── ...
+└── ...
+```
+
+### Other Project Types
+
+For libraries, tools, or other project types:
+
 ```
 /Users/yoavweitzman/Documents/Projects/
 ├── project-name-1/
@@ -67,10 +102,16 @@ New projects should follow this structure:
 │   ├── src/
 │   ├── package.json
 │   └── ...
-├── project-name-2/
-│   └── ...
 └── ...
 ```
+
+### Mobile App Standard
+
+**All full-stack projects should include a mobile app component** in addition to backend and frontend:
+- Mobile apps support both iOS and Android platforms
+- Use React Native, Flutter, or native development as appropriate
+- Mobile apps integrate with the same backend API as the web frontend
+- Mobile apps provide offline capabilities and native mobile features
 
 ## Benefits of Centralized Location
 

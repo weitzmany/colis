@@ -3,7 +3,7 @@
  *
  * Manages available templates and their metadata
  */
-import { TemplateMetadata } from './types';
+import { TemplateMetadata } from './types.js';
 export declare class TemplateRegistry {
     private templatesPath;
     constructor(templatesPath?: string);

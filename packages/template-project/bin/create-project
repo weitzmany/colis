@@ -6,8 +6,8 @@
  * Main entry point for creating new projects from templates
  */
 
-const { program } = require('commander');
-const { createCommand } = require('../dist/cli/commands/create');
+import { program } from 'commander';
+import { createCommand } from '../dist/cli/commands/create.js';
 
 program
   .name('create-project')
@@ -24,6 +24,7 @@ program
   .option('--skip-deps', 'Skip dependency installation')
   .option('--skip-git', 'Skip git initialization')
   .option('--skip-init', 'Skip Project Initialization (not recommended)')
+  .option('--skip-task-manager', 'Skip Task Manager initialization')
   .option('--overwrite', 'Overwrite existing files')
   .option('--skip-existing', 'Skip existing files (default)')
   .option('--dry-run', 'Show what would be created without making changes')
@@ -38,6 +39,7 @@ program
       skipDeps: options.skipDeps,
       skipGit: options.skipGit,
       skipInit: options.skipInit,
+      skipTaskManager: options.skipTaskManager,
       overwrite: options.overwrite,
       skipExisting: options.skipExisting,
       dryRun: options.dryRun,

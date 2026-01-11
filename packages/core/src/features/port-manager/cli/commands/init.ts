@@ -56,8 +56,23 @@ export async function initCommand(options: {
       return;
     }
 
-    // Allocate port
-    const port = await portManager.allocate(projectName, projectPath, appType as any);
+    // Allocate port (handle conflicts gracefully)
+    let port: number;
+    try {
+      port = await portManager.allocate(projectName, projectPath, appType as any);
+    } catch (allocateError: any) {
+      const errorMessage = allocateError.message || String(allocateError);
+      if (errorMessage.includes('UNIQUE constraint') || errorMessage.includes('already assigned')) {
+        // Port conflict - try to find next available port or skip
+        console.log(chalk.yellow(`⚠ Port allocation conflict: ${errorMessage}`));
+        console.log(chalk.yellow('  Port Manager will continue without port allocation'));
+        console.log(chalk.yellow('  You can allocate a port manually later with: port-manager allocate'));
+        // Return early without failing
+        return;
+      }
+      // Re-throw other errors
+      throw allocateError;
+    }
 
     // Configure project
     if (options.autoConfigure !== false) {

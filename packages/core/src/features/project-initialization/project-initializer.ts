@@ -150,9 +150,20 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         result.portManagerInitialized = true;
         console.log(chalk.green('  ✓ Port Manager initialized'));
       } catch (error: any) {
-        result.success = false;
-        result.errors.push(`Port Manager initialization failed: ${error.message}`);
-        console.log(chalk.red(`  ✗ Port Manager initialization failed: ${error.message}`));
+        // Port allocation failures are not critical - continue with initialization
+        const errorMessage = error.message || String(error);
+        if (errorMessage.includes('UNIQUE constraint') || errorMessage.includes('already assigned') || errorMessage.includes('already exists')) {
+          result.warnings.push(`Port Manager: Port conflict detected. ${errorMessage}. You can allocate a port manually later with: port-manager allocate`);
+          console.log(chalk.yellow(`  ⚠ Port allocation skipped (port conflict): ${errorMessage}`));
+          console.log(chalk.yellow('  You can allocate a port manually later with: port-manager allocate'));
+        } else {
+          // Other errors are warnings but don't fail initialization
+          result.warnings.push(`Port Manager initialization had issues: ${errorMessage}`);
+          console.log(chalk.yellow(`  ⚠ Port Manager initialization had issues: ${errorMessage}`));
+          console.log(chalk.yellow('  You can initialize Port Manager manually later with: npx @your-org/core port-manager init'));
+        }
+        // Don't mark as failed - port allocation is optional for project setup
+        result.portManagerInitialized = false;
       }
     } else {
       result.warnings.push('Port Manager initialization was skipped (not recommended)');

@@ -4,10 +4,10 @@
  * Generates project structure from templates
  */
 
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import * as path from 'path';
-import { TemplateProcessor } from './template-processor';
-import { GenerationOptions, GenerationResult, TemplateContext } from './types';
+import { TemplateProcessor } from './template-processor.js';
+import { GenerationOptions, GenerationResult, TemplateContext } from './types.js';
 
 export class FileGenerator {
   private processor: TemplateProcessor;

@@ -41,12 +41,24 @@ npx @your-org/template-project create my-project \
 - `--skip-deps`: Skip dependency installation
 - `--skip-git`: Skip git initialization
 - `--skip-init`: Skip Project Initialization (not recommended)
+- `--skip-task-manager`: Skip Task Manager initialization
 - `--overwrite`: Overwrite existing files
 - `--skip-existing`: Skip existing files (default)
 - `--dry-run`: Show what would be created without making changes
 - `--description <text>`: Project description
 - `--author <name>`: Author name
 - `--license <type>`: License type (MIT, Apache-2.0, etc.)
+
+## What Gets Set Up Automatically
+
+When you create a new project, the following are automatically initialized:
+
+1. **Project Structure** - Complete template structure with all necessary files
+2. **Project Initialization** - Cursor rules, commands, Port Manager, and IDE colors
+3. **Task Manager** - Task management system initialized (can be skipped with `--skip-task-manager`)
+4. **Dependencies** - Package dependencies installed (can be skipped with `--skip-deps`)
+5. **Git Repository** - Git initialized (can be skipped with `--skip-git`)
+6. **IDE Opening** - Project automatically opens in Cursor IDE
 
 ## Available Templates
 

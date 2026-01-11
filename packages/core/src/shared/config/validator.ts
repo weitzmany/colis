@@ -1,20 +1,57 @@
 /**
  * Configuration Validator
  * 
- * Validates configuration values and provides default values.
+ * Validates configuration values and provides validation results.
+ * Ensures configuration values meet requirements and constraints.
+ * 
+ * @packageDocumentation
+ * @module @your-org/core/shared/config
  */
 
 import { GlobalConfig } from './global-config';
 import { ProjectConfig } from './project-config';
 
+/**
+ * Validation result
+ * 
+ * Represents the result of a configuration validation operation.
+ */
 export interface ValidationResult {
+  /** Whether the validation passed */
   valid: boolean;
+  /** List of validation error messages (empty if valid is true) */
   errors: string[];
 }
 
+/**
+ * Configuration Validator
+ * 
+ * Provides static methods for validating configuration values.
+ * Used to ensure configuration meets requirements before saving or using.
+ * 
+ * @example
+ * ```typescript
+ * const result = ConfigValidator.validatePort(3000);
+ * if (!result.valid) {
+ *   console.error('Validation errors:', result.errors);
+ * }
+ * ```
+ */
 export class ConfigValidator {
   /**
    * Validate port number
+   * 
+   * Validates that a port number is a valid integer within the allowed range
+   * and warns if it's a system port (below 1024).
+   * 
+   * @param port - Port number to validate
+   * @returns Validation result with valid flag and error messages
+   * 
+   * @example
+   * ```typescript
+   * const result = ConfigValidator.validatePort(3000);
+   * // result.valid = true (but warning about system ports if < 1024)
+   * ```
    */
   static validatePort(port: number): ValidationResult {
     const errors: string[] = [];
@@ -35,6 +72,18 @@ export class ConfigValidator {
 
   /**
    * Validate project name
+   * 
+   * Validates that a project name is a non-empty string, within length limits,
+   * and contains only allowed characters (letters, numbers, underscores, hyphens).
+   * 
+   * @param name - Project name to validate
+   * @returns Validation result with valid flag and error messages
+   * 
+   * @example
+   * ```typescript
+   * const result = ConfigValidator.validateProjectName('my-project');
+   * // result.valid = true
+   * ```
    */
   static validateProjectName(name: string): ValidationResult {
     const errors: string[] = [];
@@ -55,6 +104,17 @@ export class ConfigValidator {
 
   /**
    * Validate app type
+   * 
+   * Validates that an app type is one of the supported application types.
+   * 
+   * @param appType - App type string to validate
+   * @returns Validation result with valid flag and error messages
+   * 
+   * @example
+   * ```typescript
+   * const result = ConfigValidator.validateAppType('nextjs');
+   * // result.valid = true
+   * ```
    */
   static validateAppType(appType: string): ValidationResult {
     const validTypes = ['node', 'nextjs', 'angular', 'react', 'php', 'python', 'docker'];
@@ -72,6 +132,18 @@ export class ConfigValidator {
 
   /**
    * Validate port range
+   * 
+   * Validates that a port range is valid (start < end, both ports valid).
+   * 
+   * @param start - Start port number
+   * @param end - End port number
+   * @returns Validation result with valid flag and error messages
+   * 
+   * @example
+   * ```typescript
+   * const result = ConfigValidator.validatePortRange(3001, 3099);
+   * // result.valid = true
+   * ```
    */
   static validatePortRange(start: number, end: number): ValidationResult {
     const errors: string[] = [];
@@ -94,6 +166,20 @@ export class ConfigValidator {
 
   /**
    * Validate global configuration
+   * 
+   * Validates all aspects of a global configuration object, including
+   * port ranges and reserved ports.
+   * 
+   * @param config - Global configuration object to validate
+   * @returns Validation result with valid flag and error messages
+   * 
+   * @example
+   * ```typescript
+   * const result = ConfigValidator.validateGlobalConfig(config);
+   * if (!result.valid) {
+   *   console.error('Config errors:', result.errors);
+   * }
+   * ```
    */
   static validateGlobalConfig(config: GlobalConfig): ValidationResult {
     const errors: string[] = [];
@@ -124,6 +210,20 @@ export class ConfigValidator {
 
   /**
    * Validate project configuration
+   * 
+   * Validates all aspects of a project configuration object, including
+   * project name, app type, and port number.
+   * 
+   * @param config - Project configuration object to validate
+   * @returns Validation result with valid flag and error messages
+   * 
+   * @example
+   * ```typescript
+   * const result = ConfigValidator.validateProjectConfig(config);
+   * if (!result.valid) {
+   *   console.error('Config errors:', result.errors);
+   * }
+   * ```
    */
   static validateProjectConfig(config: ProjectConfig): ValidationResult {
     const errors: string[] = [];

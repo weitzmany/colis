@@ -2,6 +2,10 @@
  * Shared Database Abstractions
  * 
  * Exports all database-related interfaces and implementations.
+ * Provides database-agnostic abstractions using the Repository pattern.
+ * 
+ * @packageDocumentation
+ * @module @your-org/core/shared/database
  */
 
 export * from './repository';

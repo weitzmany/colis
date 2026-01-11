@@ -2,25 +2,64 @@
  * Setup Validator
  * 
  * Validates that project initialization was successful.
+ * Checks that all expected files exist and are correctly configured.
  */
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
+/**
+ * Result of setup validation
+ */
 export interface InitValidationResult {
+  /** Whether overall validation passed */
   success: boolean;
+  /** Whether rules validation passed */
   rulesValid: boolean;
+  /** Whether commands validation passed */
   commandsValid: boolean;
+  /** Whether Port Manager validation passed */
   portManagerValid: boolean;
+  /** Whether IDE colors validation passed */
   colorsValid: boolean;
+  /** List of validation errors */
   errors: string[];
+  /** List of validation warnings */
   warnings: string[];
 }
 
+/**
+ * Options for setup validation
+ */
 export interface ValidationOptions {
+  /** Whether to check IDE colors configuration. Default: false */
   checkColors?: boolean;
 }
 
+/**
+ * Validate project initialization setup
+ * 
+ * Checks that all expected files were copied correctly and that
+ * Port Manager and IDE colors (if requested) are properly configured.
+ * 
+ * @param projectPath - Path to the project root directory
+ * @param expectedRules - Expected number of rules files
+ * @param expectedRules.experts - Expected number of expert persona files
+ * @param expectedRules.user - Expected number of user rule files
+ * @param expectedCommands - Expected number of command files
+ * @param expectedCommands.general - Expected number of general command files
+ * @param options - Validation options
+ * @param options.checkColors - Whether to validate IDE colors setup. Default: false
+ * @returns Promise resolving to validation result with success status and detailed checks
+ * 
+ * @example
+ * ```typescript
+ * const result = await validateSetup('/path/to/project', { experts: 26, user: 3 }, { general: 5 }, { checkColors: true });
+ * if (!result.success) {
+ *   console.error('Validation failed:', result.errors);
+ * }
+ * ```
+ */
 export async function validateSetup(
   projectPath: string,
   expectedRules: { experts: number; user: number },
@@ -158,9 +197,13 @@ export async function validateSetup(
     }
 
     return result;
-  } catch (error: any) {
+  } catch (error: unknown) {
     result.success = false;
-    result.errors.push(`Validation error: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    result.errors.push(
+      `Validation error: ${errorMessage}\n` +
+      `  Solution: Re-run initialization: npx @your-org/core init`
+    );
     return result;
   }
 }

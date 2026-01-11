@@ -2,7 +2,9 @@
  * Project Initializer
  * 
  * Main initialization logic that orchestrates rules copying, commands copying,
- * and Port Manager initialization.
+ * Port Manager initialization, and IDE color configuration.
+ * 
+ * This is the core function that handles the complete project initialization workflow.
  */
 
 import * as path from 'path';
@@ -22,30 +24,77 @@ import {
   initializeSettingsJson,
 } from './hook-generator';
 
+/**
+ * Options for project initialization
+ */
 export interface InitOptions {
+  /** Project name (auto-detected if not provided) */
   projectName?: string;
+  /** App type (auto-detected if not provided) */
   appType?: string;
+  /** Overwrite existing files. Default: false */
   overwrite?: boolean;
+  /** Skip existing files (default behavior). Default: true */
   skipExisting?: boolean;
+  /** Skip copying rules. Default: false */
   skipRules?: boolean;
+  /** Skip copying commands. Default: false */
   skipCommands?: boolean;
+  /** Skip Port Manager initialization (not recommended). Default: false */
   skipPortManager?: boolean;
+  /** Skip prompting to install default frameworks. Default: false */
   skipDefaults?: boolean;
+  /** Skip automatic domain setup with Caddy. Default: false */
   skipDomain?: boolean;
+  /** Skip IDE color setup. Default: false */
   skipColors?: boolean;
+  /** Show what would be done without making changes. Default: false */
   dryRun?: boolean;
 }
 
+/**
+ * Result of project initialization
+ */
 export interface InitResult {
+  /** Whether initialization succeeded */
   success: boolean;
+  /** Result of rules copying operation */
   rulesResult?: CopyRulesResult;
+  /** Result of commands copying operation */
   commandsResult?: CopyCommandsResult;
+  /** Result of setup validation */
   validationResult?: InitValidationResult;
+  /** Whether Port Manager was initialized */
   portManagerInitialized: boolean;
+  /** List of errors encountered during initialization */
   errors: string[];
+  /** List of warnings encountered during initialization */
   warnings: string[];
 }
 
+/**
+ * Initialize a project with rules, commands, Port Manager, and IDE colors
+ * 
+ * This is the main entry point for project initialization. It orchestrates:
+ * - Copying expert personas and user rules to `.cursor/rules/`
+ * - Copying general commands to `.cursor/commands/general/` (excludes local commands)
+ * - Initializing Port Manager (mandatory unless skipped)
+ * - Configuring IDE colors with unique KEY_COLOR and branch-based themes
+ * - Validating the setup
+ * 
+ * @param options - Initialization options
+ * @returns Promise resolving to initialization result with success status and detailed information
+ * 
+ * @example
+ * ```typescript
+ * const result = await initializeProject({ overwrite: false, skipColors: false });
+ * if (result.success) {
+ *   console.log('Project initialized successfully!');
+ * } else {
+ *   console.error('Errors:', result.errors);
+ * }
+ * ```
+ */
 export async function initializeProject(options: InitOptions = {}): Promise<InitResult> {
   const result: InitResult = {
     success: true,
@@ -62,15 +111,61 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
     if (!corePackagePath) {
       result.success = false;
       result.errors.push(
-        'Core package not found. Make sure @your-org/core is installed in node_modules.'
+        'Core package not found. Make sure @your-org/core is installed in node_modules.\n' +
+        '  Solution: Run: npm install @your-org/core'
       );
       return result;
     }
 
     if (options.dryRun) {
-      console.log(chalk.blue('🔍 Dry run mode - no changes will be made'));
+      console.log(chalk.blue('🔍 Dry run mode - no changes will be made\n'));
       console.log(chalk.blue(`Project path: ${projectPath}`));
-      console.log(chalk.blue(`Core package path: ${corePackagePath}`));
+      console.log(chalk.blue(`Core package path: ${corePackagePath}\n`));
+      
+      // Show what would be done
+      console.log(chalk.blue('Would perform the following operations:'));
+      
+      if (!options.skipRules) {
+        const sourceRulesPath = path.join(corePackagePath, 'rules');
+        const expertsPath = path.join(sourceRulesPath, 'experts');
+        const userPath = path.join(sourceRulesPath, 'user');
+        
+        let expertCount = 0;
+        let userCount = 0;
+        
+        if (await fs.pathExists(expertsPath)) {
+          const expertFiles = (await fs.readdir(expertsPath)).filter(f => f.endsWith('.mdc'));
+          expertCount = expertFiles.length;
+        }
+        if (await fs.pathExists(userPath)) {
+          const userFiles = (await fs.readdir(userPath)).filter(f => f.endsWith('.mdc'));
+          userCount = userFiles.length;
+        }
+        
+        console.log(chalk.blue(`  📋 Copy ${expertCount} expert personas and ${userCount} user rules`));
+      }
+      
+      if (!options.skipCommands) {
+        const sourceCommandsPath = path.join(corePackagePath, 'commands', 'general');
+        let commandCount = 0;
+        if (await fs.pathExists(sourceCommandsPath)) {
+          const commandFiles = (await fs.readdir(sourceCommandsPath)).filter(f => f.endsWith('.md'));
+          commandCount = commandFiles.length;
+        }
+        console.log(chalk.blue(`  ⚡ Copy ${commandCount} general commands`));
+      }
+      
+      if (!options.skipPortManager) {
+        console.log(chalk.blue(`  🔌 Initialize Port Manager for project: ${projectName || 'auto-detect'}`));
+      }
+      
+      if (!options.skipColors) {
+        const palette = generateColorPalette(projectName || generateProjectName(projectPath));
+        console.log(chalk.blue(`  🎨 Configure IDE colors with KEY_COLOR: ${palette.keyColor}`));
+      }
+      
+      console.log(chalk.blue(`  ✓ Validate setup\n`));
+      
       return result;
     }
 
@@ -285,15 +380,23 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
     }
 
     return result;
-  } catch (error: any) {
+  } catch (error: unknown) {
     result.success = false;
-    result.errors.push(`Initialization error: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    result.errors.push(
+      `Initialization error: ${errorMessage}\n` +
+      '  Solution: Check error details above and ensure all dependencies are installed'
+    );
     return result;
   }
 }
 
 /**
  * Find the core package path in node_modules
+ * 
+ * Searches for @your-org/core package in common node_modules locations.
+ * 
+ * @returns Promise resolving to core package path if found, null otherwise
  */
 async function findCorePackagePath(): Promise<string | null> {
   const projectPath = process.cwd();

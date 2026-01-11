@@ -47,6 +47,14 @@ Projects are categorized by academic discipline and educational value.
   - Computer Science: Database systems, distributed computing, system architecture
   - Software Engineering: Migration strategies, deployment automation, system design
   - Data Management: Schema design, data persistence, backup strategies
+- **Database Considerations**:
+  - **Database Type**: SQLite (embedded database, suitable for single-instance bots)
+  - **Schema Design**: Story management schema, bot configuration schema, user data schema
+  - **Migration Strategy**: Version-controlled migrations for schema evolution
+  - **Data Persistence**: Local file-based database storage
+  - **Backup Strategy**: Database backup and restore procedures
+  - **Query Optimization**: Efficient queries for story retrieval and bot management
+  - **Concurrency**: Multi-bot coordination with database locking/transaction management
 
 ### 3. `find-hidden-files/`
 - **Type**: Obsidian Plugin
@@ -97,6 +105,16 @@ Projects are categorized by academic discipline and educational value.
   - Adaptive learning algorithms
   - Question difficulty assessment
   - Learning analytics and progress tracking
+- **Database Considerations**:
+  - **Database Type**: MySQL (relational database, suitable for structured educational data)
+  - **Schema Design**: User authentication schema, question/quiz schema, staff management schema, learning progress schema
+  - **Migration Strategy**: Database migrations for schema versioning and evolution
+  - **Data Persistence**: Dockerized MySQL database with persistent volumes
+  - **Backup Strategy**: Database backup and restore procedures for educational data
+  - **Query Optimization**: Optimized queries for question retrieval, user progress tracking, quiz scoring
+  - **Data Integrity**: Foreign key constraints, data validation, transaction management
+  - **Scalability**: Database indexing for performance, connection pooling for concurrent users
+  - **Security**: Secure credential management, SQL injection prevention, access control
 
 ### 5. `games-mirror/`
 - **Type**: Documentation/Backup Mirror
@@ -168,6 +186,16 @@ Projects are categorized by academic discipline and educational value.
   - Computer Science: Web development, state management, API design, authentication
   - Business/Mathematics: Pricing algorithms, discount calculations, inventory management
   - Software Engineering: Component architecture, type safety (TypeScript), testing strategies
+- **Database Considerations**:
+  - **Database Type**: Likely PostgreSQL or MySQL (relational database for e-commerce data)
+  - **Schema Design**: Product catalog schema, user/authentication schema, order management schema, coupon/discount schema, inventory schema
+  - **Migration Strategy**: Database migrations for schema versioning and product/order data management
+  - **Data Persistence**: Persistent database storage for products, orders, users, inventory
+  - **Backup Strategy**: Database backup and restore procedures for business-critical data
+  - **Query Optimization**: Optimized queries for product search, order retrieval, inventory checks, coupon validation
+  - **Data Integrity**: Foreign key constraints, inventory constraints, order data consistency, transaction management for orders
+  - **Scalability**: Database indexing for product search, order queries, connection pooling for high traffic
+  - **Security**: Secure credential management, SQL injection prevention, PCI compliance considerations for payment data
 
 ### 8. `packages/`
 - **Type**: Documentation/Knowledge Base (Current Workspace)
@@ -254,10 +282,14 @@ The following directories exist in `~/Documents/` but are not code projects:
    - Monorepo management strategies
    - API design principles
 
-3. **Database Systems Research** (`discord-story-bot/`):
-   - Migration strategies
+3. **Database Systems Research** (`discord-story-bot/`, `games/`, `spoon-me/`):
+   - Migration strategies and schema evolution
    - Distributed data management
    - Multi-bot coordination
+   - Educational data management and learning analytics
+   - E-commerce database design and transaction management
+   - Query optimization and performance tuning
+   - Database security and access control
 
 4. **Knowledge Management Research** (`packages/`):
    - Documentation structure effectiveness
@@ -294,6 +326,11 @@ The following directories exist in `~/Documents/` but are not code projects:
 **Expertise**: Subject Matter (Physics, Math, CS, Academic Fields)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this projects list document by adding comprehensive academic classification and educational value assessment. For each project, added: academic classification (Computer Science, Information Science, Educational Technology), educational value assessment (high/moderate/supporting with specific learning opportunities), subject matter areas (detailed breakdown of CS topics, mathematics applications, software engineering concepts), and research opportunities (educational technology research, software architecture research, database systems research, knowledge management research). Added an "Academic Classification Summary" section organizing projects by academic discipline, educational value, and research opportunities. Also fixed the date from 2025-01-05 to 2026-01-05. This addition provides academic rigor and educational context to the project list, making it valuable for understanding the educational and research potential of each project, and helps identify learning opportunities and subject matter connections across the project portfolio.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this projects list document by adding comprehensive "Database Considerations" sections for database-using projects. Added detailed database considerations for `discord-story-bot/` (SQLite database with schema design, migration strategy, data persistence, backup strategy, query optimization, concurrency management), `games/` (MySQL database with educational data schema, migration strategy, Docker persistence, backup strategy, query optimization, data integrity, scalability, security), and `spoon-me/` (PostgreSQL/MySQL database with e-commerce schema, migration strategy, data persistence, backup strategy, query optimization, data integrity, scalability, PCI compliance considerations). Enhanced the "Database Systems Research" section to include educational data management, e-commerce database design, query optimization, and database security research opportunities. This addition provides essential database perspective on projects, ensuring that database considerations are documented and understood for each project that uses databases, helping identify database design patterns, migration strategies, and optimization opportunities across the project portfolio.
 
 ---
 

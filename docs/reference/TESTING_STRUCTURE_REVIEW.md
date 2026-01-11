@@ -2,7 +2,7 @@
 
 This document lists useful testing structure patterns found in other projects.
 
-**Last Updated**: 2025-01-05
+**Last Updated**: 2026-01-05
 
 ## Testing Structure Patterns Found
 
@@ -419,6 +419,155 @@ When reviewing test structure, consider:
 - [ ] **Test Maintainability Quality**: Test structure supports easy maintenance and extension
 - [ ] **Test Documentation Quality**: Test structure is well-documented and easy to understand
 
+## Database Testing Structure Patterns
+
+### Pattern 1: Database Test Setup Structure
+
+```
+tests/
+├── Database/
+│   ├── TestDatabase.php          # Test database setup
+│   ├── DatabaseTestCase.php       # Base test case for database tests
+│   ├── Migrations/
+│   │   ├── MigrationTest.php     # Migration testing
+│   │   └── RollbackTest.php       # Rollback testing
+│   ├── Models/
+│   │   ├── UserModelTest.php      # Model tests
+│   │   └── OrderModelTest.php
+│   ├── Queries/
+│   │   ├── QueryOptimizationTest.php
+│   │   └── QueryPerformanceTest.php
+│   └── Fixtures/
+│       ├── users.sql              # Test data fixtures
+│       └── orders.sql
+└── bootstrap.php                  # Database test bootstrap
+```
+
+### Pattern 2: Database Test Organization
+
+```typescript
+// tests/database/migrations/migration.test.ts
+describe('Database Migrations', () => {
+  beforeEach(async () => {
+    // Setup test database
+    await setupTestDatabase();
+  });
+  
+  afterEach(async () => {
+    // Cleanup test database
+    await cleanupTestDatabase();
+  });
+  
+  it('should run migrations successfully', async () => {
+    await runMigrations();
+    const tables = await getTables();
+    expect(tables).toContain('users');
+    expect(tables).toContain('orders');
+  });
+  
+  it('should rollback migrations', async () => {
+    await runMigrations();
+    await rollbackMigrations();
+    const tables = await getTables();
+    expect(tables).not.toContain('users');
+  });
+});
+```
+
+### Pattern 3: Database Integration Test Structure
+
+```typescript
+// tests/database/integration/user.integration.test.ts
+describe('User Database Integration', () => {
+  let db: Database;
+  
+  beforeAll(async () => {
+    db = await createTestDatabase();
+    await runMigrations();
+  });
+  
+  afterAll(async () => {
+    await dropTestDatabase(db);
+  });
+  
+  beforeEach(async () => {
+    await clearTestData(db);
+    await seedTestData(db);
+  });
+  
+  it('should create user with profile', async () => {
+    const user = await db.query(
+      'INSERT INTO users (email, name) VALUES (?, ?)',
+      ['test@example.com', 'Test User']
+    );
+    
+    await db.query(
+      'INSERT INTO user_profiles (user_id, bio) VALUES (?, ?)',
+      [user.insertId, 'Test bio']
+    );
+    
+    const profile = await db.query(
+      'SELECT * FROM user_profiles WHERE user_id = ?',
+      [user.insertId]
+    );
+    
+    expect(profile).toBeDefined();
+    expect(profile.bio).toBe('Test bio');
+  });
+});
+```
+
+### Pattern 4: Database Performance Test Structure
+
+```typescript
+// tests/database/performance/query.performance.test.ts
+describe('Database Query Performance', () => {
+  it('should complete query within timeout', async () => {
+    const startTime = Date.now();
+    
+    await db.query('SELECT * FROM users WHERE email = ?', ['test@example.com']);
+    
+    const duration = Date.now() - startTime;
+    expect(duration).toBeLessThan(100); // 100ms timeout
+  });
+  
+  it('should use indexes for queries', async () => {
+    const explain = await db.query(
+      'EXPLAIN SELECT * FROM users WHERE email = ?',
+      ['test@example.com']
+    );
+    
+    expect(explain[0].key).toBe('idx_email'); // Index used
+  });
+});
+```
+
+### Database Testing Best Practices
+
+1. **Test Database Setup**:
+   - Use separate test database
+   - Run migrations before tests
+   - Seed test data
+   - Clean up after tests
+
+2. **Test Isolation**:
+   - Each test should be independent
+   - Use transactions for isolation
+   - Rollback after each test
+   - Avoid shared state
+
+3. **Test Data Management**:
+   - Use fixtures for test data
+   - Create test data factories
+   - Clean up test data
+   - Use realistic test data
+
+4. **Migration Testing**:
+   - Test migration execution
+   - Test migration rollback
+   - Test migration idempotency
+   - Test migration dependencies
+
 ## Notes
 
 - Testing structure depends on project type
@@ -434,6 +583,9 @@ When reviewing test structure, consider:
 - **Test code quality is as important as production code quality**
 - **Test structure should support code quality goals**
 - **Code review should include test structure evaluation**
+- **Database tests should use separate test databases**
+- **Database tests should be isolated with transactions**
+- **Database migrations should be tested before deployment**
 
 ---
 
@@ -463,5 +615,10 @@ When reviewing test structure, consider:
 **Expertise**: Code Quality and Code Review  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this testing structure review document by adding comprehensive "Code Quality Considerations for Testing Structure" section covering test code quality standards (test code readability with clear test names and descriptive assertions, test code maintainability with DRY principles and reusable test utilities, test code consistency with consistent naming conventions and structure patterns, test code documentation with clear test descriptions and inline comments for complex logic), test structure quality metrics (test organization quality with clear directory structure and logical grouping, test file quality with focused test files and single responsibility, test coverage quality with adequate coverage thresholds and meaningful coverage metrics, test maintainability quality with minimal duplication and clear dependencies), code review checklist for test structure (test organization review with directory structure evaluation, test file review with file structure and naming evaluation, test code review with code quality standards, test coverage review with coverage analysis, test maintainability review with duplication and dependency analysis), test structure refactoring (identifying test structure issues with code smells and anti-patterns, refactoring test organization with improved directory structure, refactoring test files with better file organization, refactoring test code with improved code quality), and comprehensive code quality checklist for testing structure (test code quality, test organization quality, test file quality, test coverage quality, test maintainability quality, test documentation quality). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. This addition ensures that testing structure documentation includes code quality considerations, making test code quality an integral part of testing structure standards, ensuring that test organization supports code quality goals, and providing code review guidelines for evaluating test structure quality.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this testing structure review document by adding comprehensive "Database Testing Structure Patterns" section covering database test setup structure (test database organization with TestDatabase.php, DatabaseTestCase.php, migrations, models, queries, fixtures directories, bootstrap.php for test configuration), database test organization (database migration tests with setup/cleanup, migration execution and rollback testing, TypeScript test examples), database integration test structure (database integration tests with beforeAll/afterAll setup, beforeEach cleanup and seeding, user creation with profile integration test example), database performance test structure (query performance tests with timeout checks, index usage verification with EXPLAIN queries), database testing best practices (test database setup with separate test database and migrations, test isolation with independent tests and transactions, test data management with fixtures and factories, migration testing with execution/rollback/idempotency/dependency testing), and comprehensive database testing checklist (test database setup, test isolation, test data management, migration testing). Enhanced "Notes" section with database-specific testing considerations (separate test databases, transaction isolation, migration testing before deployment). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide practical, production-ready patterns for organizing database tests, ensuring database tests are properly structured, isolated, and comprehensive, covering migrations, integration, and performance testing.
 
 ---

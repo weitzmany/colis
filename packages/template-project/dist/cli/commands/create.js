@@ -195,33 +195,51 @@ export async function createCommand(options = {}) {
                 // Check if taskmaster-ai is available (either via task-manager package or directly)
                 const taskmasterDir = path.join(outputPath, '.taskmaster');
                 if (!fs.existsSync(taskmasterDir)) {
-                    // Try to initialize using taskmaster-ai CLI
+                    // Try to initialize using taskmaster-ai CLI (suppress npm errors)
                     try {
                         execSync('npx taskmaster-ai init', {
-                            stdio: 'inherit',
+                            stdio: ['ignore', 'inherit', 'pipe'], // Suppress stderr to avoid npm 404 noise
                             cwd: outputPath
                         });
                         console.log(chalk.green('✓ Task Manager initialized'));
                     }
                     catch (taskmasterError) {
-                        // If taskmaster-ai init fails, try installing task-manager package
-                        console.log(chalk.yellow('⚠ taskmaster-ai not found, installing @your-org/task-manager...'));
-                        try {
-                            const installCommand = config.packageManager === 'yarn'
-                                ? 'yarn add @your-org/task-manager'
-                                : config.packageManager === 'pnpm'
-                                    ? 'pnpm add @your-org/task-manager'
-                                    : 'npm install @your-org/task-manager';
-                            execSync(installCommand, {
-                                stdio: 'inherit',
-                                cwd: outputPath
-                            });
-                            // Postinstall script will initialize taskmaster-ai
-                            console.log(chalk.green('✓ Task Manager installed and initialized'));
+                        // Check if error is due to package not found (404)
+                        const errorOutput = taskmasterError.stderr?.toString() || taskmasterError.message || '';
+                        const isNotFoundError = errorOutput.includes('404') ||
+                            errorOutput.includes('Not found') ||
+                            errorOutput.includes('is not in this registry');
+                        if (isNotFoundError) {
+                            // Package doesn't exist in npm registry - skip silently
+                            console.log(chalk.gray('  ⊘ Task Manager skipped (package not available in npm registry)'));
                         }
-                        catch (installError) {
-                            console.warn(chalk.yellow('⚠ Task Manager initialization skipped'));
-                            console.warn(chalk.yellow('  Install manually: npm install @your-org/task-manager'));
+                        else {
+                            // Other errors - try installing task-manager package
+                            console.log(chalk.yellow('⚠ taskmaster-ai not found, trying @your-org/task-manager...'));
+                            try {
+                                const installCommand = config.packageManager === 'yarn'
+                                    ? 'yarn add @your-org/task-manager'
+                                    : config.packageManager === 'pnpm'
+                                        ? 'pnpm add @your-org/task-manager'
+                                        : 'npm install @your-org/task-manager';
+                                execSync(installCommand, {
+                                    stdio: ['ignore', 'inherit', 'pipe'], // Suppress stderr
+                                    cwd: outputPath
+                                });
+                                // Postinstall script will initialize taskmaster-ai
+                                console.log(chalk.green('✓ Task Manager installed and initialized'));
+                            }
+                            catch (installError) {
+                                const installErrorOutput = installError.stderr?.toString() || installError.message || '';
+                                if (installErrorOutput.includes('404') || installErrorOutput.includes('Not found')) {
+                                    // Package doesn't exist - skip silently
+                                    console.log(chalk.gray('  ⊘ Task Manager skipped (package not available in npm registry)'));
+                                }
+                                else {
+                                    console.warn(chalk.yellow('⚠ Task Manager initialization skipped'));
+                                    console.warn(chalk.yellow('  Install manually: npm install @your-org/task-manager'));
+                                }
+                            }
                         }
                     }
                 }
@@ -230,8 +248,8 @@ export async function createCommand(options = {}) {
                 }
             }
             catch (error) {
-                console.warn(chalk.yellow('⚠ Task Manager initialization skipped'));
-                console.warn(chalk.yellow('  Install manually: npm install @your-org/task-manager'));
+                // Silent skip - Task Manager is optional
+                console.log(chalk.gray('  ⊘ Task Manager skipped'));
             }
             finally {
                 process.chdir(originalCwd);

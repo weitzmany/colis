@@ -2,7 +2,7 @@
 
 This document lists generic/useful rules found in other projects that could be helpful across multiple projects.
 
-**Last Updated**: 2025-01-05
+**Last Updated**: 2026-01-05
 
 ## Rules Found in Other Projects
 
@@ -131,14 +131,122 @@ Based on the review, here are the most generic and useful rules:
 10. ✅ **documentation-structure.mdc** - If using similar documentation structure
 11. ✅ **pre_push_investigation.mdc** - Generic CI/CD investigation process (needs cleanup)
 
+## Database Rule Patterns
+
+### Pattern 1: Database Design Rules
+
+**Generic Rules**:
+- Normalization rules (3NF minimum)
+- Indexing rules (index foreign keys, frequently queried columns)
+- Naming conventions (table names, column names)
+- Data type selection rules
+- Constraint rules (primary keys, foreign keys, unique constraints)
+
+**Pattern**:
+```markdown
+# Database Design Rules
+
+## Normalization
+- Use 3NF (Third Normal Form) as minimum
+- Denormalize only when performance requires it
+- Document denormalization decisions
+
+## Indexing
+- Index all foreign keys
+- Index frequently filtered columns
+- Use composite indexes for multi-column queries
+- Monitor index usage and remove unused indexes
+
+## Naming Conventions
+- Table names: plural, snake_case (users, user_profiles)
+- Column names: snake_case (user_id, created_at)
+- Index names: idx_<column> (idx_email, idx_user_id)
+```
+
+### Pattern 2: Database Query Rules
+
+**Generic Rules**:
+- Always use prepared statements
+- Select only needed columns (no SELECT *)
+- Use appropriate JOINs
+- Implement pagination for large result sets
+- Avoid N+1 query problems
+
+**Pattern**:
+```markdown
+# Database Query Rules
+
+## Query Optimization
+- ✅ DO: SELECT id, name, email FROM users
+- ❌ DON'T: SELECT * FROM users
+- ✅ DO: Use JOINs instead of multiple queries
+- ❌ DON'T: N+1 query patterns
+- ✅ DO: Use LIMIT for pagination
+- ❌ DON'T: Fetch all rows without pagination
+```
+
+### Pattern 3: Database Migration Rules
+
+**Generic Rules**:
+- Migrations must be idempotent
+- Migrations must have rollback procedures
+- Migrations must be tested before deployment
+- Migration files must be version controlled
+
+**Pattern**:
+```markdown
+# Database Migration Rules
+
+## Migration Requirements
+- All migrations must be idempotent (use IF NOT EXISTS)
+- All migrations must have rollback procedures
+- Migrations must be tested in staging before production
+- Migration files must be version controlled
+- Migration execution must be logged
+```
+
+### Pattern 4: Database Performance Rules
+
+**Generic Rules**:
+- Monitor slow queries
+- Optimize queries with EXPLAIN
+- Use connection pooling
+- Cache frequently accessed data
+- Monitor database performance metrics
+
+**Pattern**:
+```markdown
+# Database Performance Rules
+
+## Performance Requirements
+- Queries must complete within timeout limits
+- Slow queries must be logged and optimized
+- Connection pooling must be configured
+- Query performance must be monitored
+- Database indexes must be optimized
+```
+
 ## Notes
 
 - Rules marked with ⭐⭐⭐⭐⭐ are highly generic and recommended
 - Rules with framework-specific examples (Angular/NestJS) can still be useful for concepts
 - Project-specific rules should be skipped or heavily adapted
 - Some rules may need adaptation for this project's context
+- Database rules should enforce best practices for schema design, queries, and migrations
+- Database performance rules help maintain system performance
+- Database migration rules ensure safe schema changes
 
 ---
 
 **Next Steps**: Review each recommended rule and decide which ones to adopt/adapt for this project.
 
+---
+
+## Review/Contribution
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this generic rules review document by adding comprehensive "Database Rule Patterns" section covering database design rules (normalization rules with 3NF minimum and denormalization guidelines, indexing rules with foreign key and query optimization, naming conventions with table/column/index naming patterns), database query rules (prepared statements requirement, SELECT column optimization, JOIN usage, pagination requirements, N+1 query prevention), database migration rules (idempotency requirements, rollback procedures, testing requirements, version control requirements, logging requirements), database performance rules (slow query monitoring, EXPLAIN optimization, connection pooling, caching, performance metrics monitoring). Enhanced "Notes" section with database-specific rule considerations (best practices enforcement, performance maintenance, safe schema changes). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide practical, production-ready patterns for database rule implementation, ensuring database operations follow best practices for schema design, query optimization, migration management, and performance monitoring.
+
+---

@@ -456,6 +456,190 @@ This document lists useful git hooks patterns found in other projects.
    - Monitor hook usage and effectiveness
    - Iterate on hook improvements
 
+## Database-Related Git Hooks
+
+### Pre-Commit Hooks for Database
+
+**Migration File Validation**:
+- Validate migration file naming conventions (timestamp, description format)
+- Check migration file syntax (SQL syntax validation, migration tool format validation)
+- Verify migration file structure (up/down methods, rollback support)
+- Validate migration dependencies (check for missing dependencies, circular dependencies)
+- Check migration file completeness (required fields, proper formatting)
+
+**Schema Change Validation**:
+- Validate schema changes (DDL syntax validation, constraint validation)
+- Check for breaking changes (column removal, constraint removal, index removal)
+- Verify migration rollback support (down migration exists, rollback tested)
+- Validate migration ordering (timestamp ordering, dependency ordering)
+
+**Database Script Validation**:
+- Validate database script syntax (SQL syntax, script tool format)
+- Check database script structure (transaction handling, error handling)
+- Verify database script dependencies (required tables, required data)
+- Validate database script security (SQL injection prevention, credential handling)
+
+**Example Pre-Commit Hook for Migration Validation**:
+```bash
+#!/bin/bash
+# .git/hooks/pre-commit
+
+# Check for migration files
+MIGRATION_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(sql|migration|migrate)$')
+
+if [ -n "$MIGRATION_FILES" ]; then
+    echo "Validating migration files..."
+    
+    for file in $MIGRATION_FILES; do
+        # Validate migration file naming
+        if ! [[ "$file" =~ ^[0-9]{14}_.*\.(sql|migration|migrate)$ ]]; then
+            echo "Error: Migration file '$file' does not follow naming convention (timestamp_description.ext)"
+            exit 1
+        fi
+        
+        # Validate migration file syntax
+        if ! sql_validator "$file"; then
+            echo "Error: Migration file '$file' has syntax errors"
+            exit 1
+        fi
+        
+        # Check for rollback support
+        if ! grep -q "down" "$file"; then
+            echo "Warning: Migration file '$file' may not have rollback support"
+        fi
+    done
+    
+    echo "Migration files validated successfully"
+fi
+```
+
+### Pre-Push Hooks for Database
+
+**Migration Testing**:
+- Run migration tests (test migration execution, test rollback)
+- Validate migration against test database (schema validation, data validation)
+- Check migration performance (execution time, resource usage)
+- Verify migration compatibility (database version compatibility, dependency compatibility)
+
+**Database Schema Validation**:
+- Validate schema changes against production schema (schema diff validation, constraint validation)
+- Check for breaking changes (backward compatibility, data migration requirements)
+- Verify migration safety (no data loss, no downtime requirements)
+- Validate migration rollback safety (rollback tested, rollback safe)
+
+**Database Backup Verification**:
+- Verify database backup exists (backup file exists, backup is recent)
+- Check database backup integrity (backup file validation, backup restore test)
+- Validate database backup location (backup location accessible, backup location secure)
+
+**Example Pre-Push Hook for Migration Testing**:
+```bash
+#!/bin/bash
+# .git/hooks/pre-push
+
+# Check for migration files in commits being pushed
+MIGRATION_FILES=$(git diff origin/$(git rev-parse --abbrev-ref HEAD)..HEAD --name-only --diff-filter=ACM | grep -E '\.(sql|migration|migrate)$')
+
+if [ -n "$MIGRATION_FILES" ]; then
+    echo "Testing migrations before push..."
+    
+    # Set up test database
+    TEST_DB="test_migration_$(date +%s)"
+    createdb "$TEST_DB"
+    
+    # Run migrations
+    for file in $MIGRATION_FILES; do
+        echo "Testing migration: $file"
+        if ! psql "$TEST_DB" -f "$file"; then
+            echo "Error: Migration '$file' failed"
+            dropdb "$TEST_DB"
+            exit 1
+        fi
+    done
+    
+    # Test rollback
+    for file in $(echo "$MIGRATION_FILES" | tac); do
+        echo "Testing rollback: $file"
+        if ! psql "$TEST_DB" -f "${file%.*}.down.sql"; then
+            echo "Error: Rollback for '$file' failed"
+            dropdb "$TEST_DB"
+            exit 1
+        fi
+    done
+    
+    # Clean up
+    dropdb "$TEST_DB"
+    echo "Migrations tested successfully"
+fi
+```
+
+### Post-Merge Hooks for Database
+
+**Migration Execution**:
+- Execute migrations after merge (run migrations, verify migration success)
+- Validate migration results (schema validation, data validation)
+- Check migration status (migration applied, migration status)
+
+**Database Schema Synchronization**:
+- Synchronize database schema (update schema, verify schema matches)
+- Validate schema consistency (schema matches code, schema matches migrations)
+- Check for schema drift (detect schema drift, report schema differences)
+
+**Database Seed Data**:
+- Run seed data scripts (execute seed scripts, verify seed data)
+- Validate seed data (data integrity, data completeness)
+- Check seed data consistency (seed data matches requirements)
+
+**Example Post-Merge Hook for Migration Execution**:
+```bash
+#!/bin/bash
+# .git/hooks/post-merge
+
+# Check for new migration files
+MIGRATION_FILES=$(git diff HEAD@{1}..HEAD --name-only --diff-filter=A | grep -E '\.(sql|migration|migrate)$')
+
+if [ -n "$MIGRATION_FILES" ]; then
+    echo "New migrations detected, executing..."
+    
+    for file in $MIGRATION_FILES; do
+        echo "Executing migration: $file"
+        if ! psql "$DATABASE_URL" -f "$file"; then
+            echo "Error: Migration '$file' failed"
+            exit 1
+        fi
+    done
+    
+    echo "Migrations executed successfully"
+fi
+```
+
+### Database Hook Best Practices
+
+**Migration Hook Best Practices**:
+- Validate migration files before commit (pre-commit validation, syntax checking)
+- Test migrations before push (pre-push testing, rollback testing)
+- Execute migrations after merge (post-merge execution, migration status checking)
+- Monitor migration execution (migration logging, migration monitoring)
+- Handle migration errors (error handling, rollback on error)
+
+**Database Schema Hook Best Practices**:
+- Validate schema changes (schema validation, breaking change detection)
+- Check schema consistency (schema drift detection, schema synchronization)
+- Monitor schema changes (schema change logging, schema change alerts)
+- Document schema changes (schema change documentation, migration documentation)
+
+**Database Security Hook Best Practices**:
+- Validate database credentials (credential validation, credential security)
+- Check database access (access control, permission validation)
+- Monitor database access (access logging, access monitoring)
+- Prevent SQL injection (SQL injection prevention, input validation)
+
+**Database Performance Hook Best Practices**:
+- Monitor migration performance (migration timing, resource usage)
+- Optimize migration execution (migration optimization, batch operations)
+- Check migration impact (performance impact, resource impact)
+- Validate migration efficiency (execution time, resource usage)
+
 ## Notes
 
 - Git hooks are powerful for enforcing quality and security
@@ -472,6 +656,11 @@ This document lists useful git hooks patterns found in other projects.
 - Secret detection is critical for preventing credential exposure
 - Vulnerability scanning helps maintain secure dependencies
 - Security hooks should be part of defense-in-depth strategy
+- Database migration hooks ensure migration quality and safety
+- Pre-commit hooks validate migration files before commit
+- Pre-push hooks test migrations before push
+- Post-merge hooks execute migrations after merge
+- Database hooks should validate, test, and monitor database operations
 
 ---
 
@@ -491,5 +680,10 @@ This document lists useful git hooks patterns found in other projects.
 **Expertise**: DevOps, CI/CD, and Deployment  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this Git hooks review document by adding a comprehensive "DevOps Best Practices for Git Hooks" section covering CI/CD integration with Git hooks (pre-push hook CI/CD integration with pipeline status checks, local CI/CD simulation with consistent checks, CI/CD pipeline optimization with incremental checks and caching), automated hook management (hook installation automation with setup scripts, hook version management with version control, hook distribution with version-controlled templates), deployment pipeline integration (pre-deployment validation with deployment readiness checks, environment-specific hooks with branch-based configuration, deployment workflow integration with deployment triggers), monitoring and observability for Git hooks (hook execution monitoring with logging and alerting, hook performance metrics with execution duration tracking, hook analytics and reporting with usage statistics), Infrastructure as Code for Git hooks (hook configuration as code with version control, hook template management with reusable templates, hook configuration validation with syntax checking), DevOps tools and technologies (hook management tools like Husky and pre-commit, CI/CD integration tools, monitoring and observability tools), and DevOps workflow best practices (development workflow integration, team collaboration, continuous improvement). This enhancement provides essential DevOps perspective on Git hooks, ensuring that hooks are integrated with CI/CD pipelines, automated, monitored, and managed using DevOps best practices.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this Git hooks review document by adding a comprehensive "Database-Related Git Hooks" section covering pre-commit hooks for database (migration file validation with naming conventions, syntax validation, structure validation, dependency validation, schema change validation with breaking change detection, database script validation with security checks), pre-push hooks for database (migration testing with test database validation, database schema validation with production schema comparison, database backup verification with integrity checks), post-merge hooks for database (migration execution with status checking, database schema synchronization with drift detection, database seed data execution with validation), database hook best practices (migration hook best practices with validation and testing, database schema hook best practices with consistency checking, database security hook best practices with credential validation, database performance hook best practices with monitoring and optimization), and practical examples for each hook type. This enhancement provides essential database perspective on Git hooks, ensuring that database migrations, schema changes, and database operations are validated, tested, and executed safely through Git hooks.
 
 ---

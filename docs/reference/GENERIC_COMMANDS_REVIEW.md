@@ -130,6 +130,93 @@ Based on the review, here are the most generic and useful commands:
 - Format: Description, Usage, Workflow/Process, Examples
 - Can reference scripts or describe direct workflows
 
+## Database Command Patterns
+
+### Pattern 1: Database Migration Commands
+
+**Generic Commands**:
+- `migrate` - Run pending database migrations
+- `migrate:rollback` - Rollback last migration
+- `migrate:status` - Show migration status
+- `migrate:create <name>` - Create new migration file
+- `migrate:validate` - Validate migration files
+
+**Pattern**:
+```bash
+# Run migrations
+npm run migrate
+
+# Rollback last migration
+npm run migrate:rollback
+
+# Show migration status
+npm run migrate:status
+
+# Create new migration
+npm run migrate:create add_user_profile_table
+```
+
+### Pattern 2: Database Query Commands
+
+**Generic Commands**:
+- `db:query <sql>` - Execute SQL query
+- `db:explain <sql>` - Explain query execution plan
+- `db:indexes` - List all indexes
+- `db:slow-queries` - Show slow queries
+
+**Pattern**:
+```bash
+# Execute query
+npm run db:query "SELECT * FROM users LIMIT 10"
+
+# Explain query
+npm run db:explain "SELECT * FROM users WHERE email = 'test@example.com'"
+
+# List indexes
+npm run db:indexes
+
+# Show slow queries
+npm run db:slow-queries
+```
+
+### Pattern 3: Database Backup Commands
+
+**Generic Commands**:
+- `db:backup` - Create database backup
+- `db:restore <file>` - Restore database from backup
+- `db:backup:list` - List available backups
+
+**Pattern**:
+```bash
+# Create backup
+npm run db:backup
+
+# Restore backup
+npm run db:restore backup_20260105_120000.sql
+
+# List backups
+npm run db:backup:list
+```
+
+### Pattern 4: Database Performance Commands
+
+**Generic Commands**:
+- `db:analyze` - Analyze table statistics
+- `db:optimize` - Optimize tables
+- `db:health` - Check database health
+
+**Pattern**:
+```bash
+# Analyze tables
+npm run db:analyze
+
+# Optimize tables
+npm run db:optimize
+
+# Check database health
+npm run db:health
+```
+
 ## Notes
 
 - Commands marked with ⭐⭐⭐⭐⭐ are highly generic and recommended
@@ -137,8 +224,22 @@ Based on the review, here are the most generic and useful commands:
 - Script-based commands require corresponding shell scripts
 - Direct workflow commands are self-contained in the markdown file
 - Some commands may need adaptation for this project's workflow
+- Database commands should support multiple database types
+- Database migration commands should include rollback support
+- Database backup commands should support cloud storage
+- Database performance commands should provide actionable insights
 
 ---
 
 **Next Steps**: Review each recommended command and decide which ones to adopt/adapt for this project, and whether to use script-based or direct workflow approach.
 
+---
+
+## Review/Contribution
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this generic commands review document by adding comprehensive "Database Command Patterns" section covering database migration commands (migrate, migrate:rollback, migrate:status, migrate:create, migrate:validate with usage examples), database query commands (db:query, db:explain, db:indexes, db:slow-queries with SQL execution and analysis examples), database backup commands (db:backup, db:restore, db:backup:list with backup/restore workflow examples), database performance commands (db:analyze, db:optimize, db:health with table analysis and optimization examples). Enhanced "Notes" section with database-specific command considerations (multi-database support, rollback support, cloud storage support, actionable insights). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide practical, production-ready patterns for database command implementation, ensuring database operations can be performed efficiently through command-line interfaces with proper migration, query, backup, and performance management capabilities.
+
+---

@@ -671,6 +671,293 @@ security-scan:
    - **Best Practices Sharing**: Share CI/CD best practices across teams
    - **Onboarding Documentation**: Help new team members understand CI/CD workflows
 
+## Database CI/CD Workflow Patterns
+
+### Database Testing in CI
+
+#### Pattern 1: Database Service in CI Pipeline
+
+```yaml
+# GitHub Actions workflow
+jobs:
+  test:
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    
+    steps:
+      - name: Wait for MySQL
+        run: |
+          until mysqladmin ping -h mysql -u root -prootpassword --silent; do
+            sleep 1
+          done
+      
+      - name: Run Database Migrations
+        run: npm run migrate:up
+        env:
+          DB_HOST: mysql
+          DB_USER: root
+          DB_PASSWORD: rootpassword
+          DB_DATABASE: test_db
+      
+      - name: Run Database Tests
+        run: npm run test:database
+```
+
+#### Pattern 2: Database Migration Validation
+
+```yaml
+- name: Validate Migration Files
+  run: |
+    # Check migration file syntax
+    for migration in database/migrations/*.sql; do
+      mysql --host=mysql --user=root --password=rootpassword \
+        --execute="SOURCE $migration" test_db || exit 1
+    done
+    
+    # Verify migration idempotency
+    npm run migrate:up
+    npm run migrate:up  # Should succeed without errors
+    
+    # Verify rollback
+    npm run migrate:down
+    npm run migrate:up  # Should succeed again
+```
+
+#### Pattern 3: Database Schema Testing
+
+```yaml
+- name: Test Database Schema
+  run: |
+    # Verify schema matches expected structure
+    npm run migrate:up
+    
+    # Run schema validation tests
+    npm run test:schema
+    
+    # Verify indexes exist
+    mysql --host=mysql --user=root --password=rootpassword test_db << EOF
+    SELECT COUNT(*) as index_count
+    FROM information_schema.STATISTICS
+    WHERE TABLE_SCHEMA = 'test_db'
+    AND TABLE_NAME = 'users';
+    EOF
+    
+    # Verify foreign keys
+    mysql --host=mysql --user=root --password=rootpassword test_db << EOF
+    SELECT COUNT(*) as fk_count
+    FROM information_schema.KEY_COLUMN_USAGE
+    WHERE TABLE_SCHEMA = 'test_db'
+    AND REFERENCED_TABLE_NAME IS NOT NULL;
+    EOF
+```
+
+### Database Migration CI/CD Workflow
+
+#### Pattern 1: Migration Validation Job
+
+```yaml
+validate-migrations:
+  runs-on: ubuntu-latest
+  services:
+    mysql:
+      image: mysql:8.0
+      env:
+        MYSQL_ROOT_PASSWORD: rootpassword
+        MYSQL_DATABASE: test_db
+      ports:
+        - 3306:3306
+  
+  steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install Dependencies
+      run: npm ci
+    
+    - name: Wait for MySQL
+      run: |
+        until mysqladmin ping -h mysql -u root -prootpassword --silent; do
+          sleep 1
+        done
+    
+    - name: Validate Migration Syntax
+      run: npm run migrate:validate
+    
+    - name: Test Migration Execution
+      run: npm run migrate:test
+    
+    - name: Test Migration Rollback
+      run: npm run migrate:test:rollback
+```
+
+#### Pattern 2: Database Migration Deployment Job
+
+```yaml
+deploy-migrations:
+  needs: [build, validate-migrations]
+  runs-on: ubuntu-latest
+  if: github.ref == 'refs/heads/main'
+  
+  steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Database Connection
+      run: |
+        echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+        echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+        echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> $GITHUB_ENV
+    
+    - name: Backup Database
+      run: |
+        mysqldump \
+          -h ${{ secrets.DB_HOST }} \
+          -u ${{ secrets.DB_USER }} \
+          -p${{ secrets.DB_PASSWORD }} \
+          ${{ secrets.DB_DATABASE }} \
+          > backup_$(date +%Y%m%d_%H%M%S).sql
+        
+        # Upload backup to S3
+        aws s3 cp backup_*.sql s3://${{ secrets.S3_BACKUP_BUCKET }}/backups/
+    
+    - name: Run Migrations
+      run: npm run migrate:up
+      continue-on-error: false
+    
+    - name: Verify Migration Success
+      run: |
+        npm run migrate:status
+        # Verify schema version matches expected
+    
+    - name: Rollback on Failure
+      if: failure()
+      run: |
+        echo "Migration failed, rolling back..."
+        npm run migrate:down -- --to-last
+        exit 1
+```
+
+### Database Testing Patterns in CI/CD
+
+#### Pattern 1: Database Integration Tests
+
+```yaml
+test-database-integration:
+  services:
+    mysql:
+      image: mysql:8.0
+      env:
+        MYSQL_ROOT_PASSWORD: rootpassword
+        MYSQL_DATABASE: test_db
+  
+  steps:
+    - name: Setup Test Database
+      run: |
+        npm run migrate:up
+        npm run seed:test
+    
+    - name: Run Integration Tests
+      run: npm run test:integration
+      env:
+        DB_HOST: mysql
+        DB_USER: root
+        DB_PASSWORD: rootpassword
+        DB_DATABASE: test_db
+    
+    - name: Cleanup Test Database
+      if: always()
+      run: npm run migrate:down -- --all
+```
+
+#### Pattern 2: Database Performance Tests
+
+```yaml
+test-database-performance:
+  services:
+    mysql:
+      image: mysql:8.0
+  
+  steps:
+    - name: Setup Database
+      run: npm run migrate:up
+    
+    - name: Load Test Data
+      run: npm run seed:performance
+    
+    - name: Run Performance Tests
+      run: npm run test:performance
+    
+    - name: Check Slow Queries
+      run: |
+        SLOW_QUERIES=$(mysql -h mysql -u root -prootpassword test_db \
+          -se "SELECT COUNT(*) FROM mysql.slow_log WHERE start_time > DATE_SUB(NOW(), INTERVAL 1 HOUR)")
+        
+        if [ "$SLOW_QUERIES" -gt 10 ]; then
+          echo "⚠️ Warning: $SLOW_QUERIES slow queries detected"
+          exit 1
+        fi
+```
+
+### Database CI/CD Best Practices
+
+1. **Database Testing in CI**:
+   - Use database services in CI pipelines
+   - Run migrations before tests
+   - Test migration rollback procedures
+   - Validate schema after migrations
+   - Clean up test databases after tests
+
+2. **Migration Validation**:
+   - Validate migration file syntax
+   - Test migration idempotency
+   - Verify migration rollback
+   - Check migration dependencies
+   - Validate migration against test data
+
+3. **Database Deployment**:
+   - Backup database before migrations (production)
+   - Run migrations in transaction when possible
+   - Verify migration success
+   - Monitor migration execution time
+   - Rollback on deployment failure
+
+4. **Database Health Checks**:
+   - Verify database connectivity
+   - Check schema version
+   - Monitor slow queries
+   - Verify data integrity
+   - Check database performance metrics
+
+### Database CI/CD Checklist
+
+- [ ] Database service configured in CI pipeline
+- [ ] Database migrations run before tests
+- [ ] Migration validation job implemented
+- [ ] Migration rollback testing automated
+- [ ] Database schema testing automated
+- [ ] Database integration tests in CI
+- [ ] Database performance tests configured
+- [ ] Database backup before production migrations
+- [ ] Database health checks after deployment
+- [ ] Database migration rollback on failure
+- [ ] Database monitoring in CI/CD
+- [ ] Database deployment documentation
+
 ## Notes
 
 - CI/CD patterns are highly reusable
@@ -691,6 +978,9 @@ security-scan:
 - **Deployment strategies**: Choose appropriate deployment strategy based on application needs
 - **Monitoring and metrics**: Track pipeline and deployment metrics for continuous improvement
 - **Tool selection**: Choose CI/CD platform based on project requirements and team expertise
+- **Database testing**: Test database migrations and schema changes in CI
+- **Database validation**: Validate migrations before deployment
+- **Database health checks**: Verify database state after deployment
 
 ---
 
@@ -706,3 +996,7 @@ security-scan:
 **Date**: 2026-01-05  
 **Changes**: Enhanced this CI/CD workflows review document by adding comprehensive "DevOps Best Practices for CI/CD Workflows" section covering pipeline efficiency and optimization (build time optimization with dependency caching and incremental builds, resource management with right-sizing and cleanup, artifact management with selective upload and compression), pipeline reliability and resilience (error handling and recovery with retry mechanisms and graceful degradation, health checks and validation with pre/post-deployment verification, pipeline security with secrets management and security scanning), deployment automation and strategies (automated deployment workflows with environment promotion and rollback, deployment strategy implementation with blue-green/canary/rolling deployments, multi-environment management with environment parity and provisioning), CI/CD pipeline monitoring and observability (pipeline metrics with build duration and success rate tracking, deployment monitoring with MTTR and change failure rate, observability integration with logging and distributed tracing), DevOps tools and platform integration (CI/CD platform selection criteria, container and orchestration integration, Infrastructure as Code integration), and DevOps workflow best practices (Git workflow integration with branch strategies and PR workflows, testing strategy in CI/CD with test pyramid and parallelization, documentation and knowledge sharing). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. This addition provides essential DevOps perspective on CI/CD workflows, ensuring that pipelines are efficient, reliable, secure, and well-monitored, with proper deployment automation and best practices for continuous improvement.
 
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this CI/CD workflows review document by adding comprehensive "Database CI/CD Workflow Patterns" section covering database testing in CI (database service in CI pipeline with MySQL service configuration and health checks, database migration validation with syntax checking and idempotency testing, database schema testing with schema validation and index/foreign key verification), database migration CI/CD workflow (migration validation job with syntax validation and rollback testing, database migration deployment job with backup, migration execution, verification, and rollback on failure), database testing patterns in CI/CD (database integration tests with test database setup and cleanup, database performance tests with slow query detection), database CI/CD best practices (database testing in CI with migration execution and cleanup, migration validation with syntax and dependency checking, database deployment with backup and transaction support, database health checks with connectivity and schema verification), and comprehensive database CI/CD checklist (12 items covering database service configuration, migration validation, rollback testing, schema testing, integration tests, performance tests, backup, health checks, rollback, monitoring, documentation). Enhanced "Notes" section with database-specific considerations (database testing, migration validation, database health checks). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide production-ready patterns for integrating database operations into CI/CD pipelines, ensuring database migrations are tested, validated, and safely deployed as part of the continuous integration and deployment process.

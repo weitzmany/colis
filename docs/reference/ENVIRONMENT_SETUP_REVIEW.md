@@ -470,6 +470,181 @@ This document lists useful environment setup patterns found in other projects.
    - Use development environment templates
    - Implement fast local development workflows
 
+## Database Environment Setup Patterns
+
+### Database Initialization in Docker
+
+#### Pattern 1: Database Initialization Scripts
+
+```yaml
+# docker-compose.yml
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: myapp
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d  # Init scripts
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+```
+
+```sql
+-- database/init/01-init.sql
+CREATE DATABASE IF NOT EXISTS myapp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE myapp;
+
+-- Create initial schema
+CREATE TABLE IF NOT EXISTS users (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+```
+
+#### Pattern 2: Database Migration Execution
+
+```bash
+#!/bin/bash
+# scripts/setup-database.sh
+
+set -e
+
+echo "Waiting for database to be ready..."
+until mysqladmin ping -h localhost -u root -prootpassword --silent; do
+    sleep 1
+done
+
+echo "Running database migrations..."
+for migration in database/migrations/*.sql; do
+    echo "Applying migration: $migration"
+    mysql -h localhost -u root -prootpassword myapp < "$migration"
+done
+
+echo "Database setup complete!"
+```
+
+#### Pattern 3: Database Seeding
+
+```bash
+#!/bin/bash
+# scripts/seed-database.sh
+
+set -e
+
+echo "Seeding database with test data..."
+mysql -h localhost -u root -prootpassword myapp << EOF
+INSERT INTO users (email) VALUES
+    ('test1@example.com'),
+    ('test2@example.com'),
+    ('test3@example.com');
+EOF
+
+echo "Database seeded successfully!"
+```
+
+### Database Connection Configuration
+
+#### Environment-Based Database Configuration
+
+```bash
+# .env.example
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=myapp
+DB_USERNAME=appuser
+DB_PASSWORD=apppassword
+DB_CHARSET=utf8mb4
+DB_COLLATION=utf8mb4_unicode_ci
+
+# Connection Pool Configuration
+DB_POOL_MIN=2
+DB_POOL_MAX=10
+DB_POOL_IDLE_TIMEOUT=30000
+
+# Migration Configuration
+DB_MIGRATIONS_DIR=./database/migrations
+DB_MIGRATIONS_TABLE=schema_migrations
+```
+
+#### Database Connection Health Checks
+
+```bash
+#!/bin/bash
+# scripts/check-database.sh
+
+set -e
+
+DB_HOST="${DB_HOST:-localhost}"
+DB_PORT="${DB_PORT:-3306}"
+DB_USER="${DB_USER:-root}"
+DB_PASSWORD="${DB_PASSWORD:-password}"
+
+echo "Checking database connection..."
+if mysqladmin ping -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASSWORD" --silent; then
+    echo "✅ Database is ready"
+    exit 0
+else
+    echo "❌ Database is not ready"
+    exit 1
+fi
+```
+
+### Database Environment Setup Best Practices
+
+1. **Database Initialization**:
+   - Use initialization scripts in Docker entrypoint
+   - Run migrations automatically on startup
+   - Seed test data for development environments
+   - Verify database connectivity before proceeding
+
+2. **Database Configuration**:
+   - Use environment variables for database credentials
+   - Support different database configurations per environment
+   - Use connection pooling for production
+   - Configure appropriate timeouts and retries
+
+3. **Database Migration Management**:
+   - Run migrations as part of environment setup
+   - Track migration state in database
+   - Support rollback capabilities
+   - Validate migrations before execution
+
+4. **Database Health Checks**:
+   - Implement database connectivity checks
+   - Verify database schema version
+   - Check database performance metrics
+   - Monitor database resource usage
+
+5. **Database Data Management**:
+   - Use persistent volumes for production data
+   - Use temporary volumes for test environments
+   - Implement database backup strategies
+   - Support database restoration procedures
+
+### Database Environment Setup Checklist
+
+- [ ] Database service configured in docker-compose.yml
+- [ ] Database initialization scripts created
+- [ ] Database migrations directory structure established
+- [ ] Database connection configuration in .env file
+- [ ] Database health check script implemented
+- [ ] Database seeding script for development data
+- [ ] Database migration execution automated
+- [ ] Database connection pooling configured
+- [ ] Database credentials secured (not committed)
+- [ ] Database backup strategy implemented
+- [ ] Database restoration procedure documented
+- [ ] Database performance monitoring configured
+
 ## Notes
 
 - Docker setup patterns are highly reusable
@@ -484,6 +659,10 @@ This document lists useful environment setup patterns found in other projects.
 - Fast iteration cycles enhance development experience
 - Resource efficiency reduces local machine requirements
 - Performance monitoring helps identify bottlenecks
+- Database initialization should be automated
+- Database migrations should run automatically on setup
+- Database health checks ensure reliable connections
+- Database configuration should be environment-specific
 
 ---
 
@@ -498,5 +677,10 @@ This document lists useful environment setup patterns found in other projects.
 **Expertise**: DevOps, CI/CD, and Deployment  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this environment setup review document by adding a comprehensive "DevOps Best Practices for Environment Setup" section covering Infrastructure as Code (IaC) for environments (environment provisioning with Terraform/CloudFormation, container orchestration with Kubernetes, multi-environment management with environment parity and promotion workflows), CI/CD integration with environment setup (automated environment provisioning in pipelines, environment-specific deployment strategies with blue-green/canary/rolling deployments, environment promotion workflows with approval gates), secrets management across environments (secrets management best practices with AWS Secrets Manager/Vault, environment variable management with validation and injection, configuration management with versioning and templates), monitoring and observability for environments (environment monitoring with CloudWatch/Datadog, environment health checks with readiness/liveness probes, observability best practices with structured logging and tracing), disaster recovery and backup strategies (backup strategies with automated backups and point-in-time recovery, disaster recovery planning with multi-region deployments, environment resilience with circuit breakers and graceful degradation), DevOps tools and technologies (container technologies, Infrastructure as Code tools, CI/CD platforms, secrets management, monitoring and observability), and DevOps workflow best practices (environment setup automation, environment consistency, developer experience). This enhancement provides essential DevOps perspective on environment setup, ensuring that environments are provisioned, managed, and monitored using DevOps best practices, automation, and infrastructure as code principles.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this environment setup review document by adding comprehensive "Database Environment Setup Patterns" section covering database initialization in Docker (database initialization scripts with SQL init files in docker-entrypoint-initdb.d, database migration execution with automated migration scripts, database seeding with test data scripts), database connection configuration (environment-based database configuration with .env variables for host/port/database/user/password/charset/collation, connection pool configuration with min/max/idle timeout, migration configuration with migrations directory and table), database connection health checks (database connectivity verification scripts with mysqladmin ping checks, database readiness verification before application startup), database environment setup best practices (database initialization with automatic migration execution and test data seeding, database configuration with environment-specific settings and connection pooling, database migration management with state tracking and rollback support, database health checks with connectivity and schema version verification, database data management with persistent volumes and backup strategies), and comprehensive database environment setup checklist (12 items covering database service configuration, initialization scripts, migrations, connection configuration, health checks, seeding, migration automation, connection pooling, credential security, backup, restoration, performance monitoring). Enhanced "Notes" section with database-specific considerations (database initialization automation, automatic migration execution, database health checks, environment-specific database configuration). These additions provide practical, production-ready patterns for setting up database environments in Docker and other containerized environments, ensuring databases are properly initialized, configured, and managed as part of the overall environment setup process.
 
 ---

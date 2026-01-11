@@ -2,7 +2,7 @@
 
 This document lists useful build and deployment patterns found in other projects.
 
-**Last Updated**: 2025-01-05
+**Last Updated**: 2026-01-05
 
 ## Build & Deployment Patterns Found
 
@@ -557,6 +557,206 @@ This document lists useful build and deployment patterns found in other projects
        # Rollback if health checks fail
    ```
 
+### Database Deployment Patterns
+
+#### Pattern 1: Database Migration Execution During Deployment
+
+```yaml
+# GitHub Actions workflow
+- name: Run Database Migrations
+  run: |
+    # Backup database before migrations (production only)
+    if [ "$ENVIRONMENT" == "production" ]; then
+      mysqldump -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_DATABASE > backup_$(date +%Y%m%d_%H%M%S).sql
+    fi
+    
+    # Run migrations
+    npm run migrate:up
+    
+    # Verify migrations succeeded
+    npm run migrate:status
+  env:
+    DB_HOST: ${{ secrets.DB_HOST }}
+    DB_USER: ${{ secrets.DB_USER }}
+    DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+    DB_DATABASE: ${{ secrets.DB_DATABASE }}
+```
+
+#### Pattern 2: Database Backup Before Deployment
+
+```bash
+#!/bin/bash
+# scripts/pre-deployment-backup.sh
+
+set -e
+
+BACKUP_DIR="./backups"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+BACKUP_FILE="${BACKUP_DIR}/backup_${TIMESTAMP}.sql"
+
+echo "Creating database backup..."
+mysqldump \
+  -h "${DB_HOST}" \
+  -u "${DB_USER}" \
+  -p"${DB_PASSWORD}" \
+  "${DB_DATABASE}" \
+  > "${BACKUP_FILE}"
+
+echo "Compressing backup..."
+gzip "${BACKUP_FILE}"
+
+echo "Backup created: ${BACKUP_FILE}.gz"
+
+# Upload to S3 (optional)
+if [ -n "${S3_BACKUP_BUCKET}" ]; then
+  aws s3 cp "${BACKUP_FILE}.gz" "s3://${S3_BACKUP_BUCKET}/backups/"
+fi
+```
+
+#### Pattern 3: Database Migration Rollback on Deployment Failure
+
+```yaml
+# GitHub Actions workflow with rollback
+- name: Deploy Application
+  id: deploy
+  run: |
+    # Deploy application
+    ./deploy.sh
+    
+- name: Verify Deployment
+  run: |
+    # Health check
+    curl -f https://api.example.com/health || exit 1
+    
+- name: Rollback on Failure
+  if: failure() && steps.deploy.outcome == 'failure'
+  run: |
+    echo "Deployment failed, rolling back..."
+    # Rollback application
+    ./rollback.sh
+    
+    # Rollback database migrations if needed
+    npm run migrate:down -- --to-last
+```
+
+#### Pattern 4: Database Health Check After Deployment
+
+```bash
+#!/bin/bash
+# scripts/post-deployment-db-check.sh
+
+set -e
+
+echo "Checking database connectivity..."
+mysqladmin ping -h "${DB_HOST}" -u "${DB_USER}" -p"${DB_PASSWORD}" || exit 1
+
+echo "Verifying database schema version..."
+CURRENT_VERSION=$(mysql -h "${DB_HOST}" -u "${DB_USER}" -p"${DB_PASSWORD}" "${DB_DATABASE}" \
+  -se "SELECT version FROM schema_migrations ORDER BY applied_at DESC LIMIT 1")
+
+EXPECTED_VERSION=$(ls -1 database/migrations/ | tail -1 | cut -d'_' -f1)
+
+if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ]; then
+  echo "❌ Schema version mismatch: current=$CURRENT_VERSION, expected=$EXPECTED_VERSION"
+  exit 1
+fi
+
+echo "✅ Database schema version verified: $CURRENT_VERSION"
+
+echo "Checking database performance..."
+SLOW_QUERIES=$(mysql -h "${DB_HOST}" -u "${DB_USER}" -p"${DB_PASSWORD}" "${DB_DATABASE}" \
+  -se "SELECT COUNT(*) FROM mysql.slow_log WHERE start_time > DATE_SUB(NOW(), INTERVAL 1 HOUR)")
+
+if [ "$SLOW_QUERIES" -gt 10 ]; then
+  echo "⚠️ Warning: $SLOW_QUERIES slow queries in the last hour"
+fi
+
+echo "✅ Database health check complete"
+```
+
+#### Pattern 5: Zero-Downtime Database Migration Deployment
+
+```yaml
+# Zero-downtime migration workflow
+- name: Prepare Database Migration
+  run: |
+    # Step 1: Add new column (nullable)
+    mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_DATABASE << EOF
+    ALTER TABLE users ADD COLUMN new_email VARCHAR(255) NULL;
+    EOF
+
+- name: Deploy Application (Supports Both Schemas)
+  run: |
+    # Deploy application that supports both old and new schema
+    ./deploy.sh
+
+- name: Backfill Data
+  run: |
+    # Step 2: Backfill data (can take time)
+    mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_DATABASE << EOF
+    UPDATE users SET new_email = email WHERE new_email IS NULL;
+    EOF
+
+- name: Complete Migration
+  run: |
+    # Step 3: Make column NOT NULL
+    mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_DATABASE << EOF
+    ALTER TABLE users MODIFY COLUMN new_email VARCHAR(255) NOT NULL;
+    EOF
+```
+
+### Database Deployment Best Practices
+
+1. **Pre-Deployment Database Steps**:
+   - Backup database before migrations (production)
+   - Verify database connectivity
+   - Check available disk space
+   - Verify database user permissions
+   - Review migration files for safety
+
+2. **Migration Execution**:
+   - Run migrations in transaction when possible
+   - Execute migrations before application deployment
+   - Verify migration success
+   - Track migration execution time
+   - Log migration results
+
+3. **Post-Deployment Database Steps**:
+   - Verify database schema version
+   - Check database connectivity
+   - Monitor slow queries
+   - Verify data integrity
+   - Check database performance metrics
+
+4. **Rollback Procedures**:
+   - Rollback migrations on deployment failure
+   - Restore database from backup if needed
+   - Verify rollback success
+   - Document rollback procedures
+   - Test rollback procedures regularly
+
+5. **Zero-Downtime Migrations**:
+   - Use expand-contract pattern
+   - Support multiple schema versions
+   - Gradual migration with feature flags
+   - Monitor migration progress
+   - Complete migration after verification
+
+### Database Deployment Checklist
+
+- [ ] Database backup created before deployment (production)
+- [ ] Database connectivity verified
+- [ ] Database migrations tested in staging
+- [ ] Database migration execution automated
+- [ ] Database migration rollback procedure documented
+- [ ] Database health check after deployment
+- [ ] Database schema version verified
+- [ ] Database performance monitored
+- [ ] Database slow queries checked
+- [ ] Database data integrity verified
+- [ ] Database rollback tested
+- [ ] Database deployment documented
+
 ### Cloud Infrastructure Deployment Checklist
 
 - [ ] Cloud platform selected (AWS/Azure/GCP)
@@ -572,8 +772,10 @@ This document lists useful build and deployment patterns found in other projects
 - [ ] Rollback procedures defined
 - [ ] Multi-region deployment planned (if needed)
 - [ ] Disaster recovery plan documented
-
----
+- [ ] Database deployment patterns implemented
+- [ ] Database backup strategy configured
+- [ ] Database migration automation set up
+- [ ] Database health checks automated
 
 ## Review/Contribution
 
@@ -591,5 +793,10 @@ This document lists useful build and deployment patterns found in other projects
 **Expertise**: Cloud Infrastructure (Cloud Platform Architecture, Deployment, Operations)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this build and deployment review document by adding comprehensive "Cloud Infrastructure Build and Deployment Patterns" section covering cloud-native build strategies (cloud build services with AWS CodeBuild, Azure Pipelines, and Google Cloud Build, cloud build optimization with caching and cost optimization), multi-cloud deployment strategies (cloud provider abstraction with Terraform/Pulumi, hybrid cloud deployment with multi-cloud support, cloud migration patterns with lift-and-shift and cloud-native refactoring), cloud cost optimization in build/deploy (build cost optimization with spot instances and right-sizing, deployment cost optimization with auto-scaling and reserved instances, cost monitoring with budget alerts), cloud security in build/deploy (secrets management with AWS Secrets Manager/Azure Key Vault/GCP Secret Manager/HashiCorp Vault, image security with vulnerability scanning and signing, infrastructure security with IaC scanning and least privilege), cloud monitoring integration (pre-deployment checks with resource availability and quota limits, post-deployment monitoring with CloudWatch/Azure Monitor/Stackdriver, rollback triggers with cloud metric thresholds), serverless build and deployment (AWS Lambda, Azure Functions, and Google Cloud Functions deployment patterns), cloud container orchestration deployment (Kubernetes, ECS, and Azure Container Instances deployment workflows), cloud-native deployment patterns (blue-green, canary, and rolling deployments with cloud-specific implementations), and comprehensive cloud infrastructure deployment checklist covering cloud platform selection, build service configuration, container registry setup, deployment strategies, auto-scaling, health checks, monitoring, secrets management, cost monitoring, security scanning, rollback procedures, multi-region deployment, and disaster recovery. This addition ensures that build and deployment processes incorporate cloud infrastructure best practices, enabling scalable, reliable, and cost-effective cloud deployments with proper security, monitoring, and observability integration.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this build and deployment review document by adding comprehensive "Database Deployment Patterns" section covering database migration execution during deployment (GitHub Actions workflow with database backup before migrations, migration execution with verification, environment-specific handling), database backup before deployment (pre-deployment backup script with timestamped backups, backup compression, S3 upload for cloud storage), database migration rollback on deployment failure (deployment verification with health checks, automatic rollback on failure, database migration rollback), database health check after deployment (database connectivity verification, schema version verification, slow query detection, performance monitoring), zero-downtime database migration deployment (expand-contract pattern with nullable column addition, application deployment supporting both schemas, data backfilling, column constraint addition), database deployment best practices (pre-deployment database steps with backup and verification, migration execution with transaction support and logging, post-deployment database steps with schema verification and performance monitoring, rollback procedures with backup restoration, zero-downtime migrations with expand-contract pattern), and comprehensive database deployment checklist (12 items covering backup, connectivity, migration testing, automation, rollback, health checks, schema verification, performance monitoring, data integrity, rollback testing, documentation). Enhanced "Cloud Infrastructure Deployment Checklist" with database-specific items (database deployment patterns, backup strategy, migration automation, health checks). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide production-ready patterns for safely deploying database changes as part of application deployments, ensuring database migrations are executed safely, monitored, and can be rolled back if needed.
 
 ---

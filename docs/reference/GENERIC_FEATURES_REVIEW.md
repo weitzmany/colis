@@ -2,7 +2,7 @@
 
 This document lists generic/reusable features found in other projects that could be helpful as reference or inspiration for new projects.
 
-**Last Updated**: 2025-01-05
+**Last Updated**: 2026-01-05
 
 ## Features Found in Other Projects
 
@@ -231,6 +231,139 @@ These features are too specific to their projects but may contain useful pattern
 - **Structure**: Project-level PRD + future feature ideas
 - **Usefulness**: Good reference for project-level documentation
 
+## Database-Backed Feature Patterns
+
+### Pattern 1: Database Query Feature
+
+**Description**: Feature that performs database queries with optimization
+
+**Pattern**:
+- Query builder or ORM integration
+- Indexed column usage
+- Pagination support
+- Query result caching
+- Prepared statements
+
+**Example**:
+```typescript
+// User search feature with database optimization
+export async function searchUsers(query: string, page: number = 1) {
+  const limit = 20;
+  const offset = (page - 1) * limit;
+  
+  // Uses indexed email column
+  const users = await db.query(
+    'SELECT id, name, email FROM users WHERE email LIKE ? LIMIT ? OFFSET ?',
+    [`%${query}%`, limit, offset]
+  );
+  
+  return users;
+}
+```
+
+### Pattern 2: Database Transaction Feature
+
+**Description**: Feature that requires atomic database operations
+
+**Pattern**:
+- Transaction management
+- Rollback on error
+- Savepoint support
+- Error handling
+
+**Example**:
+```typescript
+// Order creation with transaction
+export async function createOrder(orderData: OrderData) {
+  const connection = await db.getConnection();
+  
+  try {
+    await connection.beginTransaction();
+    
+    // Create order
+    const [order] = await connection.query(
+      'INSERT INTO orders (user_id, total) VALUES (?, ?)',
+      [orderData.userId, orderData.total]
+    );
+    
+    // Create order items
+    for (const item of orderData.items) {
+      await connection.query(
+        'INSERT INTO order_items (order_id, product_id, quantity) VALUES (?, ?, ?)',
+        [order.insertId, item.productId, item.quantity]
+      );
+    }
+    
+    await connection.commit();
+    return order;
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+}
+```
+
+### Pattern 3: Database Migration Feature
+
+**Description**: Feature for managing database schema changes
+
+**Pattern**:
+- Migration file management
+- Version tracking
+- Rollback support
+- Migration validation
+
+**Example**:
+```typescript
+// Migration execution feature
+export async function runMigrations() {
+  const migrations = await getPendingMigrations();
+  
+  for (const migration of migrations) {
+    try {
+      await executeMigration(migration);
+      await recordMigration(migration);
+    } catch (error) {
+      await rollbackMigration(migration);
+      throw error;
+    }
+  }
+}
+```
+
+### Pattern 4: Database Performance Monitoring Feature
+
+**Description**: Feature for monitoring database performance
+
+**Pattern**:
+- Slow query detection
+- Query performance tracking
+- Index usage monitoring
+- Connection pool monitoring
+
+**Example**:
+```typescript
+// Database performance monitoring feature
+export async function monitorDatabasePerformance() {
+  const slowQueries = await db.query(`
+    SELECT * FROM mysql.slow_log 
+    WHERE start_time > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+  `);
+  
+  const indexUsage = await db.query(`
+    SELECT * FROM information_schema.STATISTICS
+    WHERE TABLE_SCHEMA = DATABASE()
+  `);
+  
+  return {
+    slowQueries: slowQueries.length,
+    indexUsage: indexUsage
+  };
+}
+```
+
 ## Notes
 
 - Features marked with ⭐⭐⭐⭐⭐ are highly generic and recommended as reference
@@ -241,6 +374,9 @@ These features are too specific to their projects but may contain useful pattern
 - Project-specific features may contain useful patterns even if the feature itself isn't reusable
 - Batch operations and archive systems are particularly well-documented in discord-story-bot
 - Authentication and admin panel patterns are common across projects
+- Database-backed features should optimize queries and use transactions
+- Database migration features should support rollback and validation
+- Database performance monitoring features help maintain system health
 
 ---
 
@@ -257,5 +393,10 @@ These features are too specific to their projects but may contain useful pattern
 **Expertise**: Market Research & Product Strategy  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this generic features review document by adding comprehensive "Market Research and Product Strategy for Generic Features" section covering market research for generic features (competitive feature analysis with feature comparison and market positioning, market demand research with user needs research and pain point analysis for generic features, market size analysis with TAM/SAM/SOM calculations for feature market), product strategy for generic features (generic feature positioning with value proposition and differentiation strategy, generic feature roadmap with phased approach and market timing, generic feature pricing strategy with open-source vs commercial model analysis), and comprehensive market research integration checklist (competitive analysis, feature gap identification, competitive advantage, pricing analysis, market positioning, user feedback analysis, market demand validation, market size analysis, willingness-to-pay analysis, market opportunity scoring, competitive gap analysis, market timing analysis). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. This addition ensures that generic features review is informed by comprehensive market research, enabling data-driven strategic decisions based on competitive landscape, market demand, and market opportunities for generic features.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this generic features review document by adding comprehensive "Database-Backed Feature Patterns" section covering database query feature (query builder/ORM integration, indexed column usage, pagination support, query result caching, prepared statements with user search example), database transaction feature (transaction management, rollback on error, savepoint support, error handling with order creation example), database migration feature (migration file management, version tracking, rollback support, migration validation with migration execution example), database performance monitoring feature (slow query detection, query performance tracking, index usage monitoring, connection pool monitoring with performance monitoring example). Enhanced "Notes" section with database-specific feature considerations (database-backed features should optimize queries and use transactions, database migration features should support rollback and validation, database performance monitoring features help maintain system health). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide practical, production-ready patterns for implementing database-backed features, ensuring features that interact with databases are optimized, transactional, and performant.
 
 ---

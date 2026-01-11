@@ -1023,6 +1023,206 @@ log_min_duration_statement = 1000
 - Database credentials should never be committed
 - Database connection pooling improves performance
 - Database migration configuration enables schema versioning
+- Analytics configuration should support data collection, processing, and visualization
+- Analytics configuration should include privacy and security settings
+- Analytics configuration should be environment-specific for data retention and access control
+
+## Analytics & Business Intelligence Configuration Files
+
+### Pattern 1: Analytics Service Configuration
+
+**Description**: Configuration for analytics services including event tracking, metrics collection, and data processing
+
+**Pattern**:
+```json
+// config/analytics.json
+{
+  "analytics": {
+    "enabled": true,
+    "service": "custom",
+    "eventTracking": {
+      "enabled": true,
+      "batchSize": 100,
+      "flushInterval": 5000,
+      "maxQueueSize": 1000
+    },
+    "metrics": {
+      "enabled": true,
+      "collectionInterval": 60000,
+      "aggregationWindow": 300000
+    },
+    "privacy": {
+      "anonymizeUserIds": true,
+      "retentionDays": 90,
+      "piiRemoval": true
+    }
+  }
+}
+```
+
+### Pattern 2: Analytics Data Warehouse Configuration
+
+**Description**: Configuration for analytics data warehouse including ETL pipelines and data processing
+
+**Pattern**:
+```json
+// config/data-warehouse.json
+{
+  "dataWarehouse": {
+    "type": "postgresql",
+    "connection": {
+      "host": "${DW_HOST}",
+      "port": "${DW_PORT}",
+      "database": "${DW_DATABASE}",
+      "user": "${DW_USER}",
+      "password": "${DW_PASSWORD}"
+    },
+    "etl": {
+      "batchSize": 10000,
+      "parallelWorkers": 4,
+      "schedule": {
+        "hourly": true,
+        "daily": true,
+        "weekly": true
+      }
+    },
+    "aggregations": {
+      "daily": true,
+      "weekly": true,
+      "monthly": true,
+      "retentionDays": 730
+    }
+  }
+}
+```
+
+### Pattern 3: Analytics Dashboard Configuration
+
+**Description**: Configuration for analytics dashboards including visualization settings and caching
+
+**Pattern**:
+```json
+// config/dashboard.json
+{
+  "dashboard": {
+    "cache": {
+      "enabled": true,
+      "ttl": 3600,
+      "maxSize": 1000
+    },
+    "visualization": {
+      "chartLibrary": "recharts",
+      "defaultTimeRange": "30d",
+      "maxDataPoints": 1000
+    },
+    "export": {
+      "formats": ["pdf", "csv", "png"],
+      "maxExportSize": 10000
+    }
+  }
+}
+```
+
+### Pattern 4: Analytics Report Configuration
+
+**Description**: Configuration for analytics report generation including templates and scheduling
+
+**Pattern**:
+```json
+// config/reports.json
+{
+  "reports": {
+    "generation": {
+      "enabled": true,
+      "maxConcurrent": 5,
+      "timeout": 300000
+    },
+    "scheduling": {
+      "daily": {
+        "enabled": true,
+        "time": "00:00",
+        "recipients": ["admin@example.com"]
+      },
+      "weekly": {
+        "enabled": true,
+        "day": "monday",
+        "time": "09:00"
+      }
+    },
+    "templates": {
+      "directory": "./reports/templates",
+      "defaultFormat": "pdf"
+    }
+  }
+}
+```
+
+### Pattern 5: Analytics Environment Configuration
+
+**Description**: Environment-specific analytics configuration with privacy and security settings
+
+**Pattern**:
+```env
+# .env.analytics
+ANALYTICS_ENABLED=true
+ANALYTICS_SERVICE_URL=https://analytics.example.com
+ANALYTICS_API_KEY=${ANALYTICS_API_KEY}
+
+# Data Retention
+ANALYTICS_RETENTION_DAYS=90
+ANALYTICS_AGGREGATION_RETENTION_DAYS=730
+
+# Privacy
+ANALYTICS_ANONYMIZE_USER_IDS=true
+ANALYTICS_PII_REMOVAL=true
+
+# Performance
+ANALYTICS_BATCH_SIZE=100
+ANALYTICS_FLUSH_INTERVAL=5000
+ANALYTICS_CACHE_TTL=3600
+```
+
+### Analytics Configuration Best Practices
+
+1. **Service Configuration**:
+   - Enable/disable analytics per environment
+   - Configure batch sizes for performance
+   - Set appropriate flush intervals
+   - Configure queue limits
+
+2. **Privacy Configuration**:
+   - Enable user ID anonymization
+   - Configure data retention policies
+   - Enable PII removal
+   - Set privacy compliance settings
+
+3. **Performance Configuration**:
+   - Configure caching for dashboards
+   - Set aggregation windows
+   - Configure batch processing sizes
+   - Set query timeouts
+
+4. **Security Configuration**:
+   - Secure analytics API keys
+   - Configure access control
+   - Enable audit logging
+   - Set up encryption for data in transit
+
+### Analytics Configuration Checklist
+
+- [ ] Analytics service configuration file
+- [ ] Analytics data warehouse configuration
+- [ ] Analytics dashboard configuration
+- [ ] Analytics report configuration
+- [ ] Analytics environment variables (.env)
+- [ ] Analytics privacy settings configured
+- [ ] Analytics data retention policies set
+- [ ] Analytics caching configured
+- [ ] Analytics API keys secured
+- [ ] Analytics access control configured
+- [ ] Analytics audit logging enabled
+- [ ] Analytics configuration validated
+- [ ] Analytics configuration documented
 
 ---
 
@@ -1042,5 +1242,10 @@ log_min_duration_statement = 1000
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this configuration files review document by adding comprehensive "Database Configuration Files" section covering database connection configuration (database configuration in .env with connection and pool settings, database configuration file with environment-specific settings and connection pooling, database configuration in docker-compose.yml with health checks and character set configuration), database migration configuration (migration tool configuration with knexfile.js pattern, migration configuration file with JSON-based configuration), database performance configuration (MySQL configuration with my.cnf settings for character set, connections, InnoDB, query cache, slow query log, binary logging, PostgreSQL configuration with postgresql.conf settings for connections, shared buffers, query performance, WAL, query logging), database configuration best practices (connection configuration with environment variables and SSL/TLS, migration configuration with version control and validation, performance configuration with tuning and monitoring, security configuration with credential management and user permissions, environment-specific configuration with dev/staging/prod differences), and comprehensive database configuration checklist (13 items covering connection, migration, performance, security, environment-specific, validation, documentation). Enhanced "Notes" section with database-specific considerations (environment-specific configuration, credential security, connection pooling, migration configuration). These additions provide practical, production-ready patterns for configuring database connections, migrations, and performance settings across different environments and database systems.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this configuration files review document by adding comprehensive "Analytics & Business Intelligence Configuration Files" section covering analytics service configuration (configuration for analytics services including event tracking, metrics collection, and data processing with enabled flag, service type, event tracking configuration with batch size, flush interval, max queue size, metrics configuration with collection interval and aggregation window, privacy configuration with user ID anonymization, retention days, PII removal with JSON configuration example), analytics data warehouse configuration (configuration for analytics data warehouse including ETL pipelines and data processing with data warehouse type, connection settings, ETL configuration with batch size, parallel workers, schedule for hourly/daily/weekly, aggregations configuration with daily/weekly/monthly aggregations and retention days with JSON configuration example), analytics dashboard configuration (configuration for analytics dashboards including visualization settings and caching with cache configuration with enabled flag, TTL, max size, visualization configuration with chart library, default time range, max data points, export configuration with formats and max export size with JSON configuration example), analytics report configuration (configuration for analytics report generation including templates and scheduling with generation configuration with enabled flag, max concurrent, timeout, scheduling configuration with daily/weekly schedules, templates configuration with directory and default format with JSON configuration example), analytics environment configuration (environment-specific analytics configuration with privacy and security settings including analytics enabled flag, service URL, API key, data retention settings, privacy settings with anonymization and PII removal, performance settings with batch size, flush interval, cache TTL with .env example), and analytics configuration best practices (service configuration with enable/disable per environment, batch sizes, flush intervals, queue limits, privacy configuration with user ID anonymization, data retention policies, PII removal, privacy compliance settings, performance configuration with dashboard caching, aggregation windows, batch processing sizes, query timeouts, security configuration with secure API keys, access control, audit logging, encryption for data in transit). Added comprehensive analytics configuration checklist (13 items covering service, data warehouse, dashboard, report, environment variables, privacy, retention, caching, API keys, access control, audit logging, validation, documentation). Enhanced "Notes" section with analytics-specific considerations (analytics configuration should support data collection, processing, and visualization, analytics configuration should include privacy and security settings, analytics configuration should be environment-specific for data retention and access control). This addition provides essential BI/Analytics perspective on configuration files, ensuring analytics features have proper configuration patterns, privacy and security settings, performance optimization, and environment-specific configuration for reliable analytics functionality.
 
 ---

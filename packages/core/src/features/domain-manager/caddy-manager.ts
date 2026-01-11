@@ -9,7 +9,8 @@ import * as path from 'path';
 import * as os from 'os';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { CaddyDomainBlock, DomainInfo } from './types';
+import { CaddyDomainBlock, DomainInfo, DomainConfig } from './types';
+import { CaddyfileError } from './errors';
 
 const execAsync = promisify(exec);
 
@@ -28,6 +29,9 @@ export class CaddyManager {
 
   /**
    * Read current Caddyfile
+   * 
+   * @returns Caddyfile content as string
+   * @throws {CaddyfileError} If reading Caddyfile fails
    */
   async readCaddyfile(): Promise<string> {
     try {
@@ -36,7 +40,12 @@ export class CaddyManager {
       }
       return '';
     } catch (error) {
-      return '';
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new CaddyfileError(
+        `Failed to read Caddyfile: ${errorMessage}`,
+        'read',
+        this.caddyfilePath
+      );
     }
   }
 
@@ -52,11 +61,38 @@ export class CaddyManager {
 
   /**
    * Add domain block to Caddyfile
+   * 
+   * @param config - Domain configuration to add
+   * @throws {CaddyfileError} If writing to Caddyfile fails
    */
   async addDomain(config: CaddyDomainBlock): Promise<void> {
+    // Validate domain configuration
+    if (!config.domain) {
+      throw new CaddyfileError('Domain name is required', 'write', this.caddyfilePath);
+    }
+
+    // Validate that at least one port is provided
+    if (!config.port && !config.frontendPort && !config.backendPort) {
+      throw new CaddyfileError(
+        'At least one port (port, frontendPort, or backendPort) must be provided',
+        'write',
+        this.caddyfilePath
+      );
+    }
+
     await this.ensureCaddyDir();
 
-    let content = await this.readCaddyfile();
+    let content: string;
+    try {
+      content = await this.readCaddyfile();
+    } catch (error) {
+      // If file doesn't exist, start with empty content
+      if (error instanceof CaddyfileError && error.operation === 'read') {
+        content = '';
+      } else {
+        throw error;
+      }
+    }
 
     // Remove existing entry for this domain if it exists
     content = this.removeDomainFromContent(content, config.domain);
@@ -75,7 +111,16 @@ export class CaddyManager {
     content += '\n' + domainBlock + '\n';
 
     // Write to file
-    await fs.writeFile(this.caddyfilePath, content, 'utf-8');
+    try {
+      await fs.writeFile(this.caddyfilePath, content, 'utf-8');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new CaddyfileError(
+        `Failed to write Caddyfile: ${errorMessage}`,
+        'write',
+        this.caddyfilePath
+      );
+    }
 
     // Reload Caddy
     await this.reloadCaddy();
@@ -83,27 +128,66 @@ export class CaddyManager {
 
   /**
    * Remove domain from Caddyfile
+   * 
+   * @param domain - Domain name to remove
+   * @throws {CaddyfileError} If removing domain fails
    */
   async removeDomain(domain: string): Promise<void> {
-    const content = await this.readCaddyfile();
+    if (!domain || typeof domain !== 'string') {
+      throw new CaddyfileError('Domain name is required', 'write', this.caddyfilePath);
+    }
+
+    let content: string;
+    try {
+      content = await this.readCaddyfile();
+    } catch (error) {
+      // If file doesn't exist, nothing to remove
+      if (error instanceof CaddyfileError && error.operation === 'read') {
+        return;
+      }
+      throw error;
+    }
+
     const newContent = this.removeDomainFromContent(content, domain);
     
     if (newContent !== content) {
-      await fs.writeFile(this.caddyfilePath, newContent, 'utf-8');
+      try {
+        await fs.writeFile(this.caddyfilePath, newContent, 'utf-8');
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        throw new CaddyfileError(
+          `Failed to write Caddyfile: ${errorMessage}`,
+          'write',
+          this.caddyfilePath
+        );
+      }
       await this.reloadCaddy();
     }
   }
 
   /**
    * List all domains in Caddyfile
+   * 
+   * @returns Array of domain information
+   * @throws {CaddyfileError} If parsing Caddyfile fails
    */
   async listDomains(): Promise<DomainInfo[]> {
-    const content = await this.readCaddyfile();
+    let content: string;
+    try {
+      content = await this.readCaddyfile();
+    } catch (error) {
+      // If file doesn't exist or can't be read, return empty array
+      if (error instanceof CaddyfileError && error.operation === 'read') {
+        return [];
+      }
+      throw error;
+    }
+
     const domains: DomainInfo[] = [];
     const lines = content.split('\n');
 
     let currentDomain: string | null = null;
-    let currentConfig: any = {};
+    let currentConfig: Partial<DomainConfig> = {};
     let inDomainBlock = false;
     let lineNumber = 0;
 
@@ -128,7 +212,7 @@ export class CaddyManager {
         currentConfig = {
           domain: currentDomain,
           isMultiService: false,
-        };
+        } as DomainConfig;
         inDomainBlock = true;
         continue;
       }
@@ -138,12 +222,12 @@ export class CaddyManager {
         if (currentDomain) {
           domains.push({
             domain: currentDomain,
-            config: currentConfig,
+            config: currentConfig as DomainConfig,
             caddyfileLine: lineNumber,
           });
         }
         currentDomain = null;
-        currentConfig = {};
+        currentConfig = {} as Partial<DomainConfig>;
         inDomainBlock = false;
         continue;
       }
@@ -173,6 +257,15 @@ export class CaddyManager {
           }
         }
       }
+    }
+
+    // Add final domain if still in block (unclosed block)
+    if (currentDomain && currentConfig) {
+      domains.push({
+        domain: currentDomain,
+        config: currentConfig as DomainConfig,
+        caddyfileLine: lineNumber,
+      });
     }
 
     return domains;

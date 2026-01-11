@@ -228,6 +228,144 @@ npm run db:health
 - Database migration commands should include rollback support
 - Database backup commands should support cloud storage
 - Database performance commands should provide actionable insights
+- Analytics commands should support data collection, processing, and reporting
+- Analytics commands should ensure data accuracy and privacy compliance
+- Analytics commands should optimize for performance with large datasets
+
+## Analytics & Business Intelligence Command Patterns
+
+### Pattern 1: Analytics Data Collection Commands
+
+**Generic Commands**:
+- `analytics:track <event>` - Track analytics event
+- `analytics:batch` - Process batched events
+- `analytics:validate` - Validate analytics data
+- `analytics:anonymize` - Anonymize user identifiers
+
+**Pattern**:
+```bash
+# Track event
+npm run analytics:track "page_view" -- --page="/dashboard" --userId="user123"
+
+# Process batched events
+npm run analytics:batch
+
+# Validate analytics data
+npm run analytics:validate
+
+# Anonymize user identifiers
+npm run analytics:anonymize
+```
+
+### Pattern 2: Analytics Metrics Commands
+
+**Generic Commands**:
+- `analytics:metrics` - Show analytics metrics
+- `analytics:metrics:calculate` - Calculate metrics
+- `analytics:metrics:aggregate` - Aggregate metrics
+- `analytics:metrics:export` - Export metrics
+
+**Pattern**:
+```bash
+# Show metrics
+npm run analytics:metrics -- --timeRange="30d" --category="spending"
+
+# Calculate metrics
+npm run analytics:metrics:calculate -- --type="savings-rate" --month="2026-01"
+
+# Aggregate metrics
+npm run analytics:metrics:aggregate -- --period="daily" --start="2026-01-01"
+
+# Export metrics
+npm run analytics:metrics:export -- --format="csv" --output="./metrics.csv"
+```
+
+### Pattern 3: Analytics Dashboard Commands
+
+**Generic Commands**:
+- `analytics:dashboard:generate` - Generate dashboard data
+- `analytics:dashboard:cache` - Cache dashboard data
+- `analytics:dashboard:export` - Export dashboard
+
+**Pattern**:
+```bash
+# Generate dashboard data
+npm run analytics:dashboard:generate -- --timeRange="30d" --filters="category=food"
+
+# Cache dashboard data
+npm run analytics:dashboard:cache -- --ttl=3600
+
+# Export dashboard
+npm run analytics:dashboard:export -- --format="png" --output="./dashboard.png"
+```
+
+### Pattern 4: Analytics Report Commands
+
+**Generic Commands**:
+- `analytics:report:generate` - Generate analytics report
+- `analytics:report:schedule` - Schedule report generation
+- `analytics:report:export` - Export report
+
+**Pattern**:
+```bash
+# Generate report
+npm run analytics:report:generate -- --type="monthly" --month="2026-01"
+
+# Schedule report
+npm run analytics:report:schedule -- --type="weekly" --day="monday" --time="09:00"
+
+# Export report
+npm run analytics:report:export -- --report="monthly_2026-01" --format="pdf"
+```
+
+### Pattern 5: Analytics Data Warehouse Commands
+
+**Generic Commands**:
+- `analytics:warehouse:migrate` - Run analytics migrations
+- `analytics:warehouse:aggregate` - Aggregate data warehouse data
+- `analytics:warehouse:maintain` - Maintain data warehouse
+- `analytics:warehouse:health` - Check data warehouse health
+
+**Pattern**:
+```bash
+# Run analytics migrations
+npm run analytics:warehouse:migrate
+
+# Aggregate data warehouse data
+npm run analytics:warehouse:aggregate -- --period="daily" --date="2026-01-05"
+
+# Maintain data warehouse
+npm run analytics:warehouse:maintain -- --retention-days=90
+
+# Check data warehouse health
+npm run analytics:warehouse:health
+```
+
+### Analytics Command Best Practices
+
+1. **Data Collection Commands**:
+   - Support batch processing
+   - Validate data before processing
+   - Handle errors gracefully
+   - Anonymize user identifiers
+
+2. **Metrics Commands**:
+   - Support time range filtering
+   - Support dimension filtering
+   - Optimize for performance
+   - Cache frequently accessed metrics
+
+3. **Dashboard Commands**:
+   - Support filtering and drill-down
+   - Cache dashboard data
+   - Support multiple export formats
+   - Optimize for large datasets
+
+4. **Report Commands**:
+   - Support scheduled generation
+   - Support multiple report types
+   - Support multiple export formats
+   - Handle report generation errors
 
 ---
 
@@ -241,5 +379,10 @@ npm run db:health
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this generic commands review document by adding comprehensive "Database Command Patterns" section covering database migration commands (migrate, migrate:rollback, migrate:status, migrate:create, migrate:validate with usage examples), database query commands (db:query, db:explain, db:indexes, db:slow-queries with SQL execution and analysis examples), database backup commands (db:backup, db:restore, db:backup:list with backup/restore workflow examples), database performance commands (db:analyze, db:optimize, db:health with table analysis and optimization examples). Enhanced "Notes" section with database-specific command considerations (multi-database support, rollback support, cloud storage support, actionable insights). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide practical, production-ready patterns for database command implementation, ensuring database operations can be performed efficiently through command-line interfaces with proper migration, query, backup, and performance management capabilities.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this generic commands review document by adding comprehensive "Analytics & Business Intelligence Command Patterns" section covering analytics data collection commands (analytics:track for tracking analytics events, analytics:batch for processing batched events, analytics:validate for validating analytics data, analytics:anonymize for anonymizing user identifiers with usage examples), analytics metrics commands (analytics:metrics for showing analytics metrics with time range and category filtering, analytics:metrics:calculate for calculating metrics with type and month parameters, analytics:metrics:aggregate for aggregating metrics with period and start date, analytics:metrics:export for exporting metrics with format and output options with usage examples), analytics dashboard commands (analytics:dashboard:generate for generating dashboard data with time range and filters, analytics:dashboard:cache for caching dashboard data with TTL, analytics:dashboard:export for exporting dashboard with format and output options with usage examples), analytics report commands (analytics:report:generate for generating analytics reports with type and month parameters, analytics:report:schedule for scheduling report generation with type, day, and time parameters, analytics:report:export for exporting reports with report ID and format options with usage examples), analytics data warehouse commands (analytics:warehouse:migrate for running analytics migrations, analytics:warehouse:aggregate for aggregating data warehouse data with period and date parameters, analytics:warehouse:maintain for maintaining data warehouse with retention days, analytics:warehouse:health for checking data warehouse health with usage examples), and analytics command best practices (data collection commands with batch processing, data validation, error handling, user identifier anonymization, metrics commands with time range and dimension filtering, performance optimization, metric caching, dashboard commands with filtering and drill-down, dashboard data caching, multiple export formats, large dataset optimization, report commands with scheduled generation, multiple report types, multiple export formats, report generation error handling). Enhanced "Notes" section with analytics-specific command considerations (analytics commands should support data collection, processing, and reporting, analytics commands should ensure data accuracy and privacy compliance, analytics commands should optimize for performance with large datasets). This addition provides essential BI/Analytics perspective on generic commands, ensuring analytics operations can be performed efficiently through command-line interfaces with proper data collection, metrics calculation, dashboard generation, report generation, and data warehouse management capabilities.
 
 ---

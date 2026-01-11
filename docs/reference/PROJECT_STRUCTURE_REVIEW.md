@@ -541,6 +541,155 @@ config/
 - [ ] Database structure patterns implemented
 - [ ] Database migration organization
 - [ ] Database seed data organization
+- [ ] Analytics directory structure for data collection and processing
+- [ ] Analytics data warehouse structure for time-series and aggregated data
+- [ ] Analytics dashboard and reporting structure
+
+## Analytics & Business Intelligence Project Structure Patterns
+
+### Pattern 1: Analytics Directory Structure
+
+**Description**: Project structure for analytics features with data collection, processing, and visualization
+
+**Pattern**:
+```
+project/
+├── analytics/
+│   ├── collectors/         # Data collection services
+│   │   ├── events/
+│   │   ├── metrics/
+│   │   └── logs/
+│   ├── processors/        # Data processing and transformation
+│   │   ├── aggregators/
+│   │   ├── transformers/
+│   │   └── enrichers/
+│   ├── storage/            # Analytics data storage
+│   │   ├── time-series/
+│   │   ├── aggregated/
+│   │   └── events/
+│   ├── dashboards/         # Dashboard components
+│   │   ├── components/
+│   │   ├── charts/
+│   │   └── filters/
+│   ├── reports/            # Report generation
+│   │   ├── templates/
+│   │   ├── generators/
+│   │   └── exports/
+│   └── api/                # Analytics API endpoints
+│       ├── metrics/
+│       ├── events/
+│       ├── dashboards/
+│       └── reports/
+```
+
+### Pattern 2: Data Warehouse Structure
+
+**Description**: Project structure for analytics data warehouse with ETL pipelines and data marts
+
+**Pattern**:
+```
+project/
+├── data-warehouse/
+│   ├── etl/                # ETL pipelines
+│   │   ├── extract/
+│   │   ├── transform/
+│   │   └── load/
+│   ├── schemas/            # Data warehouse schemas
+│   │   ├── star/
+│   │   ├── snowflake/
+│   │   └── fact-tables/
+│   ├── data-marts/         # Data marts for specific domains
+│   │   ├── product/
+│   │   ├── operations/
+│   │   └── finance/
+│   ├── aggregations/       # Pre-computed aggregations
+│   │   ├── daily/
+│   │   ├── weekly/
+│   │   └── monthly/
+│   └── migrations/         # Data warehouse migrations
+```
+
+### Pattern 3: Analytics Frontend Structure
+
+**Description**: Frontend structure for analytics dashboards and visualizations
+
+**Pattern**:
+```
+frontend/
+├── src/
+│   ├── analytics/
+│   │   ├── components/
+│   │   │   ├── dashboard/
+│   │   │   ├── metrics/
+│   │   │   ├── charts/
+│   │   │   └── filters/
+│   │   ├── hooks/
+│   │   │   ├── useAnalytics.ts
+│   │   │   ├── useMetrics.ts
+│   │   │   └── useEventTracking.ts
+│   │   ├── services/
+│   │   │   ├── analytics.ts
+│   │   │   ├── metrics.ts
+│   │   │   └── reports.ts
+│   │   └── types/
+│   │       ├── analytics.ts
+│   │       ├── metrics.ts
+│   │       └── charts.ts
+```
+
+### Pattern 4: Analytics Backend Structure
+
+**Description**: Backend structure for analytics APIs and data processing
+
+**Pattern**:
+```
+backend/
+├── analytics/
+│   ├── api/
+│   │   ├── metrics/
+│   │   ├── events/
+│   │   ├── dashboards/
+│   │   └── reports/
+│   ├── services/
+│   │   ├── collection/
+│   │   ├── processing/
+│   │   ├── aggregation/
+│   │   └── reporting/
+│   ├── models/
+│   │   ├── events/
+│   │   ├── metrics/
+│   │   └── reports/
+│   └── repositories/
+│       ├── events/
+│       ├── metrics/
+│       └── aggregations/
+```
+
+### Analytics Project Structure Best Practices
+
+1. **Separation of Concerns**:
+   - Separate data collection from processing
+   - Separate data storage from visualization
+   - Separate analytics APIs from business APIs
+   - Separate real-time from batch processing
+
+2. **Scalability**:
+   - Organize for horizontal scaling
+   - Separate hot and cold data storage
+   - Organize for efficient querying
+   - Support incremental data processing
+
+3. **Privacy & Security**:
+   - Separate anonymized data from raw data
+   - Organize access control by data sensitivity
+   - Separate compliance-related code
+   - Organize audit logging separately
+
+4. **Maintainability**:
+   - Clear directory structure
+   - Consistent naming conventions
+   - Well-documented structure
+   - Easy to extend with new analytics features
 
 ## Review/Contribution
 
@@ -553,5 +702,10 @@ config/
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this project structure review document by adding comprehensive "Database Project Structure Patterns" section covering database directory structure (migrations directory with sequential numbering, seeds directory with environment-specific seeds, init directory with initialization scripts, backups directory gitignored, schemas directory with schema definitions, config directory with database configuration), backend database structure (database migrations and seeds, factories for testing data, models directory for ORM models, database configuration, database tests), database migration structure (migration files with rollback files, seed files organized by data type, schema directory with current schema snapshot), database configuration structure (environment-specific database configuration files, database connection configuration), database structure best practices (migration organization with sequential numbering and descriptive names, seed data organization by environment, schema management with versioning and documentation, database configuration with environment-specific settings), and comprehensive database project structure checklist (11 items covering migrations, seeds, initialization, backups, schemas, configuration, rollback files, test data, models, tests, documentation). Enhanced "Cloud Infrastructure Project Structure Checklist" with database-specific items (database structure patterns, migration organization, seed data organization). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide practical, production-ready patterns for organizing database-related files and directories in projects, ensuring database migrations, seeds, schemas, and configurations are properly structured and maintainable.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this project structure review document by adding comprehensive "Analytics & Business Intelligence Project Structure Patterns" section covering analytics directory structure (project structure for analytics features with data collection, processing, and visualization including collectors directory for data collection services with events/metrics/logs subdirectories, processors directory for data processing and transformation with aggregators/transformers/enrichers subdirectories, storage directory for analytics data storage with time-series/aggregated/events subdirectories, dashboards directory for dashboard components with components/charts/filters subdirectories, reports directory for report generation with templates/generators/exports subdirectories, api directory for analytics API endpoints with metrics/events/dashboards/reports subdirectories), data warehouse structure (project structure for analytics data warehouse with ETL pipelines and data marts including etl directory for ETL pipelines with extract/transform/load subdirectories, schemas directory for data warehouse schemas with star/snowflake/fact-tables subdirectories, data-marts directory for data marts for specific domains with product/operations/finance subdirectories, aggregations directory for pre-computed aggregations with daily/weekly/monthly subdirectories, migrations directory for data warehouse migrations), analytics frontend structure (frontend structure for analytics dashboards and visualizations including analytics components directory with dashboard/metrics/charts/filters subdirectories, hooks directory with useAnalytics/useMetrics/useEventTracking hooks, services directory with analytics/metrics/reports services, types directory with analytics/metrics/charts types), analytics backend structure (backend structure for analytics APIs and data processing including api directory with metrics/events/dashboards/reports endpoints, services directory with collection/processing/aggregation/reporting services, models directory with events/metrics/reports models, repositories directory with events/metrics/aggregations repositories), and analytics project structure best practices (separation of concerns with data collection/processing separation, data storage/visualization separation, analytics APIs/business APIs separation, real-time/batch processing separation, scalability with horizontal scaling organization, hot/cold data storage separation, efficient querying organization, incremental data processing support, privacy and security with anonymized/raw data separation, access control organization by data sensitivity, compliance-related code separation, audit logging organization, maintainability with clear directory structure, consistent naming conventions, well-documented structure, easy extension with new analytics features). Enhanced "Cloud Infrastructure Project Structure Checklist" with analytics-specific items (analytics directory structure, analytics data warehouse structure, analytics dashboard and reporting structure). This addition provides essential BI/Analytics perspective on project structure, ensuring analytics features have proper directory organization, scalable structure, privacy and security considerations, and maintainable architecture for comprehensive analytics capabilities.
 
 ---

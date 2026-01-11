@@ -663,6 +663,193 @@ fi
 - Database migrations should run automatically on setup
 - Database health checks ensure reliable connections
 - Database configuration should be environment-specific
+- Analytics environment setup should include data collection, processing, and visualization services
+- Analytics environment setup should configure privacy and security settings
+- Analytics environment setup should support data warehouse initialization
+
+## Analytics & Business Intelligence Environment Setup Patterns
+
+### Pattern 1: Analytics Service Environment Setup
+
+**Description**: Environment setup for analytics services including event tracking and metrics collection
+
+**Pattern**:
+- Set up analytics service containers
+- Configure analytics endpoints
+- Set up event tracking services
+- Configure metrics collection services
+- Verify analytics services after setup
+
+**Example**:
+```yaml
+# docker-compose.yml - Analytics Services
+services:
+  analytics-api:
+    image: analytics-api:latest
+    environment:
+      ANALYTICS_ENABLED: ${ANALYTICS_ENABLED:-true}
+      ANALYTICS_SERVICE_URL: ${ANALYTICS_SERVICE_URL:-http://analytics-api:3000}
+      ANALYTICS_BATCH_SIZE: ${ANALYTICS_BATCH_SIZE:-100}
+      ANALYTICS_FLUSH_INTERVAL: ${ANALYTICS_FLUSH_INTERVAL:-5000}
+    ports:
+      - "${ANALYTICS_PORT:-3001}:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+```
+
+### Pattern 2: Analytics Data Warehouse Environment Setup
+
+**Description**: Environment setup for analytics data warehouse with ETL pipelines
+
+**Pattern**:
+- Set up data warehouse database
+- Configure ETL pipeline services
+- Set up data processing jobs
+- Configure data aggregation services
+- Verify data warehouse after setup
+
+**Example**:
+```bash
+#!/bin/bash
+# scripts/setup-analytics-warehouse.sh
+
+set -e
+
+echo "Setting up analytics data warehouse..."
+
+# Create data warehouse database
+psql -h localhost -U postgres << EOF
+CREATE DATABASE analytics_warehouse;
+\c analytics_warehouse
+CREATE SCHEMA IF NOT EXISTS analytics;
+CREATE SCHEMA IF NOT EXISTS aggregations;
+EOF
+
+echo "Running analytics migrations..."
+npm run migrate:analytics
+
+echo "Setting up ETL pipeline..."
+docker-compose up -d etl-pipeline
+
+echo "Verifying analytics data warehouse..."
+curl -f http://localhost:3002/health || exit 1
+
+echo "Analytics data warehouse setup complete!"
+```
+
+### Pattern 3: Analytics Dashboard Environment Setup
+
+**Description**: Environment setup for analytics dashboards with frontend and API services
+
+**Pattern**:
+- Set up dashboard API service
+- Configure dashboard frontend
+- Set up dashboard caching
+- Configure dashboard data endpoints
+- Verify dashboard after setup
+
+**Example**:
+```bash
+#!/bin/bash
+# scripts/setup-analytics-dashboard.sh
+
+set -e
+
+echo "Setting up analytics dashboard..."
+
+# Build dashboard frontend
+cd frontend/analytics-dashboard
+npm install
+npm run build
+
+# Deploy dashboard API
+docker-compose up -d dashboard-api
+
+# Configure dashboard caching
+redis-cli CONFIG SET maxmemory 1gb
+redis-cli CONFIG SET maxmemory-policy allkeys-lru
+
+echo "Verifying analytics dashboard..."
+curl -f http://localhost:3003/health || exit 1
+
+echo "Analytics dashboard setup complete!"
+```
+
+### Pattern 4: Analytics Environment Variables Setup
+
+**Description**: Environment variables for analytics configuration
+
+**Pattern**:
+```bash
+# .env.analytics
+# Analytics Service Configuration
+ANALYTICS_ENABLED=true
+ANALYTICS_SERVICE_URL=http://localhost:3001
+ANALYTICS_API_KEY=${ANALYTICS_API_KEY}
+
+# Data Warehouse Configuration
+DW_HOST=localhost
+DW_PORT=5432
+DW_DATABASE=analytics_warehouse
+DW_USER=analytics_user
+DW_PASSWORD=${DW_PASSWORD}
+
+# Privacy Configuration
+ANALYTICS_ANONYMIZE_USER_IDS=true
+ANALYTICS_RETENTION_DAYS=90
+ANALYTICS_PII_REMOVAL=true
+
+# Performance Configuration
+ANALYTICS_BATCH_SIZE=100
+ANALYTICS_FLUSH_INTERVAL=5000
+ANALYTICS_CACHE_TTL=3600
+```
+
+### Analytics Environment Setup Best Practices
+
+1. **Service Setup**:
+   - Set up analytics services before application services
+   - Verify analytics endpoints after setup
+   - Configure analytics health checks
+   - Set up analytics monitoring
+
+2. **Data Warehouse Setup**:
+   - Initialize data warehouse database first
+   - Run analytics migrations during setup
+   - Set up ETL pipelines after database initialization
+   - Verify data warehouse connectivity
+
+3. **Privacy & Security Setup**:
+   - Configure privacy settings during setup
+   - Set up data anonymization
+   - Configure data retention policies
+   - Set up access control
+
+4. **Performance Setup**:
+   - Configure caching for dashboards
+   - Set up batch processing
+   - Configure aggregation windows
+   - Set up performance monitoring
+
+### Analytics Environment Setup Checklist
+
+- [ ] Analytics service containers configured
+- [ ] Analytics endpoints configured and verified
+- [ ] Analytics data warehouse database initialized
+- [ ] Analytics ETL pipelines configured
+- [ ] Analytics dashboard API configured
+- [ ] Analytics dashboard frontend built
+- [ ] Analytics caching configured
+- [ ] Analytics environment variables configured
+- [ ] Analytics privacy settings configured
+- [ ] Analytics data retention policies set
+- [ ] Analytics access control configured
+- [ ] Analytics health checks implemented
+- [ ] Analytics monitoring configured
+- [ ] Analytics environment setup verified
 
 ---
 
@@ -682,5 +869,10 @@ fi
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this environment setup review document by adding comprehensive "Database Environment Setup Patterns" section covering database initialization in Docker (database initialization scripts with SQL init files in docker-entrypoint-initdb.d, database migration execution with automated migration scripts, database seeding with test data scripts), database connection configuration (environment-based database configuration with .env variables for host/port/database/user/password/charset/collation, connection pool configuration with min/max/idle timeout, migration configuration with migrations directory and table), database connection health checks (database connectivity verification scripts with mysqladmin ping checks, database readiness verification before application startup), database environment setup best practices (database initialization with automatic migration execution and test data seeding, database configuration with environment-specific settings and connection pooling, database migration management with state tracking and rollback support, database health checks with connectivity and schema version verification, database data management with persistent volumes and backup strategies), and comprehensive database environment setup checklist (12 items covering database service configuration, initialization scripts, migrations, connection configuration, health checks, seeding, migration automation, connection pooling, credential security, backup, restoration, performance monitoring). Enhanced "Notes" section with database-specific considerations (database initialization automation, automatic migration execution, database health checks, environment-specific database configuration). These additions provide practical, production-ready patterns for setting up database environments in Docker and other containerized environments, ensuring databases are properly initialized, configured, and managed as part of the overall environment setup process.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this environment setup review document by adding comprehensive "Analytics & Business Intelligence Environment Setup Patterns" section covering analytics service environment setup (environment setup for analytics services including event tracking and metrics collection with set up analytics service containers, configure analytics endpoints, set up event tracking services, configure metrics collection services, verify analytics services after setup with docker-compose.yml example for analytics-api service with environment variables, ports, health checks), analytics data warehouse environment setup (environment setup for analytics data warehouse with ETL pipelines including set up data warehouse database, configure ETL pipeline services, set up data processing jobs, configure data aggregation services, verify data warehouse after setup with bash script example for setting up analytics warehouse database, running migrations, setting up ETL pipeline, verifying health), analytics dashboard environment setup (environment setup for analytics dashboards with frontend and API services including set up dashboard API service, configure dashboard frontend, set up dashboard caching, configure dashboard data endpoints, verify dashboard after setup with bash script example for building dashboard frontend, deploying dashboard API, configuring caching, verifying health), analytics environment variables setup (environment variables for analytics configuration with .env.analytics example including analytics service configuration with enabled flag, service URL, API key, data warehouse configuration with host/port/database/user/password, privacy configuration with anonymization, retention days, PII removal, performance configuration with batch size, flush interval, cache TTL), and analytics environment setup best practices (service setup with analytics services before application services, endpoint verification, health checks, monitoring, data warehouse setup with database initialization first, migration execution, ETL pipeline setup, connectivity verification, privacy and security setup with privacy settings configuration, data anonymization, retention policies, access control, performance setup with dashboard caching, batch processing, aggregation windows, performance monitoring). Added comprehensive analytics environment setup checklist (14 items covering service containers, endpoints, data warehouse database, ETL pipelines, dashboard API, dashboard frontend, caching, environment variables, privacy settings, retention policies, access control, health checks, monitoring, verification). Enhanced "Notes" section with analytics-specific considerations (analytics environment setup should include data collection, processing, and visualization services, analytics environment setup should configure privacy and security settings, analytics environment setup should support data warehouse initialization). This addition provides essential BI/Analytics perspective on environment setup, ensuring analytics features are properly set up, configured, and verified during environment initialization for reliable analytics functionality.
 
 ---

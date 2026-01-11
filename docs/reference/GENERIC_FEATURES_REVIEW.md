@@ -382,9 +382,170 @@ export async function monitorDatabasePerformance() {
 
 **Next Steps**: Review feature documentation for patterns, architecture, and implementation approaches that could inform new feature development.
 
+## Analytics & Reporting Feature Patterns
+
+### Pattern 1: Analytics Dashboard Feature
+
+**Description**: Feature that provides analytics dashboards with metrics, KPIs, and visualizations
+
+**Pattern**:
+- Data aggregation and calculation
+- Time-series data handling
+- Chart/graph visualization
+- Filtering and drill-down capabilities
+- Export functionality (PDF, CSV, PNG)
+- Real-time or batch data updates
+
+**Example**:
+```typescript
+// Analytics dashboard feature
+export interface AnalyticsDashboard {
+  metrics: Metric[];
+  kpis: KPI[];
+  charts: Chart[];
+  filters: Filter[];
+  timeRange: TimeRange;
+}
+
+export interface Metric {
+  name: string;
+  value: number;
+  trend: 'up' | 'down' | 'stable';
+  change: number;
+}
+
+export interface KPI {
+  name: string;
+  value: number;
+  target: number;
+  status: 'on-track' | 'at-risk' | 'off-track';
+}
+```
+
+### Pattern 2: Event Tracking Feature
+
+**Description**: Feature that tracks user events and interactions for analytics
+
+**Pattern**:
+- Event definition and schema
+- Event collection (client-side or server-side)
+- Event storage (time-series database or analytics service)
+- Event aggregation and analysis
+- Privacy-compliant tracking (anonymization, consent)
+
+**Example**:
+```typescript
+// Event tracking feature
+export interface EventTracker {
+  track(event: Event): Promise<void>;
+  trackBatch(events: Event[]): Promise<void>;
+  getEvents(filters: EventFilters): Promise<Event[]>;
+}
+
+export interface Event {
+  type: string;
+  userId?: string;
+  properties: Record<string, any>;
+  timestamp: Date;
+}
+```
+
+### Pattern 3: Reporting Feature
+
+**Description**: Feature that generates reports from data with formatting and export
+
+**Pattern**:
+- Report template definition
+- Data query and aggregation
+- Report generation (PDF, HTML, CSV)
+- Scheduled report generation
+- Report distribution (email, download, API)
+
+**Example**:
+```typescript
+// Reporting feature
+export interface ReportGenerator {
+  generateReport(template: ReportTemplate, data: ReportData): Promise<Report>;
+  scheduleReport(template: ReportTemplate, schedule: Schedule): Promise<void>;
+  exportReport(report: Report, format: 'pdf' | 'csv' | 'html'): Promise<Blob>;
+}
+```
+
+### Pattern 4: Data Visualization Feature
+
+**Description**: Feature that visualizes data with charts, graphs, and interactive visualizations
+
+**Pattern**:
+- Chart type selection (line, bar, pie, scatter, etc.)
+- Data transformation for visualization
+- Interactive features (zoom, filter, drill-down)
+- Responsive design for mobile
+- Accessibility support (screen readers, keyboard navigation)
+
+**Example**:
+```typescript
+// Data visualization feature
+export interface DataVisualization {
+  renderChart(chartConfig: ChartConfig, data: DataPoint[]): void;
+  updateChart(chartId: string, data: DataPoint[]): void;
+  exportChart(chartId: string, format: 'png' | 'svg' | 'pdf'): Promise<Blob>;
+}
+```
+
+### Pattern 5: Business Intelligence Feature
+
+**Description**: Feature that provides business intelligence capabilities with data analysis and insights
+
+**Pattern**:
+- Data warehouse integration
+- ETL pipeline for data processing
+- OLAP cube for multi-dimensional analysis
+- Predictive analytics and forecasting
+- Anomaly detection
+- Recommendations engine
+
+**Example**:
+```typescript
+// Business intelligence feature
+export interface BusinessIntelligence {
+  analyzeMetrics(metrics: Metric[], dimensions: Dimension[]): Promise<Analysis>;
+  predictTrends(historicalData: DataPoint[], period: number): Promise<Forecast>;
+  detectAnomalies(data: DataPoint[]): Promise<Anomaly[]>;
+  generateRecommendations(context: AnalysisContext): Promise<Recommendation[]>;
+}
+```
+
+### Analytics Feature Best Practices
+
+1. **Data Collection**:
+   - Collect only necessary data (data minimization)
+   - Anonymize user identifiers for privacy
+   - Obtain user consent for tracking
+   - Implement data retention policies
+
+2. **Performance**:
+   - Optimize queries for analytics (indexing, aggregation)
+   - Cache frequently accessed dashboards
+   - Use materialized views for complex calculations
+   - Implement pagination for large datasets
+
+3. **Visualization**:
+   - Use appropriate chart types for data
+   - Maintain consistent color schemes
+   - Ensure mobile responsiveness
+   - Support accessibility requirements
+
+4. **Reporting**:
+   - Provide multiple export formats
+   - Support scheduled report generation
+   - Include data freshness indicators
+   - Enable report customization
+
 ---
 
-## Review/Contribution**Expert**: Nicole Chen  
+## Review/Contribution
+
+**Expert**: Nicole Chen  
 **Expertise**: Observability (Monitoring, Logging, Tracing, Metrics)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this generic features review document by adding comprehensive "Observability Considerations for Generic Features" section covering feature observability patterns (feature usage metrics with feature adoption and usage frequency, feature performance metrics with feature response time and throughput, feature error metrics with feature error rates and error types), feature logging patterns (feature operation logging with structured logs for feature usage, feature error logging with error context and stack traces, feature audit logging with feature access history), feature tracing patterns (feature operation tracing with distributed tracing for feature workflows, feature correlation with correlation IDs for feature-related operations, feature performance tracing with span analysis for feature processing), and comprehensive feature observability checklist (usage metrics, performance metrics, error metrics, operation logging, error logging, audit logging, operation tracing, correlation IDs, performance tracing, dashboards, alerting). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. This addition ensures that generic features have comprehensive observability patterns, enabling monitoring of feature usage, performance tracking, error detection, and feature workflow analysis for reliable feature management.
@@ -398,5 +559,10 @@ export async function monitorDatabasePerformance() {
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this generic features review document by adding comprehensive "Database-Backed Feature Patterns" section covering database query feature (query builder/ORM integration, indexed column usage, pagination support, query result caching, prepared statements with user search example), database transaction feature (transaction management, rollback on error, savepoint support, error handling with order creation example), database migration feature (migration file management, version tracking, rollback support, migration validation with migration execution example), database performance monitoring feature (slow query detection, query performance tracking, index usage monitoring, connection pool monitoring with performance monitoring example). Enhanced "Notes" section with database-specific feature considerations (database-backed features should optimize queries and use transactions, database migration features should support rollback and validation, database performance monitoring features help maintain system health). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide practical, production-ready patterns for implementing database-backed features, ensuring features that interact with databases are optimized, transactional, and performant.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this generic features review document by adding comprehensive "Analytics & Reporting Feature Patterns" section covering analytics dashboard feature (data aggregation and calculation, time-series data handling, chart/graph visualization, filtering and drill-down capabilities, export functionality, real-time or batch data updates with TypeScript interfaces), event tracking feature (event definition and schema, event collection client-side or server-side, event storage in time-series database or analytics service, event aggregation and analysis, privacy-compliant tracking with anonymization and consent with TypeScript interfaces), reporting feature (report template definition, data query and aggregation, report generation in PDF/HTML/CSV formats, scheduled report generation, report distribution via email/download/API with TypeScript interfaces), data visualization feature (chart type selection including line/bar/pie/scatter charts, data transformation for visualization, interactive features with zoom/filter/drill-down, responsive design for mobile, accessibility support with screen readers and keyboard navigation with TypeScript interfaces), business intelligence feature (data warehouse integration, ETL pipeline for data processing, OLAP cube for multi-dimensional analysis, predictive analytics and forecasting, anomaly detection, recommendations engine with TypeScript interfaces), and analytics feature best practices (data collection with data minimization, anonymization, consent, retention policies, performance with query optimization, caching, materialized views, pagination, visualization with appropriate chart types, consistent color schemes, mobile responsiveness, accessibility, reporting with multiple export formats, scheduled generation, data freshness indicators, report customization). This addition provides essential BI/Analytics perspective on generic features, ensuring features have comprehensive analytics capabilities, proper event tracking, reporting functionality, data visualization, and business intelligence integration for actionable insights and data-driven decision making.
 
 ---

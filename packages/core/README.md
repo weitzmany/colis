@@ -196,7 +196,9 @@ This package includes Cursor rules and commands that are automatically copied to
 
 ## Documentation
 
-See the [Port Manager PRD](../../docs/features/port-manager/PRD.md) for detailed documentation.
+- [Architecture Documentation](./ARCHITECTURE.md) - Package architecture and design patterns
+- [Port Manager PRD](../../docs/features/port-manager/PRD.md) - Port Manager feature documentation
+- [Package Architecture Strategy](../../docs/architecture/PACKAGE_ARCHITECTURE.md) - Overall package architecture strategy
 
 ## License
 

@@ -238,8 +238,139 @@ A personal budget management application that helps users track their income, ex
 
 **This Personal Budget Manager would be a customer-facing application that helps users manage their finances, complementing the existing portfolio of practical, everyday-use applications.**
 
+## Advanced Analytics & Business Intelligence
+
+### Financial Analytics KPIs
+
+1. **Spending KPIs**:
+   - **Total Spending**: Monthly/weekly/yearly total spending
+   - **Average Daily Spending**: Average spending per day
+   - **Spending Growth Rate**: Month-over-month spending change
+   - **Category Spending Distribution**: Percentage of spending per category
+   - **Discretionary vs. Essential Spending**: Ratio of discretionary to essential expenses
+
+2. **Savings KPIs**:
+   - **Savings Rate**: Percentage of income saved
+   - **Savings Goal Progress**: Percentage of savings goal achieved
+   - **Emergency Fund Status**: Months of expenses covered by emergency fund
+   - **Debt-to-Income Ratio**: Total debt payments vs. income
+   - **Net Worth Trend**: Net worth change over time
+
+3. **Budget Performance KPIs**:
+   - **Budget Adherence**: Percentage of categories within budget
+   - **Budget Variance**: Difference between budgeted and actual spending
+   - **Overspending Frequency**: Number of times budget exceeded
+   - **Budget Efficiency**: Ratio of budgeted to actual spending
+   - **Category Budget Performance**: Per-category budget adherence
+
+### Data Analytics & Insights
+
+1. **Spending Pattern Analysis**:
+   - **Spending Trends**: Identify spending trends over time (increasing, decreasing, seasonal)
+   - **Spending Anomalies**: Detect unusual spending patterns or outliers
+   - **Category Trends**: Analyze category spending trends (which categories are growing/shrinking)
+   - **Time-Based Patterns**: Identify spending patterns by day of week, time of month
+   - **Merchant Analysis**: Analyze spending by merchant or vendor
+
+2. **Predictive Analytics**:
+   - **Spending Forecast**: Predict future spending based on historical patterns
+   - **Budget Recommendations**: Recommend budget adjustments based on spending patterns
+   - **Goal Achievement Prediction**: Predict likelihood of achieving savings goals
+   - **Cash Flow Forecasting**: Forecast future cash flow based on income and expenses
+   - **Financial Health Prediction**: Predict future financial health based on current trends
+
+3. **Comparative Analytics**:
+   - **Month-over-Month Comparison**: Compare spending across months
+   - **Year-over-Year Comparison**: Compare spending across years
+   - **Category Comparison**: Compare spending across categories
+   - **Goal Comparison**: Compare progress across multiple goals
+   - **Benchmark Comparison**: Compare spending to industry benchmarks (if available)
+
+### Data Visualization Requirements
+
+1. **Dashboard Visualizations**:
+   - **Financial Overview Dashboard**: 
+     - Income vs. expenses gauge chart
+     - Savings rate gauge chart
+     - Spending by category pie chart
+     - Monthly spending trend line chart
+     - Budget performance bar chart
+   - **Spending Analysis Dashboard**:
+     - Spending trends line chart (daily/weekly/monthly)
+     - Category spending comparison bar chart
+     - Spending heatmap (by day of week, time of month)
+     - Top expenses table
+     - Spending distribution histogram
+   - **Goals & Savings Dashboard**:
+     - Goal progress gauge charts
+     - Savings trend line chart
+     - Debt payoff progress bar chart
+     - Net worth trend line chart
+     - Milestone timeline
+
+2. **Report Visualizations**:
+   - **Monthly Report**: Spending summary, category breakdown, budget performance, savings progress
+   - **Yearly Report**: Annual summary, trends, goals achieved, financial health score
+   - **Category Report**: Category-specific spending analysis, trends, budget performance
+   - **Goal Report**: Goal progress, milestones, predictions, recommendations
+
+3. **Interactive Features**:
+   - **Drill-Down**: Click on category to see detailed transactions
+   - **Time Range Selection**: Filter data by custom time ranges
+   - **Category Filtering**: Filter visualizations by category
+   - **Comparison Mode**: Compare multiple time periods side-by-side
+   - **Export Options**: Export charts as PNG, PDF, or CSV
+
+### Data Collection & Event Tracking
+
+1. **Event Types to Track**:
+   - **Transaction Events**: Expense added, income added, transaction updated, transaction deleted
+   - **Budget Events**: Budget created, budget updated, budget exceeded, budget alert triggered
+   - **Goal Events**: Goal created, goal updated, goal achieved, goal milestone reached
+   - **User Interaction Events**: Dashboard viewed, report generated, export performed, filter applied
+   - **Financial Events**: Bill paid, recurring expense processed, income received
+
+2. **Metrics Collection Strategy**:
+   - **Real-Time Metrics**: Current balance, budget status, goal progress (updated immediately)
+   - **Batch Metrics**: Spending trends, category analysis, financial health score (calculated daily)
+   - **Historical Metrics**: Time-series data for trend analysis (stored for 2+ years)
+   - **Aggregated Metrics**: Pre-computed monthly/yearly summaries (for fast reporting)
+
+### Analytics Architecture
+
+1. **Data Warehouse Design**:
+   - **Fact Tables**: Transactions (expenses, income), budget events, goal events
+   - **Dimension Tables**: Categories, time (date), users, merchants
+   - **Aggregated Tables**: Daily/monthly/yearly spending summaries
+   - **Data Marts**: User-specific data marts for personalized analytics
+
+2. **ETL Pipeline**:
+   - **Extract**: Collect transaction data, budget data, goal data from application database
+   - **Transform**: Calculate metrics, aggregate data, enrich with categories and time dimensions
+   - **Load**: Load into analytics data warehouse (incremental loads for efficiency)
+   - **Schedule**: Run ETL jobs (hourly for real-time metrics, daily for batch metrics)
+
+### Privacy & Security for Analytics
+
+1. **Data Privacy**:
+   - **Financial Data Encryption**: Encrypt all financial data at rest and in transit
+   - **User Data Anonymization**: Anonymize user identifiers in analytics data (if shared)
+   - **Access Control**: Role-based access control for analytics data
+   - **Data Retention**: Enforce data retention policies (comply with financial regulations)
+
+2. **Security**:
+   - **Secure Analytics APIs**: Secure APIs for analytics data access
+   - **Audit Logging**: Log all analytics data access for compliance
+   - **Data Minimization**: Collect only necessary data for analytics
+   - **Compliance**: Ensure compliance with financial data regulations (PCI DSS, GDPR)
+
 ---
 
 ## Review/Contribution
 
-_This PRD will be reviewed and refined before implementation._
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this Personal Budget Manager PRD by adding comprehensive "Advanced Analytics & Business Intelligence" section covering financial analytics KPIs (spending KPIs including total spending, average daily spending, spending growth rate, category spending distribution, discretionary vs. essential spending ratio, savings KPIs including savings rate, savings goal progress, emergency fund status, debt-to-income ratio, net worth trend, budget performance KPIs including budget adherence, budget variance, overspending frequency, budget efficiency, category budget performance), data analytics and insights (spending pattern analysis with spending trends, spending anomalies, category trends, time-based patterns, merchant analysis, predictive analytics with spending forecast, budget recommendations, goal achievement prediction, cash flow forecasting, financial health prediction, comparative analytics with month-over-month, year-over-year, category, goal, benchmark comparisons), data visualization requirements (dashboard visualizations for financial overview, spending analysis, goals and savings with specific chart types, report visualizations for monthly, yearly, category, goal reports, interactive features with drill-down, time range selection, category filtering, comparison mode, export options), data collection and event tracking (event types including transaction, budget, goal, user interaction, financial events, metrics collection strategy with real-time, batch, historical, aggregated metrics), analytics architecture (data warehouse design with fact tables, dimension tables, aggregated tables, data marts, ETL pipeline with extract, transform, load, schedule), and privacy and security for analytics (data privacy with financial data encryption, user data anonymization, access control, data retention, security with secure analytics APIs, audit logging, data minimization, compliance with PCI DSS and GDPR). This addition provides essential BI/Analytics perspective on the budget manager, ensuring comprehensive financial analytics capabilities, proper KPI definition, predictive analytics, data visualization, and secure analytics architecture for actionable financial insights and data-driven financial decision making.
+
+---

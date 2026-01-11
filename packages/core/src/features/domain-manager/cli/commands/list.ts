@@ -5,6 +5,7 @@
  */
 
 import { DomainManager } from '../../domain-manager';
+import { CaddyfileError } from '../../errors';
 import chalk from 'chalk';
 
 export async function listCommand() {
@@ -44,8 +45,16 @@ export async function listCommand() {
       console.log(chalk.gray(`    Status: ${status.join(', ')}`));
       console.log('');
     }
-  } catch (error: any) {
-    console.error(chalk.red(`Error: ${error.message}`));
+  } catch (error) {
+    if (error instanceof CaddyfileError) {
+      console.error(chalk.red(`✗ Failed to read Caddyfile: ${error.message}`));
+      if (error.path) {
+        console.log(chalk.yellow(`  Path: ${error.path}`));
+      }
+    } else {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(`Error: ${errorMessage}`));
+    }
     process.exit(1);
   }
 }

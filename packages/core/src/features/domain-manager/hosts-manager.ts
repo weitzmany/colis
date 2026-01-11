@@ -9,6 +9,7 @@ import * as path from 'path';
 import * as os from 'os';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { HostsFileError } from './errors';
 
 const execAsync = promisify(exec);
 
@@ -42,8 +43,23 @@ export class HostsManager {
 
   /**
    * Add domain entry to hosts file
+   * 
+   * @param domain - Domain name to add
+   * @param ip - IP address (default: 127.0.0.1)
+   * @throws {HostsFileError} If adding entry fails
    */
   async addEntry(domain: string, ip: string = '127.0.0.1'): Promise<void> {
+    // Validate inputs
+    if (!domain || typeof domain !== 'string') {
+      throw new HostsFileError('Domain name is required', 'write', this.hostsPath);
+    }
+
+    // Validate IP format
+    const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    if (!ipRegex.test(ip)) {
+      throw new HostsFileError(`Invalid IP address: ${ip}`, 'write', this.hostsPath);
+    }
+
     // Check if already exists
     if (await this.hasEntry(domain)) {
       return; // Already exists, skip
@@ -58,6 +74,15 @@ export class HostsManager {
       content = await fs.readFile(this.hostsPath, 'utf-8');
     } catch (error) {
       // File might not exist or be readable
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      // If file doesn't exist, that's okay - we'll create it
+      if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) {
+        throw new HostsFileError(
+          `Failed to read hosts file: ${errorMessage}`,
+          'read',
+          this.hostsPath
+        );
+      }
       content = '';
     }
 
@@ -71,8 +96,11 @@ export class HostsManager {
       try {
         await fs.writeFile(this.hostsPath, newContent, 'utf-8');
       } catch (error) {
-        throw new Error(
-          `Failed to write to hosts file. Please run as Administrator or add manually:\n${entry}`
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        throw new HostsFileError(
+          `Failed to write to hosts file. Please run as Administrator or add manually:\n${entry}\nError: ${errorMessage}`,
+          'write',
+          this.hostsPath
         );
       }
     } else {
@@ -85,9 +113,12 @@ export class HostsManager {
         // Copy to hosts file with sudo
         await execAsync(`sudo cp ${tempFile} ${this.hostsPath}`);
         await fs.remove(tempFile);
-      } catch (error: any) {
-        throw new Error(
-          `Failed to update hosts file. Please run with sudo or add manually:\n${entry}\nError: ${error.message}`
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        throw new HostsFileError(
+          `Failed to update hosts file. Please run with sudo or add manually:\n${entry}\nError: ${errorMessage}`,
+          'write',
+          this.hostsPath
         );
       }
     }
@@ -95,8 +126,16 @@ export class HostsManager {
 
   /**
    * Remove domain entry from hosts file
+   * 
+   * @param domain - Domain name to remove
+   * @throws {HostsFileError} If removing entry fails
    */
   async removeEntry(domain: string): Promise<void> {
+    // Validate input
+    if (!domain || typeof domain !== 'string') {
+      throw new HostsFileError('Domain name is required', 'write', this.hostsPath);
+    }
+
     if (!(await this.hasEntry(domain))) {
       return; // Doesn't exist, skip
     }
@@ -105,7 +144,17 @@ export class HostsManager {
     await this.createBackup();
 
     // Read current content
-    const content = await fs.readFile(this.hostsPath, 'utf-8');
+    let content: string;
+    try {
+      content = await fs.readFile(this.hostsPath, 'utf-8');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new HostsFileError(
+        `Failed to read hosts file: ${errorMessage}`,
+        'read',
+        this.hostsPath
+      );
+    }
     const lines = content.split('\n');
 
     // Filter out the domain entry
@@ -124,8 +173,11 @@ export class HostsManager {
       try {
         await fs.writeFile(this.hostsPath, newContent, 'utf-8');
       } catch (error) {
-        throw new Error(
-          `Failed to write to hosts file. Please run as Administrator or remove manually:\n127.0.0.1 ${domain}`
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        throw new HostsFileError(
+          `Failed to write to hosts file. Please run as Administrator or remove manually:\n127.0.0.1 ${domain}\nError: ${errorMessage}`,
+          'write',
+          this.hostsPath
         );
       }
     } else {
@@ -134,9 +186,12 @@ export class HostsManager {
         await fs.writeFile(tempFile, newContent, 'utf-8');
         await execAsync(`sudo cp ${tempFile} ${this.hostsPath}`);
         await fs.remove(tempFile);
-      } catch (error: any) {
-        throw new Error(
-          `Failed to update hosts file. Please run with sudo or remove manually:\n127.0.0.1 ${domain}\nError: ${error.message}`
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        throw new HostsFileError(
+          `Failed to update hosts file. Please run with sudo or remove manually:\n127.0.0.1 ${domain}\nError: ${errorMessage}`,
+          'write',
+          this.hostsPath
         );
       }
     }

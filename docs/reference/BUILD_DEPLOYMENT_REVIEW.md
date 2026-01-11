@@ -776,6 +776,159 @@ echo "✅ Database health check complete"
 - [ ] Database backup strategy configured
 - [ ] Database migration automation set up
 - [ ] Database health checks automated
+- [ ] Analytics data collection deployment configured
+- [ ] Analytics data warehouse deployment automated
+- [ ] Analytics dashboard deployment configured
+- [ ] Analytics report generation deployment automated
+
+## Analytics & Business Intelligence Deployment Patterns
+
+### Pattern 1: Analytics Data Collection Deployment
+
+**Description**: Deploy analytics data collection services with event tracking and metrics collection
+
+**Pattern**:
+- Deploy event tracking services
+- Deploy metrics collection services
+- Configure analytics endpoints
+- Set up data pipeline deployment
+- Verify data collection after deployment
+
+**Example**:
+```yaml
+# GitHub Actions workflow for analytics deployment
+- name: Deploy Analytics Collection
+  run: |
+    # Deploy event tracking service
+    kubectl apply -f k8s/analytics/event-tracker.yaml
+    
+    # Deploy metrics collection service
+    kubectl apply -f k8s/analytics/metrics-collector.yaml
+    
+    # Verify analytics endpoints
+    curl -f https://api.example.com/analytics/health || exit 1
+```
+
+### Pattern 2: Analytics Data Warehouse Deployment
+
+**Description**: Deploy analytics data warehouse with ETL pipelines and data processing
+
+**Pattern**:
+- Deploy data warehouse infrastructure
+- Deploy ETL pipeline services
+- Configure data processing jobs
+- Set up data aggregation services
+- Verify data warehouse after deployment
+
+**Example**:
+```yaml
+# Deploy analytics data warehouse
+- name: Deploy Data Warehouse
+  run: |
+    # Deploy data warehouse database
+    terraform apply -target=module.data_warehouse
+    
+    # Deploy ETL pipeline
+    kubectl apply -f k8s/analytics/etl-pipeline.yaml
+    
+    # Schedule data processing jobs
+    kubectl apply -f k8s/analytics/data-processing-cron.yaml
+```
+
+### Pattern 3: Analytics Dashboard Deployment
+
+**Description**: Deploy analytics dashboards with frontend components and API endpoints
+
+**Pattern**:
+- Build analytics dashboard frontend
+- Deploy analytics dashboard API
+- Configure dashboard data endpoints
+- Set up dashboard caching
+- Verify dashboard after deployment
+
+**Example**:
+```yaml
+# Deploy analytics dashboard
+- name: Build Analytics Dashboard
+  run: |
+    npm run build:analytics-dashboard
+    
+- name: Deploy Analytics Dashboard
+  run: |
+    # Deploy dashboard frontend
+    aws s3 sync dist/analytics-dashboard s3://analytics-dashboard-bucket/
+    
+    # Deploy dashboard API
+    kubectl apply -f k8s/analytics/dashboard-api.yaml
+    
+    # Invalidate CloudFront cache
+    aws cloudfront create-invalidation --distribution-id $CF_DIST_ID --paths "/analytics/*"
+```
+
+### Pattern 4: Analytics Report Generation Deployment
+
+**Description**: Deploy analytics report generation services with scheduled report jobs
+
+**Pattern**:
+- Deploy report generation service
+- Configure scheduled report jobs
+- Set up report export functionality
+- Configure report distribution
+- Verify report generation after deployment
+
+**Example**:
+```yaml
+# Deploy analytics report generation
+- name: Deploy Report Generator
+  run: |
+    # Deploy report generation service
+    kubectl apply -f k8s/analytics/report-generator.yaml
+    
+    # Schedule report generation jobs
+    kubectl apply -f k8s/analytics/report-scheduler.yaml
+    
+    # Verify report generation
+    curl -f https://api.example.com/analytics/reports/health || exit 1
+```
+
+### Analytics Deployment Best Practices
+
+1. **Data Collection Deployment**:
+   - Deploy event tracking before application deployment
+   - Verify analytics endpoints after deployment
+   - Monitor event collection rates
+   - Test event tracking in staging
+
+2. **Data Warehouse Deployment**:
+   - Deploy data warehouse infrastructure first
+   - Deploy ETL pipelines incrementally
+   - Verify data processing after deployment
+   - Monitor data warehouse performance
+
+3. **Dashboard Deployment**:
+   - Deploy dashboard API before frontend
+   - Cache dashboard data for performance
+   - Verify dashboard functionality after deployment
+   - Monitor dashboard load times
+
+4. **Report Deployment**:
+   - Deploy report generation service
+   - Schedule report jobs after deployment
+   - Verify report generation after deployment
+   - Monitor report generation performance
+
+### Analytics Deployment Checklist
+
+- [ ] Analytics data collection services deployed
+- [ ] Analytics endpoints configured and verified
+- [ ] Analytics data warehouse infrastructure deployed
+- [ ] ETL pipelines deployed and scheduled
+- [ ] Analytics dashboard frontend deployed
+- [ ] Analytics dashboard API deployed
+- [ ] Analytics dashboard caching configured
+- [ ] Analytics report generation service deployed
+- [ ] Analytics report scheduling configured
+- [ ] Analytics deployment verified and monitored
 
 ## Review/Contribution
 
@@ -798,5 +951,10 @@ echo "✅ Database health check complete"
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this build and deployment review document by adding comprehensive "Database Deployment Patterns" section covering database migration execution during deployment (GitHub Actions workflow with database backup before migrations, migration execution with verification, environment-specific handling), database backup before deployment (pre-deployment backup script with timestamped backups, backup compression, S3 upload for cloud storage), database migration rollback on deployment failure (deployment verification with health checks, automatic rollback on failure, database migration rollback), database health check after deployment (database connectivity verification, schema version verification, slow query detection, performance monitoring), zero-downtime database migration deployment (expand-contract pattern with nullable column addition, application deployment supporting both schemas, data backfilling, column constraint addition), database deployment best practices (pre-deployment database steps with backup and verification, migration execution with transaction support and logging, post-deployment database steps with schema verification and performance monitoring, rollback procedures with backup restoration, zero-downtime migrations with expand-contract pattern), and comprehensive database deployment checklist (12 items covering backup, connectivity, migration testing, automation, rollback, health checks, schema verification, performance monitoring, data integrity, rollback testing, documentation). Enhanced "Cloud Infrastructure Deployment Checklist" with database-specific items (database deployment patterns, backup strategy, migration automation, health checks). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide production-ready patterns for safely deploying database changes as part of application deployments, ensuring database migrations are executed safely, monitored, and can be rolled back if needed.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this build and deployment review document by adding comprehensive "Analytics & Business Intelligence Deployment Patterns" section covering analytics data collection deployment (deploy analytics data collection services with event tracking and metrics collection including deploy event tracking services, deploy metrics collection services, configure analytics endpoints, set up data pipeline deployment, verify data collection after deployment with GitHub Actions workflow example), analytics data warehouse deployment (deploy analytics data warehouse with ETL pipelines and data processing including deploy data warehouse infrastructure, deploy ETL pipeline services, configure data processing jobs, set up data aggregation services, verify data warehouse after deployment with Terraform and Kubernetes examples), analytics dashboard deployment (deploy analytics dashboards with frontend components and API endpoints including build analytics dashboard frontend, deploy analytics dashboard API, configure dashboard data endpoints, set up dashboard caching, verify dashboard after deployment with build and S3/CloudFront deployment example), analytics report generation deployment (deploy analytics report generation services with scheduled report jobs including deploy report generation service, configure scheduled report jobs, set up report export functionality, configure report distribution, verify report generation after deployment with Kubernetes deployment example), and analytics deployment best practices (data collection deployment with event tracking deployment before application, analytics endpoints verification, event collection rate monitoring, staging testing, data warehouse deployment with infrastructure deployment first, incremental ETL pipeline deployment, data processing verification, performance monitoring, dashboard deployment with API deployment before frontend, dashboard data caching, functionality verification, load time monitoring, report deployment with report generation service deployment, report job scheduling, report generation verification, performance monitoring). Added comprehensive analytics deployment checklist (10 items covering data collection services, endpoints, data warehouse infrastructure, ETL pipelines, dashboard frontend, dashboard API, dashboard caching, report generation service, report scheduling, deployment verification and monitoring). Enhanced "Cloud Infrastructure Deployment Checklist" with analytics-specific items (analytics data collection deployment, analytics data warehouse deployment, analytics dashboard deployment, analytics report generation deployment). This addition provides essential BI/Analytics perspective on build and deployment, ensuring analytics features are properly deployed, verified, and monitored for reliable analytics functionality.
 
 ---

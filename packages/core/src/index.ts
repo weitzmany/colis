@@ -3,6 +3,9 @@
  * 
  * Core package providing features, rules, experts, and commands
  * for use across all projects.
+ * 
+ * @packageDocumentation
+ * @module @your-org/core
  */
 
 // Export Port Manager feature
@@ -17,8 +20,8 @@ export * from './features/domain-manager';
 // Export Project Initialization feature
 export * from './features/project-initialization';
 
-// Export shared utilities (if needed)
+// Export shared database utilities
 export * from './shared/database';
-export { GlobalConfigManager, ProjectConfigManager, ConfigValidator } from './shared/config';
-export type { GlobalConfig } from './shared/config/global-config';
-export type { ProjectConfig } from './shared/config/project-config';
+
+// Export shared configuration utilities
+export * from './shared/config';

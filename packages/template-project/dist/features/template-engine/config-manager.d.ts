@@ -3,7 +3,7 @@
  *
  * Collects user configuration via interactive prompts
  */
-import { ProjectConfig } from './types';
+import { ProjectConfig } from './types.js';
 export declare class ConfigManager {
     /**
      * Collect configuration from user

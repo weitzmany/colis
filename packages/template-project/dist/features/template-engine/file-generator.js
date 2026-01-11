@@ -3,9 +3,9 @@
  *
  * Generates project structure from templates
  */
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import * as path from 'path';
-import { TemplateProcessor } from './template-processor';
+import { TemplateProcessor } from './template-processor.js';
 export class FileGenerator {
     processor;
     constructor() {

@@ -1,6 +1,7 @@
 {
   "name": "@your-org/template-project",
   "version": "1.0.0",
+  "type": "module",
   "description": "Project template package for scaffolding new projects with standard structure and best practices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

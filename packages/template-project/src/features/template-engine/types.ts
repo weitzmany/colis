@@ -34,6 +34,7 @@ export interface ProjectConfig {
   skipDeps?: boolean;
   skipGit?: boolean;
   skipInit?: boolean;
+  skipTaskManager?: boolean;
   overwrite?: boolean;
   skipExisting?: boolean;
   dryRun?: boolean;

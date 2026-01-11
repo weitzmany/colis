@@ -4,7 +4,7 @@
  * Processes template files with variable substitution using Handlebars
  */
 import Handlebars from 'handlebars';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import * as path from 'path';
 export class TemplateProcessor {
     /**

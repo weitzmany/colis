@@ -3,7 +3,7 @@
  *
  * Generates project structure from templates
  */
-import { GenerationOptions, GenerationResult } from './types';
+import { GenerationOptions, GenerationResult } from './types.js';
 export declare class FileGenerator {
     private processor;
     constructor();

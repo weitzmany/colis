@@ -5,7 +5,7 @@
  */
 
 import inquirer from 'inquirer';
-import { ProjectConfig } from './types';
+import { ProjectConfig } from './types.js';
 
 export class ConfigManager {
   /**

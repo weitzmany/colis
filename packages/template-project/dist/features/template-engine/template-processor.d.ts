@@ -3,7 +3,7 @@
  *
  * Processes template files with variable substitution using Handlebars
  */
-import { TemplateContext } from './types';
+import { TemplateContext } from './types.js';
 export declare class TemplateProcessor {
     /**
      * Process a single template file

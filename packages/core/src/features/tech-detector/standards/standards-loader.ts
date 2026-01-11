@@ -52,10 +52,18 @@ export interface TechStandards {
 export interface UserChoices {
   ignoredWarnings?: {
     frameworks?: Record<string, { reason: string; timestamp: string }>;
+    languages?: Record<string, { reason: string; timestamp: string }>;
+    buildTools?: Record<string, { reason: string; timestamp: string }>;
+    packageManagers?: Record<string, { reason: string; timestamp: string }>;
+    runtimes?: Record<string, { reason: string; timestamp: string }>;
     versions?: Record<string, { current: string; recommended: string; reason: string; timestamp: string }>;
   };
   customRecommendations?: {
     frameworks?: string[];
+    languages?: string[];
+    buildTools?: string[];
+    packageManagers?: string[];
+    runtimes?: string[];
     minimumVersions?: Record<string, string>;
   };
 }
@@ -74,14 +82,25 @@ export class StandardsLoader {
 
   /**
    * Load default standards from core package
+   * 
+   * @returns TechStandards object with default standards, or empty standards if file not found
    */
   private async loadDefaultStandards(): Promise<TechStandards> {
     const standardsPath = path.join(__dirname, 'default-standards.json');
     try {
       const content = await fs.readFile(standardsPath, 'utf-8');
-      return JSON.parse(content) as TechStandards;
+      const standards = JSON.parse(content) as TechStandards;
+      
+      // Validate structure
+      if (!this.validateStandardsStructure(standards)) {
+        console.warn('⚠ Default standards file has invalid structure, using empty standards');
+        return this.getEmptyStandards();
+      }
+      
+      return standards;
     } catch (error) {
-      // Fallback to empty standards if file not found
+      // Fallback to empty standards if file not found or invalid
+      console.warn(`⚠ Could not load default standards: ${error}`);
       return this.getEmptyStandards();
     }
   }
@@ -198,5 +217,32 @@ export class StandardsLoader {
       packageManagers: { recommended: [], minimumVersions: {} },
       runtimes: { recommended: [], minimumVersions: {} },
     };
+  }
+
+  /**
+   * Validate standards structure
+   * 
+   * @param standards - Standards object to validate
+   * @returns true if structure is valid, false otherwise
+   */
+  private validateStandardsStructure(standards: any): standards is TechStandards {
+    if (!standards || typeof standards !== 'object') {
+      return false;
+    }
+
+    const requiredCategories = ['frameworks', 'languages', 'buildTools', 'packageManagers', 'runtimes'];
+    
+    for (const category of requiredCategories) {
+      if (!standards[category] || typeof standards[category] !== 'object') {
+        return false;
+      }
+      
+      const categoryData = standards[category];
+      if (!Array.isArray(categoryData.recommended) || typeof categoryData.minimumVersions !== 'object') {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

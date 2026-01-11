@@ -47,17 +47,22 @@ export async function detectCommand(options: {
     const interactive = options.interactive !== false;
 
     if (checkStandards && !skipWarnings) {
-      const standardsLoader = new StandardsLoader();
-      const warningDetector = new WarningDetector();
-      const warningHandler = new WarningHandler();
+      try {
+        const standardsLoader = new StandardsLoader();
+        const warningDetector = new WarningDetector();
+        const warningHandler = new WarningHandler();
 
-      const standards = await standardsLoader.loadStandards(projectPath);
-      const userChoices = await standardsLoader.loadUserChoices(projectPath);
+        const standards = await standardsLoader.loadStandards(projectPath);
+        const userChoices = await standardsLoader.loadUserChoices(projectPath);
 
-      const warnings = await warningDetector.detectWarnings(techStack, standards, userChoices);
+        const warnings = await warningDetector.detectWarnings(techStack, standards, userChoices);
 
-      if (warnings.length > 0) {
-        await warningHandler.handleWarnings(warnings, projectPath, interactive);
+        if (warnings.length > 0) {
+          await warningHandler.handleWarnings(warnings, projectPath, interactive);
+        }
+      } catch (error: any) {
+        console.warn(chalk.yellow(`⚠ Standards checking failed: ${error.message}`));
+        // Continue execution even if standards checking fails
       }
     }
 

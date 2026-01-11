@@ -7,7 +7,7 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import { Warning } from './warning-detector';
-import { StandardsLoader, UserChoices } from './standards-loader';
+import { StandardsLoader, UserChoices, TechStandards } from './standards-loader';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
@@ -163,33 +163,67 @@ export class WarningHandler {
    */
   private async addRecommendation(warning: Warning, projectPath: string): Promise<void> {
     const standardsPath = path.join(projectPath, '.core-tech-standards.json');
-    let standards: any = {};
+    let standards: Partial<TechStandards> = {};
 
     if (await fs.pathExists(standardsPath)) {
       try {
-        standards = JSON.parse(await fs.readFile(standardsPath, 'utf-8'));
+        const content = await fs.readFile(standardsPath, 'utf-8');
+        standards = JSON.parse(content) as Partial<TechStandards>;
       } catch (error) {
-        // Ignore parse errors
+        console.warn(chalk.yellow(`⚠ Could not parse existing standards file: ${error}`));
       }
     }
 
-    // Add to appropriate category
-    const category = warning.category;
-    if (!standards[category]) {
-      standards[category] = { recommended: [], minimumVersions: {} };
-    }
-    if (!standards[category].recommended) {
-      standards[category].recommended = [];
+    // Map category to standards structure
+    const categoryMap: Record<string, keyof TechStandards> = {
+      framework: 'frameworks',
+      language: 'languages',
+      buildTool: 'buildTools',
+      packageManager: 'packageManagers',
+      runtime: 'runtimes',
+    };
+
+    const standardsKey = categoryMap[warning.category];
+    if (!standardsKey) {
+      console.error(chalk.red(`Error: Unknown category: ${warning.category}`));
+      return;
     }
 
+    // Initialize category structure if needed
+    if (!standards[standardsKey]) {
+      standards[standardsKey] = {
+        recommended: [],
+        minimumVersions: {},
+      };
+    }
+
+    const categoryStandards = standards[standardsKey]!;
+    if (!categoryStandards.recommended) {
+      categoryStandards.recommended = [];
+    }
+
+    // Normalize tech name for comparison
     const techName = warning.detected.name.toLowerCase();
-    if (!standards[category].recommended.includes(techName)) {
-      standards[category].recommended.push(techName);
+    const techType = warning.detected.name.toLowerCase().replace(/\s+/g, '-');
+
+    // Check if already in recommendations (case-insensitive)
+    const alreadyRecommended = categoryStandards.recommended.some(
+      (rec) => rec.toLowerCase() === techName || rec.toLowerCase() === techType
+    );
+
+    if (!alreadyRecommended) {
+      // Use the normalized type name if available, otherwise use detected name
+      categoryStandards.recommended.push(techType);
     }
 
-    await fs.writeFile(standardsPath, JSON.stringify(standards, null, 2), 'utf-8');
-    console.log(chalk.green(`✓ Added ${warning.detected.name} to recommendations`));
-    console.log(chalk.green(`✓ Updated .core-tech-standards.json`));
+    try {
+      await fs.writeFile(standardsPath, JSON.stringify(standards, null, 2), 'utf-8');
+      console.log(chalk.green(`✓ Added ${warning.detected.name} to recommendations`));
+      console.log(chalk.green(`✓ Updated .core-tech-standards.json`));
+    } catch (error) {
+      console.error(chalk.red(`Error: Failed to save standards file: ${error}`));
+      throw error;
+    }
   }
 
   /**
@@ -296,35 +330,62 @@ export class WarningHandler {
    */
   private async changeRecommendation(warning: Warning, projectPath: string): Promise<void> {
     if (!warning.detected.version || !warning.minimumVersion) {
+      console.warn(chalk.yellow('⚠ Cannot change recommendation: missing version information'));
       return;
     }
 
     const standardsPath = path.join(projectPath, '.core-tech-standards.json');
-    let standards: any = {};
+    let standards: Partial<TechStandards> = {};
 
     if (await fs.pathExists(standardsPath)) {
       try {
-        standards = JSON.parse(await fs.readFile(standardsPath, 'utf-8'));
+        const content = await fs.readFile(standardsPath, 'utf-8');
+        standards = JSON.parse(content) as Partial<TechStandards>;
       } catch (error) {
-        // Ignore parse errors
+        console.warn(chalk.yellow(`⚠ Could not parse existing standards file: ${error}`));
       }
     }
 
-    // Update minimum version
-    const category = warning.category;
-    if (!standards[category]) {
-      standards[category] = { recommended: [], minimumVersions: {} };
-    }
-    if (!standards[category].minimumVersions) {
-      standards[category].minimumVersions = {};
+    // Map category to standards structure
+    const categoryMap: Record<string, keyof TechStandards> = {
+      framework: 'frameworks',
+      language: 'languages',
+      buildTool: 'buildTools',
+      packageManager: 'packageManagers',
+      runtime: 'runtimes',
+    };
+
+    const standardsKey = categoryMap[warning.category];
+    if (!standardsKey) {
+      console.error(chalk.red(`Error: Unknown category: ${warning.category}`));
+      return;
     }
 
-    const techName = warning.detected.name.toLowerCase();
-    standards[category].minimumVersions[techName] = warning.detected.version;
+    // Initialize category structure if needed
+    if (!standards[standardsKey]) {
+      standards[standardsKey] = {
+        recommended: [],
+        minimumVersions: {},
+      };
+    }
 
-    await fs.writeFile(standardsPath, JSON.stringify(standards, null, 2), 'utf-8');
-    console.log(chalk.green(`✓ Changed recommendation to ${warning.detected.version}`));
-    console.log(chalk.green(`✓ Updated .core-tech-standards.json`));
+    const categoryStandards = standards[standardsKey]!;
+    if (!categoryStandards.minimumVersions) {
+      categoryStandards.minimumVersions = {};
+    }
+
+    // Normalize tech name
+    const techName = warning.detected.name.toLowerCase().replace(/\s+/g, '-');
+    categoryStandards.minimumVersions[techName] = warning.detected.version;
+
+    try {
+      await fs.writeFile(standardsPath, JSON.stringify(standards, null, 2), 'utf-8');
+      console.log(chalk.green(`✓ Changed recommendation to ${warning.detected.version}`));
+      console.log(chalk.green(`✓ Updated .core-tech-standards.json`));
+    } catch (error) {
+      console.error(chalk.red(`Error: Failed to save standards file: ${error}`));
+      throw error;
+    }
   }
 
   /**
@@ -336,9 +397,10 @@ export class WarningHandler {
 
     if (await fs.pathExists(choicesPath)) {
       try {
-        choices = JSON.parse(await fs.readFile(choicesPath, 'utf-8'));
+        const content = await fs.readFile(choicesPath, 'utf-8');
+        choices = JSON.parse(content) as UserChoices;
       } catch (error) {
-        // Ignore parse errors
+        console.warn(chalk.yellow(`⚠ Could not parse existing choices file: ${error}`));
       }
     }
 
@@ -346,13 +408,32 @@ export class WarningHandler {
       choices.ignoredWarnings = {};
     }
 
-    const techName = warning.detected.name.toLowerCase();
+    // Normalize tech name
+    const techName = warning.detected.name.toLowerCase().replace(/\s+/g, '-');
 
     if (warning.type === 'non-recommended') {
-      if (!choices.ignoredWarnings.frameworks) {
-        choices.ignoredWarnings.frameworks = {};
+      // Store in appropriate category based on warning category
+      const categoryMap: Record<string, keyof NonNullable<UserChoices['ignoredWarnings']>> = {
+        framework: 'frameworks',
+        language: 'languages',
+        buildTool: 'buildTools',
+        packageManager: 'packageManagers',
+        runtime: 'runtimes',
+      };
+
+      const categoryKey = categoryMap[warning.category];
+      if (!categoryKey) {
+        console.warn(chalk.yellow(`⚠ Unknown warning category: ${warning.category}`));
+        return;
       }
-      choices.ignoredWarnings.frameworks[techName] = {
+
+      if (!choices.ignoredWarnings[categoryKey]) {
+        choices.ignoredWarnings[categoryKey] = {};
+      }
+      
+      // Type assertion needed due to TypeScript's strict checking
+      const categoryWarnings = choices.ignoredWarnings[categoryKey] as Record<string, { reason: string; timestamp: string }>;
+      categoryWarnings[techName] = {
         reason: 'user_choice',
         timestamp: new Date().toISOString(),
       };
@@ -368,7 +449,12 @@ export class WarningHandler {
       };
     }
 
-    await this.standardsLoader.saveUserChoices(projectPath, choices);
-    console.log(chalk.gray(`✓ Warning ignored (stored in .core-tech-choices.json)`));
+    try {
+      await this.standardsLoader.saveUserChoices(projectPath, choices);
+      console.log(chalk.gray(`✓ Warning ignored (stored in .core-tech-choices.json)`));
+    } catch (error) {
+      console.error(chalk.red(`Error: Failed to save choices file: ${error}`));
+      throw error;
+    }
   }
 }

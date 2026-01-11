@@ -127,6 +127,13 @@ export class WarningDetector {
     const warnings: Warning[] = [];
     const languageName = language.type || language.name.toLowerCase();
 
+    // Check if ignored (check custom recommendations and ignored warnings)
+    const isIgnored = userChoices.customRecommendations?.languages?.includes(languageName) ||
+                     userChoices.ignoredWarnings?.languages?.[languageName];
+    if (isIgnored) {
+      return warnings;
+    }
+
     // Check if recommended
     const isRecommended = standards.languages.recommended.some(
       (rec) => rec.toLowerCase() === languageName
@@ -175,6 +182,13 @@ export class WarningDetector {
   ): Warning[] {
     const warnings: Warning[] = [];
     const toolName = buildTool.type || buildTool.name.toLowerCase();
+
+    // Check if ignored (check custom recommendations and ignored warnings)
+    const isIgnored = userChoices.customRecommendations?.buildTools?.includes(toolName) ||
+                     userChoices.ignoredWarnings?.buildTools?.[toolName];
+    if (isIgnored) {
+      return warnings;
+    }
 
     // Check if recommended
     const isRecommended = standards.buildTools.recommended.some(
@@ -225,6 +239,13 @@ export class WarningDetector {
     const warnings: Warning[] = [];
     const pmName = packageManager.type || packageManager.name.toLowerCase();
 
+    // Check if ignored (check custom recommendations and ignored warnings)
+    const isIgnored = userChoices.customRecommendations?.packageManagers?.includes(pmName) ||
+                     userChoices.ignoredWarnings?.packageManagers?.[pmName];
+    if (isIgnored) {
+      return warnings;
+    }
+
     // Check if recommended
     const isRecommended = standards.packageManagers.recommended.some(
       (rec) => rec.toLowerCase() === pmName
@@ -274,6 +295,13 @@ export class WarningDetector {
     const warnings: Warning[] = [];
     const runtimeName = runtime.type || runtime.name.toLowerCase();
 
+    // Check if ignored (check custom recommendations and ignored warnings)
+    const isIgnored = userChoices.customRecommendations?.runtimes?.includes(runtimeName) ||
+                     userChoices.ignoredWarnings?.runtimes?.[runtimeName];
+    if (isIgnored) {
+      return warnings;
+    }
+
     // Check if recommended
     const isRecommended = standards.runtimes.recommended.some(
       (rec) => rec.toLowerCase() === runtimeName
@@ -314,6 +342,12 @@ export class WarningDetector {
 
   /**
    * Check if version is below minimum (and not ignored)
+   * 
+   * @param currentVersion - The current version string
+   * @param minVersion - The minimum recommended version
+   * @param techName - The technology name (for checking ignored warnings)
+   * @param userChoices - User choices including ignored warnings
+   * @returns true if version is below minimum and not ignored, false otherwise
    */
   private isVersionBelow(
     currentVersion: string,
@@ -329,9 +363,14 @@ export class WarningDetector {
 
     // Compare versions using semver
     try {
-      return semver.lt(currentVersion, minVersion);
+      // Clean versions for semver comparison
+      const cleanCurrent = currentVersion.replace(/^[\^~<>=!]+/, '').trim();
+      const cleanMin = minVersion.replace(/^[\^~<>=!]+/, '').trim();
+      
+      // Use semver for proper version comparison
+      return semver.lt(cleanCurrent, cleanMin);
     } catch (error) {
-      // If semver comparison fails, do string comparison
+      // If semver comparison fails (invalid version format), do string comparison as fallback
       return currentVersion < minVersion;
     }
   }

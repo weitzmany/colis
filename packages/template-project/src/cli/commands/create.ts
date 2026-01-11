@@ -232,6 +232,29 @@ export async function createCommand(options: CreateOptions = {}): Promise<void> 
       console.log(chalk.blue(`  ${config.packageManager} install`));
     }
     console.log(chalk.blue(`  Start developing!`));
+
+    // Open project in Cursor IDE
+    try {
+      const projectPath = path.resolve(outputPath);
+      
+      // Try cursor command first, fallback to code command
+      try {
+        execSync(`cursor "${projectPath}"`, { stdio: 'ignore' });
+        console.log(chalk.green(`\n🚀 Opening project in Cursor IDE...`));
+      } catch (cursorError) {
+        // Fallback to code command (VS Code, which Cursor is based on)
+        try {
+          execSync(`code "${projectPath}"`, { stdio: 'ignore' });
+          console.log(chalk.green(`\n🚀 Opening project in IDE...`));
+        } catch (codeError) {
+          // Silently fail if neither command is available
+          console.log(chalk.yellow(`\n💡 Tip: Open the project manually with: cursor ${config.projectName}`));
+        }
+      }
+    } catch (error) {
+      // Silently fail - opening IDE is optional
+      console.log(chalk.yellow(`\n💡 Tip: Open the project manually with: cursor ${config.projectName}`));
+    }
   } catch (error) {
     console.error(chalk.red('\n❌ Error creating project:'));
     console.error(chalk.red(error instanceof Error ? error.message : String(error)));

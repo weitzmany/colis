@@ -205,6 +205,32 @@ Reference the `template-project` package for a complete example:
 2. **Development Phase**: Create test docs alongside implementation
 3. **Review Phase**: Verify test docs completeness
 4. **Completion Phase**: Run through test documentation before marking done
+5. **Post-Creation**: Open project folder in Cursor IDE for immediate development
+
+### Post-Creation Workflow
+
+**After finishing project creation, always open the project folder in Cursor:**
+
+```bash
+# After creating a project, open it in Cursor
+cursor <project-path>
+
+# Or if cursor command is not available, use:
+code <project-path>
+
+# Example:
+cursor my-awesome-app
+# or
+cd my-awesome-app && cursor .
+```
+
+**This enables:**
+- Immediate access to project files
+- IDE features (autocomplete, linting, etc.)
+- Quick verification of project structure
+- Seamless transition from creation to development
+
+**Note**: If the `cursor` command is not available, the `code` command (VS Code) will also work since Cursor is based on VS Code.
 
 ### Key Principle
 

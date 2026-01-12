@@ -9,7 +9,7 @@
  * allowing the system to know which migrations have been applied.
  */
 
-import { DatabaseRepository } from './repository';
+import { DatabaseRepository } from './repository.js';
 
 /**
  * Database migration definition

@@ -4,8 +4,8 @@
  * Detects warnings for non-recommended tech and outdated versions.
  */
 
-import { TechStack, FrameworkInfo, LanguageInfo, BuildToolInfo, PackageManagerInfo, RuntimeInfo } from '../types';
-import { TechStandards, UserChoices } from './standards-loader';
+import { TechStack, FrameworkInfo, LanguageInfo, BuildToolInfo, PackageManagerInfo, RuntimeInfo } from '../types.js';
+import { TechStandards, UserChoices } from './standards-loader.js';
 import * as semver from 'semver';
 
 export interface Warning {

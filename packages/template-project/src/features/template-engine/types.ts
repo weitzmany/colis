@@ -94,8 +94,14 @@ export interface ProjectConfig {
   projectName: string;
   /** Optional project description */
   projectDescription?: string;
-  /** Template type to use (e.g., 'angular', 'slim') */
-  templateType: string;
+  /** Template type to use (e.g., 'angular', 'slim') - deprecated, use stackSelection */
+  templateType?: string;
+  /** Stack selection: frontend, backend, mobile options */
+  stackSelection?: {
+    frontend?: string | 'none';
+    backend?: string | 'none';
+    mobile?: string | 'none';
+  };
   /** Package manager to use */
   packageManager: 'npm' | 'yarn' | 'pnpm';
   /** Author name (optional) */

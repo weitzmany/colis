@@ -6,7 +6,7 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { PackageManagerInfo } from '../types';
+import { PackageManagerInfo } from '../types.js';
 
 export class PackageManagerDetector {
   /**

@@ -4,14 +4,14 @@
  * Exports for the project initialization feature.
  */
 
-export * from './project-initializer';
-export * from './rules-copier';
-export * from './commands-copier';
-export * from './setup-validator';
-export * from './color-manager';
-export * from './hook-generator';
-export * from './conflict-resolver';
-export * from './project-updater';
-export * from './cli/commands/init';
-export * from './cli/commands/colors';
-export * from './cli/commands/update';
+export * from './project-initializer.js';
+export * from './rules-copier.js';
+export * from './commands-copier.js';
+export * from './setup-validator.js';
+export * from './color-manager.js';
+export * from './hook-generator.js';
+export * from './conflict-resolver.js';
+export * from './project-updater.js';
+export * from './cli/commands/init.js';
+export * from './cli/commands/colors.js';
+export * from './cli/commands/update.js';

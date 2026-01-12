@@ -4,13 +4,13 @@
  * Main class providing the public API for Port Manager feature.
  */
 
-import { DatabaseFactory, DatabaseRepository, MigrationManager } from '../../shared/database';
-import { PortRepository } from './database/port-repository';
-import { RegistryManager } from './core/registry';
-import { PortAllocator } from './core/allocator';
-import { ConflictDetector } from './core/validator';
-import { ConfigurationManager } from './core/configurator';
-import { initialSchemaMigration } from './database/migrations/001_initial_schema';
+import { DatabaseFactory, DatabaseRepository, MigrationManager } from '../../shared/database/index.js';
+import { PortRepository } from './database/port-repository.js';
+import { RegistryManager } from './core/registry.js';
+import { PortAllocator } from './core/allocator.js';
+import { ConflictDetector } from './core/validator.js';
+import { ConfigurationManager } from './core/configurator.js';
+import { initialSchemaMigration } from './database/migrations/001_initial_schema.js';
 import {
   PortManagerConfig,
   PortAssignment,
@@ -19,13 +19,12 @@ import {
   ValidationResult,
   ConfigurationResult,
   ConflictReport,
-} from './types';
+} from './types.js';
 import {
   PortConflictError,
-  PortRangeExhaustedError,
   PortInUseError,
   PortAssignmentNotFoundError,
-} from './errors';
+} from './errors.js';
 
 export class PortManager {
   private db: DatabaseRepository;

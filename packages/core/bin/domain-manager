@@ -4,11 +4,11 @@
  * Domain Manager CLI Entry Point
  */
 
-const { program } = require('commander');
-const { setupCommand } = require('../dist/features/domain-manager/cli/commands/setup');
-const { listCommand } = require('../dist/features/domain-manager/cli/commands/list');
-const { removeCommand } = require('../dist/features/domain-manager/cli/commands/remove');
-const { installCommand } = require('../dist/features/domain-manager/cli/commands/install');
+import { program } from 'commander';
+import { setupCommand } from '../dist/features/domain-manager/cli/commands/setup.js';
+import { listCommand } from '../dist/features/domain-manager/cli/commands/list.js';
+import { removeCommand } from '../dist/features/domain-manager/cli/commands/remove.js';
+import { installCommand } from '../dist/features/domain-manager/cli/commands/install.js';
 
 program
   .name('domain-manager')

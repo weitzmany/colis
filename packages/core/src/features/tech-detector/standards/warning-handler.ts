@@ -6,8 +6,8 @@
 
 import inquirer from 'inquirer';
 import chalk from 'chalk';
-import { Warning } from './warning-detector';
-import { StandardsLoader, UserChoices, TechStandards } from './standards-loader';
+import { Warning } from './warning-detector.js';
+import { StandardsLoader, UserChoices, TechStandards } from './standards-loader.js';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
@@ -174,8 +174,8 @@ export class WarningHandler {
       }
     }
 
-    // Map category to standards structure
-    const categoryMap: Record<string, keyof TechStandards> = {
+    // Map category to standards structure (exclude newProjectDefaults)
+    const categoryMap: Record<string, 'frameworks' | 'languages' | 'buildTools' | 'packageManagers' | 'runtimes'> = {
       framework: 'frameworks',
       language: 'languages',
       buildTool: 'buildTools',
@@ -197,7 +197,7 @@ export class WarningHandler {
       };
     }
 
-    const categoryStandards = standards[standardsKey]!;
+    const categoryStandards = standards[standardsKey] as { recommended: string[]; minimumVersions: Record<string, string> };
     if (!categoryStandards.recommended) {
       categoryStandards.recommended = [];
     }
@@ -346,8 +346,8 @@ export class WarningHandler {
       }
     }
 
-    // Map category to standards structure
-    const categoryMap: Record<string, keyof TechStandards> = {
+    // Map category to standards structure (exclude newProjectDefaults)
+    const categoryMap: Record<string, 'frameworks' | 'languages' | 'buildTools' | 'packageManagers' | 'runtimes'> = {
       framework: 'frameworks',
       language: 'languages',
       buildTool: 'buildTools',
@@ -369,7 +369,7 @@ export class WarningHandler {
       };
     }
 
-    const categoryStandards = standards[standardsKey]!;
+    const categoryStandards = standards[standardsKey] as { recommended: string[]; minimumVersions: Record<string, string> };
     if (!categoryStandards.minimumVersions) {
       categoryStandards.minimumVersions = {};
     }

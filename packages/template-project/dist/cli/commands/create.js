@@ -21,6 +21,7 @@ import * as path from 'path';
 import fs from 'fs-extra';
 import chalk from 'chalk';
 import { execSync } from 'child_process';
+import inquirer from 'inquirer';
 import { TemplateRegistry } from '../../features/template-engine/template-registry.js';
 import { ConfigManager } from '../../features/template-engine/config-manager.js';
 import { FileGenerator } from '../../features/template-engine/file-generator.js';
@@ -53,8 +54,19 @@ export async function createCommand(options = {}) {
         console.log(chalk.blue('🚀 Creating new project...\n'));
         // Step 1: Collect configuration
         const configManager = new ConfigManager();
+        // Ensure projectName is a string if provided
+        let projectName = undefined;
+        if (options.projectName) {
+            if (typeof options.projectName === 'string') {
+                projectName = options.projectName.trim();
+            }
+            else {
+                // If it's not a string, try to convert it
+                projectName = String(options.projectName).trim();
+            }
+        }
         const config = await configManager.collectConfig({
-            projectName: options.projectName,
+            projectName: projectName,
             templateType: options.template,
             packageManager: options.packageManager,
             skipDeps: options.skipDeps,
@@ -62,24 +74,50 @@ export async function createCommand(options = {}) {
             skipInit: options.skipInit,
             skipTaskManager: options.skipTaskManager,
             overwrite: options.overwrite,
-            skipExisting: options.skipExisting ?? true,
+            skipExisting: options.skipExisting ?? false, // Default to false to show prompt
             dryRun: options.dryRun,
             projectDescription: options.description,
             author: options.author,
             license: options.license,
         });
+        // Ensure projectName is set and trimmed
+        if (config.projectName && typeof config.projectName === 'string') {
+            config.projectName = config.projectName.trim();
+        }
         // Validate configuration
         const validation = configManager.validateConfig(config);
         if (!validation.valid) {
             console.error(chalk.red('❌ Configuration errors:'));
             validation.errors.forEach((error) => console.error(chalk.red(`  - ${error}`)));
+            // Debug: show actual projectName value
+            if (config.projectName) {
+                console.error(chalk.yellow(`  Debug: projectName="${config.projectName}" (type: ${typeof config.projectName}, length: ${config.projectName.length})`));
+            }
             process.exit(1);
         }
-        // Step 2: Select template
+        // Step 2: Select template(s) based on stack selection
         const templateRegistry = new TemplateRegistry();
-        const template = await templateRegistry.getTemplate(config.templateType);
+        // Determine template type from stack selection or legacy templateType
+        let templateType = config.templateType;
+        if (config.stackSelection) {
+            const { frontend, backend } = config.stackSelection;
+            if (frontend !== 'none' && backend !== 'none') {
+                templateType = 'full-stack';
+            }
+            else if (frontend !== 'none') {
+                templateType = frontend;
+            }
+            else if (backend !== 'none') {
+                templateType = backend;
+            }
+        }
+        if (!templateType) {
+            console.error(chalk.red('❌ No template type selected'));
+            process.exit(1);
+        }
+        const template = await templateRegistry.getTemplate(templateType);
         if (!template) {
-            console.error(chalk.red(`❌ Template "${config.templateType}" not found`));
+            console.error(chalk.red(`❌ Template "${templateType}" not found`));
             const availableTemplates = await templateRegistry.discoverTemplates();
             if (availableTemplates.length > 0) {
                 console.log(chalk.yellow('\nAvailable templates:'));
@@ -90,19 +128,163 @@ export async function createCommand(options = {}) {
             process.exit(1);
         }
         console.log(chalk.green(`✓ Selected template: ${template.name}`));
+        // Show stack selection summary
+        if (config.stackSelection) {
+            const { frontend, backend, mobile } = config.stackSelection;
+            const selected = [];
+            if (frontend !== 'none')
+                selected.push(`Frontend: ${frontend}`);
+            if (backend !== 'none')
+                selected.push(`Backend: ${backend}`);
+            if (mobile && mobile !== 'none')
+                selected.push(`Mobile: ${mobile}`);
+            if (selected.length > 0) {
+                console.log(chalk.blue(`  Stack: ${selected.join(', ')}`));
+            }
+        }
         // Step 3: Prepare output path
-        const outputPath = path.resolve(process.cwd(), config.projectName);
+        let outputPath = path.resolve(process.cwd(), config.projectName);
         // Check if directory already exists
         if (await fs.pathExists(outputPath)) {
-            if (config.skipExisting && !config.overwrite) {
+            // Only skip if user explicitly passed --skip-existing flag
+            // Commander.js sets boolean flags to true when present, undefined when absent
+            const userExplicitlySkipped = options.skipExisting === true;
+            if (userExplicitlySkipped && !config.overwrite) {
                 console.log(chalk.yellow(`⚠ Directory already exists: ${outputPath}`));
                 console.log(chalk.yellow('  Skipping project creation'));
                 return;
             }
-            if (!config.overwrite) {
-                console.error(chalk.red(`❌ Directory already exists: ${outputPath}`));
-                console.error(chalk.red('  Use --overwrite to overwrite existing files'));
-                process.exit(1);
+            if (config.overwrite) {
+                // User explicitly requested overwrite, proceed
+                console.log(chalk.yellow(`⚠ Directory already exists: ${outputPath}`));
+                console.log(chalk.yellow('  Overwriting existing directory...'));
+            }
+            else {
+                // Interactive prompt for handling existing directory
+                console.log(chalk.yellow(`\n⚠ Directory already exists: ${outputPath}\n`));
+                const answer = await inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'action',
+                        message: 'What would you like to do?',
+                        choices: [
+                            {
+                                name: 'Abort - Cancel project creation',
+                                value: 'abort',
+                            },
+                            {
+                                name: 'Use a new name - Enter a different project name',
+                                value: 'new-name',
+                            },
+                            {
+                                name: 'Delete existing directory - Remove the existing directory and create new project',
+                                value: 'delete',
+                            },
+                            {
+                                name: 'Rename existing directory - Move existing directory to a backup name',
+                                value: 'rename',
+                            },
+                        ],
+                    },
+                ]);
+                switch (answer.action) {
+                    case 'abort':
+                        console.log(chalk.yellow('\n❌ Project creation cancelled'));
+                        process.exit(0);
+                        break;
+                    case 'new-name':
+                        const nameAnswer = await inquirer.prompt([
+                            {
+                                type: 'input',
+                                name: 'newName',
+                                message: 'Enter new project name:',
+                                validate: (input) => {
+                                    if (!input || input.trim().length === 0) {
+                                        return 'Project name is required';
+                                    }
+                                    if (!/^[a-z0-9-]+$/i.test(input)) {
+                                        return 'Project name must contain only letters, numbers, and hyphens';
+                                    }
+                                    const newPath = path.resolve(process.cwd(), input.trim());
+                                    // Use synchronous check for validation
+                                    try {
+                                        if (fs.existsSync(newPath)) {
+                                            return 'This directory also exists. Please choose a different name.';
+                                        }
+                                    }
+                                    catch {
+                                        // Ignore errors during validation
+                                    }
+                                    return true;
+                                },
+                            },
+                        ]);
+                        config.projectName = nameAnswer.newName.trim();
+                        outputPath = path.resolve(process.cwd(), config.projectName);
+                        console.log(chalk.green(`✓ Using new project name: ${config.projectName}`));
+                        break;
+                    case 'delete':
+                        const confirmAnswer = await inquirer.prompt([
+                            {
+                                type: 'confirm',
+                                name: 'confirm',
+                                message: `⚠️  This will permanently delete: ${outputPath}\n   Are you sure?`,
+                                default: false,
+                            },
+                        ]);
+                        if (!confirmAnswer.confirm) {
+                            console.log(chalk.yellow('\n❌ Project creation cancelled'));
+                            process.exit(0);
+                        }
+                        try {
+                            // Use remove with force option to handle nested directories and permissions
+                            await fs.remove(outputPath);
+                            console.log(chalk.green(`✓ Deleted existing directory: ${outputPath}`));
+                        }
+                        catch (error) {
+                            // If fs.remove fails, try using execSync with rm -rf as fallback
+                            console.log(chalk.yellow(`⚠ Attempting alternative deletion method...`));
+                            try {
+                                execSync(`rm -rf "${outputPath}"`, { stdio: 'inherit' });
+                                console.log(chalk.green(`✓ Deleted existing directory: ${outputPath}`));
+                            }
+                            catch (rmError) {
+                                console.error(chalk.red(`❌ Failed to delete directory: ${error.message || rmError.message}`));
+                                console.error(chalk.red(`   Please delete the directory manually and try again.`));
+                                process.exit(1);
+                            }
+                        }
+                        break;
+                    case 'rename':
+                        const renameAnswer = await inquirer.prompt([
+                            {
+                                type: 'input',
+                                name: 'backupName',
+                                message: 'Enter backup name for existing directory:',
+                                default: `${config.projectName}-backup-${Date.now()}`,
+                                validate: (input) => {
+                                    if (!input || input.trim().length === 0) {
+                                        return 'Backup name is required';
+                                    }
+                                    const backupPath = path.resolve(process.cwd(), input.trim());
+                                    // Note: We can't use await in validate, so we'll check synchronously
+                                    try {
+                                        if (fs.existsSync(backupPath)) {
+                                            return 'This directory already exists. Please choose a different backup name.';
+                                        }
+                                    }
+                                    catch {
+                                        // Ignore errors during validation
+                                    }
+                                    return true;
+                                },
+                            },
+                        ]);
+                        const backupPath = path.resolve(process.cwd(), renameAnswer.backupName.trim());
+                        await fs.move(outputPath, backupPath);
+                        console.log(chalk.green(`✓ Renamed existing directory to: ${backupPath}`));
+                        break;
+                }
             }
         }
         // Step 4: Allocate port (if Port Manager is available)
@@ -118,19 +300,21 @@ export async function createCommand(options = {}) {
             'backend': 3001,
             'api': 3001,
         };
-        allocatedPort = defaultPorts[config.templateType] || 4200;
+        allocatedPort = defaultPorts[templateType] || 4200;
         // Step 5: Generate project structure
         console.log(chalk.blue('\n📁 Generating project structure...'));
         const fileGenerator = new FileGenerator();
         const templateContext = {
             projectName: config.projectName,
             projectDescription: config.projectDescription,
-            appType: config.templateType,
+            appType: templateType,
             packageManager: config.packageManager,
             author: config.author,
             license: config.license,
             version: '1.0.0',
             port: allocatedPort,
+            // Include stack selection in context for templates
+            stackSelection: config.stackSelection,
         };
         // Check if template path contains {{projectName}} directory
         // If so, use the contents of that directory, not the directory itself

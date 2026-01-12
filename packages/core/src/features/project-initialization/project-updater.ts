@@ -8,23 +8,23 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import chalk from 'chalk';
-import { copyRules, CopyRulesResult } from './rules-copier';
-import { copyCommands, CopyCommandsResult } from './commands-copier';
-import { validateSetup, InitValidationResult } from './setup-validator';
-import { initCommand as portManagerInit } from '../port-manager/cli/commands/init';
-import { FrameworkDetector } from '../port-manager/utils/project-detector';
-import { DefaultsInstaller } from '../tech-detector/standards/defaults-installer';
-import { generateProjectName } from '../port-manager/utils/project-name';
-import { generateColorPalette } from './color-manager';
+import { copyRules, CopyRulesResult } from './rules-copier.js';
+import { copyCommands, CopyCommandsResult } from './commands-copier.js';
+import { validateSetup, InitValidationResult } from './setup-validator.js';
+import { initCommand as portManagerInit } from '../port-manager/cli/commands/init.js';
+import { FrameworkDetector } from '../port-manager/utils/project-detector.js';
+import { DefaultsInstaller } from '../tech-detector/standards/defaults-installer.js';
+import { generateProjectName } from '../port-manager/utils/project-name.js';
+import { generateColorPalette } from './color-manager.js';
 import {
   generatePostCheckoutHook,
   setupGitHooksPath,
   ensureSettingsIgnored,
   initializeSettingsJson,
-} from './hook-generator';
-import { PortManager } from '../port-manager/port-manager';
-import { GlobalConfigManager } from '../../shared/config/global-config';
-import { ProjectConfigManager } from '../../shared/config/project-config';
+} from './hook-generator.js';
+import { PortManager } from '../port-manager/port-manager.js';
+import { GlobalConfigManager } from '../../shared/config/global-config.js';
+import { ProjectConfigManager } from '../../shared/config/project-config.js';
 
 export interface UpdateOptions {
   projectName?: string;

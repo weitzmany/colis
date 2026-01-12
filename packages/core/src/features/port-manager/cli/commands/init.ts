@@ -4,10 +4,10 @@
  * Initializes Port Manager in the current project.
  */
 
-import { PortManager } from '../../port-manager';
-import { GlobalConfigManager } from '../../../../shared/config/global-config';
-import { FrameworkDetector } from '../../utils/project-detector';
-import { generateProjectName } from '../../utils/project-name';
+import { PortManager } from '../../port-manager.js';
+import { GlobalConfigManager } from '../../../../shared/config/global-config.js';
+import { FrameworkDetector } from '../../utils/project-detector.js';
+import { generateProjectName } from '../../utils/project-name.js';
 import * as path from 'path';
 import chalk from 'chalk';
 

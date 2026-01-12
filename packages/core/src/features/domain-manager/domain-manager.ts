@@ -4,16 +4,16 @@
  * Main class for managing local domains with Caddy reverse proxy.
  */
 
-import { CaddyManager } from './caddy-manager';
-import { HostsManager } from './hosts-manager';
-import { ServiceDetector } from './service-detector';
-import { SetupOptions, DomainSetupResult, DomainConfig, DomainInfo } from './types';
+import { CaddyManager } from './caddy-manager.js';
+import { HostsManager } from './hosts-manager.js';
+import { ServiceDetector } from './service-detector.js';
+import { SetupOptions, DomainSetupResult, DomainConfig, DomainInfo } from './types.js';
 import {
   CaddyNotInstalledError,
   DomainValidationError,
   HostsFileError,
   DomainConfigurationError,
-} from './errors';
+} from './errors.js';
 
 export class DomainManager {
   private caddyManager: CaddyManager;

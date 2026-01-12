@@ -5,10 +5,10 @@
  */
 
 import chalk from 'chalk';
-import { generateColorPalette, generateKeyColor, BASE_PALETTE } from '../../color-manager';
-import { generateProjectName } from '../../../port-manager/utils/project-name';
-import { PortManager } from '../../../port-manager';
-import { GlobalConfigManager } from '../../../../shared/config/global-config';
+import { generateColorPalette, generateKeyColor, BASE_PALETTE } from '../../color-manager.js';
+import { generateProjectName } from '../../../port-manager/utils/project-name.js';
+import { PortManager } from '../../../port-manager/index.js';
+import { GlobalConfigManager } from '../../../../shared/config/global-config.js';
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as os from 'os';

@@ -6,7 +6,7 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { BuildToolInfo } from '../types';
+import { BuildToolInfo } from '../types.js';
 
 export class BuildToolDetector {
   /**

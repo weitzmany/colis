@@ -6,7 +6,7 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { RuntimeInfo } from '../types';
+import { RuntimeInfo } from '../types.js';
 
 export class RuntimeDetector {
   /**

@@ -31,10 +31,10 @@
  * ```
  */
 
-import { DatabaseRepository, DatabaseConfig } from './repository';
-import { SQLiteRepository } from './sqlite';
-import { MySQLRepository } from './mysql';
-import { PostgreSQLRepository } from './postgresql';
+import { DatabaseRepository, DatabaseConfig } from './repository.js';
+import { SQLiteRepository } from './sqlite.js';
+import { MySQLRepository } from './mysql.js';
+import { PostgreSQLRepository } from './postgresql.js';
 
 /**
  * Database Factory

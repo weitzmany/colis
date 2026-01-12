@@ -8,8 +8,8 @@
  * @module @your-org/core/shared/config
  */
 
-import { GlobalConfig } from './global-config';
-import { ProjectConfig } from './project-config';
+import { GlobalConfig } from './global-config.js';
+import { ProjectConfig } from './project-config.js';
 
 /**
  * Validation result

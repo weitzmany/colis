@@ -4,8 +4,8 @@
  * Detects port conflicts and validates port assignments.
  */
 
-import { PortRepository } from '../database/port-repository';
-import { ConflictReport, ValidationResult } from '../types';
+import { PortRepository } from '../database/port-repository.js';
+import { ConflictReport, ValidationResult as PortValidationResult } from '../types.js';
 import * as net from 'net';
 import * as fs from 'fs-extra';
 import * as path from 'path';
@@ -21,7 +21,7 @@ export class ConflictDetector {
     projectPath: string,
     _appType: string,
     port: number
-  ): Promise<ValidationResult> {
+  ): Promise<PortValidationResult> {
     const conflicts: ConflictReport[] = [];
     const errors: string[] = [];
 
@@ -124,7 +124,7 @@ export class ConflictDetector {
   /**
    * Check all ports for conflicts
    */
-  async validateAll(): Promise<ValidationResult> {
+  async validateAll(): Promise<PortValidationResult> {
     const assignments = await this.repository.listPorts({ status: 'active' });
     const allConflicts: ConflictReport[] = [];
     const errors: string[] = [];

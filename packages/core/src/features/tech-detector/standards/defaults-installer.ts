@@ -10,8 +10,8 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { TechDetector } from '../tech-detector';
-import { StandardsLoader, NewProjectDefaults } from './standards-loader';
+import { TechDetector } from '../tech-detector.js';
+import { StandardsLoader, NewProjectDefaults } from './standards-loader.js';
 
 const execAsync = promisify(exec);
 

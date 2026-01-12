@@ -4,7 +4,7 @@
  * CLI command for project initialization.
  */
 
-import { initializeProject, InitOptions } from '../../project-initializer';
+import { initializeProject, InitOptions } from '../../project-initializer.js';
 import chalk from 'chalk';
 
 export async function initCommand(options: InitOptions) {

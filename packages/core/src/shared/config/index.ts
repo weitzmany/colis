@@ -8,9 +8,10 @@
  * @module @your-org/core/shared/config
  */
 
-export * from './global-config';
-export * from './project-config';
-export * from './validator';
+export * from './global-config.js';
+export * from './project-config.js';
+// Export validator types with explicit name to avoid conflicts
+export { ConfigValidator, type ValidationResult as ConfigValidationResult } from './validator.js';
 
 
 

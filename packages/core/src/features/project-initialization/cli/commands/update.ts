@@ -4,7 +4,7 @@
  * CLI command for updating project initialization - checks for gaps and updates as needed.
  */
 
-import { updateProject, UpdateOptions } from '../../project-updater';
+import { updateProject, UpdateOptions } from '../../project-updater.js';
 import chalk from 'chalk';
 
 export async function updateCommand(options: UpdateOptions) {

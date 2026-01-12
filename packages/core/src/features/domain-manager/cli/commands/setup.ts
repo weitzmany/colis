@@ -4,14 +4,14 @@
  * Set up domain for current project.
  */
 
-import { DomainManager } from '../../domain-manager';
-import { generateProjectName } from '../../../port-manager/utils/project-name';
+import { DomainManager } from '../../domain-manager.js';
+import { generateProjectName } from '../../../port-manager/utils/project-name.js';
 import {
   CaddyNotInstalledError,
   DomainValidationError,
   DomainConfigurationError,
   HostsFileError,
-} from '../../errors';
+} from '../../errors.js';
 import chalk from 'chalk';
 import * as path from 'path';
 

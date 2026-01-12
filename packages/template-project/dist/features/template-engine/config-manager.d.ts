@@ -44,7 +44,15 @@ export declare class ConfigManager {
      */
     collectConfig(options?: Partial<ProjectConfig>): Promise<ProjectConfig>;
     /**
-     * Prompt for template type
+     * Prompt for stack selection (frontend, backend, mobile)
+     */
+    promptForStackSelection(): Promise<{
+        frontend: string | 'none';
+        backend: string | 'none';
+        mobile?: string | 'none';
+    }>;
+    /**
+     * Prompt for template type (legacy method, kept for backward compatibility)
      */
     promptForTemplateType(): Promise<string>;
     /**

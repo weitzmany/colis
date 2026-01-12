@@ -2,7 +2,7 @@
  * SQLite Repository Tests
  */
 
-import { SQLiteRepository } from '../sqlite';
+import { SQLiteRepository } from '../sqlite.js';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as os from 'os';

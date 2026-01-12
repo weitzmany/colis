@@ -8,7 +8,7 @@ import {
   PortRangeExhaustedError,
   PortInUseError,
   PortAssignmentNotFoundError,
-} from '../errors';
+} from '../errors.js';
 
 describe('Port Manager Error Classes', () => {
   describe('PortManagerError', () => {

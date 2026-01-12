@@ -6,10 +6,10 @@
  * Handles main package commands like `npx @your-org/core init`
  */
 
-const { program } = require('commander');
-const { initCommand } = require('../dist/features/project-initialization/cli/commands/init');
-const { updateCommand } = require('../dist/features/project-initialization/cli/commands/update');
-const { colorsCommand } = require('../dist/features/project-initialization/cli/commands/colors');
+import { program } from 'commander';
+import { initCommand } from '../dist/features/project-initialization/cli/commands/init.js';
+import { updateCommand } from '../dist/features/project-initialization/cli/commands/update.js';
+import { colorsCommand } from '../dist/features/project-initialization/cli/commands/colors.js';
 
 program
   .name('@your-org/core')

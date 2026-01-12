@@ -4,8 +4,8 @@
  * Tech Detect CLI Entry Point
  */
 
-const { program } = require('commander');
-const { detectCommand } = require('../dist/features/tech-detector/cli/commands/detect');
+import { program } from 'commander';
+import { detectCommand } from '../dist/features/tech-detector/cli/commands/detect.js';
 
 program
   .name('tech-detect')

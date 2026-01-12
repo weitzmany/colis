@@ -4,8 +4,8 @@
  * List all configured domains.
  */
 
-import { DomainManager } from '../../domain-manager';
-import { CaddyfileError } from '../../errors';
+import { DomainManager } from '../../domain-manager.js';
+import { CaddyfileError } from '../../errors.js';
 import chalk from 'chalk';
 
 export async function listCommand() {

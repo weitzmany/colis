@@ -46,3 +46,5 @@ export * from './shared/database';
 
 // Export shared configuration utilities
 export * from './shared/config';
+// Note: ValidationResult is exported from both port-manager and shared/config
+// Import directly from the specific module if you need a specific one

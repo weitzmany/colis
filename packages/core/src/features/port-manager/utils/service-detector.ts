@@ -7,8 +7,8 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { FrameworkDetector } from './project-detector';
-import { AppType } from '../types';
+import { FrameworkDetector } from './project-detector.js';
+import { AppType } from '../types.js';
 
 export interface DetectedService {
   name: string; // e.g., 'frontend', 'backend', 'admin'

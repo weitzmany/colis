@@ -4,14 +4,14 @@
  * Creates the initial database schema for port assignments.
  */
 
-import { Migration } from '../../../../shared/database/migrations';
-import { DatabaseRepository } from '../../../../shared/database/repository';
+import { Migration } from '../../../../shared/database/migrations.js';
+import { DatabaseRepository } from '../../../../shared/database/repository.js';
 import {
   CREATE_PORT_ASSIGNMENTS_TABLE,
   CREATE_PORT_ASSIGNMENTS_INDEXES,
   CREATE_PORT_HISTORY_TABLE,
   CREATE_PORT_HISTORY_INDEXES,
-} from '../schema';
+} from '../schema.js';
 
 export const initialSchemaMigration: Migration = {
   version: 1,

@@ -4,14 +4,14 @@
  * Port Manager CLI Entry Point
  */
 
-const { program } = require('commander');
-const { initCommand } = require('../dist/features/port-manager/cli/commands/init');
-const { allocateCommand } = require('../dist/features/port-manager/cli/commands/allocate');
-const { checkCommand } = require('../dist/features/port-manager/cli/commands/check');
-const { listCommand } = require('../dist/features/port-manager/cli/commands/list');
-const { releaseCommand } = require('../dist/features/port-manager/cli/commands/release');
-const { validateCommand } = require('../dist/features/port-manager/cli/commands/validate');
-const { migrateCommand } = require('../dist/features/port-manager/cli/commands/migrate');
+import { program } from 'commander';
+import { initCommand } from '../dist/features/port-manager/cli/commands/init.js';
+import { allocateCommand } from '../dist/features/port-manager/cli/commands/allocate.js';
+import { checkCommand } from '../dist/features/port-manager/cli/commands/check.js';
+import { listCommand } from '../dist/features/port-manager/cli/commands/list.js';
+import { releaseCommand } from '../dist/features/port-manager/cli/commands/release.js';
+import { validateCommand } from '../dist/features/port-manager/cli/commands/validate.js';
+import { migrateCommand } from '../dist/features/port-manager/cli/commands/migrate.js';
 
 program
   .name('port-manager')
@@ -76,9 +76,9 @@ program
   .description('Detect all port configurations in the project (code, env files, docs)')
   .option('--path <path>', 'Project path (default: current directory)')
   .option('--format <format>', 'Output format (text or json)', 'text')
-  .action((options) => {
-    const { detectCommand } = require('../dist/features/port-manager/cli/commands/detect');
-    detectCommand(options);
+  .action(async (options) => {
+    const { detectCommand } = await import('../dist/features/port-manager/cli/commands/detect.js');
+    await detectCommand(options);
   });
 
 program
@@ -89,9 +89,9 @@ program
   .option('--path <path>', 'Project path (default: current directory)')
   .option('-y, --yes', 'Skip confirmation prompt')
   .option('--dry-run', 'Show what would be fixed without making changes')
-  .action((options) => {
-    const { fixCommand } = require('../dist/features/port-manager/cli/commands/fix');
-    fixCommand(options);
+  .action(async (options) => {
+    const { fixCommand } = await import('../dist/features/port-manager/cli/commands/fix.js');
+    await fixCommand(options);
   });
 
 program.parse();

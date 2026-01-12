@@ -4,8 +4,8 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { FrameworkHandler } from './interfaces';
-import { ConfigurationResult } from '../types';
+import { FrameworkHandler } from './interfaces.js';
+import { ConfigurationResult } from '../types.js';
 
 export class AngularHandler implements FrameworkHandler {
   getName(): string {

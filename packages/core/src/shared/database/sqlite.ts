@@ -4,13 +4,16 @@
  * Implements DatabaseRepository interface for SQLite database.
  */
 
-import { Database } from 'sqlite3';
+import sqlite3 from 'sqlite3';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { DatabaseRepository, Transaction } from './repository';
+import { DatabaseRepository, Transaction } from './repository.js';
+
+const { Database } = sqlite3;
+type DatabaseType = typeof Database;
 
 export class SQLiteRepository implements DatabaseRepository {
-  private db: Database | null = null;
+  private db: InstanceType<DatabaseType> | null = null;
   private dbPath: string;
 
   constructor(config: { path: string }) {
@@ -71,7 +74,7 @@ export class SQLiteRepository implements DatabaseRepository {
     }
 
     return new Promise((resolve, reject) => {
-      this.db!.all(sql, params, (err, rows) => {
+      this.db!.all(sql, params, (err: Error | null, rows: any[]) => {
         if (err) {
           reject(err);
         } else {
@@ -87,7 +90,7 @@ export class SQLiteRepository implements DatabaseRepository {
     }
 
     return new Promise((resolve, reject) => {
-      this.db!.run(sql, params, function (err) {
+      this.db!.run(sql, params, function (err: Error | null) {
         if (err) {
           reject(err);
         } else {

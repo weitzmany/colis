@@ -4,8 +4,8 @@
  * Checks port availability and conflicts.
  */
 
-import { PortManager } from '../../port-manager';
-import { GlobalConfigManager } from '../../../../shared/config/global-config';
+import { PortManager } from '../../port-manager.js';
+import { GlobalConfigManager } from '../../../../shared/config/global-config.js';
 import chalk from 'chalk';
 
 export async function checkCommand(options: {

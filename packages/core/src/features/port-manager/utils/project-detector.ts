@@ -6,7 +6,7 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { AppType } from '../types';
+import { AppType } from '../types.js';
 
 export class FrameworkDetector {
   /**

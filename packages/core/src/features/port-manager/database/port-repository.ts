@@ -4,9 +4,9 @@
  * Implements port assignment database operations using shared DatabaseRepository.
  */
 
-import { DatabaseRepository } from '../../../shared/database/repository';
-import { PortAssignment, PortFilters } from '../types';
-import { PORT_ASSIGNMENTS_TABLE, PORT_HISTORY_TABLE } from './schema';
+import { DatabaseRepository } from '../../../shared/database/repository.js';
+import { PortAssignment, PortFilters } from '../types.js';
+import { PORT_ASSIGNMENTS_TABLE, PORT_HISTORY_TABLE } from './schema.js';
 
 export class PortRepository {
   constructor(private db: DatabaseRepository) {}

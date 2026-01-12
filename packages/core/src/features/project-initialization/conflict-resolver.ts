@@ -6,7 +6,6 @@
  */
 
 import * as fs from 'fs-extra';
-import * as path from 'path';
 import chalk from 'chalk';
 import * as readline from 'readline';
 

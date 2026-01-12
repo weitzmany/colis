@@ -6,12 +6,12 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { TechStack } from './types';
-import { FrameworkDetector } from './detectors/framework-detector';
-import { LanguageDetector } from './detectors/language-detector';
-import { BuildToolDetector } from './detectors/build-tool-detector';
-import { PackageManagerDetector } from './detectors/package-manager-detector';
-import { RuntimeDetector } from './detectors/runtime-detector';
+import { TechStack } from './types.js';
+import { FrameworkDetector } from './detectors/framework-detector.js';
+import { LanguageDetector } from './detectors/language-detector.js';
+import { BuildToolDetector } from './detectors/build-tool-detector.js';
+import { PackageManagerDetector } from './detectors/package-manager-detector.js';
+import { RuntimeDetector } from './detectors/runtime-detector.js';
 
 export class TechDetector {
   private frameworkDetector: FrameworkDetector;

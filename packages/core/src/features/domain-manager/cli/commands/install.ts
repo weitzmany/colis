@@ -4,7 +4,7 @@
  * Check Caddy installation and provide installation instructions.
  */
 
-import { DomainManager } from '../../domain-manager';
+import { DomainManager } from '../../domain-manager.js';
 import chalk from 'chalk';
 import { exec } from 'child_process';
 import { promisify } from 'util';

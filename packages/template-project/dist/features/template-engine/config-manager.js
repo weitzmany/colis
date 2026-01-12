@@ -14,6 +14,7 @@
  * ```
  */
 import inquirer from 'inquirer';
+import chalk from 'chalk';
 /**
  * Manages collection of project configuration from users.
  *
@@ -44,8 +45,15 @@ export class ConfigManager {
      */
     async collectConfig(options) {
         const config = { ...options };
-        // If project name not provided, prompt for it
-        if (!config.projectName) {
+        // Ensure projectName is a string if provided and trim it
+        if (config.projectName) {
+            if (typeof config.projectName !== 'string') {
+                config.projectName = String(config.projectName);
+            }
+            config.projectName = config.projectName.trim();
+        }
+        // If project name not provided or empty after trimming, prompt for it
+        if (!config.projectName || config.projectName.length === 0) {
             const nameAnswer = await inquirer.prompt([
                 {
                     type: 'input',
@@ -63,11 +71,33 @@ export class ConfigManager {
                     },
                 },
             ]);
-            config.projectName = nameAnswer.projectName;
+            config.projectName = nameAnswer.projectName.trim();
         }
-        // If template type not provided, prompt for it
-        if (!config.templateType) {
-            config.templateType = await this.promptForTemplateType();
+        // Ensure projectName is always trimmed after collection
+        if (config.projectName && typeof config.projectName === 'string') {
+            config.projectName = config.projectName.trim();
+        }
+        // If template type not provided, prompt for stack selection
+        if (!config.templateType && !config.stackSelection) {
+            config.stackSelection = await this.promptForStackSelection();
+            // Check if all selections are "none"
+            const selections = config.stackSelection;
+            if (selections.frontend === 'none' && selections.backend === 'none' && (!selections.mobile || selections.mobile === 'none')) {
+                console.error(chalk.red('\n❌ Error: At least one stack component (frontend, backend, or mobile) must be selected.'));
+                console.error(chalk.yellow('Please select at least one component to create.'));
+                process.exit(1);
+            }
+            // For backward compatibility, set templateType based on selections
+            // Priority: full-stack > frontend > backend
+            if (selections.frontend !== 'none' && selections.backend !== 'none') {
+                config.templateType = 'full-stack';
+            }
+            else if (selections.frontend !== 'none') {
+                config.templateType = selections.frontend || 'angular';
+            }
+            else if (selections.backend !== 'none') {
+                config.templateType = selections.backend || 'slim';
+            }
         }
         // If package manager not provided, prompt for it
         if (!config.packageManager) {
@@ -90,6 +120,7 @@ export class ConfigManager {
                     type: 'input',
                     name: 'author',
                     message: 'Author name (optional):',
+                    default: 'Yoav Weitzman',
                 },
             ]);
             config.author = authorAnswer.author || undefined;
@@ -106,10 +137,69 @@ export class ConfigManager {
             ]);
             config.license = licenseAnswer.license === 'None' ? undefined : licenseAnswer.license;
         }
+        // Ensure projectName is set and trimmed before returning
+        if (config.projectName && typeof config.projectName === 'string') {
+            config.projectName = config.projectName.trim();
+        }
         return config;
     }
     /**
-     * Prompt for template type
+     * Prompt for stack selection (frontend, backend, mobile)
+     */
+    async promptForStackSelection() {
+        const selections = {
+            frontend: 'none',
+            backend: 'none',
+        };
+        // Prompt for frontend
+        const frontendAnswer = await inquirer.prompt([
+            {
+                type: 'list',
+                name: 'frontend',
+                message: 'Select frontend framework:',
+                choices: [
+                    { name: 'Angular', value: 'angular' },
+                    { name: 'React/Next.js', value: 'frontend' },
+                    { name: 'None', value: 'none' },
+                ],
+                default: 'angular',
+            },
+        ]);
+        selections.frontend = frontendAnswer.frontend;
+        // Prompt for backend
+        const backendAnswer = await inquirer.prompt([
+            {
+                type: 'list',
+                name: 'backend',
+                message: 'Select backend framework:',
+                choices: [
+                    { name: 'Slim (PHP)', value: 'slim' },
+                    { name: 'Express/Node.js', value: 'backend' },
+                    { name: 'None', value: 'none' },
+                ],
+                default: 'slim',
+            },
+        ]);
+        selections.backend = backendAnswer.backend;
+        // Prompt for mobile (optional, future feature)
+        const mobileAnswer = await inquirer.prompt([
+            {
+                type: 'list',
+                name: 'mobile',
+                message: 'Select mobile framework (optional):',
+                choices: [
+                    { name: 'React Native', value: 'react-native' },
+                    { name: 'Ionic', value: 'ionic' },
+                    { name: 'None', value: 'none' },
+                ],
+                default: 'none',
+            },
+        ]);
+        selections.mobile = mobileAnswer.mobile;
+        return selections;
+    }
+    /**
+     * Prompt for template type (legacy method, kept for backward compatibility)
      */
     async promptForTemplateType() {
         const answer = await inquirer.prompt([
@@ -154,18 +244,31 @@ export class ConfigManager {
      */
     validateConfig(config) {
         const errors = [];
-        if (!config.projectName || config.projectName.trim().length === 0) {
+        // Ensure projectName is a string before calling trim
+        const projectName = typeof config.projectName === 'string' ? config.projectName.trim() : '';
+        if (!projectName || projectName.length === 0) {
             errors.push('Project name is required');
         }
-        if (!config.templateType) {
-            errors.push('Template type is required');
+        // Either templateType (legacy) or stackSelection must be provided
+        if (!config.templateType && !config.stackSelection) {
+            errors.push('Template type or stack selection is required');
+        }
+        // If stackSelection is provided, validate it
+        if (config.stackSelection) {
+            const { frontend, backend, mobile } = config.stackSelection;
+            if (frontend === 'none' && backend === 'none' && (!mobile || mobile === 'none')) {
+                errors.push('At least one stack component (frontend, backend, or mobile) must be selected');
+            }
         }
         if (!config.packageManager) {
             errors.push('Package manager is required');
         }
-        // Validate project name format
-        if (config.projectName && !/^[a-z0-9-]+$/i.test(config.projectName)) {
-            errors.push('Project name must contain only letters, numbers, and hyphens');
+        // Validate project name format (only if projectName exists and is not empty)
+        if (projectName && projectName.length > 0) {
+            const isValid = /^[a-z0-9-]+$/i.test(projectName);
+            if (!isValid) {
+                errors.push(`Project name must contain only letters, numbers, and hyphens (got: "${projectName}")`);
+            }
         }
         return {
             valid: errors.length === 0,

@@ -5,7 +5,7 @@
  * This is a stub implementation for Phase 3.
  */
 
-import { DatabaseRepository, DatabaseConfig, Transaction } from './repository';
+import { DatabaseRepository, DatabaseConfig, Transaction } from './repository.js';
 
 export class MySQLRepository implements DatabaseRepository {
   private connection: any = null;

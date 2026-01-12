@@ -7,7 +7,7 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { PortDetection } from './port-detector';
+import { PortDetection } from './port-detector.js';
 
 export interface FixResult {
   file: string;

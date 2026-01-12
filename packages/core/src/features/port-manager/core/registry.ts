@@ -4,8 +4,8 @@
  * Manages the port assignment registry using the database repository.
  */
 
-import { PortRepository } from '../database/port-repository';
-import { PortAssignment, PortFilters, PortStatus } from '../types';
+import { PortRepository } from '../database/port-repository.js';
+import { PortAssignment, PortFilters, PortStatus } from '../types.js';
 
 export class RegistryManager {
   constructor(private repository: PortRepository) {}

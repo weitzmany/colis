@@ -4,9 +4,9 @@
  * Handles port allocation logic, including range management and conflict detection.
  */
 
-import { PortRepository } from '../database/port-repository';
-import { AppType, PortRange } from '../types';
-import { PortConflictError, PortRangeExhaustedError, PortInUseError } from '../errors';
+import { PortRepository } from '../database/port-repository.js';
+import { AppType, PortRange } from '../types.js';
+import { PortConflictError, PortRangeExhaustedError, PortInUseError } from '../errors.js';
 import * as net from 'net';
 
 export class PortAllocator {

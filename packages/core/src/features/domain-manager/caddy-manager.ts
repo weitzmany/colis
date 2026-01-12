@@ -9,8 +9,8 @@ import * as path from 'path';
 import * as os from 'os';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { CaddyDomainBlock, DomainInfo, DomainConfig } from './types';
-import { CaddyfileError } from './errors';
+import { CaddyDomainBlock, DomainInfo, DomainConfig } from './types.js';
+import { CaddyfileError } from './errors.js';
 
 const execAsync = promisify(exec);
 
@@ -199,10 +199,10 @@ export class CaddyManager {
       const domainMatch = line.match(/^(\S+\.local)\s*\{/);
       if (domainMatch) {
         // Save previous domain if exists
-        if (currentDomain) {
+        if (currentDomain && currentConfig) {
           domains.push({
             domain: currentDomain,
-            config: currentConfig,
+            config: currentConfig as DomainConfig,
             caddyfileLine: lineNumber - 1,
           });
         }

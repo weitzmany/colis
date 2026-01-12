@@ -32,8 +32,10 @@ program
   .option('-a, --author <name>', 'Author name')
   .option('-l, --license <type>', 'License type (MIT, Apache-2.0, etc.)')
   .action(async (projectName, options) => {
+    // Ensure projectName is a string, not an object
+    const name = typeof projectName === 'string' ? projectName : (projectName ? String(projectName) : undefined);
     await createCommand({
-      projectName,
+      projectName: name ? name.trim() : undefined,
       template: options.template,
       packageManager: options.packageManager,
       skipDeps: options.skipDeps,
@@ -49,11 +51,14 @@ program
     });
   });
 
-// Default command
+// Default command - handle when project name is passed directly
 program
-  .action(async (projectName) => {
-    if (projectName) {
-      await createCommand({ projectName });
+  .argument('[project-name]', 'Project name')
+  .action(async (projectName, options) => {
+    // Ensure projectName is a string, not an object
+    const name = typeof projectName === 'string' ? projectName : (projectName ? String(projectName) : undefined);
+    if (name && name.trim().length > 0) {
+      await createCommand({ projectName: name.trim() });
     } else {
       program.help();
     }

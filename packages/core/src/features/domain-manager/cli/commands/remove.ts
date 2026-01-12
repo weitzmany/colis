@@ -4,12 +4,12 @@
  * Remove domain configuration.
  */
 
-import { DomainManager } from '../../domain-manager';
+import { DomainManager } from '../../domain-manager.js';
 import {
   DomainValidationError,
   DomainConfigurationError,
   HostsFileError,
-} from '../../errors';
+} from '../../errors.js';
 import chalk from 'chalk';
 
 export async function removeCommand(domain: string) {

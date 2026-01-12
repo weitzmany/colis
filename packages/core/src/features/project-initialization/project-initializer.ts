@@ -10,19 +10,19 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import chalk from 'chalk';
-import { copyRules, CopyRulesResult } from './rules-copier';
-import { copyCommands, CopyCommandsResult } from './commands-copier';
-import { validateSetup, InitValidationResult } from './setup-validator';
-import { initCommand as portManagerInit } from '../port-manager/cli/commands/init';
-import { DefaultsInstaller } from '../tech-detector/standards/defaults-installer';
-import { generateProjectName } from '../port-manager/utils/project-name';
-import { generateColorPalette } from './color-manager';
+import { copyRules, CopyRulesResult } from './rules-copier.js';
+import { copyCommands, CopyCommandsResult } from './commands-copier.js';
+import { validateSetup, InitValidationResult } from './setup-validator.js';
+import { initCommand as portManagerInit } from '../port-manager/cli/commands/init.js';
+import { DefaultsInstaller } from '../tech-detector/standards/defaults-installer.js';
+import { generateProjectName } from '../port-manager/utils/project-name.js';
+import { generateColorPalette } from './color-manager.js';
 import {
   generatePostCheckoutHook,
   setupGitHooksPath,
   ensureSettingsIgnored,
   initializeSettingsJson,
-} from './hook-generator';
+} from './hook-generator.js';
 
 /**
  * Options for project initialization
@@ -105,6 +105,14 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
 
   try {
     const projectPath = process.cwd();
+
+    // Determine project name early (needed for color generation and logging)
+    let projectName: string;
+    if (options.projectName) {
+      projectName = options.projectName;
+    } else {
+      projectName = generateProjectName(projectPath);
+    }
 
     // Find core package path
     const corePackagePath = await findCorePackagePath();
@@ -226,11 +234,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
       }
     }
 
-    // Determine project name (needed for color generation)
-    let projectName = options.projectName;
-    if (!projectName) {
-      projectName = generateProjectName(projectPath);
-    }
+    // Project name already determined above
 
     // Initialize Port Manager (mandatory unless skipped)
     if (!options.skipPortManager) {

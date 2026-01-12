@@ -7,7 +7,7 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { execSync } from 'child_process';
-import { ProjectColorPalette } from './color-manager';
+import { ProjectColorPalette } from './color-manager.js';
 
 /**
  * Generate post-checkout hook with project colors

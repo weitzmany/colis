@@ -4,7 +4,7 @@
  * Maps TechStack to package.json format (simplified).
  */
 
-import { TechStack } from '../types';
+import { TechStack } from '../types.js';
 
 export class PackageJsonMapper {
   /**

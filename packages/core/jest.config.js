@@ -1,5 +1,5 @@
-module.exports = {
-  preset: 'ts-jest',
+export default {
+  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.test.ts', '**/?(*.)+(spec|test).ts'],
@@ -15,7 +15,14 @@ module.exports = {
   moduleNameMapper: {
     '^@core/(.*)$': '<rootDir>/src/$1',
     '^@core/shared/(.*)$': '<rootDir>/src/shared/$1',
-    '^@core/features/(.*)$': '<rootDir>/src/features/$1'
+    '^@core/features/(.*)$': '<rootDir>/src/features/$1',
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  },
+  extensionsToTreatAsEsm: ['.ts'],
+  transform: {
+    '^.+\\.ts$': ['ts-jest', {
+      useESM: true
+    }]
   }
 };
 

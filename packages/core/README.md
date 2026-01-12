@@ -83,22 +83,27 @@ npx @your-org/core init
 
 ## Features
 
+The core package provides several foundational features that help streamline development workflows. Each feature is designed to be easy to use and well-documented.
+
 ### Project Initialization
 
-Automatically set up new projects with one command:
+**Purpose**: Automatically set up new projects with all necessary configuration, rules, and tools in one command.
 
+**Quick Start**:
 ```bash
 npx @your-org/core init
 ```
 
 **What it does**:
-- Copies all rules (expert personas, user rules) to `.cursor/rules/`
-- Copies general commands to `.cursor/commands/` (excludes local commands)
-- Initializes Port Manager automatically (mandatory)
-- **Sets up IDE colors** - Generates unique color scheme per project
-- Validates everything is set up correctly
+- ✅ Copies all rules (expert personas, user rules) to `.cursor/rules/`
+- ✅ Copies general commands to `.cursor/commands/` (excludes local commands)
+- ✅ Initializes Port Manager automatically (mandatory)
+- ✅ **Sets up IDE colors** - Generates unique color scheme per project
+- ✅ Validates everything is set up correctly
 
-See [Project Initialization PRD](../../docs/features/project-initialization/PRD.md) for details.
+**Learning Tip**: This command is idempotent - you can run it multiple times safely. It will skip files that already exist unless you use the `--overwrite` flag.
+
+**Learn More**: See [Project Initialization PRD](../../docs/features/project-initialization/PRD.md) for detailed documentation.
 
 ### IDE Colors
 
@@ -153,11 +158,15 @@ npx @your-org/core init --skip-colors
 
 ### Port Manager
 
-Automatically manage port assignments across all your projects:
+**Purpose**: Automatically manage port assignments across all your projects to prevent conflicts and ensure consistent configuration.
 
+**Why it matters**: Port conflicts are a common source of frustration when working with multiple projects. Port Manager eliminates this by maintaining a centralized registry of port assignments.
+
+**Programmatic Usage**:
 ```typescript
 import { PortManager } from '@your-org/core/features/port-manager';
 
+// Create a Port Manager instance
 const manager = new PortManager({
   database: {
     type: 'sqlite',
@@ -165,34 +174,83 @@ const manager = new PortManager({
   }
 });
 
+// Allocate a port for your project
 const port = await manager.allocate('my-project', 'nextjs');
+console.log(`Assigned port: ${port}`); // e.g., "Assigned port: 3001"
 ```
 
 **CLI Usage**:
 ```bash
 # Port Manager is automatically initialized during project init
-# But you can also use it directly:
+# But you can also use it directly for manual port management:
+
+# Initialize Port Manager for your project
 npx @your-org/core port-manager init
+
+# Allocate a port for a specific project and app type
 npx @your-org/core port-manager allocate --project-name my-project --app-type nextjs
+
+# Check for port conflicts
+npx @your-org/core port-manager check
+
+# List all port assignments
+npx @your-org/core port-manager list
 ```
+
+**Learning Tip**: Port Manager automatically detects your project type and suggests appropriate ports. You can override the default port if needed, but the automatic allocation usually works best.
 
 ## Rules and Commands
 
-This package includes Cursor rules and commands that are automatically copied to your project during initialization:
+This package includes Cursor IDE rules and commands that enhance your development experience. These are automatically copied to your project during initialization.
 
-- **Rules**: Expert personas and user rules → `.cursor/rules/`
-- **Commands**: General commands → `.cursor/commands/general/`
+### What You Get
+
+- **Rules** → `.cursor/rules/`
+  - Expert personas: Specialized AI agents for different domains (architecture, security, testing, etc.)
+  - User rules: Project-specific guidelines and best practices
+  
+- **Commands** → `.cursor/commands/general/`
+  - Reusable commands for common development tasks
+  - Commands that work across all projects
+  
 - **Local Commands**: Excluded (these are for the packages repo only)
+
+### Understanding Expert Personas
+
+Expert personas are specialized AI agents that provide domain-specific guidance. For example:
+- **Architecture Expert**: Helps with system design and scalability
+- **Security Expert**: Focuses on security best practices and threat modeling
+- **Testing Expert**: Assists with test strategy and implementation
+
+These personas are automatically available in your project after initialization, making it easy to get expert-level guidance on specific topics.
 
 ## Package Structure
 
+Understanding the package structure helps you navigate and use the core package effectively:
+
 ```
 @your-org/core/
-├── features/          # Core features (Port Manager, etc.)
-├── shared/            # Shared utilities
-├── rules/             # Cursor rules
+├── features/          # Core features (Port Manager, Tech Detector, etc.)
+│   ├── port-manager/  # Port management feature
+│   ├── tech-detector/ # Technology detection feature
+│   ├── domain-manager/# Domain management feature
+│   └── project-initialization/ # Project setup feature
+├── shared/            # Shared utilities used across features
+│   ├── database/      # Database abstractions
+│   └── config/        # Configuration management
+├── rules/             # Cursor IDE rules
+│   ├── experts/       # Expert personas
+│   └── user/          # User rules
 └── commands/          # Cursor commands
+    ├── local/         # Local commands (packages repo only)
+    └── general/       # General commands (copied to projects)
 ```
+
+**Key Concepts**:
+- **Features**: Self-contained modules you can import and use in your projects
+- **Shared Utilities**: Common code used by multiple features (database, config)
+- **Rules**: Cursor IDE configuration that enhances your development experience
+- **Commands**: Reusable CLI commands for common tasks
 
 ## Documentation
 

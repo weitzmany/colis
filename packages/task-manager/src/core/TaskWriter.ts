@@ -4,7 +4,18 @@ import { Task, TasksFile } from '../types/task';
 import { TaskReader } from './TaskReader';
 
 /**
- * TaskWriter - Writes tasks to taskmaster-ai tasks.json file
+ * TaskWriter - Writes tasks to taskmaster-ai tasks.json file.
+ * 
+ * This class provides methods to write tasks to the taskmaster-ai file structure.
+ * All write operations are atomic (using temporary files and rename) and create
+ * automatic backups before modifying the file.
+ * 
+ * @example
+ * ```typescript
+ * const writer = new TaskWriter('/path/to/project');
+ * await writer.addTask('my-project', newTask);
+ * await writer.updateTask('my-project', taskId, { status: 'done' });
+ * ```
  */
 export class TaskWriter {
   private taskmasterDir: string;
@@ -12,6 +23,10 @@ export class TaskWriter {
   private tasksBackupDir: string;
   private reader: TaskReader;
 
+  /**
+   * Initializes a new TaskWriter instance.
+   * @param projectRoot The root directory of the project where .taskmaster files are located.
+   */
   constructor(projectRoot: string) {
     this.taskmasterDir = path.join(projectRoot, '.taskmaster');
     this.tasksFilePath = path.join(this.taskmasterDir, 'tasks', 'tasks.json');
@@ -20,7 +35,12 @@ export class TaskWriter {
   }
 
   /**
-   * Write tasks for a project (replaces all tasks)
+   * Write tasks for a project (replaces all tasks).
+   * This operation creates a backup before writing and uses atomic file operations.
+   * 
+   * @param projectName The name of the project to write tasks for.
+   * @param tasks The complete array of tasks to write (replaces existing tasks).
+   * @throws {Error} If the file cannot be written.
    */
   async writeTasks(projectName: string, tasks: Task[]): Promise<void> {
     await this.ensureTasksDirectory();
@@ -33,7 +53,12 @@ export class TaskWriter {
   }
 
   /**
-   * Add a new task to a project
+   * Add a new task to a project.
+   * Creates the project if it doesn't exist.
+   * 
+   * @param projectName The name of the project to add the task to.
+   * @param task The task to add.
+   * @throws {Error} If the file cannot be written.
    */
   async addTask(projectName: string, task: Task): Promise<void> {
     await this.ensureTasksDirectory();
@@ -49,7 +74,13 @@ export class TaskWriter {
   }
 
   /**
-   * Update an existing task
+   * Update an existing task with partial updates.
+   * Automatically updates the `updatedAt` timestamp.
+   * 
+   * @param projectName The name of the project containing the task.
+   * @param taskId The ID of the task to update.
+   * @param updates Partial task object containing fields to update.
+   * @throws {Error} If the project or task is not found, or if the file cannot be written.
    */
   async updateTask(
     projectName: string,
@@ -61,12 +92,13 @@ export class TaskWriter {
 
     const tasksFile = this.reader.readTasksFile();
     if (!tasksFile[projectName]) {
-      throw new Error(`Project ${projectName} not found`);
+      throw new Error(`Project "${projectName}" not found. Available projects: ${Object.keys(tasksFile).join(', ') || 'none'}`);
     }
 
     const taskIndex = tasksFile[projectName].tasks.findIndex((t) => t.id === taskId);
     if (taskIndex === -1) {
-      throw new Error(`Task ${taskId} not found in project ${projectName}`);
+      const availableIds = tasksFile[projectName].tasks.map(t => t.id).join(', ');
+      throw new Error(`Task with ID "${taskId}" not found in project "${projectName}". Available task IDs: ${availableIds || 'none'}`);
     }
 
     // Update task with new values
@@ -80,7 +112,11 @@ export class TaskWriter {
   }
 
   /**
-   * Delete a task
+   * Delete a task from a project.
+   * 
+   * @param projectName The name of the project containing the task.
+   * @param taskId The ID of the task to delete.
+   * @throws {Error} If the project or task is not found, or if the file cannot be written.
    */
   async deleteTask(projectName: string, taskId: number | string): Promise<void> {
     await this.ensureTasksDirectory();
@@ -88,7 +124,7 @@ export class TaskWriter {
 
     const tasksFile = this.reader.readTasksFile();
     if (!tasksFile[projectName]) {
-      throw new Error(`Project ${projectName} not found`);
+      throw new Error(`Project "${projectName}" not found. Available projects: ${Object.keys(tasksFile).join(', ') || 'none'}`);
     }
 
     const initialLength = tasksFile[projectName].tasks.length;
@@ -97,14 +133,19 @@ export class TaskWriter {
     );
 
     if (tasksFile[projectName].tasks.length === initialLength) {
-      throw new Error(`Task ${taskId} not found in project ${projectName}`);
+      const availableIds = tasksFile[projectName].tasks.map(t => t.id).join(', ');
+      throw new Error(`Task with ID "${taskId}" not found in project "${projectName}". Available task IDs: ${availableIds || 'none'}`);
     }
 
     await this.writeTasksFile(tasksFile);
   }
 
   /**
-   * Write the entire tasks.json file atomically
+   * Write the entire tasks.json file atomically.
+   * Uses a temporary file and rename operation to ensure atomic writes.
+   * 
+   * @param tasksFile The complete tasks file structure to write.
+   * @throws {Error} If the file cannot be written.
    */
   private async writeTasksFile(tasksFile: TasksFile): Promise<void> {
     // Atomic write: write to temp file first, then rename
@@ -120,9 +161,14 @@ export class TaskWriter {
     } catch (error) {
       // Clean up temp file if it exists
       if (fs.existsSync(tempFilePath)) {
-        fs.unlinkSync(tempFilePath);
+        try {
+          fs.unlinkSync(tempFilePath);
+        } catch (cleanupError) {
+          // Ignore cleanup errors
+        }
       }
-      throw new Error(`Failed to write tasks file: ${error}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to write tasks file at ${this.tasksFilePath}: ${errorMessage}`);
     }
   }
 

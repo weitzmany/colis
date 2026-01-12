@@ -4,17 +4,31 @@ import { TaskWriter } from '../core/TaskWriter';
 import { stringToColor } from '../utils/hashUtils';
 
 /**
- * Tag statistics
+ * Statistics for a tag, including task count, color, and list of tasks with that tag.
  */
 export interface TagStats {
+  /** The tag name */
   tag: string;
+  /** Number of tasks with this tag */
   taskCount: number;
+  /** Auto-generated color for the tag (hex format) */
   color?: string;
+  /** Array of all tasks with this tag */
   tasks: Task[];
 }
 
 /**
- * TagManager - Manage task tags with color generation
+ * TagManager - Manage task tags with automatic color generation.
+ * 
+ * Supports both single tag (taskmaster-ai style) and multiple tags (discord-story-bot style).
+ * Automatically generates consistent colors for tags using DJB2 hash algorithm.
+ * 
+ * @example
+ * ```typescript
+ * const tagManager = new TagManager('/path/to/project');
+ * await tagManager.addTag('my-project', 1, 'feature'); // Single tag
+ * await tagManager.addTags('my-project', 1, ['bug', 'urgent']); // Multiple tags with colors
+ * ```
  */
 export class TagManager {
   private reader: TaskReader;
@@ -26,7 +40,13 @@ export class TagManager {
   }
 
   /**
-   * Add a tag to a task (taskmaster-ai single tag style)
+   * Add a single tag to a task (taskmaster-ai style).
+   * Replaces any existing single tag.
+   * 
+   * @param projectName The name of the project containing the task.
+   * @param taskId The ID of the task to tag.
+   * @param tag The tag to add.
+   * @throws {Error} If the task is not found.
    */
   async addTag(
     projectName: string,
@@ -37,7 +57,13 @@ export class TagManager {
   }
 
   /**
-   * Add multiple tags to a task (discord-story-bot style with colors)
+   * Add multiple tags to a task (discord-story-bot style with auto-generated colors).
+   * Merges with existing tags and automatically generates colors for new tags.
+   * 
+   * @param projectName The name of the project containing the task.
+   * @param taskId The ID of the task to tag.
+   * @param tagNames Array of tag names to add.
+   * @throws {Error} If the task is not found.
    */
   async addTags(
     projectName: string,
@@ -46,7 +72,7 @@ export class TagManager {
   ): Promise<void> {
     const task = await this.reader.readTask(projectName, taskId);
     if (!task) {
-      throw new Error(`Task ${taskId} not found in project ${projectName}`);
+      throw new Error(`Task "${taskId}" not found in project "${projectName}"`);
     }
 
     const existingTags = task.tags || [];
@@ -67,7 +93,13 @@ export class TagManager {
   }
 
   /**
-   * Remove a tag from a task
+   * Remove a tag from a task.
+   * Works with both single tag (taskmaster-ai style) and multiple tags (discord-story-bot style).
+   * 
+   * @param projectName The name of the project containing the task.
+   * @param taskId The ID of the task to remove the tag from.
+   * @param tagName The tag name to remove.
+   * @throws {Error} If the task is not found.
    */
   async removeTag(
     projectName: string,
@@ -76,7 +108,7 @@ export class TagManager {
   ): Promise<void> {
     const task = await this.reader.readTask(projectName, taskId);
     if (!task) {
-      throw new Error(`Task ${taskId} not found in project ${projectName}`);
+      throw new Error(`Task "${taskId}" not found in project "${projectName}"`);
     }
 
     // Handle single tag (taskmaster-ai style)
@@ -99,7 +131,12 @@ export class TagManager {
   }
 
   /**
-   * List all tags with task counts and colors
+   * List all tags with their task counts, colors, and associated tasks.
+   * Results are sorted by task count (highest first).
+   * Automatically generates colors for tags that don't have them.
+   * 
+   * @param projectName The name of the project to query.
+   * @returns A promise that resolves to an array of tag statistics.
    */
   async listTags(projectName: string): Promise<TagStats[]> {
     const tasks = await this.reader.readTasks(projectName);
@@ -145,7 +182,11 @@ export class TagManager {
   }
 
   /**
-   * Migrate string tags to objects with colors
+   * Migrate string tags to tag objects with auto-generated colors.
+   * Converts both single tag (taskmaster-ai style) and string array tags to
+   * tag objects with colors. Clears the single tag field after migration.
+   * 
+   * @param projectName The name of the project to migrate tags for.
    */
   async migrateTags(projectName: string): Promise<void> {
     const tasks = await this.reader.readTasks(projectName);
@@ -199,7 +240,12 @@ export class TagManager {
   }
 
   /**
-   * Get tag suggestions (autocomplete)
+   * Get tag suggestions for autocomplete based on a prefix.
+   * Searches existing tags that start with the given prefix (case-insensitive).
+   * 
+   * @param projectName The name of the project to search tags in.
+   * @param prefix The prefix to search for.
+   * @returns A promise that resolves to an array of matching tag names (up to 10).
    */
   async suggestTags(projectName: string, prefix: string): Promise<string[]> {
     const allTags = await this.listTags(projectName);

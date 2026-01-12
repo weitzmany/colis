@@ -7,8 +7,26 @@
 
 set -e
 
+# Post-checkout hook receives three arguments:
+# $1 = previous HEAD ref (SHA-1)
+# $2 = new HEAD ref (SHA-1)
+# $3 = checkout type (1 = branch checkout, 0 = file checkout)
+
+PREVIOUS_REF="$1"
+NEW_REF="$2"
+CHECKOUT_TYPE="$3"
+
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 SETTINGS_FILE=".vscode/settings.json"
+
+# Detect previous branch if this was a branch checkout
+PREVIOUS_BRANCH=""
+if [ "$CHECKOUT_TYPE" -eq 1 ]; then
+  # It's a branch checkout, try to get the previous branch name
+  PREVIOUS_BRANCH=$(git name-rev --name-only "$PREVIOUS_REF" 2>/dev/null || echo "")
+  # Clean up the branch name (remove ~, ^, etc. that name-rev adds)
+  PREVIOUS_BRANCH=$(echo "$PREVIOUS_BRANCH" | sed 's/~[0-9]*$//' | sed 's/\^[0-9]*$//' | sed 's/remotes\///')
+fi
 
 # KEY_COLOR - Unique color for this project (70's inspired palette)
 KEY_COLOR="#81ca95"
@@ -36,6 +54,9 @@ ACTIVE_COLOR="#ffffff"
 
 echo "BRANCH: $BRANCH"
 echo "Current branch is: $BRANCH"
+if [ -n "$PREVIOUS_BRANCH" ] && [ "$PREVIOUS_BRANCH" != "$BRANCH" ]; then
+  echo "Previous branch was: $PREVIOUS_BRANCH"
+fi
 echo "KEY_COLOR: $KEY_COLOR"
 
 mkdir -p .vscode

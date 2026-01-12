@@ -18,7 +18,7 @@ This document tracks all expert reviews and contributions across the project.
 | David Anderson | Database (Schema Design, Query Optimization, Migrations) | 19 | 22 | 2026-01-05 | 0 | 1.2 | 8 | 0 |
 | Nicole Chen | Observability (Monitoring, Logging, Tracing, Metrics) | 19 | 19 | 2026-01-05 | 0 | 1.0 | 18 | 0 |
 | Marcus Thompson | Market Research & Product Strategy | 16 | 16 | 2026-01-05 | 1 | 1.0 | 2 | 0 |
-| Carol Williams | Educational Content (Learning Materials) | 14 | 15 | 2026-01-05 | 1 | 1.1 | 3 | 0 |
+| Carol Williams | Educational Content (Learning Materials) | 15 | 16 | 2026-01-05 | 2 | 1.07 | 4 | 0 |
 | System Architect | Unknown | 14 | 14 | 2026-01-05 | 8 | 1.0 | 5 | 0 |
 | Allison Foster | Accessibility (a11y) | 11 | 11 | 2026-01-05 | 0 | 1.0 | 3 | 0 |
 | Lisa Garcia | Internationalization (i18n) and Localization | 9 | 9 | 2026-01-05 | 0 | 1.0 | 5 | 0 |
@@ -451,13 +451,17 @@ This document tracks all expert reviews and contributions across the project.
 ### Carol Williams (Educational Content (Learning Materials))
 
 - **Total Reviews**: 15
-- **Files Reviewed**: 14
-- **Files Created**: 1
+- **Files Reviewed**: 15
+- **Files Created**: 2
 
 **Files Created:**
   - `docs/features/question-bank-content-library/PRD.md`
+  - `packages/core/GETTING_STARTED.md`
 
 **Files Reviewed:**
+  - `packages/core/GETTING_STARTED.md`
+  - `packages/core/README.md`
+  - `packages/core/REVIEW.md`
   - `.cursor/rules/experts/bi_expert.mdc`
   - `.cursor/rules/experts/database_expert.mdc`
   - `.cursor/rules/experts/documentation_expert.mdc`

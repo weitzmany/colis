@@ -254,9 +254,33 @@ Understanding the package structure helps you navigate and use the core package 
 
 ## Documentation
 
-- [Architecture Documentation](./ARCHITECTURE.md) - Package architecture and design patterns
-- [Port Manager PRD](../../docs/features/port-manager/PRD.md) - Port Manager feature documentation
-- [Package Architecture Strategy](../../docs/architecture/PACKAGE_ARCHITECTURE.md) - Overall package architecture strategy
+Comprehensive documentation is available to help you understand and use the core package effectively:
+
+### Getting Started
+- **[Getting Started Guide](./GETTING_STARTED.md)**: Step-by-step guide for new users
+- **This README**: Quick start guide and feature overview
+- **Architecture Documentation** ([ARCHITECTURE.md](./ARCHITECTURE.md)): Deep dive into package architecture and design patterns
+
+### Feature Documentation
+- **Port Manager**: [PRD](../../docs/features/port-manager/PRD.md) - Complete feature documentation
+- **Project Initialization**: [PRD](../../docs/features/project-initialization/PRD.md) - Setup and configuration guide
+
+### Architecture & Strategy
+- **Package Architecture Strategy**: [Overview](../../docs/architecture/PACKAGE_ARCHITECTURE.md) - How packages are organized and work together
+
+### Learning Path
+
+**New to the core package?** Follow this learning path:
+1. 📖 Read the [Getting Started Guide](./GETTING_STARTED.md) for step-by-step instructions
+2. 🚀 Run `npx @your-org/core init` in a test project
+3. 🔍 Explore the features section above to understand what's available
+4. 🏗️ Read the Architecture Documentation to understand the design
+5. 📚 Check individual feature PRDs for detailed usage
+
+**Experienced user?** Jump to:
+- Architecture Documentation for design patterns
+- Feature PRDs for advanced usage
+- Package Architecture Strategy for integration patterns
 
 ## License
 

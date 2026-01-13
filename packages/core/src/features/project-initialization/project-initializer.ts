@@ -195,10 +195,15 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
     // Copy rules
     if (!options.skipRules) {
       console.log(chalk.bold.blue('📋 Copying rules...'));
+      process.stdout.write(chalk.dim('  ⏳ Processing...'));
+      
       result.rulesResult = await copyRules(corePackagePath, projectPath, {
         overwrite: options.overwrite,
         skipExisting: options.skipExisting,
       });
+
+      // Clear the loading indicator
+      process.stdout.write('\r' + ' '.repeat(20) + '\r');
 
       if (result.rulesResult.success) {
         if (result.rulesResult.copied.length > 0) {
@@ -224,10 +229,15 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
     // Copy commands
     if (!options.skipCommands) {
       console.log(chalk.bold.blue('⚡ Copying commands...'));
+      process.stdout.write(chalk.dim('  ⏳ Processing...'));
+      
       result.commandsResult = await copyCommands(corePackagePath, projectPath, {
         overwrite: options.overwrite,
         skipExisting: options.skipExisting,
       });
+
+      // Clear the loading indicator
+      process.stdout.write('\r' + ' '.repeat(20) + '\r');
 
       if (result.commandsResult.success) {
         if (result.commandsResult.copied.length > 0) {
@@ -260,6 +270,8 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
     // Initialize Port Manager (mandatory unless skipped)
     if (!options.skipPortManager) {
       console.log(chalk.bold.blue('🔌 Initializing Port Manager...'));
+      process.stdout.write(chalk.dim('  ⏳ Allocating port and configuring...'));
+      
       try {
         await portManagerInit({
           projectName: projectName,
@@ -267,11 +279,17 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
           autoConfigure: true,
           setupDomain: !options.skipDomain, // Automatically set up domain unless explicitly skipped
         });
+        
+        // Clear the loading indicator
+        process.stdout.write('\r' + ' '.repeat(40) + '\r');
+        
         result.portManagerInitialized = true;
         console.log(chalk.green('  ✓ Port Manager initialized successfully'));
         console.log(chalk.dim('    → Port allocation configured'));
         console.log(chalk.dim('    → Created .port-manager.json'));
       } catch (error: unknown) {
+        // Clear the loading indicator
+        process.stdout.write('\r' + ' '.repeat(40) + '\r');
         // Port allocation failures are not critical - continue with initialization
         const errorMessage = error instanceof Error ? error.message : String(error);
         if (errorMessage.includes('UNIQUE constraint') || errorMessage.includes('already assigned') || errorMessage.includes('already exists')) {

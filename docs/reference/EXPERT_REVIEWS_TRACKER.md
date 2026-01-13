@@ -179,7 +179,7 @@ This document tracks all expert reviews and contributions across the project.
 | `packages/core/src/features/project-initialization/cli/commands/update.ts` | 1 |
 | `packages/core/src/features/project-initialization/cli/commands/colors.ts` | 1 |
 | `packages/core/src/features/project-initialization/project-initializer.ts` | 2 |
-| `packages/task-manager/REVIEW.md` | 2 |
+| `packages/task-manager/REVIEW.md` | 3 |
 | `.cursor/commands/scripts/calculate_statistics.py` | 0 |
 | `.cursor/commands/scripts/detect-files.sh` | 0 |
 | `.cursor/commands/scripts/scan-projects.sh` | 0 |

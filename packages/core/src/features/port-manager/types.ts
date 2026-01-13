@@ -4,7 +4,7 @@
  * Type definitions for Port Manager feature.
  */
 
-export type AppType = 'node' | 'nextjs' | 'angular' | 'react' | 'php' | 'python' | 'docker';
+export type AppType = 'node' | 'nextjs' | 'angular' | 'react' | 'php' | 'python' | 'docker' | 'react-native' | 'expo' | 'ionic' | 'flutter';
 
 export type PortStatus = 'active' | 'inactive' | 'reserved';
 

@@ -234,6 +234,10 @@ interface PortAssignment {
 - Angular: 4200-4299
 - Python: 5000-5099
 - PHP: 8000-8099
+- React Native: 8081-8199 (Metro bundler default: 8081)
+- Expo: 8081-8199 (uses Metro bundler, default: 8081)
+- Ionic: 8100-8199 (default: 8100)
+- Flutter: 5000-5099 (web dev server, default: 5000)
 
 **API**:
 ```typescript

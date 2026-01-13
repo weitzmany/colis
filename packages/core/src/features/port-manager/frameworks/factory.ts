@@ -10,6 +10,8 @@ import { AngularHandler } from './angular.js';
 import { ExpressHandler } from './express.js';
 import { ReactHandler } from './react.js';
 import { DockerHandler } from './docker.js';
+import { ReactNativeHandler } from './react-native.js';
+import { ExpoHandler } from './expo.js';
 
 export class FrameworkFactory {
   private static handlers: FrameworkHandler[] = [
@@ -18,6 +20,8 @@ export class FrameworkFactory {
     new ExpressHandler(),
     new ReactHandler(),
     new DockerHandler(),
+    new ReactNativeHandler(),
+    new ExpoHandler(),
   ];
 
   /**

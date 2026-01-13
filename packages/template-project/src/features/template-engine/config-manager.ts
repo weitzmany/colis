@@ -175,6 +175,7 @@ export class ConfigManager {
         choices: [
           { name: 'Angular', value: 'angular' },
           { name: 'React/Next.js', value: 'frontend' },
+          { name: 'Vue', value: 'vue' },
           { name: 'None', value: 'none' },
         ],
         default: 'angular',
@@ -191,6 +192,7 @@ export class ConfigManager {
         choices: [
           { name: 'Slim (PHP)', value: 'slim' },
           { name: 'Express/Node.js', value: 'backend' },
+          { name: 'Zend (PHP)', value: 'zend' },
           { name: 'None', value: 'none' },
         ],
         default: 'slim',
@@ -228,7 +230,9 @@ export class ConfigManager {
         message: 'Select template type:',
         choices: [
           { name: 'Angular (Frontend)', value: 'angular' },
+          { name: 'Vue (Frontend)', value: 'vue' },
           { name: 'Slim (PHP Backend)', value: 'slim' },
+          { name: 'Zend (PHP Backend)', value: 'zend' },
           { name: 'Full-Stack (Next.js + Express)', value: 'full-stack' },
           { name: 'Frontend (React/Next.js)', value: 'frontend' },
           { name: 'Backend (Express/Node.js)', value: 'backend' },

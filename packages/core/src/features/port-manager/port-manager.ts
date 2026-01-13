@@ -70,6 +70,37 @@ export class PortManager {
   }
 
   /**
+   * Ensure database connection is active
+   * 
+   * Validates connection health and attempts reconnection if needed.
+   * This method is called before critical operations to ensure database availability.
+   */
+  private async ensureConnection(): Promise<void> {
+    try {
+      const isHealthy = await this.db.healthCheck();
+      if (!isHealthy) {
+        // Attempt to reconnect
+        await this.db.reconnect();
+        const isHealthyAfterReconnect = await this.db.healthCheck();
+        if (!isHealthyAfterReconnect) {
+          throw new Error('Database connection health check failed after reconnection attempt');
+        }
+      }
+    } catch (error) {
+      // If health check fails, try to reconnect
+      try {
+        await this.db.reconnect();
+        const isHealthyAfterReconnect = await this.db.healthCheck();
+        if (!isHealthyAfterReconnect) {
+          throw new Error('Database connection unavailable');
+        }
+      } catch (reconnectError) {
+        throw new Error(`Database connection error: ${reconnectError}`);
+      }
+    }
+  }
+
+  /**
    * Allocate a port for a project
    */
   async allocate(

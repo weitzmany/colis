@@ -22,7 +22,7 @@ export interface ProjectConfig {
   /** Project name (used for port allocation identification) */
   projectName: string;
   /** Application type (determines port range) */
-  appType: 'node' | 'nextjs' | 'angular' | 'react' | 'php' | 'python' | 'docker';
+  appType: 'node' | 'nextjs' | 'angular' | 'react' | 'php' | 'python' | 'docker' | 'react-native' | 'expo' | 'ionic' | 'flutter';
   /** Allocated port number for this project */
   port: number;
   /** Whether to automatically configure project files with port */

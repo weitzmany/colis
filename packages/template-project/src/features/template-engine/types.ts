@@ -62,7 +62,7 @@ export interface TemplateMetadata {
   /** Template description */
   description: string;
   /** Template type category */
-  type: 'full-stack' | 'frontend' | 'backend' | 'api' | 'angular' | 'slim';
+  type: 'full-stack' | 'frontend' | 'backend' | 'api' | 'angular' | 'vue' | 'slim' | 'zend';
   /** Template version */
   version: string;
   /** File system path to template directory */

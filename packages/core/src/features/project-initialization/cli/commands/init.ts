@@ -83,6 +83,9 @@ export async function initCommand(options: InitOptions) {
     
     const result = await initializeProject(options);
 
+    // Add spacing before results
+    console.log();
+
     if (!result.success) {
       displayErrors(result.errors);
       process.exit(1);

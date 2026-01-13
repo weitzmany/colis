@@ -158,6 +158,119 @@
 - [ ] Burndown charts
 - [ ] Velocity tracking
 
+### Analytics Integration (via Analytics Dashboard Package)
+
+Task Manager integrates with the **Analytics Dashboard Package** (`@your-org/core/features/analytics-dashboard`) to provide comprehensive task analytics and insights.
+
+#### Integration Overview
+
+Task Manager automatically tracks task-related events and sends them to the Analytics Dashboard Package for aggregation, analysis, and visualization.
+
+#### Tracked Events
+
+**Task Lifecycle Events**:
+```typescript
+import { EventTracker } from '@your-org/core/features/analytics-dashboard';
+
+const tracker = new EventTracker({ feature: 'task-manager' });
+
+// Track task creation
+tracker.track('task_created', {
+  taskId: '123',
+  project: 'my-project',
+  priority: 'high',
+  assignee: 'user-123',
+  labels: ['bug', 'urgent']
+});
+
+// Track task completion
+tracker.track('task_completed', {
+  taskId: '123',
+  duration: 3600, // seconds
+  completedBy: 'user-123',
+  completionTime: new Date().toISOString()
+});
+
+// Track task updates
+tracker.track('task_updated', {
+  taskId: '123',
+  changes: ['status', 'priority'],
+  updatedBy: 'user-123'
+});
+```
+
+**Task Performance Events**:
+```typescript
+// Track task time tracking
+tracker.track('task_time_tracked', {
+  taskId: '123',
+  duration: 1800, // seconds
+  trackedBy: 'user-123'
+});
+
+// Track task dependencies
+tracker.track('task_dependency_added', {
+  taskId: '123',
+  dependencyId: '456',
+  dependencyType: 'blocks'
+});
+```
+
+#### Available Analytics
+
+**Task Completion Metrics**:
+- **Completion Rate**: Percentage of tasks completed vs. created
+- **Average Completion Time**: Average time to complete tasks
+- **Completion Trends**: Completion rates over time
+- **Completion by Priority**: Completion rates by priority level
+
+**Task Performance Metrics**:
+- **Task Velocity**: Tasks completed per time period
+- **Task Distribution**: Distribution of tasks by status, priority, assignee
+- **Task Burndown**: Burndown charts for project completion
+- **Task Cycle Time**: Time from creation to completion
+
+**Productivity Metrics**:
+- **Tasks per User**: Average tasks per user
+- **Tasks per Project**: Average tasks per project
+- **Task Reopening Rate**: Percentage of tasks reopened
+- **Task Overdue Rate**: Percentage of overdue tasks
+
+#### Dashboard Integration
+
+Task Manager analytics are available through the Analytics Dashboard Package:
+
+```typescript
+import { AnalyticsDashboard } from '@your-org/core/features/analytics-dashboard';
+
+const dashboard = new AnalyticsDashboard();
+
+// Generate task completion dashboard
+const taskDashboard = await dashboard.generateDashboard({
+  metrics: ['task_completion_rate', 'task_velocity', 'task_distribution'],
+  timeframe: '30d',
+  feature: 'task-manager'
+});
+```
+
+#### Analytics Benefits
+
+1. **Performance Insights**: Understand task completion patterns and productivity
+2. **Bottleneck Identification**: Identify bottlenecks in task workflows
+3. **Team Productivity**: Track team productivity and performance
+4. **Project Planning**: Plan projects based on historical task data
+5. **Reporting**: Generate reports for stakeholders on task management effectiveness
+
+#### Future Analytics Enhancements
+
+With the Analytics Dashboard Package, Task Manager can provide:
+- **Predictive Analytics**: Predict task completion times based on historical data
+- **Recommendations**: Recommend optimal task assignments based on performance data
+- **Trend Analysis**: Analyze trends in task completion and productivity over time
+- **Cross-Feature Analytics**: Compare task metrics with other feature metrics (e.g., port usage, tech adoption)
+
+See [Analytics Dashboard Package PRD](../analytics-dashboard-package/PRD.md) for complete analytics capabilities.
+
 ### Phase 5: Automation (Future)
 
 #### 5.1 Task Templates

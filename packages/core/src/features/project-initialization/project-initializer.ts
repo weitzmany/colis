@@ -314,25 +314,32 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
     // Setup IDE colors and git hooks (unless skipped)
     if (!options.skipColors && result.success && !options.dryRun) {
       console.log(chalk.bold.blue('🎨 Setting up IDE colors...'));
+      process.stdout.write(chalk.dim('  ⏳ Generating color palette and configuring...'));
+      
       try {
         // Generate color palette for this project
         const palette = generateColorPalette(projectName);
         
         // Generate and install post-checkout hook
         await generatePostCheckoutHook(projectPath, palette);
-        console.log(chalk.green(`  ✓ Generated post-checkout hook`));
-        console.log(chalk.dim(`    → KEY_COLOR: ${chalk.bold(palette.keyColor)}`));
         
         // Setup git hooks path
         await setupGitHooksPath(projectPath);
-        console.log(chalk.green('  ✓ Configured git hooks path'));
         
         // Ensure .vscode/settings.json is ignored and remove from git tracking
         await ensureSettingsIgnored(projectPath);
+        
+        // Clear the loading indicator
+        process.stdout.write('\r' + ' '.repeat(50) + '\r');
+        
+        console.log(chalk.green(`  ✓ Generated post-checkout hook`));
+        console.log(chalk.dim(`    → KEY_COLOR: ${chalk.bold(palette.keyColor)}`));
+        console.log(chalk.green('  ✓ Configured git hooks path'));
         console.log(chalk.green('  ✓ Configured .vscode/settings.json (ignored in git)'));
         
         // Initialize settings.json with colors by running the hook
         try {
+          process.stdout.write(chalk.dim('  ⏳ Applying color scheme...'));
           const { execSync } = require('child_process');
           // Try to get current branch, default to 'main' if git not initialized
           let branchName = 'main';
@@ -349,11 +356,13 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
           // Try to run the hook first
           try {
             execSync('bash .githooks/post-checkout', { cwd: projectPath, stdio: 'ignore' });
+            process.stdout.write('\r' + ' '.repeat(30) + '\r');
             console.log(chalk.green('  ✓ Applied color scheme to IDE'));
             console.log(chalk.dim(`    → Colors will change automatically when you switch branches`));
           } catch {
             // Hook failed, generate settings.json directly
             await initializeSettingsJson(projectPath, palette, branchName);
+            process.stdout.write('\r' + ' '.repeat(30) + '\r');
             console.log(chalk.green('  ✓ Applied color scheme to IDE'));
             console.log(chalk.dim(`    → Colors will change automatically when you switch branches`));
           }
@@ -361,15 +370,20 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
           // Fallback: generate settings.json directly
           try {
             await initializeSettingsJson(projectPath, palette, 'main');
+            process.stdout.write('\r' + ' '.repeat(30) + '\r');
             console.log(chalk.green('  ✓ Applied color scheme to IDE'));
             console.log(chalk.dim(`    → Colors will change automatically when you switch branches`));
           } catch (initError: unknown) {
+            process.stdout.write('\r' + ' '.repeat(30) + '\r');
             const errorMsg = initError instanceof Error ? initError.message : String(initError);
             result.warnings.push(`Could not initialize settings.json: ${errorMsg}`);
             console.log(chalk.yellow(`  ⚠ Could not initialize settings.json: ${errorMsg}`));
           }
         }
       } catch (error: unknown) {
+        // Clear the loading indicator
+        process.stdout.write('\r' + ' '.repeat(50) + '\r');
+        
         // Don't fail initialization if color setup fails
         const errorMsg = error instanceof Error ? error.message : String(error);
         result.warnings.push(`Color setup failed: ${errorMsg}`);
@@ -398,6 +412,8 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
     // Validate setup
     if (result.success) {
       console.log(chalk.bold.blue('\n✓ Validating setup...'));
+      process.stdout.write(chalk.dim('  ⏳ Checking files and configuration...'));
+      
       const expectedRules = {
         experts: result.rulesResult?.copied.length || 0,
         user: result.rulesResult?.copied.filter((f) => f.startsWith('user/')).length || 0,
@@ -412,6 +428,9 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         expectedCommands,
         { checkColors: !options.skipColors }
       );
+
+      // Clear the loading indicator
+      process.stdout.write('\r' + ' '.repeat(40) + '\r');
 
       if (result.validationResult.success) {
         console.log(chalk.green('  ✓ All components validated successfully'));

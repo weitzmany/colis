@@ -76,6 +76,9 @@ export async function updateCommand(options: UpdateOptions) {
     
     const result = await updateProject(options);
 
+    // Add spacing before results
+    console.log();
+
     if (!result.success) {
       displayErrors(result.errors);
       process.exit(1);

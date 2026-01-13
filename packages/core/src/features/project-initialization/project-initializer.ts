@@ -126,12 +126,17 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
     }
 
     if (options.dryRun) {
-      console.log(chalk.blue('🔍 Dry run mode - no changes will be made\n'));
-      console.log(chalk.blue(`Project path: ${projectPath}`));
-      console.log(chalk.blue(`Core package path: ${corePackagePath}\n`));
+      console.log(chalk.bold.cyan('\n╔═══════════════════════════════════════════════════════════╗'));
+      console.log(chalk.bold.cyan('║') + chalk.bold.white('  🔍 Dry Run Mode - Preview Only') + chalk.bold.cyan('                    ║'));
+      console.log(chalk.bold.cyan('╚═══════════════════════════════════════════════════════════╝\n'));
+      
+      console.log(chalk.bold('📁 Project Information:'));
+      console.log(chalk.gray(`  Project path: ${chalk.white(projectPath)}`));
+      console.log(chalk.gray(`  Project name: ${chalk.white(projectName)}`));
+      console.log(chalk.gray(`  Core package: ${chalk.white(corePackagePath)}\n`));
       
       // Show what would be done
-      console.log(chalk.blue('Would perform the following operations:'));
+      console.log(chalk.bold('📋 Operations that would be performed:\n'));
       
       if (!options.skipRules) {
         const sourceRulesPath = path.join(corePackagePath, 'rules');
@@ -150,7 +155,8 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
           userCount = userFiles.length;
         }
         
-        console.log(chalk.blue(`  📋 Copy ${expertCount} expert personas and ${userCount} user rules`));
+        console.log(chalk.cyan(`  📋 Copy ${chalk.bold(expertCount.toString())} expert personas and ${chalk.bold(userCount.toString())} user rules`));
+        console.log(chalk.dim(`     → .cursor/rules/`));
       }
       
       if (!options.skipCommands) {
@@ -160,26 +166,35 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
           const commandFiles = (await fs.readdir(sourceCommandsPath)).filter(f => f.endsWith('.md'));
           commandCount = commandFiles.length;
         }
-        console.log(chalk.blue(`  ⚡ Copy ${commandCount} general commands`));
+        console.log(chalk.cyan(`  ⚡ Copy ${chalk.bold(commandCount.toString())} general commands`));
+        console.log(chalk.dim(`     → .cursor/commands/general/`));
       }
       
       if (!options.skipPortManager) {
-        console.log(chalk.blue(`  🔌 Initialize Port Manager for project: ${projectName || 'auto-detect'}`));
+        console.log(chalk.cyan(`  🔌 Initialize Port Manager`));
+        console.log(chalk.dim(`     → Project: ${projectName || 'auto-detect'}`));
+        console.log(chalk.dim(`     → Creates .port-manager.json`));
       }
       
       if (!options.skipColors) {
         const palette = generateColorPalette(projectName || generateProjectName(projectPath));
-        console.log(chalk.blue(`  🎨 Configure IDE colors with KEY_COLOR: ${palette.keyColor}`));
+        console.log(chalk.cyan(`  🎨 Configure IDE colors`));
+        console.log(chalk.dim(`     → KEY_COLOR: ${chalk.bold(palette.keyColor)}`));
+        console.log(chalk.dim(`     → Creates .githooks/post-checkout`));
+        console.log(chalk.dim(`     → Creates .vscode/settings.json`));
       }
       
-      console.log(chalk.blue(`  ✓ Validate setup\n`));
+      console.log(chalk.cyan(`  ✓ Validate setup`));
+      console.log(chalk.dim(`     → Verify all files copied correctly\n`));
+      
+      console.log(chalk.dim('💡 Tip: Remove --dry-run to actually perform these operations\n'));
       
       return result;
     }
 
     // Copy rules
     if (!options.skipRules) {
-      console.log(chalk.blue('📋 Copying rules...'));
+      console.log(chalk.bold.blue('📋 Copying rules...'));
       result.rulesResult = await copyRules(corePackagePath, projectPath, {
         overwrite: options.overwrite,
         skipExisting: options.skipExisting,
@@ -187,23 +202,28 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
 
       if (result.rulesResult.success) {
         if (result.rulesResult.copied.length > 0) {
-          console.log(chalk.green(`  ✓ Copied ${result.rulesResult.copied.length} rule files`));
+          const expertCount = result.rulesResult.copied.filter(f => f.startsWith('experts/')).length;
+          const userCount = result.rulesResult.copied.filter(f => f.startsWith('user/')).length;
+          console.log(chalk.green(`  ✓ Copied ${chalk.bold(expertCount.toString())} expert personas and ${chalk.bold(userCount.toString())} user rules`));
         }
         if (result.rulesResult.skipped.length > 0) {
           console.log(
-            chalk.yellow(`  ⚠ Skipped ${result.rulesResult.skipped.length} existing files`)
+            chalk.yellow(`  ⚠ Skipped ${chalk.bold(result.rulesResult.skipped.length.toString())} existing files (use --overwrite to replace)`)
           );
         }
       } else {
         result.success = false;
         result.errors.push(...result.rulesResult.errors);
-        console.log(chalk.red(`  ✗ Failed to copy rules: ${result.rulesResult.errors.join(', ')}`));
+        console.log(chalk.red(`  ✗ Failed to copy rules`));
+        result.rulesResult.errors.forEach(err => {
+          console.log(chalk.red(`    • ${err}`));
+        });
       }
     }
 
     // Copy commands
     if (!options.skipCommands) {
-      console.log(chalk.blue('⚡ Copying commands...'));
+      console.log(chalk.bold.blue('⚡ Copying commands...'));
       result.commandsResult = await copyCommands(corePackagePath, projectPath, {
         overwrite: options.overwrite,
         skipExisting: options.skipExisting,
@@ -212,25 +232,26 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
       if (result.commandsResult.success) {
         if (result.commandsResult.copied.length > 0) {
           console.log(
-            chalk.green(`  ✓ Copied ${result.commandsResult.copied.length} command files`)
+            chalk.green(`  ✓ Copied ${chalk.bold(result.commandsResult.copied.length.toString())} command files`)
           );
         }
         if (result.commandsResult.skipped.length > 0) {
           console.log(
-            chalk.yellow(`  ⚠ Skipped ${result.commandsResult.skipped.length} existing files`)
+            chalk.yellow(`  ⚠ Skipped ${chalk.bold(result.commandsResult.skipped.length.toString())} existing files (use --overwrite to replace)`)
           );
         }
         if (result.commandsResult.excluded.length > 0) {
           console.log(
-            chalk.gray(`  ⊘ Excluded ${result.commandsResult.excluded.length} local commands (packages repo only)`)
+            chalk.dim(`  ⊘ Excluded ${result.commandsResult.excluded.length} local commands (packages repo only)`)
           );
         }
       } else {
         result.success = false;
         result.errors.push(...result.commandsResult.errors);
-        console.log(
-          chalk.red(`  ✗ Failed to copy commands: ${result.commandsResult.errors.join(', ')}`)
-        );
+        console.log(chalk.red(`  ✗ Failed to copy commands`));
+        result.commandsResult.errors.forEach(err => {
+          console.log(chalk.red(`    • ${err}`));
+        });
       }
     }
 
@@ -238,7 +259,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
 
     // Initialize Port Manager (mandatory unless skipped)
     if (!options.skipPortManager) {
-      console.log(chalk.blue('🔌 Initializing Port Manager...'));
+      console.log(chalk.bold.blue('🔌 Initializing Port Manager...'));
       try {
         await portManagerInit({
           projectName: projectName,
@@ -247,37 +268,42 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
           setupDomain: !options.skipDomain, // Automatically set up domain unless explicitly skipped
         });
         result.portManagerInitialized = true;
-        console.log(chalk.green('  ✓ Port Manager initialized'));
-      } catch (error: any) {
+        console.log(chalk.green('  ✓ Port Manager initialized successfully'));
+        console.log(chalk.dim('    → Port allocation configured'));
+        console.log(chalk.dim('    → Created .port-manager.json'));
+      } catch (error: unknown) {
         // Port allocation failures are not critical - continue with initialization
-        const errorMessage = error.message || String(error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
         if (errorMessage.includes('UNIQUE constraint') || errorMessage.includes('already assigned') || errorMessage.includes('already exists')) {
           result.warnings.push(`Port Manager: Port conflict detected. ${errorMessage}. You can allocate a port manually later with: port-manager allocate`);
-          console.log(chalk.yellow(`  ⚠ Port allocation skipped (port conflict): ${errorMessage}`));
-          console.log(chalk.yellow('  You can allocate a port manually later with: port-manager allocate'));
+          console.log(chalk.yellow(`  ⚠ Port conflict detected: ${errorMessage.split('\n')[0]}`));
+          console.log(chalk.dim('    💡 You can allocate a port manually: npx @your-org/core port-manager allocate'));
         } else {
           // Other errors are warnings but don't fail initialization
           result.warnings.push(`Port Manager initialization had issues: ${errorMessage}`);
-          console.log(chalk.yellow(`  ⚠ Port Manager initialization had issues: ${errorMessage}`));
-          console.log(chalk.yellow('  You can initialize Port Manager manually later with: npx @your-org/core port-manager init'));
+          console.log(chalk.yellow(`  ⚠ Port Manager initialization had issues: ${errorMessage.split('\n')[0]}`));
+          console.log(chalk.dim('    💡 You can initialize manually: npx @your-org/core port-manager init'));
         }
         // Don't mark as failed - port allocation is optional for project setup
         result.portManagerInitialized = false;
       }
     } else {
       result.warnings.push('Port Manager initialization was skipped (not recommended)');
+      console.log(chalk.yellow('  ⚠ Port Manager initialization skipped'));
+      console.log(chalk.dim('    💡 Initialize manually: npx @your-org/core port-manager init'));
     }
 
     // Setup IDE colors and git hooks (unless skipped)
     if (!options.skipColors && result.success && !options.dryRun) {
-      console.log(chalk.blue('🎨 Setting up IDE colors...'));
+      console.log(chalk.bold.blue('🎨 Setting up IDE colors...'));
       try {
         // Generate color palette for this project
         const palette = generateColorPalette(projectName);
         
         // Generate and install post-checkout hook
         await generatePostCheckoutHook(projectPath, palette);
-        console.log(chalk.green(`  ✓ Generated post-checkout hook with KEY_COLOR: ${palette.keyColor}`));
+        console.log(chalk.green(`  ✓ Generated post-checkout hook`));
+        console.log(chalk.dim(`    → KEY_COLOR: ${chalk.bold(palette.keyColor)}`));
         
         // Setup git hooks path
         await setupGitHooksPath(projectPath);
@@ -285,7 +311,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         
         // Ensure .vscode/settings.json is ignored and remove from git tracking
         await ensureSettingsIgnored(projectPath);
-        console.log(chalk.green('  ✓ Ensured .vscode/settings.json is ignored and removed from git tracking'));
+        console.log(chalk.green('  ✓ Configured .vscode/settings.json (ignored in git)'));
         
         // Initialize settings.json with colors by running the hook
         try {
@@ -305,25 +331,32 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
           // Try to run the hook first
           try {
             execSync('bash .githooks/post-checkout', { cwd: projectPath, stdio: 'ignore' });
-            console.log(chalk.green('  ✓ Initialized .vscode/settings.json with color scheme'));
+            console.log(chalk.green('  ✓ Applied color scheme to IDE'));
+            console.log(chalk.dim(`    → Colors will change automatically when you switch branches`));
           } catch {
             // Hook failed, generate settings.json directly
             await initializeSettingsJson(projectPath, palette, branchName);
-            console.log(chalk.green('  ✓ Initialized .vscode/settings.json with color scheme'));
+            console.log(chalk.green('  ✓ Applied color scheme to IDE'));
+            console.log(chalk.dim(`    → Colors will change automatically when you switch branches`));
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
           // Fallback: generate settings.json directly
           try {
             await initializeSettingsJson(projectPath, palette, 'main');
-            console.log(chalk.green('  ✓ Initialized .vscode/settings.json with color scheme'));
-          } catch (initError: any) {
-            result.warnings.push(`Could not initialize settings.json: ${initError.message}`);
+            console.log(chalk.green('  ✓ Applied color scheme to IDE'));
+            console.log(chalk.dim(`    → Colors will change automatically when you switch branches`));
+          } catch (initError: unknown) {
+            const errorMsg = initError instanceof Error ? initError.message : String(initError);
+            result.warnings.push(`Could not initialize settings.json: ${errorMsg}`);
+            console.log(chalk.yellow(`  ⚠ Could not initialize settings.json: ${errorMsg}`));
           }
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Don't fail initialization if color setup fails
-        result.warnings.push(`Color setup failed: ${error.message}`);
-        console.log(chalk.yellow(`  ⚠ Color setup failed: ${error.message}`));
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        result.warnings.push(`Color setup failed: ${errorMsg}`);
+        console.log(chalk.yellow(`  ⚠ Color setup failed: ${errorMsg}`));
+        console.log(chalk.dim('    💡 You can set up colors manually: npx @your-org/core colors'));
       }
     }
 
@@ -346,7 +379,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
 
     // Validate setup
     if (result.success) {
-      console.log(chalk.blue('✓ Validating setup...'));
+      console.log(chalk.bold.blue('\n✓ Validating setup...'));
       const expectedRules = {
         experts: result.rulesResult?.copied.length || 0,
         user: result.rulesResult?.copied.filter((f) => f.startsWith('user/')).length || 0,
@@ -363,24 +396,14 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
       );
 
       if (result.validationResult.success) {
-        console.log(chalk.green('  ✓ All rules copied successfully'));
-        console.log(chalk.green('  ✓ All commands copied successfully'));
-        if (result.portManagerInitialized) {
-          console.log(chalk.green('  ✓ Port Manager initialized successfully'));
-        }
-        if (result.validationResult.colorsValid && !options.skipColors) {
-          console.log(chalk.green('  ✓ IDE colors configured successfully'));
-        }
+        console.log(chalk.green('  ✓ All components validated successfully'));
       } else {
         result.warnings.push(...result.validationResult.errors);
         result.warnings.push(...result.validationResult.warnings);
+        if (result.validationResult.errors.length > 0) {
+          console.log(chalk.yellow('  ⚠ Some validation issues found (see warnings)'));
+        }
       }
-    }
-
-    if (result.success) {
-      console.log(chalk.green('\n✅ Project initialized successfully!'));
-    } else {
-      console.log(chalk.red('\n❌ Project initialization completed with errors'));
     }
 
     return result;

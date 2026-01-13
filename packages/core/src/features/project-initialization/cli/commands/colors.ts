@@ -113,18 +113,21 @@ export async function colorsCommand(options: {
 }) {
   try {
     // Always show base palette first
-    console.log(chalk.bold('\n🎨 Base Color Palette'));
-    console.log(chalk.gray('─'.repeat(60)));
+    console.log(chalk.bold.cyan('\n╔═══════════════════════════════════════════════════════════╗'));
+    console.log(chalk.bold.cyan('║') + chalk.bold.white('  🎨 Base Color Palette') + chalk.bold.cyan('                            ║'));
+    console.log(chalk.bold.cyan('╚═══════════════════════════════════════════════════════════╝\n'));
+    console.log(chalk.dim('  These colors serve as inspiration for project KEY_COLORs\n'));
     
     Object.entries(BASE_PALETTE).forEach(([name, color]) => {
       const capitalized = name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1').trim();
-      console.log(displayColorBlock(color, capitalized, 15));
+      console.log('  ' + displayColorBlock(color, capitalized, 15));
     });
     
     // Show all projects' colors if requested
     if (options.all) {
-      console.log(chalk.bold('\n\n🎨 All Projects Colors'));
-      console.log(chalk.gray('─'.repeat(60)));
+      console.log(chalk.bold.cyan('\n╔═══════════════════════════════════════════════════════════╗'));
+      console.log(chalk.bold.cyan('║') + chalk.bold.white('  🎨 All Projects Colors') + chalk.bold.cyan('                          ║'));
+      console.log(chalk.bold.cyan('╚═══════════════════════════════════════════════════════════╝\n'));
       
       // Get projects from Port Manager
       const portManagerProjects = await getAllProjects();
@@ -148,23 +151,25 @@ export async function colorsCommand(options: {
       }
       
       if (allProjects.size === 0) {
-        console.log(chalk.yellow('\n  No projects found'));
+        console.log(chalk.yellow('  No projects found'));
+        console.log(chalk.dim('    💡 Initialize a project to see its colors here\n'));
       } else {
         // Sort by project name
         const sortedProjects = Array.from(allProjects.values()).sort((a, b) => 
           a.name.localeCompare(b.name)
         );
         
-        console.log(chalk.dim(`\n  Found ${sortedProjects.length} project(s):\n`));
+        console.log(chalk.dim(`  Found ${chalk.bold(sortedProjects.length.toString())} project(s):\n`));
         
         sortedProjects.forEach((project, index) => {
           const palette = generateColorPalette(project.name, project.keyColor);
           console.log(
-            chalk.bold(`${(index + 1).toString().padStart(2)}. `) +
+            '  ' + chalk.bold(`${(index + 1).toString().padStart(2)}. `) +
             chalk.cyan(project.name.padEnd(30)) +
             displayColorBlock(palette.keyColor, palette.keyColor, 10)
           );
         });
+        console.log();
       }
     }
     
@@ -173,18 +178,22 @@ export async function colorsCommand(options: {
     const projectName = options.projectName || generateProjectName(projectPath);
     const palette = generateColorPalette(projectName);
     
-    console.log(chalk.bold('\n\n🎨 Current Project Colors: ') + chalk.cyan(projectName));
-    console.log(chalk.gray('─'.repeat(60)));
+    console.log(chalk.bold.cyan('\n╔═══════════════════════════════════════════════════════════╗'));
+    console.log(chalk.bold.cyan('║') + chalk.bold.white('  🎨 Current Project Colors') + chalk.bold.cyan('                        ║'));
+    console.log(chalk.bold.cyan('╚═══════════════════════════════════════════════════════════╝\n'));
+    console.log(chalk.bold('  Project: ') + chalk.cyan(projectName) + '\n');
     
-    console.log(chalk.bold('\nProject KEY_COLOR:'));
-    console.log(displayColorBlock(palette.keyColor, 'KEY_COLOR'));
+    console.log(chalk.bold('  Project KEY_COLOR:'));
+    console.log('    ' + displayColorBlock(palette.keyColor, 'KEY_COLOR', 20));
+    console.log(chalk.dim(`    → This unique color identifies your project\n`));
     
-    console.log(chalk.bold('\nBranch Colors:'));
-    console.log(displayColorBlock(palette.mainBg, 'Main/Master (RED)'));
-    console.log(displayColorBlock(palette.devBg, 'Development/Dev (ORANGE)'));
-    console.log(displayColorBlock(palette.projectBg, 'Other Branches (Project KEY_COLOR)'));
+    console.log(chalk.bold('  Branch Colors:'));
+    console.log('    ' + displayColorBlock(palette.mainBg, 'Main/Master (RED)', 20));
+    console.log('    ' + displayColorBlock(palette.devBg, 'Development/Dev (ORANGE)', 20));
+    console.log('    ' + displayColorBlock(palette.projectBg, 'Other Branches (Project KEY_COLOR)', 20));
+    console.log(chalk.dim(`    → Colors change automatically when you switch branches\n`));
     
-    console.log(chalk.bold('\nFull Palette:'));
+    console.log(chalk.bold('  Full Palette:'));
     const colorGroups = [
       { title: 'Main Branch', colors: [
         { name: 'Background', value: palette.mainBg },
@@ -208,18 +217,21 @@ export async function colorsCommand(options: {
     ];
     
     colorGroups.forEach(group => {
-      console.log(chalk.bold(`\n${group.title}:`));
+      console.log(chalk.bold(`\n    ${group.title}:`));
       group.colors.forEach(color => {
-        console.log(displayColorBlock(color.value, color.name, 15));
+        console.log('      ' + displayColorBlock(color.value, color.name, 15));
       });
     });
     
-    console.log(chalk.gray('\n' + '─'.repeat(60)));
-    console.log(chalk.dim('\n💡 Tip: Use --all to see all projects\' colors'));
-    console.log(chalk.dim('   Colors are automatically applied when you switch branches\n'));
+    console.log(chalk.dim('\n  💡 Tip: Use --all to see all projects\' colors'));
+    console.log(chalk.dim('     Colors are automatically applied when you switch branches\n'));
     
-  } catch (error: any) {
-    console.error(chalk.red(`Error: ${error.message}`));
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.log(chalk.bold.red('\n╔═══════════════════════════════════════════════════════════╗'));
+    console.log(chalk.bold.red('║') + chalk.bold.white('  ❌ Error') + chalk.bold.red('                                         ║'));
+    console.log(chalk.bold.red('╚═══════════════════════════════════════════════════════════╝\n'));
+    console.error(chalk.red(`  ${errorMessage}\n`));
     process.exit(1);
   }
 }

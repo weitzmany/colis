@@ -46,9 +46,19 @@ export class PortManager {
 
   /**
    * Connect to database
+   * 
+   * Establishes database connection with retry logic and runs migrations.
+   * Validates connection health after connecting.
    */
   async connect(): Promise<void> {
     await this.db.connect();
+    
+    // Verify connection health
+    const isHealthy = await this.db.healthCheck();
+    if (!isHealthy) {
+      throw new Error('Database connection health check failed');
+    }
+    
     await this.migrationManager.migrate();
   }
 
@@ -68,6 +78,7 @@ export class PortManager {
     appType: AppType,
     preferredPort?: number
   ): Promise<number> {
+    await this.ensureConnection();
     const port = await this.allocator.allocate(projectName, projectPath, appType, preferredPort);
 
     // Check if already assigned
@@ -203,6 +214,7 @@ export class PortManager {
    * @returns Array of conflict reports
    */
   async detectConflicts(projectPath: string): Promise<ConflictReport[]> {
+    await this.ensureConnection();
     // Find all port assignments for this project path
     const assignments = await this.repository.listPorts({});
     const projectAssignments = assignments.filter(
@@ -254,6 +266,7 @@ export class PortManager {
    * @param notes - Optional additional notes about the reservation
    */
   async reservePort(port: number, purpose: string, notes?: string): Promise<void> {
+    await this.ensureConnection();
     // Check if port is already assigned to an active project
     const existing = await this.repository.getByPort(port);
     if (existing && existing.status === 'active') {

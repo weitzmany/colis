@@ -19,6 +19,18 @@ CHECKOUT_TYPE="$3"
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 SETTINGS_FILE=".vscode/settings.json"
 
+# Normalize branch names for comparison (always set, used for colors and merge logic)
+IS_MAIN=false
+IS_DEV=false
+PREV_IS_MAIN=false
+PREV_IS_DEV=false
+
+if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+  IS_MAIN=true
+elif [ "$BRANCH" = "development" ] || [ "$BRANCH" = "dev" ]; then
+  IS_DEV=true
+fi
+
 # Detect previous branch if this was a branch checkout
 PREVIOUS_BRANCH=""
 if [ "$CHECKOUT_TYPE" -eq 1 ]; then
@@ -26,6 +38,13 @@ if [ "$CHECKOUT_TYPE" -eq 1 ]; then
   PREVIOUS_BRANCH=$(git name-rev --name-only "$PREVIOUS_REF" 2>/dev/null || echo "")
   # Clean up the branch name (remove ~, ^, etc. that name-rev adds)
   PREVIOUS_BRANCH=$(echo "$PREVIOUS_BRANCH" | sed 's/~[0-9]*$//' | sed 's/\^[0-9]*$//' | sed 's/remotes\///')
+  
+  # Normalize previous branch name
+  if [ "$PREVIOUS_BRANCH" = "main" ] || [ "$PREVIOUS_BRANCH" = "master" ]; then
+    PREV_IS_MAIN=true
+  elif [ "$PREVIOUS_BRANCH" = "development" ] || [ "$PREVIOUS_BRANCH" = "dev" ]; then
+    PREV_IS_DEV=true
+  fi
 fi
 
 # KEY_COLOR - Unique color for this project (70's inspired palette)
@@ -59,14 +78,88 @@ if [ -n "$PREVIOUS_BRANCH" ] && [ "$PREVIOUS_BRANCH" != "$BRANCH" ]; then
 fi
 echo "KEY_COLOR: $KEY_COLOR"
 
+# Conditional merge logic
+if [ "$CHECKOUT_TYPE" -eq 1 ]; then
+  # Only perform merges on branch checkouts, not file checkouts
+  set +e
+  
+  # Rule 1: If current is not main and not dev → merge from dev
+  if [ "$IS_MAIN" = false ] && [ "$IS_DEV" = false ]; then
+    echo "Merging from development branch..."
+    if git show-ref --verify --quiet refs/heads/development 2>/dev/null; then
+      git merge development --no-edit --no-ff 2>&1
+      MERGE_EXIT=$?
+      if [ $MERGE_EXIT -eq 0 ]; then
+        echo "✓ Successfully merged from development"
+      elif [ $MERGE_EXIT -eq 1 ]; then
+        echo "⚠ Merge from development: already up to date or conflicts (check git status)"
+      else
+        echo "✗ Merge from development failed (exit code: $MERGE_EXIT)"
+      fi
+    elif git show-ref --verify --quiet refs/heads/dev 2>/dev/null; then
+      git merge dev --no-edit --no-ff 2>&1
+      MERGE_EXIT=$?
+      if [ $MERGE_EXIT -eq 0 ]; then
+        echo "✓ Successfully merged from dev"
+      elif [ $MERGE_EXIT -eq 1 ]; then
+        echo "⚠ Merge from dev: already up to date or conflicts (check git status)"
+      else
+        echo "✗ Merge from dev failed (exit code: $MERGE_EXIT)"
+      fi
+    else
+      echo "⚠ Development branch not found, skipping merge"
+    fi
+  
+  # Rule 2: Else if current is dev and prev is not main → merge from prev
+  elif [ "$IS_DEV" = true ] && [ "$PREV_IS_MAIN" = false ] && [ -n "$PREVIOUS_BRANCH" ]; then
+    echo "Merging from previous branch: $PREVIOUS_BRANCH"
+    if git show-ref --verify --quiet "refs/heads/$PREVIOUS_BRANCH" 2>/dev/null; then
+      git merge "$PREVIOUS_BRANCH" --no-edit --no-ff 2>&1
+      MERGE_EXIT=$?
+      if [ $MERGE_EXIT -eq 0 ]; then
+        echo "✓ Successfully merged from $PREVIOUS_BRANCH"
+      elif [ $MERGE_EXIT -eq 1 ]; then
+        echo "⚠ Merge from $PREVIOUS_BRANCH: already up to date or conflicts (check git status)"
+      else
+        echo "✗ Merge from $PREVIOUS_BRANCH failed (exit code: $MERGE_EXIT)"
+      fi
+    else
+      echo "⚠ Previous branch $PREVIOUS_BRANCH not found, skipping merge"
+    fi
+  
+  # Rule 3: Else if current is main and prev is not dev → ERROR: switch back and exit
+  elif [ "$IS_MAIN" = true ] && [ "$PREV_IS_DEV" = false ] && [ -n "$PREVIOUS_BRANCH" ]; then
+    echo ""
+    echo "❌ ERROR: Switching to main from '$PREVIOUS_BRANCH' is prohibited!"
+    echo "   You must switch to development first, then to main."
+    echo "   This prevents accidentally losing changes."
+    echo ""
+    echo "   Switching back to '$PREVIOUS_BRANCH'..."
+    git checkout "$PREVIOUS_BRANCH" 2>&1
+    echo ""
+    echo "   Please switch to development first:"
+    echo "   git checkout development"
+    echo "   # or: git checkout dev"
+    echo ""
+    exit 1
+  
+  # Rule 4: Else → do nothing
+  else
+    echo "No merge needed"
+  fi
+  
+  set -e
+fi
+
 mkdir -p .vscode
 
-if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+# Set colors based on branch type (using IS_MAIN and IS_DEV from merge logic)
+if [ "$IS_MAIN" = true ]; then
   # Main branch - RED
   COLOR="$MAIN_COLOR"
   INACTIVE="$MAIN_INACTIVE"
   BG="$MAIN_BG"
-elif [ "$BRANCH" = "development" ] || [ "$BRANCH" = "dev" ]; then
+elif [ "$IS_DEV" = true ]; then
   # Development branch - ORANGE
   COLOR="$DEV_COLOR"
   INACTIVE="$DEV_INACTIVE"
@@ -79,13 +172,13 @@ else
 fi
 
 # Determine branch-specific colors for UI elements
-if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+if [ "$IS_MAIN" = true ]; then
   STATUS_BG="$MAIN_BG"
   STATUS_COLOR="$MAIN_COLOR"
   ACTIVITY_FG="$MAIN_BG"
   FOCUS_BORDER="$MAIN_BG"
   TAB_BORDER="$MAIN_BG"
-elif [ "$BRANCH" = "development" ] || [ "$BRANCH" = "dev" ]; then
+elif [ "$IS_DEV" = true ]; then
   STATUS_BG="$DEV_BG"
   STATUS_COLOR="$DEV_COLOR"
   ACTIVITY_FG="$DEV_BG"

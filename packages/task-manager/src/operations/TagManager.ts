@@ -31,6 +31,8 @@ export interface TagStats {
  * ```
  */
 export class TagManager {
+  private static readonly MAX_TAG_SUGGESTIONS = 10;
+
   private reader: TaskReader;
   private writer: TaskWriter;
 
@@ -254,6 +256,6 @@ export class TagManager {
     return allTags
       .filter((tagStat) => tagStat.tag.toLowerCase().startsWith(prefixLower))
       .map((tagStat) => tagStat.tag)
-      .slice(0, 10); // Return top 10 matches
+      .slice(0, TagManager.MAX_TAG_SUGGESTIONS);
   }
 }

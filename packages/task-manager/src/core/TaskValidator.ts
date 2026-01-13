@@ -286,21 +286,37 @@ export class TaskValidator {
         throw new ValidationError('Task cannot depend on itself', 'dependencies');
       }
 
-      // Temporarily add the dependency to check for cycles
+      // Check for cycles by temporarily adding this dependency
+      // We need to check if adding this dependency creates a cycle
+      const tempTasks = [...tasks];
+      const existingTask = tempTasks.find((t) => t.id === taskId);
+      
+      // Create a temporary task with the new dependencies for cycle detection
       const tempTask: Task = {
         id: taskId,
-        title: '',
-        description: '',
-        priority: 'medium',
-        status: 'pending',
+        title: existingTask?.title || '',
+        description: existingTask?.description || '',
+        priority: existingTask?.priority || 'medium',
+        status: existingTask?.status || 'pending',
         updatedAt: new Date().toISOString(),
         dependencies: dependencies,
       };
 
-      const tempTasks = [...tasks, tempTask];
+      // Replace existing task or add new one for cycle detection
+      const taskIndex = tempTasks.findIndex((t) => t.id === taskId);
+      if (taskIndex >= 0) {
+        tempTasks[taskIndex] = tempTask;
+      } else {
+        tempTasks.push(tempTask);
+      }
+
+      // Reset visited sets for cycle detection with new dependencies
+      visited.clear();
+      recursionStack.clear();
+      
       if (hasCycle(taskId)) {
         throw new ValidationError(
-          `Adding dependency ${depId} creates a circular dependency`,
+          `Adding dependency "${depId}" creates a circular dependency`,
           'dependencies'
         );
       }
@@ -318,12 +334,13 @@ export class TaskValidator {
     tasks: Task[],
     dependencies: (number | string)[]
   ): void {
+    const MAX_DISPLAY_IDS = 10;
     const taskIds = new Set(tasks.map((t) => t.id));
 
     for (const depId of dependencies) {
       if (!taskIds.has(depId)) {
-        const availableIds = Array.from(taskIds).slice(0, 10).join(', ');
-        const moreText = taskIds.size > 10 ? ` (and ${taskIds.size - 10} more)` : '';
+        const availableIds = Array.from(taskIds).slice(0, MAX_DISPLAY_IDS).join(', ');
+        const moreText = taskIds.size > MAX_DISPLAY_IDS ? ` (and ${taskIds.size - MAX_DISPLAY_IDS} more)` : '';
         throw new ValidationError(
           `Dependency "${depId}" does not exist. Available task IDs: ${availableIds}${moreText}`,
           'dependencies'

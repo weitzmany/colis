@@ -28,6 +28,8 @@ export interface LabelStats {
  * ```
  */
 export class LabelManager {
+  private static readonly MAX_LABEL_SUGGESTIONS = 5;
+
   private reader: TaskReader;
   private writer: TaskWriter;
 
@@ -198,6 +200,6 @@ export class LabelManager {
         text.includes(keyword) && !existingLabelNames.has(keyword) && !task.labels?.includes(keyword)
     );
 
-    return suggestions.slice(0, 5); // Return top 5 suggestions
+    return suggestions.slice(0, LabelManager.MAX_LABEL_SUGGESTIONS);
   }
 }

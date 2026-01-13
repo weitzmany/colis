@@ -60,6 +60,25 @@ export class MySQLRepository implements DatabaseRepository {
     throw new Error('MySQL support not yet implemented (Phase 3)');
   }
 
+  async healthCheck(): Promise<boolean> {
+    if (!this.connection) {
+      return false;
+    }
+    // TODO: Implement MySQL health check when MySQL support is implemented
+    // try {
+    //   await this.query('SELECT 1');
+    //   return true;
+    // } catch {
+    //   return false;
+    // }
+    return this.connection !== null;
+  }
+
+  async reconnect(): Promise<void> {
+    await this.disconnect();
+    await this.connect();
+  }
+
   isConnected(): boolean {
     return this.connection !== null;
   }

@@ -18,6 +18,10 @@ import { TaskReader } from './TaskReader';
  * ```
  */
 export class TaskWriter {
+  private static readonly MAX_BACKUPS = 10;
+  private static readonly BACKUP_FILE_PREFIX = 'tasks-';
+  private static readonly BACKUP_FILE_SUFFIX = '.json';
+
   private taskmasterDir: string;
   private tasksFilePath: string;
   private tasksBackupDir: string;
@@ -189,22 +193,23 @@ export class TaskWriter {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const backupFilePath = path.join(
       this.tasksBackupDir,
-      `tasks-${timestamp}.json`
+      `${TaskWriter.BACKUP_FILE_PREFIX}${timestamp}${TaskWriter.BACKUP_FILE_SUFFIX}`
     );
 
     try {
       fs.copyFileSync(this.tasksFilePath, backupFilePath);
 
-      // Keep only last 10 backups
+      // Keep only last MAX_BACKUPS backups
       this.cleanupOldBackups();
     } catch (error) {
       // Log warning but don't fail the operation
-      console.warn(`Failed to create backup: ${error}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn(`Failed to create backup: ${errorMessage}`);
     }
   }
 
   /**
-   * Clean up old backups, keeping only the last 10
+   * Clean up old backups, keeping only the last MAX_BACKUPS
    */
   private cleanupOldBackups(): void {
     if (!fs.existsSync(this.tasksBackupDir)) {
@@ -213,7 +218,11 @@ export class TaskWriter {
 
     const backups = fs
       .readdirSync(this.tasksBackupDir)
-      .filter((file) => file.startsWith('tasks-') && file.endsWith('.json'))
+      .filter(
+        (file) =>
+          file.startsWith(TaskWriter.BACKUP_FILE_PREFIX) &&
+          file.endsWith(TaskWriter.BACKUP_FILE_SUFFIX)
+      )
       .map((file) => ({
         name: file,
         path: path.join(this.tasksBackupDir, file),
@@ -221,13 +230,14 @@ export class TaskWriter {
       }))
       .sort((a, b) => b.mtime.getTime() - a.mtime.getTime()); // Newest first
 
-    // Delete backups beyond the last 10
-    if (backups.length > 10) {
-      for (let i = 10; i < backups.length; i++) {
+    // Delete backups beyond the last MAX_BACKUPS
+    if (backups.length > TaskWriter.MAX_BACKUPS) {
+      for (let i = TaskWriter.MAX_BACKUPS; i < backups.length; i++) {
         try {
           fs.unlinkSync(backups[i].path);
         } catch (error) {
-          console.warn(`Failed to delete old backup ${backups[i].name}: ${error}`);
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          console.warn(`Failed to delete old backup ${backups[i].name}: ${errorMessage}`);
         }
       }
     }

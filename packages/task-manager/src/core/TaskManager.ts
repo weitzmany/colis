@@ -93,8 +93,9 @@ export class TaskManager {
       });
       this.initialized = true;
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       throw new Error(
-        `Failed to initialize taskmaster-ai: ${error}. Run manually: npx taskmaster-ai init`
+        `Failed to initialize taskmaster-ai: ${errorMessage}. Run manually: npx taskmaster-ai init`
       );
     }
   }

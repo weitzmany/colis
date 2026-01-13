@@ -70,7 +70,11 @@ export class DatabaseFactory {
         if (!config.sqlite) {
           throw new Error('SQLite configuration is required when type is sqlite');
         }
-        return new SQLiteRepository(config.sqlite);
+        return new SQLiteRepository({
+          ...config.sqlite,
+          retry: config.sqlite.retry ?? config.retry,
+          timeout: config.sqlite.timeout ?? config.timeout,
+        });
 
       case 'mysql':
         if (!config.mysql) {

@@ -147,6 +147,36 @@ export interface DatabaseRepository {
   isConnected(): boolean;
 
   /**
+   * Health check - verify database connection is alive
+   * 
+   * Performs a lightweight query to verify the database connection is active
+   * and responsive. Useful for health checks and connection validation.
+   * 
+   * @returns Promise resolving to true if connection is healthy, false otherwise
+   * @throws Error if health check fails
+   * 
+   * @example
+   * ```typescript
+   * const isHealthy = await repo.healthCheck();
+   * if (!isHealthy) {
+   *   await repo.reconnect();
+   * }
+   * ```
+   */
+  healthCheck(): Promise<boolean>;
+
+  /**
+   * Reconnect to database
+   * 
+   * Closes existing connection (if any) and establishes a new connection.
+   * Useful for recovering from connection failures.
+   * 
+   * @returns Promise that resolves when reconnection completes
+   * @throws Error if reconnection fails
+   */
+  reconnect(): Promise<void>;
+
+  /**
    * Get database type
    * 
    * @returns Database type identifier ('sqlite', 'mysql', or 'postgresql')
@@ -191,6 +221,18 @@ export interface DatabaseConfig {
   sqlite?: {
     /** Path to SQLite database file (supports ~ for home directory) */
     path: string;
+    /** Connection retry configuration (optional) */
+    retry?: {
+      maxAttempts?: number;
+      initialDelay?: number;
+      maxDelay?: number;
+      backoffMultiplier?: number;
+    };
+    /** Connection timeout configuration (optional) */
+    timeout?: {
+      connect?: number;
+      query?: number;
+    };
   };
   /** MySQL-specific configuration (required when type is 'mysql') */
   mysql?: {
@@ -221,6 +263,24 @@ export interface DatabaseConfig {
     password: string;
     /** Maximum number of connections in pool (optional) */
     max?: number;
+  };
+  /** Connection retry configuration (optional, applies to all database types) */
+  retry?: {
+    /** Maximum number of retry attempts (default: 3) */
+    maxAttempts?: number;
+    /** Initial delay between retries in milliseconds (default: 1000) */
+    initialDelay?: number;
+    /** Maximum delay between retries in milliseconds (default: 10000) */
+    maxDelay?: number;
+    /** Multiplier for exponential backoff (default: 2) */
+    backoffMultiplier?: number;
+  };
+  /** Connection timeout configuration (optional, applies to all database types) */
+  timeout?: {
+    /** Connection timeout in milliseconds (default: 30000) */
+    connect?: number;
+    /** Query timeout in milliseconds (default: 30000) */
+    query?: number;
   };
 }
 

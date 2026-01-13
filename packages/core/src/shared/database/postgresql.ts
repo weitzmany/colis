@@ -61,6 +61,25 @@ export class PostgreSQLRepository implements DatabaseRepository {
     throw new Error('PostgreSQL support not yet implemented (Phase 3)');
   }
 
+  async healthCheck(): Promise<boolean> {
+    if (!this.client) {
+      return false;
+    }
+    // TODO: Implement PostgreSQL health check when PostgreSQL support is implemented
+    // try {
+    //   await this.query('SELECT 1');
+    //   return true;
+    // } catch {
+    //   return false;
+    // }
+    return this.client !== null;
+  }
+
+  async reconnect(): Promise<void> {
+    await this.disconnect();
+    await this.connect();
+  }
+
   isConnected(): boolean {
     return this.client !== null;
   }

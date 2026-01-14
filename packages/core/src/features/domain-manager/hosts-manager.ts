@@ -218,24 +218,35 @@ export class HostsManager implements IHostsManager {
   async listEntries(): Promise<string[]> {
     try {
       const content = await fs.readFile(this.hostsPath, 'utf-8');
-      const lines = content.split('\n');
-      const domains: string[] = [];
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed && !trimmed.startsWith('#')) {
-          // Match IP and domain pattern
-          const match = trimmed.match(/127\.0\.0\.1\s+(\S+\.local)/);
-          if (match && match[1]) {
-            domains.push(match[1]);
-          }
-        }
-      }
-
-      return domains;
+      return this.parseLocalDomains(content);
     } catch (error) {
       return [];
     }
+  }
+
+  /**
+   * Parse .local domains from hosts file content
+   * 
+   * @param content - Hosts file content
+   * @returns Array of .local domain names
+   * @private
+   */
+  private parseLocalDomains(content: string): string[] {
+    const lines = content.split('\n');
+    const domains: string[] = [];
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith('#')) {
+        // Match IP and domain pattern
+        const match = trimmed.match(/127\.0\.0\.1\s+(\S+\.local)/);
+        if (match && match[1]) {
+          domains.push(match[1]);
+        }
+      }
+    }
+
+    return domains;
   }
 
   /**

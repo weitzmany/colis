@@ -5,12 +5,19 @@
  */
 
 import { DomainManager } from '../../domain-manager.js';
+import { CaddyManager } from '../../caddy-manager.js';
+import { HostsManager } from '../../hosts-manager.js';
+import { ServiceDetector } from '../../service-detector.js';
 import { CaddyfileError } from '../../errors.js';
 import chalk from 'chalk';
 
 export async function listCommand() {
   try {
-    const domainManager = new DomainManager();
+    const domainManager = new DomainManager({
+      caddyManager: new CaddyManager(),
+      hostsManager: new HostsManager(),
+      serviceDetector: new ServiceDetector(),
+    });
     const domains = await domainManager.list();
 
     if (domains.length === 0) {

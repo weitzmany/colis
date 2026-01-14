@@ -7,7 +7,14 @@
 import { CaddyManager } from './caddy-manager.js';
 import { HostsManager } from './hosts-manager.js';
 import { ServiceDetector } from './service-detector.js';
-import { SetupOptions, DomainSetupResult, DomainConfig, DomainInfo } from './types.js';
+import {
+  SetupOptions,
+  DomainSetupResult,
+  DomainConfig,
+  DomainInfo,
+  DEFAULT_PORTS,
+  DOMAIN_SUFFIX,
+} from './types.js';
 import {
   CaddyNotInstalledError,
   DomainValidationError,
@@ -78,13 +85,7 @@ export class DomainManager {
    */
   async setup(projectPath: string, options: SetupOptions): Promise<DomainSetupResult> {
     // Validate inputs
-    if (!projectPath || typeof projectPath !== 'string') {
-      throw new DomainValidationError('Project path is required', undefined, 'projectPath');
-    }
-
-    if (!options.projectName || typeof options.projectName !== 'string') {
-      throw new DomainValidationError('Project name is required', undefined, 'projectName');
-    }
+    this.validateSetupInputs(projectPath, options);
 
     // Check if Caddy is installed
     const caddyInstalled = await this.caddyManager.checkCaddyInstalled();
@@ -98,7 +99,7 @@ export class DomainManager {
     }
 
     // Generate domain name if not provided
-    const domain = options.domain || `${options.projectName}.local`;
+    const domain = options.domain || `${options.projectName}${DOMAIN_SUFFIX}`;
 
     // Validate domain name format
     if (!this.isValidDomain(domain)) {
@@ -110,28 +111,13 @@ export class DomainManager {
     }
 
     // Detect services if ports not explicitly provided
-    let frontendPort = options.frontendPort;
-    let backendPort = options.backendPort;
-    let port = options.port;
-
-    if (!port && !frontendPort && !backendPort) {
-      const services = await this.serviceDetector.detectServices(projectPath);
-      const frontendService = services.find(s => s.name === 'frontend');
-      const backendService = services.find(s => s.name === 'backend');
-
-      if (frontendService && backendService) {
-        // Multi-service project
-        frontendPort = frontendService.detectedPort || 4200; // Default Angular port
-        backendPort = backendService.detectedPort || 8080; // Default backend port
-      } else if (frontendService) {
-        frontendPort = frontendService.detectedPort || 4200;
-      } else if (backendService) {
-        backendPort = backendService.detectedPort || 8080;
-      } else {
-        // Single service - use provided port or default
-        port = options.port || 3000;
-      }
-    }
+    const detectedPorts = await this.detectServicePorts(
+      projectPath,
+      options
+    );
+    const frontendPort = options.frontendPort || detectedPorts.frontendPort;
+    const backendPort = options.backendPort || detectedPorts.backendPort;
+    const port = options.port || detectedPorts.port;
 
     // Determine if multi-service
     const isMultiService = !!(frontendPort && backendPort);
@@ -146,7 +132,8 @@ export class DomainManager {
       config.frontendPort = frontendPort;
       config.backendPort = backendPort;
     } else {
-      config.port = port || frontendPort || backendPort || 3000;
+      config.port =
+        port || frontendPort || backendPort || DEFAULT_PORTS.SINGLE_SERVICE;
     }
 
     // Add to Caddyfile
@@ -288,6 +275,91 @@ export class DomainManager {
   }
 
   /**
+   * Validate setup inputs
+   * 
+   * @param projectPath - Project path to validate
+   * @param options - Setup options to validate
+   * @throws {DomainValidationError} If inputs are invalid
+   */
+  private validateSetupInputs(
+    projectPath: string,
+    options: SetupOptions
+  ): void {
+    if (!projectPath || typeof projectPath !== 'string') {
+      throw new DomainValidationError(
+        'Project path is required',
+        undefined,
+        'projectPath'
+      );
+    }
+
+    if (!options.projectName || typeof options.projectName !== 'string') {
+      throw new DomainValidationError(
+        'Project name is required',
+        undefined,
+        'projectName'
+      );
+    }
+  }
+
+  /**
+   * Detect service ports from project structure
+   * 
+   * @param projectPath - Path to project directory
+   * @param options - Setup options with explicit ports
+   * @returns Detected or default ports for services
+   */
+  private async detectServicePorts(
+    projectPath: string,
+    options: SetupOptions
+  ): Promise<{
+    frontendPort?: number;
+    backendPort?: number;
+    port?: number;
+  }> {
+    // If ports are explicitly provided, return them
+    if (options.port || options.frontendPort || options.backendPort) {
+      return {
+        frontendPort: options.frontendPort,
+        backendPort: options.backendPort,
+        port: options.port,
+      };
+    }
+
+    // Detect services from project structure
+    const services = await this.serviceDetector.detectServices(projectPath);
+    const frontendService = services.find(s => s.name === 'frontend');
+    const backendService = services.find(s => s.name === 'backend');
+
+    if (frontendService && backendService) {
+      // Multi-service project
+      return {
+        frontendPort:
+          frontendService.detectedPort || DEFAULT_PORTS.ANGULAR_FRONTEND,
+        backendPort: backendService.detectedPort || DEFAULT_PORTS.BACKEND_API,
+      };
+    }
+
+    if (frontendService) {
+      return {
+        frontendPort:
+          frontendService.detectedPort || DEFAULT_PORTS.ANGULAR_FRONTEND,
+      };
+    }
+
+    if (backendService) {
+      return {
+        backendPort: backendService.detectedPort || DEFAULT_PORTS.BACKEND_API,
+      };
+    }
+
+    // Single service - use default
+    return {
+      port: DEFAULT_PORTS.SINGLE_SERVICE,
+    };
+  }
+
+  /**
    * Validate domain name format
    * 
    * @param domain - Domain name to validate
@@ -295,13 +367,14 @@ export class DomainManager {
    */
   private isValidDomain(domain: string): boolean {
     // Domain must end with .local
-    if (!domain.endsWith('.local')) {
+    if (!domain.endsWith(DOMAIN_SUFFIX)) {
       return false;
     }
 
     // Domain must contain only alphanumeric characters, hyphens, and dots
     // Must not start or end with hyphen or dot (except .local)
-    const domainWithoutLocal = domain.slice(0, -6); // Remove '.local'
+    const suffixLength = DOMAIN_SUFFIX.length;
+    const domainWithoutLocal = domain.slice(0, -suffixLength);
     if (!domainWithoutLocal || domainWithoutLocal.length === 0) {
       return false;
     }

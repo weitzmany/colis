@@ -5,6 +5,9 @@
  */
 
 import { DomainManager } from '../../domain-manager.js';
+import { CaddyManager } from '../../caddy-manager.js';
+import { HostsManager } from '../../hosts-manager.js';
+import { ServiceDetector } from '../../service-detector.js';
 import { generateProjectName } from '../../../port-manager/utils/project-name.js';
 import {
   CaddyNotInstalledError,
@@ -26,7 +29,11 @@ export async function setupCommand(options: {
 }) {
   try {
     const projectPath = options.path ? path.resolve(options.path) : process.cwd();
-    const domainManager = new DomainManager();
+    const domainManager = new DomainManager({
+      caddyManager: new CaddyManager(),
+      hostsManager: new HostsManager(),
+      serviceDetector: new ServiceDetector(),
+    });
 
     // Check if Caddy is installed
     const caddyInstalled = await domainManager.checkCaddyInstalled();

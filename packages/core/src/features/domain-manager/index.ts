@@ -12,6 +12,9 @@ export * from './service-detector.js';
 export * from './errors.js';
 export * from './interfaces.js';
 
+// Export constants for external use
+export { DEFAULT_PORTS, DOMAIN_SUFFIX } from './types.js';
+
 
 
 

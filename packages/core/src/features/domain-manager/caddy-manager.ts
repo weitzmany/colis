@@ -357,31 +357,52 @@ export class CaddyManager implements ICaddyManager {
 
   /**
    * Reload Caddy configuration
+   * 
+   * Attempts to reload Caddy by sending SIGHUP signal. If this fails,
+   * Caddy will auto-reload on file changes or can be restarted manually.
    */
   async reloadCaddy(): Promise<void> {
     try {
-      // Try sending SIGHUP to caddy process to reload config
-      try {
-        await execAsync('pkill -HUP caddy 2>/dev/null || true');
-      } catch (error) {
-        // If that fails, try finding caddy process and sending signal
-        try {
-          const { stdout } = await execAsync('pgrep -f caddy 2>/dev/null || true');
-          if (stdout.trim()) {
-            const pid = stdout.trim().split('\n')[0];
-            if (pid) {
-              await execAsync(`kill -HUP ${pid} 2>/dev/null || true`);
-            }
-          }
-        } catch (error) {
-          // If all fails, user will need to restart Caddy manually
-          // This is not a critical error - Caddy can auto-reload on file changes
-          // or user can restart manually: caddy reload --config ~/.caddy/Caddyfile
-        }
-      }
+      await this.sendReloadSignal();
     } catch (error) {
       // Reload failed, but that's okay - Caddy watches the file and will reload automatically
       // User can also restart Caddy manually if needed
+    }
+  }
+
+  /**
+   * Send SIGHUP signal to Caddy process to reload configuration
+   * 
+   * @private
+   */
+  private async sendReloadSignal(): Promise<void> {
+    try {
+      // Try sending SIGHUP to caddy process to reload config
+      await execAsync('pkill -HUP caddy 2>/dev/null || true');
+    } catch (error) {
+      // If that fails, try finding caddy process and sending signal
+      await this.reloadCaddyByPid();
+    }
+  }
+
+  /**
+   * Reload Caddy by finding process ID and sending SIGHUP
+   * 
+   * @private
+   */
+  private async reloadCaddyByPid(): Promise<void> {
+    try {
+      const { stdout } = await execAsync('pgrep -f caddy 2>/dev/null || true');
+      if (stdout.trim()) {
+        const pid = stdout.trim().split('\n')[0];
+        if (pid) {
+          await execAsync(`kill -HUP ${pid} 2>/dev/null || true`);
+        }
+      }
+    } catch (error) {
+      // If all fails, user will need to restart Caddy manually
+      // This is not a critical error - Caddy can auto-reload on file changes
+      // or user can restart manually: caddy reload --config ~/.caddy/Caddyfile
     }
   }
 

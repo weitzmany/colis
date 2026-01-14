@@ -14,16 +14,56 @@ import {
   HostsFileError,
   DomainConfigurationError,
 } from './errors.js';
+import {
+  DomainManagerConfig,
+  ICaddyManager,
+  IHostsManager,
+  IServiceDetector,
+} from './interfaces.js';
 
+/**
+ * Domain Manager
+ * 
+ * Main class for managing local domains with Caddy reverse proxy.
+ * Supports dependency injection for testability and extensibility.
+ */
 export class DomainManager {
-  private caddyManager: CaddyManager;
-  private hostsManager: HostsManager;
-  private serviceDetector: ServiceDetector;
+  private caddyManager: ICaddyManager;
+  private hostsManager: IHostsManager;
+  private serviceDetector: IServiceDetector;
 
-  constructor() {
-    this.caddyManager = new CaddyManager();
-    this.hostsManager = new HostsManager();
-    this.serviceDetector = new ServiceDetector();
+  /**
+   * Create a new DomainManager instance
+   * 
+   * @param config - Optional configuration for customizing behavior
+   * 
+   * @example
+   * ```typescript
+   * // Default configuration
+   * const manager = new DomainManager();
+   * 
+   * // Custom Caddyfile path
+   * const manager = new DomainManager({
+   *   caddyfilePath: '/custom/path/Caddyfile'
+   * });
+   * 
+   * // Custom implementations for testing
+   * const manager = new DomainManager({
+   *   caddyManager: mockCaddyManager,
+   *   hostsManager: mockHostsManager,
+   *   serviceDetector: mockServiceDetector
+   * });
+   * ```
+   */
+  constructor(config?: DomainManagerConfig) {
+    // Use provided implementations or create defaults
+    this.caddyManager = config?.caddyManager || new CaddyManager({
+      caddyfilePath: config?.caddyfilePath,
+    });
+    this.hostsManager = config?.hostsManager || new HostsManager({
+      hostsPath: config?.hostsPath,
+    });
+    this.serviceDetector = config?.serviceDetector || new ServiceDetector();
   }
 
   /**

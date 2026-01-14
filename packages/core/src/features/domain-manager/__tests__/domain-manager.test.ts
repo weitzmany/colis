@@ -13,6 +13,11 @@ import {
   HostsFileError,
 } from '../errors.js';
 import { SetupOptions } from '../types.js';
+import {
+  ICaddyManager,
+  IHostsManager,
+  IServiceDetector,
+} from '../interfaces.js';
 
 // Mock dependencies
 jest.mock('../caddy-manager.js');
@@ -21,9 +26,9 @@ jest.mock('../service-detector.js');
 
 describe('DomainManager', () => {
   let domainManager: DomainManager;
-  let mockCaddyManager: jest.Mocked<CaddyManager>;
-  let mockHostsManager: jest.Mocked<HostsManager>;
-  let mockServiceDetector: jest.Mocked<ServiceDetector>;
+  let mockCaddyManager: jest.Mocked<ICaddyManager>;
+  let mockHostsManager: jest.Mocked<IHostsManager>;
+  let mockServiceDetector: jest.Mocked<IServiceDetector>;
 
   beforeEach(() => {
     // Reset mocks
@@ -36,30 +41,26 @@ describe('DomainManager', () => {
       addDomain: jest.fn(),
       removeDomain: jest.fn(),
       listDomains: jest.fn(),
+      readCaddyfile: jest.fn(),
     } as any;
 
     mockHostsManager = {
       addEntry: jest.fn(),
       removeEntry: jest.fn(),
       listEntries: jest.fn(),
+      hasEntry: jest.fn(),
     } as any;
 
     mockServiceDetector = {
       detectServices: jest.fn(),
     } as any;
 
-    // Replace constructor dependencies
-    (CaddyManager as jest.MockedClass<typeof CaddyManager>).mockImplementation(
-      () => mockCaddyManager
-    );
-    (HostsManager as jest.MockedClass<typeof HostsManager>).mockImplementation(
-      () => mockHostsManager
-    );
-    (ServiceDetector as jest.MockedClass<
-      typeof ServiceDetector
-    >).mockImplementation(() => mockServiceDetector);
-
-    domainManager = new DomainManager();
+    // Create DomainManager with mocked dependencies
+    domainManager = new DomainManager({
+      caddyManager: mockCaddyManager,
+      hostsManager: mockHostsManager,
+      serviceDetector: mockServiceDetector,
+    });
   });
 
   describe('setup', () => {
@@ -413,6 +414,41 @@ describe('DomainManager', () => {
       const result = await domainManager.checkCaddyRunning();
 
       expect(result).toBe(false);
+    });
+  });
+
+  describe('constructor', () => {
+    it('should use default implementations when no config provided', () => {
+      const manager = new DomainManager();
+      expect(manager).toBeInstanceOf(DomainManager);
+    });
+
+    it('should accept custom implementations via config', () => {
+      const customCaddy = mockCaddyManager;
+      const customHosts = mockHostsManager;
+      const customService = mockServiceDetector;
+
+      const manager = new DomainManager({
+        caddyManager: customCaddy,
+        hostsManager: customHosts,
+        serviceDetector: customService,
+      });
+
+      expect(manager).toBeInstanceOf(DomainManager);
+    });
+
+    it('should accept custom Caddyfile path', () => {
+      const manager = new DomainManager({
+        caddyfilePath: '/custom/path/Caddyfile',
+      });
+      expect(manager).toBeInstanceOf(DomainManager);
+    });
+
+    it('should accept custom hosts file path', () => {
+      const manager = new DomainManager({
+        hostsPath: '/custom/path/hosts',
+      });
+      expect(manager).toBeInstanceOf(DomainManager);
     });
   });
 });

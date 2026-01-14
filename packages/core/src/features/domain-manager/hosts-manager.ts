@@ -10,18 +10,33 @@ import * as os from 'os';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { HostsFileError } from './errors.js';
+import { IHostsManager } from './interfaces.js';
 
 const execAsync = promisify(exec);
 
-export class HostsManager {
+/**
+ * Hosts Manager Configuration
+ */
+export interface HostsManagerConfig {
+  /**
+   * Hosts file path (default: /etc/hosts or C:\Windows\System32\drivers\etc\hosts)
+   */
+  hostsPath?: string;
+}
+
+export class HostsManager implements IHostsManager {
   private hostsPath: string;
 
-  constructor() {
-    // Determine hosts file path based on OS
-    if (process.platform === 'win32') {
-      this.hostsPath = 'C:\\Windows\\System32\\drivers\\etc\\hosts';
+  constructor(config?: HostsManagerConfig) {
+    if (config?.hostsPath) {
+      this.hostsPath = config.hostsPath;
     } else {
-      this.hostsPath = '/etc/hosts';
+      // Determine hosts file path based on OS
+      if (process.platform === 'win32') {
+        this.hostsPath = 'C:\\Windows\\System32\\drivers\\etc\\hosts';
+      } else {
+        this.hostsPath = '/etc/hosts';
+      }
     }
   }
 

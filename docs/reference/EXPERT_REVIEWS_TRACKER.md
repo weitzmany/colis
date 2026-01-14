@@ -31,7 +31,7 @@ This document tracks all expert reviews and contributions across the project.
 | General Review | Feature Implementation Review | 6 | 6 | 2026-01-05 | 1 | 1.0 | 3 | 0 |
 | Thomas Mitchell | Testing (TDD, Unit Tests, Integration Tests, E2E Tests) | 8 | 8 | 2026-01-05 | 0 | 1.0 | 3 | 0 |
 | Andrew Lee | RESTful API Design | 5 | 6 | 2026-01-05 | 0 | 1.2 | 5 | 0 |
-| Emma Rodriguez | Copywriting (App naming, section naming, website content) | 5 | 5 | 2026-01-05 | 1 | 1.0 | 3 | 0 |
+| Emma Rodriguez | Copywriting (App naming, section naming, website content) | 6 | 6 | 2026-01-05 | 1 | 1.0 | 4 | 0 |
 | Jennifer Park | Code Quality and Code Review | 7 | 7 | 2026-01-05 | 0 | 1.0 | 4 | 0 |
 | Steven Taylor | SEO (Search Engine Optimization) | 5 | 5 | 2026-01-05 | 0 | 1.0 | 5 | 0 |
 | James Martinez | Performance Optimization | 5 | 5 | 2026-01-05 | 0 | 1.0 | 3 | 0 |

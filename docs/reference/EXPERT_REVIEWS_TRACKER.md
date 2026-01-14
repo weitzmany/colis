@@ -235,10 +235,13 @@ This document tracks all expert reviews and contributions across the project.
 | `docs/projects/project-health-dashboard/PRD.md` | 0 |
 | `docs/reference/EXPERT_REVIEWS_TRACKER.md` | 0 |
 | `docs/reference/PROJECT_IDEAS_AVOID.md` | 0 |
-| `packages/core/README.md` | 1 |
+| `packages/core/README.md` | 3 |
 | `packages/core/ARCHITECTURE.md` | 1 |
-| `packages/core/REVIEW.md` | 2 |
+| `packages/core/REVIEW.md` | 3 |
 | `packages/core/src/index.ts` | 2 |
+| `packages/core/GETTING_STARTED.md` | 2 |
+| `packages/core/package.json` | 1 |
+| `packages/core/bin/core` | 1 |
 | `packages/core/src/shared/database/repository.ts` | 1 |
 | `packages/core/src/shared/database/factory.ts` | 1 |
 | `packages/core/src/shared/database/migrations.ts` | 1 |
@@ -723,14 +726,20 @@ This document tracks all expert reviews and contributions across the project.
 
 ### Emma Rodriguez (Copywriting (App naming, section naming, website content))
 
-- **Total Reviews**: 5
-- **Files Reviewed**: 5
+- **Total Reviews**: 6
+- **Files Reviewed**: 6
 - **Files Created**: 1
 
 **Files Created:**
   - `docs/guides/PLANNING_MODE_WORKFLOW.md`
 
 **Files Reviewed:**
+  - `packages/core/README.md`
+  - `packages/core/GETTING_STARTED.md`
+  - `packages/core/REVIEW.md`
+  - `packages/core/package.json`
+  - `packages/core/bin/core`
+  - `packages/core/src/index.ts`
   - `.cursor/rules/experts/market_research_expert.mdc`
   - `docs/features/port-manager/PRD.md`
   - `docs/guides/PLANNING_MODE_WORKFLOW.md`

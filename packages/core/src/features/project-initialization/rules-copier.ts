@@ -6,6 +6,7 @@
  */
 
 import * as fs from 'fs-extra';
+import { readdir } from 'fs/promises';
 import * as path from 'path';
 
 /**
@@ -81,7 +82,7 @@ export async function copyRules(
     const expertsTarget = path.join(targetRulesPath, 'experts');
 
     if (await fs.pathExists(expertsSource)) {
-      const expertFiles = await fs.readdir(expertsSource);
+      const expertFiles = await readdir(expertsSource);
       for (const file of expertFiles) {
         if (file.endsWith('.mdc')) {
           const sourceFile = path.join(expertsSource, file);
@@ -107,7 +108,7 @@ export async function copyRules(
     const userTarget = path.join(targetRulesPath, 'user');
 
     if (await fs.pathExists(userSource)) {
-      const userFiles = await fs.readdir(userSource);
+      const userFiles = await readdir(userSource);
       for (const file of userFiles) {
         if (file.endsWith('.mdc')) {
           const sourceFile = path.join(userSource, file);

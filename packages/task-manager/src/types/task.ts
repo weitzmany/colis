@@ -1,5 +1,25 @@
 /**
  * Task status values (combining taskmaster-ai and discord-story-bot)
+ * 
+ * @remarks
+ * Status values from taskmaster-ai:
+ * - `pending`: Task is waiting to be started
+ * - `in-progress`: Task is currently being worked on
+ * - `done`: Task is completed
+ * - `deferred`: Task is postponed
+ * - `cancelled`: Task is cancelled
+ * - `blocked`: Task is blocked by dependencies or issues
+ * - `review`: Task is in review
+ * 
+ * Status values from discord-story-bot:
+ * - `backlog`: Task is in backlog
+ * - `to do`: Task is ready to be started (alternative to pending)
+ * - `in progress`: Task is in progress (alternative spelling)
+ * - `testing`: Task is being tested
+ * - `next release`: Task is scheduled for next release
+ * - `archive`: Task is archived
+ * 
+ * @public
  */
 export type TaskStatus =
   // taskmaster-ai statuses
@@ -20,7 +40,20 @@ export type TaskStatus =
 
 /**
  * Task priority values (combining both systems)
- * Note: "urgent" is invalid per taskmaster-ai validation
+ * 
+ * @remarks
+ * Priority values from taskmaster-ai:
+ * - `low`: Low priority task
+ * - `medium`: Medium priority task (default)
+ * - `high`: High priority task
+ * 
+ * Priority values from discord-story-bot (5-level system):
+ * - `very low`: Very low priority task
+ * - `very high`: Very high priority task
+ * 
+ * Note: "urgent" is invalid per taskmaster-ai validation and should not be used.
+ * 
+ * @public
  */
 export type TaskPriority =
   // taskmaster-ai priorities
@@ -33,6 +66,18 @@ export type TaskPriority =
 
 /**
  * Task type (from discord-story-bot)
+ * 
+ * @remarks
+ * Task types categorize tasks by their nature:
+ * - `feature`: New feature implementation
+ * - `bug`: Bug fix
+ * - `fix`: General fix (non-bug)
+ * - `test`: Testing task
+ * - `research`: Research task
+ * - `prd`: Product Requirements Document task
+ * - `documents`: Documentation task
+ * 
+ * @public
  */
 export type TaskType =
   | 'feature'
@@ -45,10 +90,22 @@ export type TaskType =
 
 /**
  * Tag structure (from discord-story-bot)
+ * 
+ * @remarks
+ * Tags provide flexible organization for tasks. Colors are automatically
+ * generated using the DJB2 hash algorithm if not provided, ensuring consistent
+ * colors for the same tag name.
+ * 
+ * @public
  */
 export interface Tag {
+  /** Tag name (e.g., "sprint-1", "feature-auth") */
   name: string;
-  color?: string; // Auto-generated from name hash if not provided
+  /** 
+   * Tag color in hex format (e.g., "#ff0000")
+   * Auto-generated from name hash if not provided
+   */
+  color?: string;
 }
 
 /**

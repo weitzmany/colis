@@ -9,6 +9,8 @@
 
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import { readdir } from 'fs/promises';
+import { execSync } from 'child_process';
 import chalk from 'chalk';
 import { copyRules, CopyRulesResult } from './rules-copier.js';
 import { copyCommands, CopyCommandsResult } from './commands-copier.js';
@@ -147,11 +149,11 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         let userCount = 0;
         
         if (await fs.pathExists(expertsPath)) {
-          const expertFiles = (await fs.readdir(expertsPath)).filter(f => f.endsWith('.mdc'));
+          const expertFiles = (await readdir(expertsPath)).filter(f => f.endsWith('.mdc'));
           expertCount = expertFiles.length;
         }
         if (await fs.pathExists(userPath)) {
-          const userFiles = (await fs.readdir(userPath)).filter(f => f.endsWith('.mdc'));
+          const userFiles = (await readdir(userPath)).filter(f => f.endsWith('.mdc'));
           userCount = userFiles.length;
         }
         
@@ -163,7 +165,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         const sourceCommandsPath = path.join(corePackagePath, 'commands', 'general');
         let commandCount = 0;
         if (await fs.pathExists(sourceCommandsPath)) {
-          const commandFiles = (await fs.readdir(sourceCommandsPath)).filter(f => f.endsWith('.md'));
+          const commandFiles = (await readdir(sourceCommandsPath)).filter(f => f.endsWith('.md'));
           commandCount = commandFiles.length;
         }
         console.log(chalk.cyan(`  ⚡ Copy ${chalk.bold(commandCount.toString())} general commands`));
@@ -340,7 +342,6 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         // Initialize settings.json with colors by running the hook
         try {
           process.stdout.write(chalk.dim('  ⏳ Applying color scheme...'));
-          const { execSync } = require('child_process');
           // Try to get current branch, default to 'main' if git not initialized
           let branchName = 'main';
           try {

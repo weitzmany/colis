@@ -99,7 +99,7 @@ export async function createCommand(options: CreateOptions = {}): Promise<void> 
   try {
     console.log(chalk.blue('🚀 Creating new project...\n'));
 
-    // Step 1: Collect configuration
+    // Step 1: Get project name first (before tech stack questions)
     const configManager = new ConfigManager();
     
     // Ensure projectName is a string if provided
@@ -113,8 +113,177 @@ export async function createCommand(options: CreateOptions = {}): Promise<void> 
       }
     }
     
+    // If project name not provided, prompt for it first
+    if (!projectName || projectName.length === 0) {
+      const nameAnswer = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'projectName',
+          message: 'What is your project name?',
+          validate: (input: string) => {
+            if (!input || input.trim().length === 0) {
+              return 'Project name is required';
+            }
+            // Validate project name (no spaces, valid npm package name)
+            if (!/^[a-z0-9-]+$/i.test(input)) {
+              return 'Project name must contain only letters, numbers, and hyphens';
+            }
+            return true;
+          },
+        },
+      ]);
+      projectName = nameAnswer.projectName.trim();
+    }
+
+    // Step 2: Check if directory already exists BEFORE asking about tech stack
+    let outputPath = path.resolve(process.cwd(), projectName);
+    let resolvedProjectName = projectName;
+
+    if (await fs.pathExists(outputPath)) {
+      // Only skip if user explicitly passed --skip-existing flag
+      const userExplicitlySkipped = options.skipExisting === true;
+      
+      if (userExplicitlySkipped && !options.overwrite) {
+        console.log(chalk.yellow(`⚠ Directory already exists: ${outputPath}`));
+        console.log(chalk.yellow('  Skipping project creation'));
+        return;
+      }
+      
+      if (options.overwrite) {
+        // User explicitly requested overwrite, proceed
+        console.log(chalk.yellow(`⚠ Directory already exists: ${outputPath}`));
+        console.log(chalk.yellow('  Overwriting existing directory...'));
+        try {
+          await fs.remove(outputPath);
+          console.log(chalk.green(`✓ Deleted existing directory: ${outputPath}`));
+        } catch (error: any) {
+          console.log(chalk.yellow(`⚠ Attempting alternative deletion method...`));
+          try {
+            execSync(`rm -rf "${outputPath}"`, { stdio: 'inherit' });
+            console.log(chalk.green(`✓ Deleted existing directory: ${outputPath}`));
+          } catch (rmError: any) {
+            console.error(chalk.red(`❌ Failed to delete directory: ${error.message || rmError.message}`));
+            console.error(chalk.red(`   Please delete the directory manually and try again.`));
+            process.exit(1);
+          }
+        }
+      } else {
+        // Interactive prompt for handling existing directory
+        console.log(chalk.yellow(`⚠ Directory already exists: ${outputPath}\n`));
+        
+        const answer = await inquirer.prompt([
+          {
+            type: 'list',
+            name: 'action',
+            message: 'What would you like to do?',
+            choices: [
+              {
+                name: 'Delete existing directory - Remove the existing directory and create new project',
+                value: 'delete',
+              },
+              {
+                name: 'Abort - Cancel project creation',
+                value: 'abort',
+              },
+              {
+                name: 'Use a new name - Enter a different project name',
+                value: 'new-name',
+              },
+              {
+                name: 'Rename existing directory - Move existing directory to a backup name',
+                value: 'rename',
+              },
+            ],
+          },
+        ]);
+
+        switch (answer.action) {
+          case 'delete':
+            try {
+              await fs.remove(outputPath);
+              console.log(chalk.green(`✓ Deleted existing directory: ${outputPath}`));
+            } catch (error: any) {
+              console.log(chalk.yellow(`⚠ Attempting alternative deletion method...`));
+              try {
+                execSync(`rm -rf "${outputPath}"`, { stdio: 'inherit' });
+                console.log(chalk.green(`✓ Deleted existing directory: ${outputPath}`));
+              } catch (rmError: any) {
+                console.error(chalk.red(`❌ Failed to delete directory: ${error.message || rmError.message}`));
+                console.error(chalk.red(`   Please delete the directory manually and try again.`));
+                process.exit(1);
+              }
+            }
+            break;
+
+          case 'abort':
+            console.log(chalk.yellow('\n❌ Project creation cancelled'));
+            process.exit(0);
+            break;
+
+          case 'new-name':
+            const nameAnswer = await inquirer.prompt([
+              {
+                type: 'input',
+                name: 'newName',
+                message: 'Enter new project name:',
+                validate: (input: string) => {
+                  if (!input || input.trim().length === 0) {
+                    return 'Project name is required';
+                  }
+                  if (!/^[a-z0-9-]+$/i.test(input)) {
+                    return 'Project name must contain only letters, numbers, and hyphens';
+                  }
+                  const newPath = path.resolve(process.cwd(), input.trim());
+                  try {
+                    if (fs.existsSync(newPath)) {
+                      return 'This directory also exists. Please choose a different name.';
+                    }
+                  } catch {
+                    // Ignore errors during validation
+                  }
+                  return true;
+                },
+              },
+            ]);
+            resolvedProjectName = nameAnswer.newName.trim();
+            outputPath = path.resolve(process.cwd(), resolvedProjectName);
+            console.log(chalk.green(`✓ Using new project name: ${resolvedProjectName}`));
+            break;
+
+          case 'rename':
+            const renameAnswer = await inquirer.prompt([
+              {
+                type: 'input',
+                name: 'backupName',
+                message: 'Enter backup name for existing directory:',
+                default: `${resolvedProjectName}-backup-${Date.now()}`,
+                validate: (input: string) => {
+                  if (!input || input.trim().length === 0) {
+                    return 'Backup name is required';
+                  }
+                  const backupPath = path.resolve(process.cwd(), input.trim());
+                  try {
+                    if (fs.existsSync(backupPath)) {
+                      return 'This directory already exists. Please choose a different backup name.';
+                    }
+                  } catch {
+                    // Ignore errors during validation
+                  }
+                  return true;
+                },
+              },
+            ]);
+            const backupPath = path.resolve(process.cwd(), renameAnswer.backupName.trim());
+            await fs.move(outputPath, backupPath);
+            console.log(chalk.green(`✓ Renamed existing directory to: ${backupPath}`));
+            break;
+        }
+      }
+    }
+
+    // Step 3: Now collect the rest of the configuration (tech stack, etc.)
     const config: ProjectConfig = await configManager.collectConfig({
-      projectName: projectName,
+      projectName: resolvedProjectName,
       templateType: options.template,
       packageManager: options.packageManager,
       skipDeps: options.skipDeps,
@@ -122,7 +291,7 @@ export async function createCommand(options: CreateOptions = {}): Promise<void> 
       skipInit: options.skipInit,
       skipTaskManager: options.skipTaskManager,
       overwrite: options.overwrite,
-      skipExisting: options.skipExisting ?? false, // Default to false to show prompt
+      skipExisting: options.skipExisting ?? false,
       dryRun: options.dryRun,
       projectDescription: options.description,
       author: options.author,
@@ -134,19 +303,21 @@ export async function createCommand(options: CreateOptions = {}): Promise<void> 
       config.projectName = config.projectName.trim();
     }
     
+    // Update outputPath in case projectName changed during config collection
+    outputPath = path.resolve(process.cwd(), config.projectName);
+    
     // Validate configuration
     const validation = configManager.validateConfig(config);
     if (!validation.valid) {
       console.error(chalk.red('❌ Configuration errors:'));
       validation.errors.forEach((error) => console.error(chalk.red(`  - ${error}`)));
-      // Debug: show actual projectName value
       if (config.projectName) {
         console.error(chalk.yellow(`  Debug: projectName="${config.projectName}" (type: ${typeof config.projectName}, length: ${config.projectName.length})`));
       }
       process.exit(1);
     }
 
-    // Step 2: Select template(s) based on stack selection
+    // Step 4: Select template(s) based on stack selection
     const templateRegistry = new TemplateRegistry();
     
     // Determine template type from stack selection or legacy templateType
@@ -192,154 +363,6 @@ export async function createCommand(options: CreateOptions = {}): Promise<void> 
       if (mobile && mobile !== 'none') selected.push(`Mobile: ${mobile}`);
       if (selected.length > 0) {
         console.log(chalk.blue(`  Stack: ${selected.join(', ')}`));
-      }
-    }
-
-    // Step 3: Prepare output path
-    let outputPath = path.resolve(process.cwd(), config.projectName);
-
-    // Check if directory already exists
-    if (await fs.pathExists(outputPath)) {
-      // Only skip if user explicitly passed --skip-existing flag
-      // Commander.js sets boolean flags to true when present, undefined when absent
-      const userExplicitlySkipped = options.skipExisting === true;
-      
-      if (userExplicitlySkipped && !config.overwrite) {
-        console.log(chalk.yellow(`⚠ Directory already exists: ${outputPath}`));
-        console.log(chalk.yellow('  Skipping project creation'));
-        return;
-      }
-      if (config.overwrite) {
-        // User explicitly requested overwrite, proceed
-        console.log(chalk.yellow(`⚠ Directory already exists: ${outputPath}`));
-        console.log(chalk.yellow('  Overwriting existing directory...'));
-      } else {
-        // Interactive prompt for handling existing directory
-        console.log(chalk.yellow(`\n⚠ Directory already exists: ${outputPath}\n`));
-        
-        const answer = await inquirer.prompt([
-          {
-            type: 'list',
-            name: 'action',
-            message: 'What would you like to do?',
-            choices: [
-              {
-                name: 'Abort - Cancel project creation',
-                value: 'abort',
-              },
-              {
-                name: 'Use a new name - Enter a different project name',
-                value: 'new-name',
-              },
-              {
-                name: 'Delete existing directory - Remove the existing directory and create new project',
-                value: 'delete',
-              },
-              {
-                name: 'Rename existing directory - Move existing directory to a backup name',
-                value: 'rename',
-              },
-            ],
-          },
-        ]);
-
-        switch (answer.action) {
-          case 'abort':
-            console.log(chalk.yellow('\n❌ Project creation cancelled'));
-            process.exit(0);
-            break;
-
-          case 'new-name':
-            const nameAnswer = await inquirer.prompt([
-              {
-                type: 'input',
-                name: 'newName',
-                message: 'Enter new project name:',
-                validate: (input: string) => {
-                  if (!input || input.trim().length === 0) {
-                    return 'Project name is required';
-                  }
-                  if (!/^[a-z0-9-]+$/i.test(input)) {
-                    return 'Project name must contain only letters, numbers, and hyphens';
-                  }
-                  const newPath = path.resolve(process.cwd(), input.trim());
-                  // Use synchronous check for validation
-                  try {
-                    if (fs.existsSync(newPath)) {
-                      return 'This directory also exists. Please choose a different name.';
-                    }
-                  } catch {
-                    // Ignore errors during validation
-                  }
-                  return true;
-                },
-              },
-            ]);
-            config.projectName = nameAnswer.newName.trim();
-            outputPath = path.resolve(process.cwd(), config.projectName);
-            console.log(chalk.green(`✓ Using new project name: ${config.projectName}`));
-            break;
-
-          case 'delete':
-            const confirmAnswer = await inquirer.prompt([
-              {
-                type: 'confirm',
-                name: 'confirm',
-                message: `⚠️  This will permanently delete: ${outputPath}\n   Are you sure?`,
-                default: false,
-              },
-            ]);
-            if (!confirmAnswer.confirm) {
-              console.log(chalk.yellow('\n❌ Project creation cancelled'));
-              process.exit(0);
-            }
-            try {
-              // Use remove with force option to handle nested directories and permissions
-              await fs.remove(outputPath);
-              console.log(chalk.green(`✓ Deleted existing directory: ${outputPath}`));
-            } catch (error: any) {
-              // If fs.remove fails, try using execSync with rm -rf as fallback
-              console.log(chalk.yellow(`⚠ Attempting alternative deletion method...`));
-              try {
-                execSync(`rm -rf "${outputPath}"`, { stdio: 'inherit' });
-                console.log(chalk.green(`✓ Deleted existing directory: ${outputPath}`));
-              } catch (rmError: any) {
-                console.error(chalk.red(`❌ Failed to delete directory: ${error.message || rmError.message}`));
-                console.error(chalk.red(`   Please delete the directory manually and try again.`));
-                process.exit(1);
-              }
-            }
-            break;
-
-          case 'rename':
-            const renameAnswer = await inquirer.prompt([
-              {
-                type: 'input',
-                name: 'backupName',
-                message: 'Enter backup name for existing directory:',
-                default: `${config.projectName}-backup-${Date.now()}`,
-                validate: (input: string) => {
-                  if (!input || input.trim().length === 0) {
-                    return 'Backup name is required';
-                  }
-                  const backupPath = path.resolve(process.cwd(), input.trim());
-                  // Note: We can't use await in validate, so we'll check synchronously
-                  try {
-                    if (fs.existsSync(backupPath)) {
-                      return 'This directory already exists. Please choose a different backup name.';
-                    }
-                  } catch {
-                    // Ignore errors during validation
-                  }
-                  return true;
-                },
-              },
-            ]);
-            const backupPath = path.resolve(process.cwd(), renameAnswer.backupName.trim());
-            await fs.move(outputPath, backupPath);
-            console.log(chalk.green(`✓ Renamed existing directory to: ${backupPath}`));
-            break;
-        }
       }
     }
 

@@ -1,27 +1,27 @@
 # Getting Started with @your-org/core
 
-**Welcome!** This guide will help you get started with the core package quickly and effectively.
+**Welcome!** This guide will get you up and running with the core package in minutes.
 
 ## What is @your-org/core?
 
-The `@your-org/core` package is a foundational development toolkit that provides:
+Think of `@your-org/core` as your **development foundation** — a toolkit that provides:
 - **Features**: Reusable tools like Port Manager, Tech Detector, and Project Initialization
 - **Rules**: Cursor IDE rules and expert personas for enhanced development
 - **Commands**: CLI commands for common development tasks
 - **Shared Utilities**: Database abstractions and configuration management
 
-## Prerequisites
+## What You'll Need
 
-Before you begin, make sure you have:
+Before getting started, make sure you have:
 - **Node.js** version 18.0.0 or higher
 - **npm** or **yarn** package manager
 - A project directory where you want to use the core package
 
 ## Installation
 
-### Step 1: One-Time Setup (Only Needed Once)
+### Step 1: One-Time Setup
 
-If you're developing the core package locally, link it globally:
+**First time using the core package?** Link it globally once:
 
 ```bash
 cd ~/Documents/packages/packages/core
@@ -60,9 +60,9 @@ npx @your-org/core init
 - ✅ Technology stack detected and saved
 - ✅ IDE colors configured (unique colors per project)
 
-## Understanding What Happened
+## What Just Happened?
 
-When you ran `npx @your-org/core init`, the following happened:
+When you ran `npx @your-org/core init`, here's what was set up:
 
 1. **Rules Copied**: Expert personas and user rules were copied to `.cursor/rules/`
 2. **Commands Copied**: General commands were copied to `.cursor/commands/general/`
@@ -70,11 +70,11 @@ When you ran `npx @your-org/core init`, the following happened:
 4. **Tech Stack Detected**: Your project's technology stack was detected and saved
 5. **IDE Colors Configured**: Unique colors were assigned to your project
 
-## Next Steps
+## What's Next?
 
-### Explore the Features
+### Try Out the Features
 
-Now that your project is initialized, you can explore the available features:
+Now that your project is set up, explore what's available:
 
 #### Port Manager
 ```bash
@@ -159,54 +159,70 @@ npx @your-org/core init --skip-commands
 
 ## Troubleshooting
 
+**Running into issues?** Here are quick fixes for common problems:
+
 ### Port Manager Not Working
 
-If Port Manager isn't working:
-1. Check if it was initialized: `npx @your-org/core port-manager check`
+**Problem**: Port Manager commands aren't working.
+
+**Solution**:
+1. Check initialization status: `npx @your-org/core port-manager check`
 2. Re-initialize if needed: `npx @your-org/core port-manager init`
 
-### Rules Not Appearing
+### Rules Not Showing Up
 
-If rules aren't appearing in your IDE:
-1. Check if `.cursor/rules/` directory exists
+**Problem**: Expert personas and rules aren't appearing in your IDE.
+
+**Solution**:
+1. Verify `.cursor/rules/` directory exists
 2. Restart your IDE (Cursor/VS Code)
 3. Re-run initialization: `npx @your-org/core init`
 
-### Commands Not Available
+### Commands Missing
 
-If commands aren't available:
+**Problem**: Commands aren't available in your IDE.
+
+**Solution**:
 1. Check if `.cursor/commands/general/` directory exists
-2. Verify the command file exists
+2. Verify command files are present
 3. Re-run initialization: `npx @your-org/core init`
 
-## Getting Help
+## Need Help?
 
-- **Documentation**: Check the README.md and ARCHITECTURE.md files
-- **Feature PRDs**: Detailed documentation for each feature
-- **Issues**: Report issues or ask questions in the project repository
+- **📖 Documentation**: Check README.md and ARCHITECTURE.md for detailed information
+- **🔍 Feature Docs**: Each feature has its own PRD with complete documentation
+- **🐛 Issues**: Found a bug or have a question? Report it in the project repository
 
 ## Learning Resources
 
-### For Beginners
-1. Start with this Getting Started guide
-2. Read the README.md for feature overview
-3. Try the examples in each feature section
-4. Explore the `.cursor/rules/` directory to see what was installed
+### 🎓 For Beginners
 
-### For Advanced Users
-1. Read ARCHITECTURE.md for design patterns
-2. Check feature PRDs for detailed API documentation
-3. Explore the source code in `packages/core/src/`
-4. Review the Package Architecture Strategy document
+**New to the core package?** Start here:
+1. **This guide** — You're reading it! Follow the steps above
+2. **README.md** — Overview of all features and capabilities
+3. **Try the examples** — Each feature section has working examples
+4. **Explore `.cursor/rules/`** — See what expert personas were installed
+
+### 🚀 For Advanced Users
+
+**Ready to go deeper?** Check out:
+1. **ARCHITECTURE.md** — Design patterns and system structure
+2. **Feature PRDs** — Complete API documentation for each feature
+3. **Source code** — Explore `packages/core/src/` to see how it works
+4. **Package Architecture Strategy** — Understand how everything fits together
 
 ## Best Practices
 
-1. **Always initialize**: Run `npx @your-org/core init` after installing
-2. **Keep updated**: Update the core package regularly to get new features
-3. **Use Port Manager**: Let Port Manager handle port assignments automatically
-4. **Explore features**: Try different features to see what works best for your workflow
-5. **Read documentation**: Check feature PRDs for advanced usage
+**Get the most out of the core package** with these tips:
+
+1. **Always initialize** — Run `npx @your-org/core init` after installing to set everything up
+2. **Stay updated** — Update the core package regularly to get new features and improvements
+3. **Use Port Manager** — Let it handle port assignments automatically (it's smarter than manual management)
+4. **Explore features** — Try different features to discover what works best for your workflow
+5. **Read the docs** — Feature PRDs have advanced usage examples and API details
 
 ---
 
-**Happy coding!** 🚀
+**Ready to build something amazing?** 🚀
+
+The core package is your foundation — now go create something great!

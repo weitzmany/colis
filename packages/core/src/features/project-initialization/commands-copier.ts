@@ -7,6 +7,7 @@
  */
 
 import * as fs from 'fs-extra';
+import { readdir } from 'fs/promises';
 import * as path from 'path';
 
 /**
@@ -83,7 +84,7 @@ export async function copyCommands(
 
     if (await fs.pathExists(generalSource)) {
       await fs.ensureDir(generalTarget);
-      const generalFiles = await fs.readdir(generalSource);
+      const generalFiles = await readdir(generalSource);
       for (const file of generalFiles) {
         if (file.endsWith('.md')) {
           const sourceFile = path.join(generalSource, file);
@@ -107,7 +108,7 @@ export async function copyCommands(
     // Track excluded local commands (for reporting)
     const localSource = path.join(sourceCommandsPath, 'local');
     if (await fs.pathExists(localSource)) {
-      const localFiles = await fs.readdir(localSource);
+      const localFiles = await readdir(localSource);
       for (const file of localFiles) {
         if (file.endsWith('.md')) {
           result.excluded.push(`local/${file}`);

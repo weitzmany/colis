@@ -1,14 +1,23 @@
 /**
  * @your-org/core
  * 
- * Core package providing foundational features, rules, experts, and commands
- * for use across all projects.
+ * Your development foundation — Essential tools, rules, and utilities for all projects.
  * 
- * This package serves as the foundation for all projects, providing:
- * - **Features**: Port Manager, Tech Detector, Domain Manager, Project Initialization
- * - **Shared Utilities**: Database abstractions, configuration management
- * - **Rules**: Cursor IDE rules and expert personas
- * - **Commands**: CLI commands for common development tasks
+ * The core package provides everything you need to set up and manage projects efficiently:
+ * 
+ * **Features**:
+ * - Port Manager: Automatic port assignment and conflict prevention
+ * - Tech Detector: Detect and document your project's technology stack
+ * - Domain Manager: Manage local domains with Caddy integration
+ * - Project Initialization: One-command project setup
+ * 
+ * **Shared Utilities**:
+ * - Database abstractions: Work with SQLite, MySQL, or PostgreSQL seamlessly
+ * - Configuration management: Global and project-specific settings
+ * 
+ * **Development Tools**:
+ * - Cursor IDE rules: Expert personas and best practices
+ * - CLI commands: Reusable commands for common tasks
  * 
  * @packageDocumentation
  * @module @your-org/core

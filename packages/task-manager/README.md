@@ -178,9 +178,12 @@ This package works alongside taskmaster-ai:
 - Reads `.taskmaster/state.json` for current tag/branch mapping
 - Auto-initializes taskmaster-ai if not present
 
-## Complete Workflow Guide
+## Documentation
 
-For a detailed step-by-step workflow guide including installation, usage examples, and manual testing instructions, see [WORKFLOW.md](../../docs/features/task-manager/WORKFLOW.md).
+- **[User Guide](./USER_GUIDE.md)** - Complete user guide with examples and best practices
+- **[Migration Guide](./MIGRATION_GUIDE.md)** - Guide for migrating from other systems
+- **[Troubleshooting Guide](./TROUBLESHOOTING.md)** - Common issues and solutions
+- **[Workflow Guide](../../docs/features/task-manager/WORKFLOW.md)** - Detailed workflow guide
 
 ## Development
 

@@ -7,6 +7,8 @@
 
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import { readdir } from 'fs/promises';
+import { execSync } from 'child_process';
 import chalk from 'chalk';
 import { copyRules, CopyRulesResult } from './rules-copier.js';
 import { copyCommands, CopyCommandsResult } from './commands-copier.js';
@@ -297,7 +299,6 @@ export async function updateProject(options: UpdateOptions = {}): Promise<Update
           
           // Try to initialize settings.json
           try {
-            const { execSync } = require('child_process');
             let branchName = 'main';
             try {
               branchName = execSync('git rev-parse --abbrev-ref HEAD', {
@@ -478,7 +479,7 @@ async function findMissingRules(
     const expertsTarget = path.join(targetRulesPath, 'experts');
 
     if (await fs.pathExists(expertsSource)) {
-      const expertFiles = (await fs.readdir(expertsSource)).filter((f) => f.endsWith('.mdc'));
+      const expertFiles = (await readdir(expertsSource)).filter((f) => f.endsWith('.mdc'));
       for (const file of expertFiles) {
         const targetFile = path.join(expertsTarget, file);
         if (!(await fs.pathExists(targetFile))) {
@@ -492,7 +493,7 @@ async function findMissingRules(
     const userTarget = path.join(targetRulesPath, 'user');
 
     if (await fs.pathExists(userSource)) {
-      const userFiles = (await fs.readdir(userSource)).filter((f) => f.endsWith('.mdc'));
+      const userFiles = (await readdir(userSource)).filter((f) => f.endsWith('.mdc'));
       for (const file of userFiles) {
         const targetFile = path.join(userTarget, file);
         if (!(await fs.pathExists(targetFile))) {

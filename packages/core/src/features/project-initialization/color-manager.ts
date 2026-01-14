@@ -26,6 +26,44 @@ export const BASE_PALETTE = {
 } as const;
 
 /**
+ * Cached array of base palette colors for performance
+ * Pre-computed to avoid Object.values() call on every color generation
+ */
+const BASE_PALETTE_COLORS = Object.values(BASE_PALETTE);
+
+/**
+ * Cache for RGB conversions to avoid repeated hex parsing
+ * Key: hex color string (normalized), Value: RGB object
+ */
+const rgbCache = new Map<string, { r: number; g: number; b: number }>();
+
+/**
+ * Maximum cache size to prevent memory leaks
+ */
+const MAX_RGB_CACHE_SIZE = 1000;
+
+/**
+ * Clear the RGB conversion cache
+ * Useful for testing or memory management
+ * 
+ * @internal
+ */
+export function clearRgbCache(): void {
+  rgbCache.clear();
+}
+
+/**
+ * Get the current RGB cache size
+ * Useful for monitoring cache performance
+ * 
+ * @returns Current number of cached RGB conversions
+ * @internal
+ */
+export function getRgbCacheSize(): number {
+  return rgbCache.size;
+}
+
+/**
  * Generate a hash from a string (consistent across runs)
  * Uses DJB2 hash algorithm for deterministic color generation.
  * 
@@ -52,6 +90,7 @@ function djb2Hash(str: string): number {
 
 /**
  * Convert hex color to RGB values
+ * Uses caching to avoid repeated parsing of the same colors.
  * 
  * @param hex - Hex color string (with or without # prefix, e.g., "#FF0000" or "FF0000")
  * @returns RGB color object with r, g, b values (0-255)
@@ -65,6 +104,12 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } {
   // Normalize hex string (remove # if present, ensure uppercase)
   const normalizedHex = hex.trim().replace(/^#/, '').toUpperCase();
   
+  // Check cache first (performance optimization)
+  const cached = rgbCache.get(normalizedHex);
+  if (cached) {
+    return cached;
+  }
+  
   // Validate hex format (must be 6 hex digits)
   if (!/^[0-9A-F]{6}$/i.test(normalizedHex)) {
     throw new Error(`Invalid hex color format: "${hex}". Expected format: "#RRGGBB" or "RRGGBB"`);
@@ -75,11 +120,23 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } {
     throw new Error(`Failed to parse hex color: "${hex}"`);
   }
   
-  return {
+  const rgb = {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
     b: parseInt(result[3], 16),
   };
+  
+  // Cache the result (with size limit to prevent memory leaks)
+  if (rgbCache.size >= MAX_RGB_CACHE_SIZE) {
+    // Remove oldest entry (FIFO - first in, first out)
+    const firstKey = rgbCache.keys().next().value;
+    if (firstKey) {
+      rgbCache.delete(firstKey);
+    }
+  }
+  rgbCache.set(normalizedHex, rgb);
+  
+  return rgb;
 }
 
 /**
@@ -216,8 +273,8 @@ export function generateKeyColor(projectName: string): string {
   const hash = djb2Hash(normalizedName);
   
   // Select a base color from palette based on hash
-  const paletteColors = Object.values(BASE_PALETTE);
-  const baseColor = paletteColors[hash % paletteColors.length];
+  // Use cached array to avoid Object.values() call on every generation
+  const baseColor = BASE_PALETTE_COLORS[hash % BASE_PALETTE_COLORS.length];
   
   // Generate variations to ensure uniqueness
   const variation = (hash % 100) / 100; // 0-1 variation factor
@@ -338,7 +395,7 @@ export function generateColorPalette(projectName: string, keyColor?: string): Pr
   // Project colors built around KEY_COLOR
   const PROJECT_BG = KEY_COLOR;
   const PROJECT_COLOR = darken(KEY_COLOR, 0.7); // Darker version for text
-  const PROJECT_INACTIVE = KEY_COLOR + 'CC'; // Add transparency (80% opacity)
+  const PROJECT_INACTIVE = `${KEY_COLOR}CC`; // Add transparency (80% opacity) - use template literal for performance
   
   // Border color - slightly lighter than KEY_COLOR
   const BORDER = lighten(KEY_COLOR, 0.15);
@@ -421,7 +478,8 @@ export function ensureUniqueColor(
   }
   
   // Check if color is too similar to existing colors
-  const minDistance = 30; // Minimum color distance (0-255 scale)
+  // Use squared distance to avoid expensive Math.sqrt() call
+  const minDistanceSquared = 30 * 30; // Minimum color distance squared (900)
   
   const rgb1 = hexToRgb(keyColor);
   
@@ -435,15 +493,15 @@ export function ensureUniqueColor(
     try {
       const rgb2 = hexToRgb(existingColor);
       
-      // Calculate color distance (Euclidean distance in RGB space)
-      const distance = Math.sqrt(
+      // Calculate squared color distance (Euclidean distance squared in RGB space)
+      // Using squared distance avoids expensive Math.sqrt() call
+      const distanceSquared =
         Math.pow(rgb1.r - rgb2.r, 2) +
         Math.pow(rgb1.g - rgb2.g, 2) +
-        Math.pow(rgb1.b - rgb2.b, 2)
-      );
+        Math.pow(rgb1.b - rgb2.b, 2);
       
       // If too similar, adjust the color
-      if (distance < minDistance) {
+      if (distanceSquared < minDistanceSquared) {
         // Shift hue slightly using deterministic hash
         const normalizedName = projectName.trim().toLowerCase();
         const hash = djb2Hash(normalizedName + '_adjusted');

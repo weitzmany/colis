@@ -17,31 +17,31 @@
   "license": "{{license}}",
   {{/if}}
   "dependencies": {
-    "@angular/animations": "^21.0.0",
-    "@angular/common": "^21.0.0",
-    "@angular/compiler": "^21.0.0",
-    "@angular/core": "^21.0.0",
-    "@angular/forms": "^21.0.0",
-    "@angular/platform-browser": "^21.0.0",
-    "@angular/platform-browser-dynamic": "^21.0.0",
-    "@angular/router": "^21.0.0",
-    "rxjs": "^7.8.0",
-    "tslib": "^2.8.0",
-    "zone.js": "^0.15.0"
+    "@angular/animations": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
+    "@angular/common": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
+    "@angular/compiler": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
+    "@angular/core": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
+    "@angular/forms": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
+    "@angular/platform-browser": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
+    "@angular/platform-browser-dynamic": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
+    "@angular/router": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
+    "rxjs": "{{#if angularVersions}}{{angularVersions.rxjs}}{{else}}^7.8.0{{/if}}",
+    "tslib": "{{#if angularVersions}}{{angularVersions.tslib}}{{else}}^2.8.0{{/if}}",
+    "zone.js": "{{#if angularVersions}}{{angularVersions.zoneJs}}{{else}}^0.15.0{{/if}}"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^21.0.0",
-    "@angular/cli": "^21.0.0",
-    "@angular/compiler-cli": "^21.0.0",
+    "@angular-devkit/build-angular": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
+    "@angular/cli": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
+    "@angular/compiler-cli": "^{{#if angularVersions}}{{angularVersions.angular}}{{else}}21.0.0{{/if}}",
     "@types/jasmine": "^5.1.0",
-    "@types/node": "^22.0.0",
+    "@types/node": "{{#if angularVersions}}{{angularVersions.node}}{{else}}^22.0.0{{/if}}",
     "jasmine-core": "^5.4.0",
     "karma": "^6.4.0",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.0",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "typescript": "~5.6.0"
+    "typescript": "{{#if angularVersions}}{{angularVersions.typescript}}{{else}}~5.6.0{{/if}}"
   },
   "overrides": {
     "glob": "^10.5.0"

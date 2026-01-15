@@ -28,6 +28,7 @@ import { ConfigManager } from '../../features/template-engine/config-manager.js'
 import { FileGenerator } from '../../features/template-engine/file-generator.js';
 import { ProjectConfig, TemplateContext } from '../../features/template-engine/types.js';
 import { initializeProject } from '@your-org/core/features/project-initialization';
+import { getLatestAngularVersion, getAngularEcosystemVersions } from '../../utils/npm-version-fetcher.js';
 
 /**
  * Options for the create command.
@@ -382,6 +383,20 @@ export async function createCommand(options: CreateOptions = {}): Promise<void> 
     };
     allocatedPort = defaultPorts[templateType] || 4200;
 
+    // Step 4.5: Fetch latest Angular version (if Angular template)
+    let angularVersions: Awaited<ReturnType<typeof getAngularEcosystemVersions>> | undefined;
+    
+    if (templateType === 'angular' || config.stackSelection?.frontend === 'angular') {
+      console.log(chalk.blue('\n🔍 Fetching latest Angular version...'));
+      try {
+        const latestAngular = await getLatestAngularVersion();
+        angularVersions = await getAngularEcosystemVersions(latestAngular);
+        console.log(chalk.green(`✓ Using Angular ${angularVersions.angular}`));
+      } catch (error) {
+        console.warn(chalk.yellow('⚠ Could not fetch latest Angular version, using template defaults'));
+      }
+    }
+
     // Step 5: Generate project structure
     console.log(chalk.blue('\n📁 Generating project structure...'));
 
@@ -397,6 +412,8 @@ export async function createCommand(options: CreateOptions = {}): Promise<void> 
       port: allocatedPort,
       // Include stack selection in context for templates
       stackSelection: config.stackSelection,
+      // Include Angular versions if fetched
+      angularVersions,
     };
 
     // Check if template path contains {{projectName}} directory

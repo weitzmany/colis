@@ -1,7 +1,7 @@
 {
   "name": "slim",
   "description": "Slim PHP framework application template",
-  "type": "backend",
+  "type": "slim",
   "version": "1.0.0",
   "dependencies": {
     "slim/slim": "^4.12.0",

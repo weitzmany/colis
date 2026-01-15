@@ -102,6 +102,22 @@ export class PortManager {
 
   /**
    * Allocate a port for a project
+   * 
+   * @example
+   * ```typescript
+   * try {
+   *   const port = await portManager.allocate('my-project', './my-project', 'nextjs');
+   *   console.log(`Allocated port: ${port}`);
+   * } catch (error) {
+   *   if (error instanceof PortConflictError) {
+   *     // Handle port conflict
+   *   } else if (error instanceof PortRangeExhaustedError) {
+   *     // Handle range exhaustion
+   *   } else if (error instanceof PortInUseError) {
+   *     // Handle port in use
+   *   }
+   * }
+   * ```
    */
   async allocate(
     projectName: string,
@@ -295,6 +311,19 @@ export class PortManager {
    * @param port - Port number to reserve
    * @param purpose - Purpose for the reservation (e.g., "Future project", "MySQL service")
    * @param notes - Optional additional notes about the reservation
+   * 
+   * @example
+   * ```typescript
+   * try {
+   *   await portManager.reservePort(5432, 'PostgreSQL service', 'Database port');
+   * } catch (error) {
+   *   if (error instanceof PortConflictError) {
+   *     console.error(`Port ${error.port} is already assigned to ${error.projectName}`);
+   *   } else if (error instanceof PortInUseError) {
+   *     console.error(`Port ${error.port} is currently in use on the system`);
+   *   }
+   * }
+   * ```
    */
   async reservePort(port: number, purpose: string, notes?: string): Promise<void> {
     await this.ensureConnection();

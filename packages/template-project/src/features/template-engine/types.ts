@@ -35,6 +35,15 @@ export interface TemplateContext {
   license?: string;
   /** Project version (defaults to '1.0.0') */
   version?: string;
+  /** Angular versions (if Angular template) - fetched from npm */
+  angularVersions?: {
+    angular: string;
+    typescript: string;
+    node: string;
+    rxjs: string;
+    tslib: string;
+    zoneJs: string;
+  };
   /** Additional custom variables can be added */
   [key: string]: unknown;
 }

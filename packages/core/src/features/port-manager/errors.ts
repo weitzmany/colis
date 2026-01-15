@@ -21,6 +21,18 @@ export class PortManagerError extends Error {
 
 /**
  * Error thrown when a port conflict is detected
+ * 
+ * @example
+ * ```typescript
+ * try {
+ *   await portManager.allocate('my-project', './my-project', 'nextjs');
+ * } catch (error) {
+ *   if (error instanceof PortConflictError) {
+ *     console.error(`Port conflict: ${error.message}`);
+ *     console.error(`Port: ${error.port}, Project: ${error.projectName}`);
+ *   }
+ * }
+ * ```
  */
 export class PortConflictError extends PortManagerError {
   constructor(
@@ -37,6 +49,18 @@ export class PortConflictError extends PortManagerError {
 
 /**
  * Error thrown when port range is exhausted
+ * 
+ * @example
+ * ```typescript
+ * try {
+ *   await portManager.allocate('my-project', './my-project', 'nextjs');
+ * } catch (error) {
+ *   if (error instanceof PortRangeExhaustedError) {
+ *     console.error(`Port range exhausted: ${error.message}`);
+ *     console.error(`App type: ${error.appType}, Range: ${error.range?.start}-${error.range?.end}`);
+ *   }
+ * }
+ * ```
  */
 export class PortRangeExhaustedError extends PortManagerError {
   constructor(

@@ -1,9 +1,15 @@
 import { Task, TaskStatus, TaskPriority, TaskType, Subtask } from '../types/task';
 
 /**
- * Validation error
+ * Validation error thrown when task validation fails.
+ * Includes the field name that failed validation for better error reporting.
  */
 export class ValidationError extends Error {
+  /**
+   * Creates a new ValidationError.
+   * @param message Human-readable error message describing the validation failure.
+   * @param field Optional field name that failed validation (e.g., 'title', 'status', 'dependencies').
+   */
   constructor(message: string, public field?: string) {
     super(message);
     this.name = 'ValidationError';
@@ -11,7 +17,23 @@ export class ValidationError extends Error {
 }
 
 /**
- * TaskValidator - Validates task structure and data
+ * TaskValidator - Validates task structure and data.
+ * 
+ * This class provides comprehensive validation for tasks, subtasks, and dependencies.
+ * All validation methods throw ValidationError with descriptive messages when validation fails.
+ * 
+ * @example
+ * ```typescript
+ * const validator = new TaskValidator();
+ * try {
+ *   validator.validateTask(task);
+ *   console.log('Task is valid');
+ * } catch (error) {
+ *   if (error instanceof ValidationError) {
+ *     console.error(`Validation failed for field "${error.field}": ${error.message}`);
+ *   }
+ * }
+ * ```
  */
 export class TaskValidator {
   private readonly VALID_STATUSES: TaskStatus[] = [
@@ -49,7 +71,11 @@ export class TaskValidator {
   ];
 
   /**
-   * Validate a task
+   * Validate a task structure and all its fields.
+   * Checks required fields, field types, valid values, and format constraints.
+   * 
+   * @param task The task to validate (can be partial for updates).
+   * @throws {ValidationError} If any validation check fails, with the field name and error message.
    */
   validateTask(task: Partial<Task>): void {
     // Required fields
@@ -178,7 +204,11 @@ export class TaskValidator {
   }
 
   /**
-   * Validate a subtask
+   * Validate a subtask structure and its relationship to its parent task.
+   * 
+   * @param subtask The subtask to validate (can be partial for updates).
+   * @param parentId The ID of the parent task (used to validate parentId field).
+   * @throws {ValidationError} If any validation check fails, with the field name and error message.
    */
   validateSubtask(subtask: Partial<Subtask>, parentId: number | string): void {
     if (!subtask.id && subtask.id !== 0) {
@@ -209,7 +239,13 @@ export class TaskValidator {
   }
 
   /**
-   * Validate dependencies don't create cycles
+   * Validate that adding dependencies doesn't create circular dependencies.
+   * Uses depth-first search to detect cycles in the dependency graph.
+   * 
+   * @param tasks All existing tasks in the project (used to check dependency chains).
+   * @param taskId The ID of the task that will have these dependencies.
+   * @param dependencies Array of task IDs that the task will depend on.
+   * @throws {ValidationError} If a circular dependency is detected or if a task depends on itself.
    */
   validateDependencies(
     tasks: Task[],
@@ -250,21 +286,37 @@ export class TaskValidator {
         throw new ValidationError('Task cannot depend on itself', 'dependencies');
       }
 
-      // Temporarily add the dependency to check for cycles
+      // Check for cycles by temporarily adding this dependency
+      // We need to check if adding this dependency creates a cycle
+      const tempTasks = [...tasks];
+      const existingTask = tempTasks.find((t) => t.id === taskId);
+      
+      // Create a temporary task with the new dependencies for cycle detection
       const tempTask: Task = {
         id: taskId,
-        title: '',
-        description: '',
-        priority: 'medium',
-        status: 'pending',
+        title: existingTask?.title || '',
+        description: existingTask?.description || '',
+        priority: existingTask?.priority || 'medium',
+        status: existingTask?.status || 'pending',
         updatedAt: new Date().toISOString(),
         dependencies: dependencies,
       };
 
-      const tempTasks = [...tasks, tempTask];
+      // Replace existing task or add new one for cycle detection
+      const taskIndex = tempTasks.findIndex((t) => t.id === taskId);
+      if (taskIndex >= 0) {
+        tempTasks[taskIndex] = tempTask;
+      } else {
+        tempTasks.push(tempTask);
+      }
+
+      // Reset visited sets for cycle detection with new dependencies
+      visited.clear();
+      recursionStack.clear();
+      
       if (hasCycle(taskId)) {
         throw new ValidationError(
-          `Adding dependency ${depId} creates a circular dependency`,
+          `Adding dependency "${depId}" creates a circular dependency`,
           'dependencies'
         );
       }
@@ -272,23 +324,35 @@ export class TaskValidator {
   }
 
   /**
-   * Check if all dependencies exist
+   * Check if all specified dependencies exist in the task list.
+   * 
+   * @param tasks All existing tasks in the project.
+   * @param dependencies Array of task IDs to check for existence.
+   * @throws {ValidationError} If any dependency ID doesn't exist in the task list.
    */
   validateDependenciesExist(
     tasks: Task[],
     dependencies: (number | string)[]
   ): void {
+    const MAX_DISPLAY_IDS = 10;
     const taskIds = new Set(tasks.map((t) => t.id));
 
     for (const depId of dependencies) {
       if (!taskIds.has(depId)) {
-        throw new ValidationError(`Dependency ${depId} does not exist`, 'dependencies');
+        const availableIds = Array.from(taskIds).slice(0, MAX_DISPLAY_IDS).join(', ');
+        const moreText = taskIds.size > MAX_DISPLAY_IDS ? ` (and ${taskIds.size - MAX_DISPLAY_IDS} more)` : '';
+        throw new ValidationError(
+          `Dependency "${depId}" does not exist. Available task IDs: ${availableIds}${moreText}`,
+          'dependencies'
+        );
       }
     }
   }
 
   /**
-   * Validate ISO date string
+   * Validate that a date string is in valid ISO 8601 format.
+   * @param dateString The date string to validate.
+   * @returns True if the date is valid ISO format, false otherwise.
    */
   private isValidISODate(dateString: string): boolean {
     const date = new Date(dateString);

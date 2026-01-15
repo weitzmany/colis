@@ -4,8 +4,8 @@
  * Project Initialization CLI Entry Point
  */
 
-const { program } = require('commander');
-const { initCommand } = require('../dist/features/project-initialization/cli/commands/init');
+import { program } from 'commander';
+import { initCommand } from '../dist/features/project-initialization/cli/commands/init.js';
 
 program
   .name('init')

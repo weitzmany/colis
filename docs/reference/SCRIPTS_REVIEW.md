@@ -2044,6 +2044,218 @@ When creating database scripts, ensure:
    - Review scripts for best practices
    - Standardize script patterns and conventions
    - Foster script knowledge sharing
+- Analytics scripts should support data collection, processing, and reporting
+- Analytics scripts should ensure data accuracy and privacy compliance
+- Analytics scripts should optimize for performance with large datasets
+
+## Analytics & Business Intelligence Script Patterns
+
+### Pattern 1: Analytics Data Collection Scripts
+
+**Description**: Scripts for collecting analytics data including event tracking and metrics collection
+
+**Pattern**:
+- Event tracking scripts
+- Metrics collection scripts
+- Data validation scripts
+- Data anonymization scripts
+
+**Example**:
+```bash
+#!/bin/bash
+# scripts/collect-analytics-events.sh
+
+set -e
+
+ANALYTICS_API_URL="${ANALYTICS_API_URL:-http://localhost:3001}"
+BATCH_SIZE="${ANALYTICS_BATCH_SIZE:-100}"
+
+echo "Collecting analytics events..."
+
+# Collect events from application logs
+events=$(tail -n 1000 /var/log/app.log | grep "ANALYTICS_EVENT" | jq -s '.')
+
+# Batch events
+echo "$events" | jq -c --argjson batch_size "$BATCH_SIZE" \
+  'group_by(.type) | .[] | _nth(0; .[] | length % $batch_size == 0) | .[0:$batch_size]' | \
+  while read batch; do
+    curl -X POST "$ANALYTICS_API_URL/events/batch" \
+      -H "Content-Type: application/json" \
+      -d "$batch"
+  done
+
+echo "Analytics events collected successfully"
+```
+
+### Pattern 2: Analytics Data Processing Scripts
+
+**Description**: Scripts for processing analytics data including aggregation and transformation
+
+**Pattern**:
+- Data aggregation scripts
+- Data transformation scripts
+- Data enrichment scripts
+- Data quality validation scripts
+
+**Example**:
+```bash
+#!/bin/bash
+# scripts/process-analytics-data.sh
+
+set -e
+
+DW_HOST="${DW_HOST:-localhost}"
+DW_DATABASE="${DW_DATABASE:-analytics_warehouse}"
+
+echo "Processing analytics data..."
+
+# Aggregate daily metrics
+psql -h "$DW_HOST" -d "$DW_DATABASE" << EOF
+INSERT INTO daily_metrics (date, metric_type, value)
+SELECT 
+  DATE(created_at) as date,
+  event_type as metric_type,
+  COUNT(*) as value
+FROM events
+WHERE created_at >= CURRENT_DATE - INTERVAL '1 day'
+GROUP BY DATE(created_at), event_type
+ON CONFLICT (date, metric_type) DO UPDATE
+SET value = EXCLUDED.value;
+EOF
+
+echo "Analytics data processed successfully"
+```
+
+### Pattern 3: Analytics Report Generation Scripts
+
+**Description**: Scripts for generating analytics reports including data extraction and formatting
+
+**Pattern**:
+- Report data extraction scripts
+- Report formatting scripts
+- Report export scripts
+- Scheduled report scripts
+
+**Example**:
+```bash
+#!/bin/bash
+# scripts/generate-analytics-report.sh
+
+set -e
+
+REPORT_TYPE="${1:-monthly}"
+REPORT_DATE="${2:-$(date +%Y-%m)}"
+OUTPUT_DIR="${OUTPUT_DIR:-./reports}"
+
+echo "Generating $REPORT_TYPE report for $REPORT_DATE..."
+
+# Extract report data
+psql -h localhost -d analytics_warehouse -t -A -F',' << EOF > "$OUTPUT_DIR/report_data.csv"
+SELECT 
+  date,
+  metric_type,
+  value
+FROM daily_metrics
+WHERE date >= '$REPORT_DATE-01' AND date < '$REPORT_DATE-01'::date + INTERVAL '1 month'
+ORDER BY date, metric_type;
+EOF
+
+# Generate report
+python scripts/report-generator.py \
+  --type "$REPORT_TYPE" \
+  --date "$REPORT_DATE" \
+  --input "$OUTPUT_DIR/report_data.csv" \
+  --output "$OUTPUT_DIR/report_${REPORT_TYPE}_${REPORT_DATE}.pdf"
+
+echo "Report generated: $OUTPUT_DIR/report_${REPORT_TYPE}_${REPORT_DATE}.pdf"
+```
+
+### Pattern 4: Analytics Data Warehouse Maintenance Scripts
+
+**Description**: Scripts for maintaining analytics data warehouse including cleanup and optimization
+
+**Pattern**:
+- Data retention scripts
+- Data archiving scripts
+- Index optimization scripts
+- Data warehouse health check scripts
+
+**Example**:
+```bash
+#!/bin/bash
+# scripts/maintain-analytics-warehouse.sh
+
+set -e
+
+DW_HOST="${DW_HOST:-localhost}"
+DW_DATABASE="${DW_DATABASE:-analytics_warehouse}"
+RETENTION_DAYS="${ANALYTICS_RETENTION_DAYS:-90}"
+
+echo "Maintaining analytics data warehouse..."
+
+# Archive old data
+psql -h "$DW_HOST" -d "$DW_DATABASE" << EOF
+INSERT INTO events_archive
+SELECT * FROM events
+WHERE created_at < CURRENT_DATE - INTERVAL '$RETENTION_DAYS days';
+
+DELETE FROM events
+WHERE created_at < CURRENT_DATE - INTERVAL '$RETENTION_DAYS days';
+EOF
+
+# Optimize indexes
+psql -h "$DW_HOST" -d "$DW_DATABASE" << EOF
+REINDEX TABLE events;
+REINDEX TABLE daily_metrics;
+VACUUM ANALYZE events;
+VACUUM ANALYZE daily_metrics;
+EOF
+
+echo "Analytics data warehouse maintenance complete"
+```
+
+### Analytics Script Best Practices
+
+1. **Data Collection Scripts**:
+   - Batch events for efficiency
+   - Validate data before sending
+   - Handle errors gracefully
+   - Retry failed requests
+   - Anonymize user identifiers
+
+2. **Data Processing Scripts**:
+   - Use transactions for data integrity
+   - Optimize queries for performance
+   - Handle large datasets with pagination
+   - Monitor processing time
+   - Log processing results
+
+3. **Report Generation Scripts**:
+   - Cache report data when possible
+   - Generate reports incrementally
+   - Support multiple export formats
+   - Handle report generation errors
+   - Schedule reports appropriately
+
+4. **Data Warehouse Maintenance Scripts**:
+   - Archive data before deletion
+   - Optimize indexes regularly
+   - Monitor data warehouse size
+   - Clean up old aggregations
+   - Verify data integrity
+
+### Analytics Script Checklist
+
+- [ ] Analytics data collection scripts implemented
+- [ ] Analytics data processing scripts implemented
+- [ ] Analytics report generation scripts implemented
+- [ ] Analytics data warehouse maintenance scripts implemented
+- [ ] Analytics scripts handle errors gracefully
+- [ ] Analytics scripts validate data accuracy
+- [ ] Analytics scripts anonymize user data
+- [ ] Analytics scripts optimize for performance
+- [ ] Analytics scripts support batch processing
+- [ ] Analytics scripts include logging and monitoring
 
 ---
 
@@ -2073,5 +2285,10 @@ When creating database scripts, ensure:
 **Expertise**: DevOps, CI/CD, and Deployment  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this scripts review document by adding a comprehensive "DevOps Best Practices for Scripts" section covering CI/CD integration with scripts (script execution in CI/CD pipelines with GitHub Actions/GitLab CI/Jenkins integration, CI/CD script patterns for build/test/deployment/migration/linting/security/notification, CI/CD script best practices with idempotency and retry logic), script automation and orchestration (script orchestration patterns with workflow tools, script automation tools like Make/Task/Just/Invoke, script scheduling and cron jobs with monitoring), script monitoring and observability (script execution monitoring with logging and alerting, script performance metrics with execution time and resource tracking, script observability best practices with correlation IDs and distributed tracing), script deployment and versioning (script deployment strategies with blue-green and canary deployments, script version management with semantic versioning, script rollback procedures), script infrastructure management (script execution environment with containers and resource limits, script configuration management with environment variables and secrets, script dependency management with version locking), script security best practices (script security hardening with input validation, script secrets management with rotation, script security scanning), DevOps tools and technologies (CI/CD platforms, script orchestration tools, monitoring and observability tools, script execution environments), and DevOps workflow best practices (script development workflow, script maintenance workflow, script collaboration workflow). This enhancement provides essential DevOps perspective on scripts, ensuring that scripts are integrated with CI/CD pipelines, automated, monitored, deployed, and managed using DevOps best practices.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this scripts review document by adding comprehensive "Analytics & Business Intelligence Script Patterns" section covering analytics data collection scripts (scripts for collecting analytics data including event tracking and metrics collection with event tracking scripts, metrics collection scripts, data validation scripts, data anonymization scripts with bash script example for collecting analytics events from application logs, batching events, sending to analytics API), analytics data processing scripts (scripts for processing analytics data including aggregation and transformation with data aggregation scripts, data transformation scripts, data enrichment scripts, data quality validation scripts with bash script example for processing analytics data, aggregating daily metrics, inserting into data warehouse), analytics report generation scripts (scripts for generating analytics reports including data extraction and formatting with report data extraction scripts, report formatting scripts, report export scripts, scheduled report scripts with bash script example for generating analytics reports, extracting report data, generating PDF reports), analytics data warehouse maintenance scripts (scripts for maintaining analytics data warehouse including cleanup and optimization with data retention scripts, data archiving scripts, index optimization scripts, data warehouse health check scripts with bash script example for maintaining analytics data warehouse, archiving old data, optimizing indexes), and analytics script best practices (data collection scripts with event batching, data validation, error handling, retry logic, user identifier anonymization, data processing scripts with transaction support, query optimization, pagination, processing time monitoring, result logging, report generation scripts with data caching, incremental generation, multiple export formats, error handling, appropriate scheduling, data warehouse maintenance scripts with data archiving before deletion, regular index optimization, data warehouse size monitoring, old aggregation cleanup, data integrity verification). Added comprehensive analytics script checklist (10 items covering data collection, data processing, report generation, data warehouse maintenance, error handling, data validation, anonymization, performance optimization, batch processing, logging and monitoring). Enhanced "Notes" section with analytics-specific considerations (analytics scripts should support data collection, processing, and reporting, analytics scripts should ensure data accuracy and privacy compliance, analytics scripts should optimize for performance with large datasets). This addition provides essential BI/Analytics perspective on scripts, ensuring analytics scripts have proper patterns for data collection, processing, report generation, and data warehouse maintenance for reliable analytics functionality.
 
 ---

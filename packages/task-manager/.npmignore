@@ -1,0 +1,34 @@
+# Source files
+src/
+tsconfig.json
+
+# Test files
+*.test.ts
+*.spec.ts
+**/__tests__/
+**/__mocks__/
+coverage/
+
+# Development files
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# Documentation (keep README.md)
+docs/
+*.md
+!README.md
+
+# Build artifacts (keep dist/)
+*.tsbuildinfo
+
+# Config files
+.eslintrc*
+.prettierrc*
+.editorconfig
+
+# Test documentation (keep for reference but don't publish)
+TEST_PLAN.md
+QUICK_TEST_CHECKLIST.md
+TEST_CHEATSHEET.md

@@ -6,6 +6,7 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import { IServiceDetector } from './interfaces.js';
 
 export interface DetectedService {
   name: string; // 'frontend', 'backend', 'root'
@@ -14,7 +15,7 @@ export interface DetectedService {
   detectedPort?: number; // Port found in code/config
 }
 
-export class ServiceDetector {
+export class ServiceDetector implements IServiceDetector {
   /**
    * Detect services in a project
    */

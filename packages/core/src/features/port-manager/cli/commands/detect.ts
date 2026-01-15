@@ -4,7 +4,7 @@
  * Detects all port configurations in a project.
  */
 
-import { PortDetector } from '../../utils/port-detector';
+import { PortDetector } from '../../utils/port-detector.js';
 import chalk from 'chalk';
 import * as path from 'path';
 

@@ -2,7 +2,7 @@
  * Port Manager Tests
  */
 
-import { PortManager } from '../port-manager';
+import { PortManager } from '../port-manager.js';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as os from 'os';

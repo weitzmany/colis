@@ -234,6 +234,10 @@ interface PortAssignment {
 - Angular: 4200-4299
 - Python: 5000-5099
 - PHP: 8000-8099
+- React Native: 8081-8199 (Metro bundler default: 8081)
+- Expo: 8081-8199 (uses Metro bundler, default: 8081)
+- Ionic: 8100-8199 (default: 8100)
+- Flutter: 5000-5099 (web dev server, default: 5000)
 
 **API**:
 ```typescript
@@ -1553,10 +1557,110 @@ Port Manager, as part of `@your-org/core`, shares dependencies with the core pac
 
 1. **Web UI**: Browser-based port management interface
 2. **Team Collaboration**: Shared port registry for teams
-3. **Port Analytics**: Usage statistics and insights
+3. **Port Analytics**: Usage statistics and insights (via Analytics Dashboard Package)
 4. **Auto-Migration**: Automatic migration of existing projects
 5. **Plugin System**: Extensible framework support
 6. **Cloud Sync**: Sync port registry across devices
+
+## Analytics Integration
+
+Port Manager integrates with the **Analytics Dashboard Package** (`@your-org/core/features/analytics-dashboard`) to provide comprehensive port usage analytics and insights.
+
+### Integration Overview
+
+Port Manager automatically tracks port-related events and sends them to the Analytics Dashboard Package for aggregation, analysis, and visualization.
+
+### Tracked Events
+
+**Port Allocation Events**:
+```typescript
+import { EventTracker } from '@your-org/core/features/analytics-dashboard';
+
+const tracker = new EventTracker({ feature: 'port-manager' });
+
+// Track port allocation
+tracker.track('port_allocated', {
+  port: 3000,
+  project: 'my-app',
+  framework: 'nextjs',
+  timestamp: new Date().toISOString()
+});
+```
+
+**Port Conflict Events**:
+```typescript
+// Track port conflicts
+tracker.track('port_conflict', {
+  port: 3000,
+  conflictingProject: 'other-app',
+  resolved: true,
+  resolutionTime: 5000 // milliseconds
+});
+```
+
+**Port Release Events**:
+```typescript
+// Track port release
+tracker.track('port_released', {
+  port: 3000,
+  project: 'my-app',
+  duration: 3600000 // milliseconds
+});
+```
+
+### Available Analytics
+
+**Port Usage Metrics**:
+- **Port Allocation Rate**: Ports allocated per day/week/month
+- **Port Utilization**: Percentage of ports in use
+- **Popular Ports**: Most commonly allocated ports
+- **Port Distribution**: Distribution of port assignments across projects
+
+**Port Conflict Metrics**:
+- **Conflict Frequency**: Number of conflicts per time period
+- **Conflict Resolution Time**: Average time to resolve conflicts
+- **Conflict Prevention Rate**: Percentage of conflicts prevented
+- **Conflict Patterns**: Common conflict scenarios
+
+**Project Port Metrics**:
+- **Ports per Project**: Average number of ports per project
+- **Port Reuse Rate**: Percentage of ports reused across projects
+- **Port Lifecycle**: Average duration of port assignments
+
+### Dashboard Integration
+
+Port Manager analytics are available through the Analytics Dashboard Package:
+
+```typescript
+import { AnalyticsDashboard } from '@your-org/core/features/analytics-dashboard';
+
+const dashboard = new AnalyticsDashboard();
+
+// Generate port usage dashboard
+const portDashboard = await dashboard.generateDashboard({
+  metrics: ['port_usage', 'port_conflicts', 'port_utilization'],
+  timeframe: '30d',
+  feature: 'port-manager'
+});
+```
+
+### Analytics Benefits
+
+1. **Usage Insights**: Understand how ports are being used across projects
+2. **Conflict Analysis**: Identify patterns in port conflicts for prevention
+3. **Optimization**: Optimize port allocation strategies based on usage data
+4. **Planning**: Plan port allocation based on historical usage patterns
+5. **Reporting**: Generate reports for stakeholders on port management effectiveness
+
+### Future Analytics Enhancements
+
+With the Analytics Dashboard Package, Port Manager can provide:
+- **Predictive Analytics**: Predict port conflicts before they happen
+- **Recommendations**: Recommend optimal port assignments based on usage patterns
+- **Trend Analysis**: Analyze trends in port usage over time
+- **Cross-Feature Analytics**: Compare port usage with other feature metrics
+
+See [Analytics Dashboard Package PRD](../analytics-dashboard-package/PRD.md) for complete analytics capabilities.
 
 ## Business Value Analysis
 

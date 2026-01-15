@@ -4,13 +4,13 @@
  * Public API exports for Port Manager feature.
  */
 
-export * from './types';
-export * from './port-manager';
-export * from './core/registry';
-export * from './core/allocator';
-export * from './core/validator';
-export * from './core/configurator';
-export * from './frameworks/interfaces';
-export * from './frameworks/factory';
-export * from './errors';
+export * from './types.js';
+export * from './port-manager.js';
+export * from './core/registry.js';
+export * from './core/allocator.js';
+export * from './core/validator.js';
+export * from './core/configurator.js';
+export * from './frameworks/interfaces.js';
+export * from './frameworks/factory.js';
+export * from './errors.js';
 

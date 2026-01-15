@@ -4,9 +4,9 @@
  * Handles port allocation logic, including range management and conflict detection.
  */
 
-import { PortRepository } from '../database/port-repository';
-import { AppType, PortRange } from '../types';
-import { PortConflictError, PortRangeExhaustedError, PortInUseError } from '../errors';
+import { PortRepository } from '../database/port-repository.js';
+import { AppType, PortRange } from '../types.js';
+import { PortConflictError, PortRangeExhaustedError, PortInUseError } from '../errors.js';
 import * as net from 'net';
 
 export class PortAllocator {
@@ -18,13 +18,26 @@ export class PortAllocator {
     python: { start: 5001, end: 5099 },  // Skip 5000 (default)
     php: { start: 8001, end: 8099 },      // Skip 8000 (default)
     docker: { start: 3001, end: 3999 },   // Skip 3000 (default)
+    'react-native': { start: 8081, end: 8199 }, // Metro bundler default: 8081
+    expo: { start: 8081, end: 8199 },     // Expo uses Metro bundler (default: 8081)
+    ionic: { start: 8100, end: 8199 },    // Ionic dev server (default: 8100)
+    flutter: { start: 5000, end: 5099 },  // Flutter web dev server (default: 5000)
   };
 
   /**
    * Default ports that should never be assigned by Port Manager
    * These are reserved for projects that don't use Port Manager
+   * Includes mobile development server defaults
    */
-  private reservedDefaultPorts: number[] = [3000, 4200, 4000, 5000, 8000];
+  private reservedDefaultPorts: number[] = [
+    3000,   // Node.js/Next.js default
+    4200,   // Angular default
+    4000,   // React default
+    5000,   // Python/Flutter default
+    8000,   // PHP default
+    8081,   // React Native Metro bundler default
+    8100,   // Ionic dev server default
+  ];
 
   constructor(
     private repository: PortRepository,

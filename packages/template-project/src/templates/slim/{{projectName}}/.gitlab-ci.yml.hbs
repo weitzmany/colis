@@ -1,0 +1,46 @@
+stages:
+  - lint
+  - test
+  - build
+
+variables:
+  PHP_VERSION: "8.2"
+
+before_script:
+  - composer install --prefer-dist --no-progress --no-interaction
+
+lint:
+  stage: lint
+  image: php:${PHP_VERSION}
+  script:
+    - composer run phpstan
+    - composer run cs-check
+  only:
+    - main
+    - develop
+    - merge_requests
+
+test:
+  stage: test
+  image: php:${PHP_VERSION}
+  script:
+    - composer run test
+  only:
+    - main
+    - develop
+    - merge_requests
+
+build:
+  stage: build
+  image: php:${PHP_VERSION}
+  script:
+    - composer install --prefer-dist --no-progress --no-interaction --no-dev
+    - mkdir -p build
+    # Add build steps here
+  artifacts:
+    paths:
+      - build
+    expire_in: 1 week
+  only:
+    - main
+    - develop

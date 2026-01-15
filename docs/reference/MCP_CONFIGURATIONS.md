@@ -480,6 +480,158 @@ When designing MCP server configurations, ensure:
 - [Games Project MCP Documentation](../../../games/docs/setup/MCP_CONFIGURATION.md) - Original MCP setup documentation
 - [Security and Secrets](../guides/SECURITY_AND_SECRETS.md) - Rules for handling secrets
 
+## Database-Related MCP Configurations
+
+### Database MCP Server Patterns
+
+**Database Connection MCP Servers**:
+- Database connection management MCP servers (PostgreSQL, MySQL, MongoDB, etc.)
+- Database connection pooling MCP servers
+- Database connection monitoring MCP servers
+- Database connection health check MCP servers
+
+**Example Database Connection MCP Configuration**:
+```json
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "POSTGRES_HOST": "localhost",
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_DATABASE": "your_database",
+        "POSTGRES_USER": "YOUR_DB_USER_HERE",
+        "POSTGRES_PASSWORD": "YOUR_DB_PASSWORD_HERE"
+      }
+    },
+    "mysql": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-mysql"],
+      "env": {
+        "MYSQL_HOST": "localhost",
+        "MYSQL_PORT": "3306",
+        "MYSQL_DATABASE": "your_database",
+        "MYSQL_USER": "YOUR_DB_USER_HERE",
+        "MYSQL_PASSWORD": "YOUR_DB_PASSWORD_HERE"
+      }
+    }
+  }
+}
+```
+
+**Database Migration MCP Servers**:
+- Database migration execution MCP servers
+- Database migration rollback MCP servers
+- Database migration status MCP servers
+- Database migration validation MCP servers
+
+**Example Database Migration MCP Configuration**:
+```json
+{
+  "mcpServers": {
+    "database-migrations": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-database-migrations"],
+      "env": {
+        "DATABASE_URL": "postgresql://user:password@localhost:5432/database",
+        "MIGRATIONS_DIR": "./migrations",
+        "MIGRATION_TOOL": "knex"
+      }
+    }
+  }
+}
+```
+
+**Database Query MCP Servers**:
+- Database query execution MCP servers
+- Database query optimization MCP servers
+- Database query monitoring MCP servers
+- Database query result caching MCP servers
+
+**Example Database Query MCP Configuration**:
+```json
+{
+  "mcpServers": {
+    "database-query": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-database-query"],
+      "env": {
+        "DATABASE_URL": "postgresql://user:password@localhost:5432/database",
+        "QUERY_CACHE_ENABLED": "true",
+        "QUERY_CACHE_TTL": "3600",
+        "QUERY_TIMEOUT": "30000"
+      }
+    }
+  }
+}
+```
+
+**Database Schema MCP Servers**:
+- Database schema inspection MCP servers
+- Database schema validation MCP servers
+- Database schema migration MCP servers
+- Database schema documentation MCP servers
+
+**Example Database Schema MCP Configuration**:
+```json
+{
+  "mcpServers": {
+    "database-schema": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-database-schema"],
+      "env": {
+        "DATABASE_URL": "postgresql://user:password@localhost:5432/database",
+        "SCHEMA_DIR": "./schemas",
+        "SCHEMA_FORMAT": "json"
+      }
+    }
+  }
+}
+```
+
+### Database MCP Configuration Best Practices
+
+**Database Connection Security**:
+- Use environment variables for database credentials (never hardcode)
+- Use secure credential storage (secret management systems)
+- Implement connection encryption (SSL/TLS)
+- Use connection pooling for performance
+- Monitor database connections (connection limits, connection health)
+
+**Database Migration Management**:
+- Version control database migrations
+- Test migrations before execution
+- Support migration rollback
+- Monitor migration execution
+- Document migration changes
+
+**Database Query Optimization**:
+- Implement query result caching
+- Monitor query performance
+- Optimize slow queries
+- Use connection pooling
+- Implement query timeout
+
+**Database Schema Management**:
+- Version control database schemas
+- Validate schema changes
+- Document schema changes
+- Test schema migrations
+- Monitor schema drift
+
+**Database MCP Configuration Checklist**:
+- [ ] **Database Credentials**: Securely stored in environment variables
+- [ ] **Connection Security**: SSL/TLS encryption enabled
+- [ ] **Connection Pooling**: Configured for performance
+- [ ] **Migration Management**: Version controlled and tested
+- [ ] **Query Optimization**: Caching and monitoring configured
+- [ ] **Schema Management**: Version controlled and documented
+- [ ] **Error Handling**: Proper error handling and retry logic
+- [ ] **Monitoring**: Database performance and health monitoring
+- [ ] **Backup**: Database backup and recovery configured
+- [ ] **Documentation**: Database configuration documented
+
 ---
 
 ## Review/Contribution
@@ -488,6 +640,11 @@ When designing MCP server configurations, ensure:
 **Expertise**: RESTful API Design  
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "API Design Considerations for MCP Configurations" section covering MCP server API design principles (consistent interface design with uniform resource naming and standardized commands, API versioning for MCP servers with server and protocol versioning, API contract definition with clear interfaces and input validation, request/response patterns with standardized requests and structured responses, error handling and status codes with standard error codes and retry logic, API security design with authentication and authorization, API rate limiting and throttling with rate limits and quota management, API documentation standards with OpenAPI/Swagger), MCP server API design patterns (resource-based API design with resources as nouns and actions as verbs, command-based API design with commands as actions, event-driven API design with event publishers and subscribers), MCP server API best practices (consistency across servers, backward compatibility, performance optimization, observability, testing and validation), and comprehensive MCP configuration API design checklist covering API contract, versioning, error handling, security, rate limiting, documentation, consistency, backward compatibility, performance, and observability. Also fixed the date from 2025-01-05 to 2026-01-05. This addition ensures that MCP server configurations follow RESTful API design principles, providing consistent, maintainable, and well-documented APIs that enhance developer experience and system reliability.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this MCP configurations document by adding a comprehensive "Database-Related MCP Configurations" section covering database MCP server patterns (database connection MCP servers with connection management and pooling, database migration MCP servers with execution and rollback support, database query MCP servers with query execution and optimization, database schema MCP servers with schema inspection and validation), database MCP configuration best practices (database connection security with credential management and encryption, database migration management with version control and testing, database query optimization with caching and monitoring, database schema management with version control and documentation), practical configuration examples for PostgreSQL, MySQL, database migrations, database queries, and database schemas, and comprehensive database MCP configuration checklist covering database credentials, connection security, connection pooling, migration management, query optimization, schema management, error handling, monitoring, backup, and documentation. This enhancement provides essential database perspective on MCP configurations, ensuring that database-related MCP servers are properly configured, secured, and optimized for production use.
 
 ---
 

@@ -93,6 +93,13 @@ These expert personas are generic enough to be useful across multiple projects:
 - **Description**: Database design and optimization expert
 - **Usefulness**: ⭐⭐⭐⭐⭐ Very generic - database concepts apply to all projects using databases
 - **Notes**: Database design principles are universal (specific SQL/NoSQL may vary)
+- **Key Responsibilities**:
+  - Schema design and normalization
+  - Query optimization and indexing
+  - Migration management and rollback
+  - Database performance monitoring
+  - Data integrity and security
+  - Connection pooling and transaction management
 
 #### 11. **backend_expert / backend-developer** (games, sandbox)
 - **Location**: 
@@ -602,6 +609,52 @@ When creating or reviewing an expert persona file, ensure:
 **Expertise**: Documentation (Code, API, User Documentation)  
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "Documentation Standards for Expert Persona Files" section covering file structure standards (frontmatter section with required metadata, expert definition section with clear structure, content organization with consistent heading hierarchy, code examples with appropriate language tags), documentation quality standards (clarity with clear concise language, completeness with all responsibilities documented, consistency with consistent terminology and structure, accuracy with correct technical information), expert persona documentation checklist (14 items covering frontmatter, expert definition, responsibilities, knowledge areas, code examples, project context, best practices, review section, formatting, links, code correctness, spelling/grammar), documentation maintenance (regular reviews with periodic updates, version control with change tracking, cross-references with linking structure), and documentation best practices for expert personas (10 best practices covering purpose, specificity, examples, updates, scannability, context, decisions, resources, consistency, reviews). This addition ensures that expert persona files follow consistent documentation standards, making them easier to understand, maintain, and use effectively across projects.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this generic experts review document by expanding the database_expert section with detailed key responsibilities (schema design with normalization and entity relationships, query optimization with indexing and performance analysis, migration management with rollback procedures and zero-downtime migrations, performance monitoring with slow query detection and health checks). Added comprehensive "Database Expert Patterns" section covering database expert responsibilities (schema design with normalization and constraints, query optimization with indexing and N+1 prevention, migration management with structure and testing, performance monitoring with slow queries and connection pools), database expert best practices (patterns to follow including prepared statements, column selection, indexes, pagination, transactions, monitoring, documentation, testing, anti-patterns to avoid including SELECT *, N+1 queries, missing indexes, long transactions, unoptimized queries, missing rollback procedures). Enhanced "Notes" section with database expert considerations (schema design focus, query optimization, migration management, performance monitoring, best practices enforcement, performance optimization). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide comprehensive guidance for database expert persona implementation, ensuring database experts have clear responsibilities, follow best practices, and avoid common anti-patterns in database design and optimization.
+
+## Analytics & Business Intelligence Expert Patterns
+
+### Pattern 1: Business Intelligence Expert (bi_expert)
+
+**Generic Expert**:
+- **Name**: Business Intelligence and Analytics Expert
+- **Expertise**: Analytics, reporting, data visualization, business intelligence
+- **Usefulness**: ⭐⭐⭐⭐⭐ Very generic - analytics applies to all data-driven projects
+
+**Key Responsibilities**:
+- Design analytics data collection strategies
+- Define KPIs and business metrics
+- Design analytics dashboards and visualizations
+- Implement analytics data warehouses
+- Design analytics reporting systems
+- Ensure data privacy and compliance
+
+**Knowledge Areas**:
+- Event tracking and metrics collection
+- Data aggregation and transformation
+- Data visualization and dashboards
+- Business intelligence and reporting
+- Data warehouse design
+- ETL pipeline design
+- Privacy and compliance (GDPR, data anonymization)
+
+**Best Practices**:
+- ✅ DO: Anonymize user identifiers
+- ✅ DO: Validate analytics data
+- ✅ DO: Optimize analytics queries
+- ✅ DO: Cache frequently accessed metrics
+- ✅ DO: Support multiple export formats
+- ❌ DON'T: Track personally identifiable information
+- ❌ DON'T: Use inefficient analytics queries
+- ❌ DON'T: Generate reports without validation
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this generic experts review document by adding comprehensive "Analytics & Business Intelligence Expert Patterns" section covering business intelligence expert (bi_expert) pattern with generic expert definition (name, expertise, usefulness rating), key responsibilities (design analytics data collection strategies, define KPIs and business metrics, design analytics dashboards and visualizations, implement analytics data warehouses, design analytics reporting systems, ensure data privacy and compliance), knowledge areas (event tracking and metrics collection, data aggregation and transformation, data visualization and dashboards, business intelligence and reporting, data warehouse design, ETL pipeline design, privacy and compliance with GDPR and data anonymization), and best practices (DO patterns including anonymize user identifiers, validate analytics data, optimize analytics queries, cache frequently accessed metrics, support multiple export formats, DON'T patterns including track personally identifiable information, use inefficient analytics queries, generate reports without validation). This addition provides comprehensive guidance for business intelligence expert persona implementation, ensuring analytics experts have clear responsibilities, follow best practices, and avoid common anti-patterns in analytics design and implementation.
 
 ---
 

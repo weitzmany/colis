@@ -4,6 +4,23 @@
  * Type definitions for Domain Manager feature.
  */
 
+/**
+ * Default port constants for common service types
+ */
+export const DEFAULT_PORTS = {
+  /** Default Angular frontend port */
+  ANGULAR_FRONTEND: 4200,
+  /** Default backend API port */
+  BACKEND_API: 8080,
+  /** Default single-service port */
+  SINGLE_SERVICE: 3000,
+} as const;
+
+/**
+ * Domain suffix for local development domains
+ */
+export const DOMAIN_SUFFIX = '.local' as const;
+
 export interface SetupOptions {
   projectName: string;
   port?: number; // Single port for single-service projects

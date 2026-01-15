@@ -4,7 +4,10 @@
  * Check Caddy installation and provide installation instructions.
  */
 
-import { DomainManager } from '../../domain-manager';
+import { DomainManager } from '../../domain-manager.js';
+import { CaddyManager } from '../../caddy-manager.js';
+import { HostsManager } from '../../hosts-manager.js';
+import { ServiceDetector } from '../../service-detector.js';
 import chalk from 'chalk';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -13,7 +16,11 @@ const execAsync = promisify(exec);
 
 export async function installCommand() {
   try {
-    const domainManager = new DomainManager();
+    const domainManager = new DomainManager({
+      caddyManager: new CaddyManager(),
+      hostsManager: new HostsManager(),
+      serviceDetector: new ServiceDetector(),
+    });
     const installed = await domainManager.checkCaddyInstalled();
 
     if (installed) {

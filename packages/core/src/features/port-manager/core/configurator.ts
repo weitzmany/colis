@@ -4,8 +4,8 @@
  * Manages project configuration files and updates them with port assignments.
  */
 
-import { ProjectConfigManager } from '../../../shared/config/project-config';
-import { ConfigurationResult } from '../types';
+import { ProjectConfigManager } from '../../../shared/config/project-config.js';
+import { ConfigurationResult } from '../types.js';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 

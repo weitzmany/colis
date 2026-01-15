@@ -8,7 +8,7 @@
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src"
   },
   {{#if author}}
   "author": "{{author}}",
@@ -28,8 +28,11 @@
     "@types/cors": "^2.8.17",
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.2",
-    "eslint": "^8.56.0",
-    "@typescript-eslint/eslint-plugin": "^6.17.0",
-    "@typescript-eslint/parser": "^6.17.0"
+    "eslint": "^9.39.2",
+    "@typescript-eslint/eslint-plugin": "^8.53.0",
+    "@typescript-eslint/parser": "^8.53.0"
+  },
+  "overrides": {
+    "glob": "^10.5.0"
   }
 }

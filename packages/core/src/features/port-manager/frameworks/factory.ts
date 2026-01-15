@@ -4,12 +4,14 @@
  * Creates framework handler instances using Factory pattern.
  */
 
-import { FrameworkHandler } from './interfaces';
-import { NextJsHandler } from './nextjs';
-import { AngularHandler } from './angular';
-import { ExpressHandler } from './express';
-import { ReactHandler } from './react';
-import { DockerHandler } from './docker';
+import { FrameworkHandler } from './interfaces.js';
+import { NextJsHandler } from './nextjs.js';
+import { AngularHandler } from './angular.js';
+import { ExpressHandler } from './express.js';
+import { ReactHandler } from './react.js';
+import { DockerHandler } from './docker.js';
+import { ReactNativeHandler } from './react-native.js';
+import { ExpoHandler } from './expo.js';
 
 export class FrameworkFactory {
   private static handlers: FrameworkHandler[] = [
@@ -18,6 +20,8 @@ export class FrameworkFactory {
     new ExpressHandler(),
     new ReactHandler(),
     new DockerHandler(),
+    new ReactNativeHandler(),
+    new ExpoHandler(),
   ];
 
   /**

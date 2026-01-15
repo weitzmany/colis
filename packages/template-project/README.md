@@ -54,11 +54,12 @@ npx @your-org/template-project create my-project \
 When you create a new project, the following are automatically initialized:
 
 1. **Project Structure** - Complete template structure with all necessary files
-2. **Project Initialization** - Cursor rules, commands, Port Manager, and IDE colors
-3. **Task Manager** - Task management system initialized (can be skipped with `--skip-task-manager`)
-4. **Dependencies** - Package dependencies installed (can be skipped with `--skip-deps`)
-5. **Git Repository** - Git initialized (can be skipped with `--skip-git`)
-6. **IDE Opening** - Project automatically opens in Cursor IDE
+2. **CI/CD Configuration** - GitHub Actions and GitLab CI workflows for automated testing and building
+3. **Project Initialization** - Cursor rules, commands, Port Manager, and IDE colors
+4. **Task Manager** - Task management system initialized (can be skipped with `--skip-task-manager`)
+5. **Dependencies** - Package dependencies installed (can be skipped with `--skip-deps`)
+6. **Git Repository** - Git initialized (can be skipped with `--skip-git`)
+7. **IDE Opening** - Project automatically opens in Cursor IDE
 
 ## Available Templates
 
@@ -76,6 +77,8 @@ npx @your-org/template-project create my-app --template angular
 - Angular Router
 - Karma/Jasmine testing setup
 - Modern build configuration
+- GitHub Actions CI workflow
+- GitLab CI configuration
 
 ### Slim Template
 
@@ -92,6 +95,8 @@ npx @your-org/template-project create my-api --template slim
 - PHPUnit testing
 - PHPStan static analysis
 - PSR-12 code style
+- GitHub Actions CI workflow (PHP 8.2)
+- GitLab CI configuration
 
 ### Full-Stack Template
 
@@ -106,6 +111,8 @@ npx @your-org/template-project create my-app --template full-stack
 - Express API server
 - CORS configuration
 - Environment variable setup
+- GitHub Actions CI workflow (frontend + backend)
+- GitLab CI configuration
 
 ### Frontend Template
 
@@ -119,6 +126,8 @@ npx @your-org/template-project create my-app --template frontend
 - Next.js 14 with TypeScript
 - React 18
 - ESLint configuration
+- GitHub Actions CI workflow
+- GitLab CI configuration
 
 ### Backend Template
 
@@ -133,6 +142,8 @@ npx @your-org/template-project create my-api --template backend
 - CORS configuration
 - Environment variable setup
 - Nodemon for development
+- GitHub Actions CI workflow
+- GitLab CI configuration
 
 ## Integration with Project Initialization
 
@@ -155,6 +166,54 @@ Generated projects follow standard best practices:
 - README with getting started instructions
 - Proper directory structure
 
+## API Documentation
+
+### Programmatic Usage
+
+You can use the template engine programmatically in your own code:
+
+```typescript
+import { createCommand } from '@your-org/template-project';
+import { TemplateRegistry, FileGenerator, ConfigManager } from '@your-org/template-project/features/template-engine';
+
+// Using the high-level create command
+await createCommand({
+  projectName: 'my-app',
+  template: 'angular',
+  packageManager: 'npm'
+});
+
+// Using individual components
+const registry = new TemplateRegistry();
+const templates = await registry.discoverTemplates();
+const template = await registry.getTemplate('angular');
+
+const generator = new FileGenerator();
+const result = await generator.generateProject({
+  outputPath: './my-project',
+  templatePath: template.path,
+  context: {
+    projectName: 'my-app',
+    packageManager: 'npm',
+    port: 4200
+  }
+});
+```
+
+### Type Definitions
+
+All types are exported from the package:
+
+```typescript
+import type {
+  TemplateContext,
+  TemplateMetadata,
+  ProjectConfig,
+  GenerationOptions,
+  GenerationResult
+} from '@your-org/template-project/features/template-engine';
+```
+
 ## Development
 
 ### Building
@@ -174,6 +233,38 @@ npm test
 ```bash
 npm run lint
 ```
+
+### Code Documentation
+
+This package uses TypeScript with JSDoc comments for API documentation.
+Generate documentation using TypeDoc:
+
+```bash
+npx typedoc src/index.ts
+```
+
+## Architecture
+
+The template-project package follows a modular architecture:
+
+- **Template Engine** (`src/features/template-engine/`): Core template processing
+  - `TemplateProcessor`: Handlebars template processing
+  - `TemplateRegistry`: Template discovery and metadata management
+  - `ConfigManager`: Interactive configuration collection
+  - `FileGenerator`: Project structure generation
+- **CLI** (`src/cli/commands/`): Command-line interface
+  - `create.ts`: Main create command implementation
+- **Templates** (`src/templates/`): Template files organized by type
+
+## Contributing
+
+When adding new templates:
+
+1. Create a new directory in `src/templates/<template-name>/`
+2. Add a `template.json` file with metadata
+3. Create template files with `.hbs` extension
+4. Use Handlebars syntax for variable substitution: `{{projectName}}`
+5. Test the template by creating a project
 
 ## License
 

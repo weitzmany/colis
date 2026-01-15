@@ -4,13 +4,13 @@
  * Main class providing the public API for Port Manager feature.
  */
 
-import { DatabaseFactory, DatabaseRepository, MigrationManager } from '../../shared/database';
-import { PortRepository } from './database/port-repository';
-import { RegistryManager } from './core/registry';
-import { PortAllocator } from './core/allocator';
-import { ConflictDetector } from './core/validator';
-import { ConfigurationManager } from './core/configurator';
-import { initialSchemaMigration } from './database/migrations/001_initial_schema';
+import { DatabaseFactory, DatabaseRepository, MigrationManager } from '../../shared/database/index.js';
+import { PortRepository } from './database/port-repository.js';
+import { RegistryManager } from './core/registry.js';
+import { PortAllocator } from './core/allocator.js';
+import { ConflictDetector } from './core/validator.js';
+import { ConfigurationManager } from './core/configurator.js';
+import { initialSchemaMigration } from './database/migrations/001_initial_schema.js';
 import {
   PortManagerConfig,
   PortAssignment,
@@ -19,13 +19,12 @@ import {
   ValidationResult,
   ConfigurationResult,
   ConflictReport,
-} from './types';
+} from './types.js';
 import {
   PortConflictError,
-  PortRangeExhaustedError,
   PortInUseError,
   PortAssignmentNotFoundError,
-} from './errors';
+} from './errors.js';
 
 export class PortManager {
   private db: DatabaseRepository;
@@ -47,9 +46,19 @@ export class PortManager {
 
   /**
    * Connect to database
+   * 
+   * Establishes database connection with retry logic and runs migrations.
+   * Validates connection health after connecting.
    */
   async connect(): Promise<void> {
     await this.db.connect();
+    
+    // Verify connection health
+    const isHealthy = await this.db.healthCheck();
+    if (!isHealthy) {
+      throw new Error('Database connection health check failed');
+    }
+    
     await this.migrationManager.migrate();
   }
 
@@ -58,6 +67,37 @@ export class PortManager {
    */
   async disconnect(): Promise<void> {
     await this.db.disconnect();
+  }
+
+  /**
+   * Ensure database connection is active
+   * 
+   * Validates connection health and attempts reconnection if needed.
+   * This method is called before critical operations to ensure database availability.
+   */
+  private async ensureConnection(): Promise<void> {
+    try {
+      const isHealthy = await this.db.healthCheck();
+      if (!isHealthy) {
+        // Attempt to reconnect
+        await this.db.reconnect();
+        const isHealthyAfterReconnect = await this.db.healthCheck();
+        if (!isHealthyAfterReconnect) {
+          throw new Error('Database connection health check failed after reconnection attempt');
+        }
+      }
+    } catch (error) {
+      // If health check fails, try to reconnect
+      try {
+        await this.db.reconnect();
+        const isHealthyAfterReconnect = await this.db.healthCheck();
+        if (!isHealthyAfterReconnect) {
+          throw new Error('Database connection unavailable');
+        }
+      } catch (reconnectError) {
+        throw new Error(`Database connection error: ${reconnectError}`);
+      }
+    }
   }
 
   /**
@@ -85,6 +125,7 @@ export class PortManager {
     appType: AppType,
     preferredPort?: number
   ): Promise<number> {
+    await this.ensureConnection();
     const port = await this.allocator.allocate(projectName, projectPath, appType, preferredPort);
 
     // Check if already assigned
@@ -220,6 +261,7 @@ export class PortManager {
    * @returns Array of conflict reports
    */
   async detectConflicts(projectPath: string): Promise<ConflictReport[]> {
+    await this.ensureConnection();
     // Find all port assignments for this project path
     const assignments = await this.repository.listPorts({});
     const projectAssignments = assignments.filter(
@@ -284,6 +326,7 @@ export class PortManager {
    * ```
    */
   async reservePort(port: number, purpose: string, notes?: string): Promise<void> {
+    await this.ensureConnection();
     // Check if port is already assigned to an active project
     const existing = await this.repository.getByPort(port);
     if (existing && existing.status === 'active') {

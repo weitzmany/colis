@@ -1331,6 +1331,411 @@ When reviewing API structure, consider:
 - [ ] **Infrastructure as Code**: Infrastructure configuration version controlled
 - [ ] **Disaster Recovery**: Disaster recovery configuration organized for API availability
 
+## Database Query Patterns in APIs
+
+### Pattern 1: Efficient Query Design
+
+```typescript
+// ✅ DO: Select only needed columns
+export async function GET(request: NextRequest) {
+  const users = await db.query(
+    'SELECT id, name, email FROM users WHERE status = ?',
+    ['active']
+  );
+  return NextResponse.json({ data: users });
+}
+
+// ❌ DON'T: SELECT * (fetches unnecessary data)
+export async function GET(request: NextRequest) {
+  const users = await db.query('SELECT * FROM users WHERE status = ?', ['active']);
+  return NextResponse.json({ data: users });
+}
+```
+
+### Pattern 2: Query Optimization with Indexes
+
+```typescript
+// ✅ DO: Use indexed columns in WHERE clauses
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const email = searchParams.get('email');
+  
+  // email column is indexed
+  const user = await db.query(
+    'SELECT id, name, email FROM users WHERE email = ?',
+    [email]
+  );
+  return NextResponse.json({ data: user });
+}
+
+// ❌ DON'T: Query on non-indexed columns without optimization
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const bio = searchParams.get('bio');
+  
+  // bio column is not indexed - slow query
+  const users = await db.query(
+    'SELECT * FROM users WHERE bio LIKE ?',
+    [`%${bio}%`]
+  );
+  return NextResponse.json({ data: users });
+}
+```
+
+### Pattern 3: Pagination Patterns
+
+```typescript
+// ✅ DO: Use cursor-based pagination for large datasets
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const cursor = searchParams.get('cursor') || '0';
+  const limit = parseInt(searchParams.get('limit') || '20');
+  
+  const users = await db.query(
+    'SELECT id, name, email FROM users WHERE id > ? ORDER BY id LIMIT ?',
+    [cursor, limit + 1]
+  );
+  
+  const hasMore = users.length > limit;
+  const data = hasMore ? users.slice(0, limit) : users;
+  const nextCursor = hasMore ? users[limit - 1].id : null;
+  
+  return NextResponse.json({
+    data,
+    pagination: {
+      cursor: nextCursor,
+      hasMore
+    }
+  });
+}
+
+// ✅ DO: Use offset-based pagination for smaller datasets
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const page = parseInt(searchParams.get('page') || '1');
+  const limit = parseInt(searchParams.get('limit') || '20');
+  const offset = (page - 1) * limit;
+  
+  const [users, total] = await Promise.all([
+    db.query('SELECT id, name, email FROM users LIMIT ? OFFSET ?', [limit, offset]),
+    db.query('SELECT COUNT(*) as total FROM users')
+  ]);
+  
+  return NextResponse.json({
+    data: users,
+    pagination: {
+      page,
+      limit,
+      total: total[0].total,
+      totalPages: Math.ceil(total[0].total / limit)
+    }
+  });
+}
+```
+
+### Pattern 4: N+1 Query Prevention
+
+```typescript
+// ❌ DON'T: N+1 queries
+export async function GET(request: NextRequest) {
+  const users = await db.query('SELECT id, name FROM users');
+  
+  // N+1 problem: one query per user
+  const usersWithOrders = await Promise.all(
+    users.map(async (user) => {
+      const orders = await db.query('SELECT * FROM orders WHERE user_id = ?', [user.id]);
+      return { ...user, orders };
+    })
+  );
+  
+  return NextResponse.json({ data: usersWithOrders });
+}
+
+// ✅ DO: Use JOIN or batch queries
+export async function GET(request: NextRequest) {
+  const users = await db.query(`
+    SELECT 
+      u.id, u.name, u.email,
+      o.id as order_id, o.total, o.created_at
+    FROM users u
+    LEFT JOIN orders o ON u.id = o.user_id
+    ORDER BY u.id, o.created_at DESC
+  `);
+  
+  // Group orders by user
+  const usersWithOrders = users.reduce((acc, row) => {
+    if (!acc[row.id]) {
+      acc[row.id] = {
+        id: row.id,
+        name: row.name,
+        email: row.email,
+        orders: []
+      };
+    }
+    if (row.order_id) {
+      acc[row.id].orders.push({
+        id: row.order_id,
+        total: row.total,
+        created_at: row.created_at
+      });
+    }
+    return acc;
+  }, {});
+  
+  return NextResponse.json({ data: Object.values(usersWithOrders) });
+}
+```
+
+## Database Transaction Patterns in APIs
+
+### Pattern 1: Transaction Management
+
+```typescript
+// ✅ DO: Use transactions for atomic operations
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const connection = await db.getConnection();
+  
+  try {
+    await connection.beginTransaction();
+    
+    // Create user
+    const [userResult] = await connection.query(
+      'INSERT INTO users (name, email) VALUES (?, ?)',
+      [body.name, body.email]
+    );
+    
+    // Create user profile
+    await connection.query(
+      'INSERT INTO user_profiles (user_id, bio) VALUES (?, ?)',
+      [userResult.insertId, body.bio]
+    );
+    
+    await connection.commit();
+    return NextResponse.json({ 
+      data: { id: userResult.insertId, ...body },
+      message: 'User created successfully'
+    }, { status: 201 });
+  } catch (error) {
+    await connection.rollback();
+    return NextResponse.json(
+      { error: 'Failed to create user' },
+      { status: 500 }
+    );
+  } finally {
+    connection.release();
+  }
+}
+```
+
+### Pattern 2: Savepoint for Nested Transactions
+
+```typescript
+// ✅ DO: Use savepoints for nested operations
+export async function POST(request: NextRequest) {
+  const connection = await db.getConnection();
+  
+  try {
+    await connection.beginTransaction();
+    
+    // Main operation
+    await connection.query('INSERT INTO orders (user_id, total) VALUES (?, ?)', [1, 100]);
+    
+    try {
+      await connection.query('SAVEPOINT sp1');
+      
+      // Nested operation that might fail
+      await connection.query('INSERT INTO order_items (order_id, product_id) VALUES (?, ?)', [1, 999]);
+      
+      await connection.query('RELEASE SAVEPOINT sp1');
+    } catch (error) {
+      // Rollback only nested operation
+      await connection.query('ROLLBACK TO SAVEPOINT sp1');
+      // Continue with main transaction
+    }
+    
+    await connection.commit();
+    return NextResponse.json({ message: 'Order created' }, { status: 201 });
+  } catch (error) {
+    await connection.rollback();
+    return NextResponse.json({ error: 'Failed to create order' }, { status: 500 });
+  } finally {
+    connection.release();
+  }
+}
+```
+
+## Database Error Handling in APIs
+
+### Pattern 1: Database Error Handling
+
+```typescript
+// ✅ DO: Handle database errors appropriately
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    
+    const [result] = await db.query(
+      'INSERT INTO users (email, name) VALUES (?, ?)',
+      [body.email, body.name]
+    );
+    
+    return NextResponse.json({ 
+      data: { id: result.insertId, ...body }
+    }, { status: 201 });
+  } catch (error) {
+    // Handle specific database errors
+    if (error.code === 'ER_DUP_ENTRY') {
+      return NextResponse.json(
+        { error: 'Email already exists' },
+        { status: 409 }
+      );
+    }
+    
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+      return NextResponse.json(
+        { error: 'Referenced record does not exist' },
+        { status: 400 }
+      );
+    }
+    
+    // Log unexpected errors
+    console.error('Database error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### Pattern 2: Query Timeout Handling
+
+```typescript
+// ✅ DO: Set query timeouts
+export async function GET(request: NextRequest) {
+  try {
+    const connection = await db.getConnection();
+    connection.query({ sql: 'SELECT * FROM large_table', timeout: 5000 });
+    
+    const results = await connection.query('SELECT * FROM large_table');
+    connection.release();
+    
+    return NextResponse.json({ data: results });
+  } catch (error) {
+    if (error.code === 'PROTOCOL_SEQUENCE_TIMEOUT') {
+      return NextResponse.json(
+        { error: 'Query timeout - please try again' },
+        { status: 504 }
+      );
+    }
+    throw error;
+  }
+}
+```
+
+## Database Performance Optimization in APIs
+
+### Pattern 1: Query Result Caching
+
+```typescript
+// ✅ DO: Cache frequently accessed data
+import { cache } from 'react';
+
+export const getUsers = cache(async () => {
+  return await db.query('SELECT id, name, email FROM users WHERE status = ?', ['active']);
+});
+
+export async function GET(request: NextRequest) {
+  const users = await getUsers();
+  return NextResponse.json({ data: users });
+}
+```
+
+### Pattern 2: Prepared Statements
+
+```typescript
+// ✅ DO: Use prepared statements for security and performance
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get('id');
+  
+  // Prepared statement (prevents SQL injection + better performance)
+  const [user] = await db.query(
+    'SELECT id, name, email FROM users WHERE id = ?',
+    [userId]
+  );
+  
+  return NextResponse.json({ data: user });
+}
+```
+
+### Pattern 3: Connection Pooling
+
+```typescript
+// ✅ DO: Use connection pooling
+import mysql from 'mysql2/promise';
+
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
+
+export async function GET(request: NextRequest) {
+  const [users] = await pool.query('SELECT id, name, email FROM users');
+  return NextResponse.json({ data: users });
+}
+```
+
+## Database API Best Practices
+
+1. **Query Optimization**:
+   - Select only needed columns
+   - Use indexed columns in WHERE clauses
+   - Implement proper pagination
+   - Avoid N+1 query problems
+   - Use JOINs instead of multiple queries
+
+2. **Transaction Management**:
+   - Use transactions for atomic operations
+   - Keep transactions short
+   - Use savepoints for nested operations
+   - Handle transaction errors properly
+   - Release connections after use
+
+3. **Error Handling**:
+   - Handle specific database error codes
+   - Provide meaningful error messages
+   - Log unexpected errors
+   - Set appropriate HTTP status codes
+   - Handle query timeouts
+
+4. **Performance**:
+   - Use connection pooling
+   - Cache frequently accessed data
+   - Use prepared statements
+   - Monitor slow queries
+   - Optimize database indexes
+
+## Database API Checklist
+
+- [ ] Database queries optimized (no SELECT *, indexed columns)
+- [ ] Pagination implemented for list endpoints
+- [ ] N+1 query problems prevented
+- [ ] Transactions used for atomic operations
+- [ ] Database errors handled appropriately
+- [ ] Query timeouts configured
+- [ ] Connection pooling implemented
+- [ ] Prepared statements used (security + performance)
+- [ ] Query result caching implemented (where appropriate)
+- [ ] Slow queries monitored
+- [ ] Database indexes optimized
+
 ## Notes
 
 - API structure patterns are framework-specific but concepts are universal
@@ -1348,6 +1753,9 @@ When reviewing API structure, consider:
 - **API code quality is as important as API design**
 - **API structure should support code quality goals**
 - **Code review should include API structure evaluation**
+- **Database queries should be optimized for performance**
+- **Database transactions ensure data consistency**
+- **Database error handling improves API reliability**
 
 ---
 
@@ -1396,5 +1804,15 @@ When reviewing API structure, consider:
 **Expertise**: Cloud Infrastructure (Cloud Platform Architecture, Deployment, Operations)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this API structure review document by adding comprehensive "Cloud Infrastructure Considerations for API Structure" section covering API deployment architecture (API Gateway structure with route organization and stage management, serverless API structure with Lambda function organization and shared code, container-based API structure with Docker organization and microservices structure), API scaling and load balancing (stateless API design with session management and state management, load balancing structure with health check endpoints and readiness/liveness probes, auto-scaling configuration with scaling metrics and resource limits), API monitoring and observability (cloud monitoring integration with metrics/logging/tracing structure, alerting structure with alert configuration and SLA monitoring), API security in cloud (IAM and authentication structure with IAM integration and token validation, network security structure with VPC configuration and WAF integration, secrets management with secrets structure and encryption), API cost optimization (resource optimization with caching structure and CDN configuration, cost monitoring with cost tracking and resource tagging), multi-region API structure (regional deployment with region-specific structure and cross-region replication, global load balancing with Route53/DNS structure and failover configuration), and comprehensive cloud infrastructure API structure checklist covering API Gateway, serverless, container, stateless design, health checks, auto-scaling, cloud monitoring, IAM, network security, secrets management, caching, cost monitoring, multi-region deployment, Infrastructure as Code, and disaster recovery. This addition ensures that API structure patterns incorporate cloud infrastructure best practices, enabling scalable, reliable, and cost-effective API deployment on cloud platforms with proper monitoring, security, and cost optimization.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this API structure review document by adding comprehensive "Database Query Patterns in APIs" section covering efficient query design (selecting only needed columns instead of SELECT *, using indexed columns in WHERE clauses, avoiding queries on non-indexed columns), pagination patterns (cursor-based pagination for large datasets with hasMore and nextCursor, offset-based pagination for smaller datasets with page/total/totalPages), N+1 query prevention (using JOINs or batch queries instead of multiple queries per item, grouping results efficiently). Added "Database Transaction Patterns in APIs" section covering transaction management (using transactions for atomic operations with BEGIN/COMMIT/ROLLBACK, proper error handling and connection release), savepoint for nested transactions (using savepoints for nested operations with ROLLBACK TO SAVEPOINT). Added "Database Error Handling in APIs" section covering database error handling (handling specific database error codes like ER_DUP_ENTRY and ER_NO_REFERENCED_ROW_2, providing meaningful error messages with appropriate HTTP status codes), query timeout handling (setting query timeouts and handling PROTOCOL_SEQUENCE_TIMEOUT errors). Added "Database Performance Optimization in APIs" section covering query result caching (caching frequently accessed data with React cache), prepared statements (using prepared statements for security and performance), connection pooling (using connection pooling with proper configuration). Added "Database API Best Practices" section covering query optimization, transaction management, error handling, and performance optimization. Added comprehensive "Database API Checklist" (11 items covering query optimization, pagination, N+1 prevention, transactions, error handling, timeouts, connection pooling, prepared statements, caching, slow query monitoring, index optimization). Enhanced "Notes" section with database-specific considerations (query optimization, transaction consistency, error handling reliability). These additions provide production-ready patterns for integrating database operations into API endpoints, ensuring database queries are optimized, transactions are properly managed, errors are handled gracefully, and performance is maximized.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this API structure review document by adding comprehensive "Analytics & Business Intelligence API Patterns" section covering analytics API endpoints (metrics endpoints with GET /api/analytics/metrics for aggregated metrics and KPIs, events endpoints with POST /api/analytics/events for event tracking, reports endpoints with GET /api/analytics/reports for report generation, dashboards endpoints with GET /api/analytics/dashboards for dashboard data), analytics data structure (time-series data structure with timestamp, value, dimensions, aggregated data structure with pre-computed aggregations, event data structure with event type, properties, user context), analytics API query patterns (time range queries with start/end date parameters, dimension filtering with category/user/feature filters, aggregation queries with sum/average/count aggregations, comparison queries with period-over-period comparisons), analytics API response patterns (paginated responses for large datasets, aggregated responses with pre-computed metrics, time-series responses with chronological data, comparison responses with side-by-side comparisons), analytics API performance optimization (data caching with Redis caching for frequently accessed metrics, query optimization with indexed queries and materialized views, batch processing with batch event ingestion, incremental updates with delta updates for efficiency), analytics API security and privacy (data anonymization with user identifier hashing, access control with role-based analytics access, data retention with automatic data expiration, compliance with GDPR and data privacy regulations), and comprehensive analytics API checklist (analytics endpoints, metrics endpoints, events endpoints, reports endpoints, dashboards endpoints, time-series data, aggregated data, event data, time range queries, dimension filtering, aggregation queries, comparison queries, paginated responses, aggregated responses, time-series responses, comparison responses, data caching, query optimization, batch processing, incremental updates, data anonymization, access control, data retention, compliance). This addition provides essential BI/Analytics perspective on API structure, ensuring APIs support comprehensive analytics capabilities, proper data structure for analytics, efficient query patterns, performance optimization, and secure analytics data handling for actionable insights and data-driven decision making.
 
 ---

@@ -7,8 +7,9 @@
  * This copies rules, commands, and initializes Port Manager.
  */
 
-const path = require('path');
-const fs = require('fs');
+import * as path from 'path';
+import * as fs from 'fs';
+import { pathToFileURL } from 'url';
 
 async function runPostinstall() {
   try {
@@ -40,7 +41,10 @@ async function runPostinstall() {
     
     // Import and run initialization
     try {
-      const { initializeProject } = require(path.join(nodeModulesPath, 'dist', 'features', 'project-initialization', 'project-initializer'));
+      // Convert path to file:// URL for ES module import
+      const modulePath = path.join(nodeModulesPath, 'dist', 'features', 'project-initialization', 'project-initializer.js');
+      const moduleUrl = pathToFileURL(modulePath).href;
+      const { initializeProject } = await import(moduleUrl);
       
       console.log('🚀 @your-org/core: Initializing project...');
       

@@ -7,7 +7,7 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { FrameworkInfo } from '../types';
+import { FrameworkInfo } from '../types.js';
 
 export class FrameworkDetector {
   /**

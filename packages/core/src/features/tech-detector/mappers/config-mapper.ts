@@ -4,7 +4,7 @@
  * Maps TechStack to .core-tech.json format.
  */
 
-import { TechStack } from '../types';
+import { TechStack } from '../types.js';
 
 export class ConfigMapper {
   /**

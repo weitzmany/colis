@@ -4,11 +4,11 @@
  * CLI command for technology stack detection.
  */
 
-import { TechDetector } from '../../tech-detector';
-import { PackageJsonMapper } from '../../mappers/package-json-mapper';
-import { StandardsLoader } from '../../standards/standards-loader';
-import { WarningDetector } from '../../standards/warning-detector';
-import { WarningHandler } from '../../standards/warning-handler';
+import { TechDetector } from '../../tech-detector.js';
+import { PackageJsonMapper } from '../../mappers/package-json-mapper.js';
+import { StandardsLoader } from '../../standards/standards-loader.js';
+import { WarningDetector } from '../../standards/warning-detector.js';
+import { WarningHandler } from '../../standards/warning-handler.js';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';

@@ -4,7 +4,15 @@
  * Remove domain configuration.
  */
 
-import { DomainManager } from '../../domain-manager';
+import { DomainManager } from '../../domain-manager.js';
+import { CaddyManager } from '../../caddy-manager.js';
+import { HostsManager } from '../../hosts-manager.js';
+import { ServiceDetector } from '../../service-detector.js';
+import {
+  DomainValidationError,
+  DomainConfigurationError,
+  HostsFileError,
+} from '../../errors.js';
 import chalk from 'chalk';
 
 export async function removeCommand(domain: string) {
@@ -15,7 +23,11 @@ export async function removeCommand(domain: string) {
       process.exit(1);
     }
 
-    const domainManager = new DomainManager();
+    const domainManager = new DomainManager({
+      caddyManager: new CaddyManager(),
+      hostsManager: new HostsManager(),
+      serviceDetector: new ServiceDetector(),
+    });
 
     console.log(chalk.blue(`\n🗑️  Removing domain: ${domain}`));
 
@@ -24,8 +36,25 @@ export async function removeCommand(domain: string) {
     console.log(chalk.green(`✓ Domain removed from Caddyfile`));
     console.log(chalk.green(`✓ Domain removed from hosts file`));
     console.log(chalk.yellow(`\n⚠ You may need to restart Caddy for changes to take effect`));
-  } catch (error: any) {
-    console.error(chalk.red(`Error: ${error.message}`));
+  } catch (error) {
+    if (error instanceof DomainValidationError) {
+      console.error(chalk.red(`✗ Invalid domain: ${error.message}`));
+      if (error.validationRule) {
+        console.log(chalk.yellow(`  Validation rule: ${error.validationRule}`));
+      }
+    } else if (error instanceof DomainConfigurationError) {
+      console.error(chalk.red(`✗ Configuration error: ${error.message}`));
+      if (error.reason) {
+        console.log(chalk.yellow(`  Reason: ${error.reason}`));
+      }
+    } else if (error instanceof HostsFileError) {
+      console.warn(chalk.yellow(`⚠ ${error.message}`));
+      console.log(chalk.yellow('  Domain removed from Caddyfile but hosts file update failed.'));
+      console.log(chalk.yellow('  You may need to remove the domain manually from your hosts file.'));
+    } else {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(`Error: ${errorMessage}`));
+    }
     process.exit(1);
   }
 }

@@ -713,11 +713,319 @@ CREATE TABLE orders (
 - [ ] Connection pool monitored
 - [ ] Database size monitored
 
+## Advanced Query Optimization Patterns
+
+### Window Functions for Complex Queries
+
+Window functions provide powerful capabilities for analytical queries without subqueries:
+
+```sql
+-- Rank users by order total
+SELECT 
+    u.id,
+    u.name,
+    o.total,
+    RANK() OVER (PARTITION BY u.id ORDER BY o.total DESC) as order_rank,
+    SUM(o.total) OVER (PARTITION BY u.id) as user_total
+FROM users u
+JOIN orders o ON u.id = o.user_id;
+
+-- Running totals and moving averages
+SELECT 
+    date,
+    revenue,
+    SUM(revenue) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) as running_total,
+    AVG(revenue) OVER (ORDER BY date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) as seven_day_avg
+FROM daily_revenue
+ORDER BY date;
+```
+
+### Common Table Expressions (CTEs) for Readability
+
+CTEs improve query readability and can optimize complex queries:
+
+```sql
+-- Recursive CTE for hierarchical data
+WITH RECURSIVE category_tree AS (
+    -- Base case: root categories
+    SELECT id, name, parent_id, 0 as level
+    FROM categories
+    WHERE parent_id IS NULL
+    
+    UNION ALL
+    
+    -- Recursive case: child categories
+    SELECT c.id, c.name, c.parent_id, ct.level + 1
+    FROM categories c
+    JOIN category_tree ct ON c.parent_id = ct.id
+)
+SELECT * FROM category_tree ORDER BY level, name;
+
+-- CTE for complex aggregations
+WITH monthly_stats AS (
+    SELECT 
+        DATE_FORMAT(created_at, '%Y-%m') as month,
+        COUNT(*) as order_count,
+        SUM(total) as revenue
+    FROM orders
+    GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+)
+SELECT 
+    month,
+    order_count,
+    revenue,
+    LAG(revenue) OVER (ORDER BY month) as prev_month_revenue,
+    revenue - LAG(revenue) OVER (ORDER BY month) as revenue_change
+FROM monthly_stats;
+```
+
+### Query Result Caching Strategies
+
+Implement intelligent caching for frequently accessed data:
+
+```sql
+-- Materialized view pattern (PostgreSQL)
+CREATE MATERIALIZED VIEW user_order_summary AS
+SELECT 
+    u.id as user_id,
+    COUNT(o.id) as total_orders,
+    SUM(o.total) as lifetime_value,
+    MAX(o.created_at) as last_order_date
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+GROUP BY u.id;
+
+-- Refresh materialized view periodically
+REFRESH MATERIALIZED VIEW CONCURRENTLY user_order_summary;
+
+-- MySQL: Use generated columns for computed values
+CREATE TABLE products (
+    id INT PRIMARY KEY,
+    price DECIMAL(10,2),
+    discount_percent DECIMAL(5,2),
+    final_price DECIMAL(10,2) AS (price * (1 - discount_percent / 100)) STORED,
+    INDEX idx_final_price (final_price)
+);
+```
+
+### Database Partitioning Strategies
+
+Partition large tables to improve query performance:
+
+```sql
+-- Range partitioning by date (PostgreSQL/MySQL 8.0+)
+CREATE TABLE orders (
+    id INT PRIMARY KEY,
+    user_id INT,
+    total DECIMAL(10,2),
+    created_at TIMESTAMP
+) PARTITION BY RANGE (YEAR(created_at)) (
+    PARTITION p2024 VALUES LESS THAN (2025),
+    PARTITION p2025 VALUES LESS THAN (2026),
+    PARTITION p2026 VALUES LESS THAN (2027),
+    PARTITION p_future VALUES LESS THAN MAXVALUE
+);
+
+-- Hash partitioning for even distribution
+CREATE TABLE user_sessions (
+    id INT PRIMARY KEY,
+    user_id INT,
+    session_data TEXT,
+    created_at TIMESTAMP
+) PARTITION BY HASH(user_id) PARTITIONS 8;
+
+-- List partitioning for categorical data
+CREATE TABLE events (
+    id INT PRIMARY KEY,
+    event_type VARCHAR(50),
+    event_data JSON,
+    created_at TIMESTAMP
+) PARTITION BY LIST (event_type) (
+    PARTITION p_login VALUES IN ('login', 'logout'),
+    PARTITION p_purchase VALUES IN ('purchase', 'refund'),
+    PARTITION p_other VALUES IN (DEFAULT)
+);
+```
+
+**Partitioning Best Practices:**
+- Partition by columns frequently used in WHERE clauses
+- Keep partition sizes manageable (aim for < 10GB per partition)
+- Plan for partition maintenance (dropping old partitions, adding new ones)
+- Monitor partition pruning effectiveness
+- Use partition-aware indexes
+
+## Advanced Migration Strategies
+
+### Zero-Downtime Migrations
+
+Implement migrations that don't require application downtime:
+
+```sql
+-- Step 1: Add new column as nullable
+ALTER TABLE users ADD COLUMN new_email VARCHAR(255) NULL;
+
+-- Step 2: Backfill data (run in background)
+UPDATE users SET new_email = email WHERE new_email IS NULL;
+
+-- Step 3: Add NOT NULL constraint with default (MySQL 8.0.13+)
+ALTER TABLE users 
+    MODIFY COLUMN new_email VARCHAR(255) NOT NULL DEFAULT '';
+
+-- Step 4: Update application to use new_email
+
+-- Step 5: Drop old column (after verification period)
+-- ALTER TABLE users DROP COLUMN email;
+```
+
+### Rollback Strategies
+
+Design migrations with explicit rollback procedures:
+
+```sql
+-- Migration: Add index
+-- Forward migration
+CREATE INDEX idx_user_email ON users(email);
+
+-- Rollback migration (store separately)
+-- DROP INDEX idx_user_email ON users;
+
+-- Migration: Add column with data migration
+-- Forward migration
+ALTER TABLE orders ADD COLUMN status_v2 VARCHAR(50) NULL;
+UPDATE orders SET status_v2 = 
+    CASE 
+        WHEN status = 1 THEN 'pending'
+        WHEN status = 2 THEN 'completed'
+        WHEN status = 3 THEN 'cancelled'
+        ELSE 'unknown'
+    END;
+ALTER TABLE orders MODIFY COLUMN status_v2 VARCHAR(50) NOT NULL;
+
+-- Rollback migration
+-- ALTER TABLE orders DROP COLUMN status_v2;
+```
+
+### Migration Testing Framework
+
+Create a testing framework for migrations:
+
+```sql
+-- Test migration idempotency
+-- Run migration twice, verify no errors
+SOURCE migration_001.sql;
+SOURCE migration_001.sql;  -- Should succeed without errors
+
+-- Test rollback
+SOURCE migration_001.sql;
+SOURCE migration_001_rollback.sql;
+-- Verify schema matches pre-migration state
+
+-- Test data integrity
+START TRANSACTION;
+SOURCE migration_001.sql;
+-- Verify data constraints
+ROLLBACK;
+```
+
+## Database Performance Monitoring
+
+### Key Performance Indicators (KPIs)
+
+Monitor these metrics to identify performance issues:
+
+```sql
+-- Query performance metrics
+SELECT 
+    DIGEST_TEXT as query_pattern,
+    COUNT_STAR as execution_count,
+    AVG_TIMER_WAIT / 1000000000000 as avg_time_seconds,
+    MAX_TIMER_WAIT / 1000000000000 as max_time_seconds,
+    SUM_ROWS_EXAMINED as total_rows_examined,
+    SUM_ROWS_SENT as total_rows_sent
+FROM performance_schema.events_statements_summary_by_digest
+WHERE SCHEMA_NAME = 'your_database'
+ORDER BY AVG_TIMER_WAIT DESC
+LIMIT 20;
+
+-- Index usage statistics
+SELECT 
+    TABLE_NAME,
+    INDEX_NAME,
+    SEQ_IN_INDEX,
+    CARDINALITY,
+    INDEX_TYPE
+FROM information_schema.STATISTICS
+WHERE TABLE_SCHEMA = 'your_database'
+AND CARDINALITY IS NOT NULL
+ORDER BY CARDINALITY DESC;
+
+-- Table size and growth
+SELECT 
+    TABLE_NAME,
+    ROUND(((DATA_LENGTH + INDEX_LENGTH) / 1024 / 1024), 2) AS size_mb,
+    TABLE_ROWS,
+    ROUND((DATA_LENGTH / 1024 / 1024), 2) AS data_mb,
+    ROUND((INDEX_LENGTH / 1024 / 1024), 2) AS index_mb
+FROM information_schema.TABLES
+WHERE TABLE_SCHEMA = 'your_database'
+ORDER BY (DATA_LENGTH + INDEX_LENGTH) DESC;
+```
+
+### Slow Query Analysis
+
+Identify and optimize slow queries:
+
+```sql
+-- Enable slow query log (MySQL)
+SET GLOBAL slow_query_log = 'ON';
+SET GLOBAL long_query_time = 1;  -- Log queries > 1 second
+
+-- Analyze slow queries
+SELECT 
+    sql_text,
+    exec_count,
+    avg_timer_wait / 1000000000000 as avg_time_seconds,
+    sum_rows_examined,
+    sum_rows_sent
+FROM performance_schema.events_statements_summary_by_digest
+WHERE avg_timer_wait > 1000000000000  -- > 1 second
+ORDER BY avg_timer_wait DESC;
+
+-- Find queries with high row examination ratio
+SELECT 
+    DIGEST_TEXT,
+    SUM_ROWS_EXAMINED / SUM_ROWS_SENT as examination_ratio,
+    SUM_ROWS_EXAMINED,
+    SUM_ROWS_SENT
+FROM performance_schema.events_statements_summary_by_digest
+WHERE SUM_ROWS_SENT > 0
+HAVING examination_ratio > 10  -- Examining 10x more rows than returned
+ORDER BY examination_ratio DESC;
+```
+
 ## Resources and Tools
 
 ### Database Management Tools
 - **MySQL Workbench**: Schema design and administration
 - **pgAdmin**: PostgreSQL administration
+- **DBeaver**: Universal database tool with advanced query capabilities
+- **DataGrip**: JetBrains database IDE with query optimization features
+- **phpMyAdmin**: Web-based MySQL administration
+- **TablePlus**: Modern database management with query optimization
+
+### Performance Monitoring Tools
+- **Percona Monitoring and Management (PMM)**: Comprehensive MySQL/PostgreSQL monitoring
+- **MySQL Enterprise Monitor**: Enterprise-grade MySQL performance monitoring
+- **pg_stat_statements**: PostgreSQL query performance statistics
+- **Prometheus + Grafana**: Custom database metrics and visualization
+- **New Relic Database**: Cloud-based database performance monitoring
+
+### Migration Tools
+- **Flyway**: Database migration and version control
+- **Liquibase**: Database schema change management
+- **Sqitch**: Database change management with dependency tracking
+- **Alembic**: Python database migration tool (SQLAlchemy)
+- **Sequelize Migrations**: Node.js migration framework
 - **DBeaver**: Universal database tool
 - **phpMyAdmin**: Web-based MySQL management
 
@@ -791,6 +1099,11 @@ When this guide is published for web access:
 ---
 
 ## Review/Contribution
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this database design guide by adding comprehensive "Advanced Query Optimization Patterns" section covering window functions for complex queries (ranking, running totals, moving averages), Common Table Expressions (CTEs) for readability (recursive CTEs for hierarchical data, CTEs for complex aggregations), query result caching strategies (materialized views, generated columns for computed values), and database partitioning strategies (range partitioning by date, hash partitioning for even distribution, list partitioning for categorical data, partitioning best practices). Added "Advanced Migration Strategies" section covering zero-downtime migrations (step-by-step process for adding columns without downtime), rollback strategies (explicit rollback procedures with examples), and migration testing framework (idempotency testing, rollback testing, data integrity verification). Added "Database Performance Monitoring" section covering key performance indicators (query performance metrics, index usage statistics, table size and growth), and slow query analysis (enabling slow query log, analyzing slow queries, finding queries with high row examination ratio). Enhanced "Resources and Tools" section with performance monitoring tools (Percona Monitoring and Management, MySQL Enterprise Monitor, pg_stat_statements, Prometheus + Grafana, New Relic Database) and migration tools (Flyway, Liquibase, Sqitch, Alembic, Sequelize Migrations). These additions provide practical, production-ready techniques for advanced database optimization, migration management, and performance monitoring, enabling database administrators and developers to handle complex scenarios and maintain high-performance database systems.
 
 **Expert**: David Anderson  
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  

@@ -5,7 +5,7 @@
  * This is a stub implementation for Phase 3.
  */
 
-import { DatabaseRepository, DatabaseConfig, Transaction } from './repository';
+import { DatabaseRepository, DatabaseConfig, Transaction } from './repository.js';
 
 export class MySQLRepository implements DatabaseRepository {
   private connection: any = null;
@@ -58,6 +58,25 @@ export class MySQLRepository implements DatabaseRepository {
     }
     // TODO: Implement MySQL transaction
     throw new Error('MySQL support not yet implemented (Phase 3)');
+  }
+
+  async healthCheck(): Promise<boolean> {
+    if (!this.connection) {
+      return false;
+    }
+    // TODO: Implement MySQL health check when MySQL support is implemented
+    // try {
+    //   await this.query('SELECT 1');
+    //   return true;
+    // } catch {
+    //   return false;
+    // }
+    return this.connection !== null;
+  }
+
+  async reconnect(): Promise<void> {
+    await this.disconnect();
+    await this.connect();
   }
 
   isConnected(): boolean {

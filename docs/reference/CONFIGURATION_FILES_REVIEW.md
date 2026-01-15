@@ -729,6 +729,284 @@ This document lists useful configuration file patterns found in other projects.
    - Automate validation
    - Automate rollback procedures
 
+## Database Configuration Files
+
+### ✅ Database Connection Configuration
+
+#### Pattern 1: Database Configuration in .env
+
+```bash
+# .env.example
+# Database Configuration
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=myapp
+DB_USERNAME=appuser
+DB_PASSWORD=apppassword
+DB_CHARSET=utf8mb4
+DB_COLLATION=utf8mb4_unicode_ci
+
+# Connection Pool Configuration
+DB_POOL_MIN=2
+DB_POOL_MAX=10
+DB_POOL_IDLE_TIMEOUT=30000
+DB_POOL_ACQUIRE_TIMEOUT=60000
+DB_POOL_EVICT=10000
+
+# Migration Configuration
+DB_MIGRATIONS_DIR=./database/migrations
+DB_MIGRATIONS_TABLE=schema_migrations
+DB_SEEDS_DIR=./database/seeds
+```
+
+#### Pattern 2: Database Configuration File (config/database.js)
+
+```javascript
+// config/database.js
+module.exports = {
+  development: {
+    client: 'mysql2',
+    connection: {
+      host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || 3306,
+      database: process.env.DB_DATABASE || 'myapp_dev',
+      user: process.env.DB_USERNAME || 'root',
+      password: process.env.DB_PASSWORD || 'password',
+      charset: process.env.DB_CHARSET || 'utf8mb4'
+    },
+    pool: {
+      min: parseInt(process.env.DB_POOL_MIN) || 2,
+      max: parseInt(process.env.DB_POOL_MAX) || 10,
+      idleTimeoutMillis: parseInt(process.env.DB_POOL_IDLE_TIMEOUT) || 30000
+    },
+    migrations: {
+      directory: process.env.DB_MIGRATIONS_DIR || './database/migrations',
+      tableName: process.env.DB_MIGRATIONS_TABLE || 'schema_migrations'
+    },
+    seeds: {
+      directory: process.env.DB_SEEDS_DIR || './database/seeds'
+    }
+  },
+  production: {
+    client: 'mysql2',
+    connection: {
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      database: process.env.DB_DATABASE,
+      user: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      charset: 'utf8mb4',
+      ssl: {
+        rejectUnauthorized: true
+      }
+    },
+    pool: {
+      min: 5,
+      max: 20,
+      idleTimeoutMillis: 30000
+    }
+  }
+};
+```
+
+#### Pattern 3: Database Configuration in docker-compose.yml
+
+```yaml
+# docker-compose.yml
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_DATABASE:-myapp}
+      MYSQL_USER: ${DB_USERNAME:-appuser}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-apppassword}
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max-connections=200
+      --innodb-buffer-pool-size=1G
+```
+
+### ✅ Database Migration Configuration
+
+#### Pattern 1: Migration Tool Configuration (knexfile.js)
+
+```javascript
+// knexfile.js
+module.exports = {
+  development: {
+    client: 'mysql2',
+    connection: {
+      host: 'localhost',
+      database: 'myapp_dev',
+      user: 'root',
+      password: 'password'
+    },
+    migrations: {
+      directory: './database/migrations',
+      tableName: 'knex_migrations',
+      extension: 'js'
+    },
+    seeds: {
+      directory: './database/seeds'
+    }
+  }
+};
+```
+
+#### Pattern 2: Migration Configuration File (migration.config.json)
+
+```json
+{
+  "migrations": {
+    "directory": "./database/migrations",
+    "tableName": "schema_migrations",
+    "database": {
+      "type": "mysql",
+      "host": "localhost",
+      "port": 3306,
+      "database": "myapp",
+      "user": "root",
+      "password": "password"
+    },
+    "options": {
+      "transaction": true,
+      "dryRun": false,
+      "validateBeforeRun": true,
+      "rollbackOnError": true
+    }
+  }
+}
+```
+
+### ✅ Database Performance Configuration
+
+#### Pattern 1: MySQL Configuration (my.cnf)
+
+```ini
+# my.cnf
+[mysqld]
+# Character Set
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+
+# Connection Settings
+max_connections=200
+max_connect_errors=10
+wait_timeout=28800
+interactive_timeout=28800
+
+# InnoDB Settings
+innodb_buffer_pool_size=1G
+innodb_log_file_size=256M
+innodb_flush_log_at_trx_commit=2
+innodb_flush_method=O_DIRECT
+
+# Query Cache (MySQL 5.7 and earlier)
+query_cache_type=1
+query_cache_size=64M
+
+# Slow Query Log
+slow_query_log=1
+long_query_time=1
+slow_query_log_file=/var/log/mysql/slow-query.log
+
+# Binary Logging
+log_bin=/var/log/mysql/mysql-bin.log
+binlog_format=ROW
+expire_logs_days=7
+```
+
+#### Pattern 2: PostgreSQL Configuration (postgresql.conf)
+
+```conf
+# postgresql.conf
+# Connection Settings
+max_connections = 200
+shared_buffers = 256MB
+effective_cache_size = 1GB
+
+# Query Performance
+work_mem = 16MB
+maintenance_work_mem = 64MB
+
+# Write-Ahead Logging
+wal_buffers = 16MB
+checkpoint_completion_target = 0.9
+
+# Query Logging
+log_statement = 'all'
+log_duration = on
+log_min_duration_statement = 1000
+```
+
+### Database Configuration Best Practices
+
+1. **Connection Configuration**:
+   - Use environment variables for database credentials
+   - Support different configurations per environment
+   - Use connection pooling for production
+   - Configure appropriate timeouts and retries
+   - Use SSL/TLS for production connections
+
+2. **Migration Configuration**:
+   - Store migration configuration in version control
+   - Use consistent migration directory structure
+   - Track migration state in database
+   - Support rollback capabilities
+   - Validate migrations before execution
+
+3. **Performance Configuration**:
+   - Tune database settings for workload
+   - Configure appropriate buffer pool sizes
+   - Enable slow query logging
+   - Configure connection limits
+   - Monitor and adjust based on metrics
+
+4. **Security Configuration**:
+   - Never commit database passwords
+   - Use strong passwords for production
+   - Enable SSL/TLS for remote connections
+   - Restrict database user permissions
+   - Use separate users for different operations
+
+5. **Environment-Specific Configuration**:
+   - Different settings for dev/staging/prod
+   - Use .env files for local development
+   - Use secrets management for production
+   - Document configuration differences
+   - Validate configuration on startup
+
+### Database Configuration Checklist
+
+- [ ] Database connection configuration in .env file
+- [ ] Database configuration file (config/database.js or equivalent)
+- [ ] Database service configuration in docker-compose.yml
+- [ ] Migration tool configuration (knexfile.js or equivalent)
+- [ ] Database performance configuration (my.cnf or postgresql.conf)
+- [ ] Connection pool configuration
+- [ ] Database health check configuration
+- [ ] Database backup configuration
+- [ ] Database monitoring configuration
+- [ ] Database security configuration (SSL/TLS, user permissions)
+- [ ] Environment-specific database configurations
+- [ ] Database configuration validation
+- [ ] Database configuration documentation
+
 ## Notes
 
 - Configuration patterns are framework/tech-specific but concepts are universal
@@ -741,6 +1019,210 @@ This document lists useful configuration file patterns found in other projects.
 - Secrets management is critical for security
 - Monitoring configuration is essential for observability
 - Document non-standard configurations
+- Database configuration should be environment-specific
+- Database credentials should never be committed
+- Database connection pooling improves performance
+- Database migration configuration enables schema versioning
+- Analytics configuration should support data collection, processing, and visualization
+- Analytics configuration should include privacy and security settings
+- Analytics configuration should be environment-specific for data retention and access control
+
+## Analytics & Business Intelligence Configuration Files
+
+### Pattern 1: Analytics Service Configuration
+
+**Description**: Configuration for analytics services including event tracking, metrics collection, and data processing
+
+**Pattern**:
+```json
+// config/analytics.json
+{
+  "analytics": {
+    "enabled": true,
+    "service": "custom",
+    "eventTracking": {
+      "enabled": true,
+      "batchSize": 100,
+      "flushInterval": 5000,
+      "maxQueueSize": 1000
+    },
+    "metrics": {
+      "enabled": true,
+      "collectionInterval": 60000,
+      "aggregationWindow": 300000
+    },
+    "privacy": {
+      "anonymizeUserIds": true,
+      "retentionDays": 90,
+      "piiRemoval": true
+    }
+  }
+}
+```
+
+### Pattern 2: Analytics Data Warehouse Configuration
+
+**Description**: Configuration for analytics data warehouse including ETL pipelines and data processing
+
+**Pattern**:
+```json
+// config/data-warehouse.json
+{
+  "dataWarehouse": {
+    "type": "postgresql",
+    "connection": {
+      "host": "${DW_HOST}",
+      "port": "${DW_PORT}",
+      "database": "${DW_DATABASE}",
+      "user": "${DW_USER}",
+      "password": "${DW_PASSWORD}"
+    },
+    "etl": {
+      "batchSize": 10000,
+      "parallelWorkers": 4,
+      "schedule": {
+        "hourly": true,
+        "daily": true,
+        "weekly": true
+      }
+    },
+    "aggregations": {
+      "daily": true,
+      "weekly": true,
+      "monthly": true,
+      "retentionDays": 730
+    }
+  }
+}
+```
+
+### Pattern 3: Analytics Dashboard Configuration
+
+**Description**: Configuration for analytics dashboards including visualization settings and caching
+
+**Pattern**:
+```json
+// config/dashboard.json
+{
+  "dashboard": {
+    "cache": {
+      "enabled": true,
+      "ttl": 3600,
+      "maxSize": 1000
+    },
+    "visualization": {
+      "chartLibrary": "recharts",
+      "defaultTimeRange": "30d",
+      "maxDataPoints": 1000
+    },
+    "export": {
+      "formats": ["pdf", "csv", "png"],
+      "maxExportSize": 10000
+    }
+  }
+}
+```
+
+### Pattern 4: Analytics Report Configuration
+
+**Description**: Configuration for analytics report generation including templates and scheduling
+
+**Pattern**:
+```json
+// config/reports.json
+{
+  "reports": {
+    "generation": {
+      "enabled": true,
+      "maxConcurrent": 5,
+      "timeout": 300000
+    },
+    "scheduling": {
+      "daily": {
+        "enabled": true,
+        "time": "00:00",
+        "recipients": ["admin@example.com"]
+      },
+      "weekly": {
+        "enabled": true,
+        "day": "monday",
+        "time": "09:00"
+      }
+    },
+    "templates": {
+      "directory": "./reports/templates",
+      "defaultFormat": "pdf"
+    }
+  }
+}
+```
+
+### Pattern 5: Analytics Environment Configuration
+
+**Description**: Environment-specific analytics configuration with privacy and security settings
+
+**Pattern**:
+```env
+# .env.analytics
+ANALYTICS_ENABLED=true
+ANALYTICS_SERVICE_URL=https://analytics.example.com
+ANALYTICS_API_KEY=${ANALYTICS_API_KEY}
+
+# Data Retention
+ANALYTICS_RETENTION_DAYS=90
+ANALYTICS_AGGREGATION_RETENTION_DAYS=730
+
+# Privacy
+ANALYTICS_ANONYMIZE_USER_IDS=true
+ANALYTICS_PII_REMOVAL=true
+
+# Performance
+ANALYTICS_BATCH_SIZE=100
+ANALYTICS_FLUSH_INTERVAL=5000
+ANALYTICS_CACHE_TTL=3600
+```
+
+### Analytics Configuration Best Practices
+
+1. **Service Configuration**:
+   - Enable/disable analytics per environment
+   - Configure batch sizes for performance
+   - Set appropriate flush intervals
+   - Configure queue limits
+
+2. **Privacy Configuration**:
+   - Enable user ID anonymization
+   - Configure data retention policies
+   - Enable PII removal
+   - Set privacy compliance settings
+
+3. **Performance Configuration**:
+   - Configure caching for dashboards
+   - Set aggregation windows
+   - Configure batch processing sizes
+   - Set query timeouts
+
+4. **Security Configuration**:
+   - Secure analytics API keys
+   - Configure access control
+   - Enable audit logging
+   - Set up encryption for data in transit
+
+### Analytics Configuration Checklist
+
+- [ ] Analytics service configuration file
+- [ ] Analytics data warehouse configuration
+- [ ] Analytics dashboard configuration
+- [ ] Analytics report configuration
+- [ ] Analytics environment variables (.env)
+- [ ] Analytics privacy settings configured
+- [ ] Analytics data retention policies set
+- [ ] Analytics caching configured
+- [ ] Analytics API keys secured
+- [ ] Analytics access control configured
+- [ ] Analytics audit logging enabled
+- [ ] Analytics configuration validated
+- [ ] Analytics configuration documented
 
 ---
 
@@ -755,5 +1237,15 @@ This document lists useful configuration file patterns found in other projects.
 **Expertise**: DevOps (CI/CD, Deployment)  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this configuration files review document by adding comprehensive DevOps configuration patterns and best practices. Added sections covering: CI/CD configuration files (GitHub Actions workflows with multi-stage pipelines, GitLab CI configuration with stage-based deployments), Infrastructure as Code (Terraform configuration with state management and modules, AWS CloudFormation templates with parameters and outputs), secrets management configuration (environment variables with .env.example patterns, AWS Secrets Manager and Parameter Store integration), container orchestration configuration (Kubernetes deployments and services with ConfigMaps and Secrets, ECS task definitions with Fargate support), monitoring and observability configuration (CloudWatch log groups, metric filters, and alarms, Prometheus scrape configurations and alert rules), Docker configuration enhancements (multi-stage Dockerfiles for optimized builds, production-ready Docker Compose with health checks and resource limits), and comprehensive DevOps configuration best practices (Infrastructure as Code, secrets management, environment configuration, CI/CD configuration, container configuration, monitoring configuration, configuration versioning, configuration validation). Also fixed the date from 2025-01-05 to 2026-01-05. This addition provides essential DevOps perspective on configuration management, ensuring that configuration files support automation, security, scalability, and observability throughout the software development lifecycle.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this configuration files review document by adding comprehensive "Database Configuration Files" section covering database connection configuration (database configuration in .env with connection and pool settings, database configuration file with environment-specific settings and connection pooling, database configuration in docker-compose.yml with health checks and character set configuration), database migration configuration (migration tool configuration with knexfile.js pattern, migration configuration file with JSON-based configuration), database performance configuration (MySQL configuration with my.cnf settings for character set, connections, InnoDB, query cache, slow query log, binary logging, PostgreSQL configuration with postgresql.conf settings for connections, shared buffers, query performance, WAL, query logging), database configuration best practices (connection configuration with environment variables and SSL/TLS, migration configuration with version control and validation, performance configuration with tuning and monitoring, security configuration with credential management and user permissions, environment-specific configuration with dev/staging/prod differences), and comprehensive database configuration checklist (13 items covering connection, migration, performance, security, environment-specific, validation, documentation). Enhanced "Notes" section with database-specific considerations (environment-specific configuration, credential security, connection pooling, migration configuration). These additions provide practical, production-ready patterns for configuring database connections, migrations, and performance settings across different environments and database systems.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this configuration files review document by adding comprehensive "Analytics & Business Intelligence Configuration Files" section covering analytics service configuration (configuration for analytics services including event tracking, metrics collection, and data processing with enabled flag, service type, event tracking configuration with batch size, flush interval, max queue size, metrics configuration with collection interval and aggregation window, privacy configuration with user ID anonymization, retention days, PII removal with JSON configuration example), analytics data warehouse configuration (configuration for analytics data warehouse including ETL pipelines and data processing with data warehouse type, connection settings, ETL configuration with batch size, parallel workers, schedule for hourly/daily/weekly, aggregations configuration with daily/weekly/monthly aggregations and retention days with JSON configuration example), analytics dashboard configuration (configuration for analytics dashboards including visualization settings and caching with cache configuration with enabled flag, TTL, max size, visualization configuration with chart library, default time range, max data points, export configuration with formats and max export size with JSON configuration example), analytics report configuration (configuration for analytics report generation including templates and scheduling with generation configuration with enabled flag, max concurrent, timeout, scheduling configuration with daily/weekly schedules, templates configuration with directory and default format with JSON configuration example), analytics environment configuration (environment-specific analytics configuration with privacy and security settings including analytics enabled flag, service URL, API key, data retention settings, privacy settings with anonymization and PII removal, performance settings with batch size, flush interval, cache TTL with .env example), and analytics configuration best practices (service configuration with enable/disable per environment, batch sizes, flush intervals, queue limits, privacy configuration with user ID anonymization, data retention policies, PII removal, privacy compliance settings, performance configuration with dashboard caching, aggregation windows, batch processing sizes, query timeouts, security configuration with secure API keys, access control, audit logging, encryption for data in transit). Added comprehensive analytics configuration checklist (13 items covering service, data warehouse, dashboard, report, environment variables, privacy, retention, caching, API keys, access control, audit logging, validation, documentation). Enhanced "Notes" section with analytics-specific considerations (analytics configuration should support data collection, processing, and visualization, analytics configuration should include privacy and security settings, analytics configuration should be environment-specific for data retention and access control). This addition provides essential BI/Analytics perspective on configuration files, ensuring analytics features have proper configuration patterns, privacy and security settings, performance optimization, and environment-specific configuration for reliable analytics functionality.
 
 ---

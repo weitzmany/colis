@@ -1,0 +1,50 @@
+stages:
+  - lint
+  - test
+  - build
+
+variables:
+  NODE_VERSION: "20"
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - npm ci
+
+lint:
+  stage: lint
+  image: node:${NODE_VERSION}
+  script:
+    - npm run lint
+  only:
+    - main
+    - develop
+    - merge_requests
+
+test:
+  stage: test
+  image: node:${NODE_VERSION}
+  script:
+    - npm run build
+    - npm run lint
+    # Add test command when tests are added
+    # - npm test
+  only:
+    - main
+    - develop
+    - merge_requests
+
+build:
+  stage: build
+  image: node:${NODE_VERSION}
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - .next
+    expire_in: 1 week
+  only:
+    - main
+    - develop

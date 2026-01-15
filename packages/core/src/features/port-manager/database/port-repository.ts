@@ -4,9 +4,9 @@
  * Implements port assignment database operations using shared DatabaseRepository.
  */
 
-import { DatabaseRepository } from '../../../shared/database/repository';
-import { PortAssignment, PortFilters } from '../types';
-import { PORT_ASSIGNMENTS_TABLE, PORT_HISTORY_TABLE } from './schema';
+import { DatabaseRepository } from '../../../shared/database/repository.js';
+import { PortAssignment, PortFilters } from '../types.js';
+import { PORT_ASSIGNMENTS_TABLE, PORT_HISTORY_TABLE } from './schema.js';
 
 export class PortRepository {
   constructor(private db: DatabaseRepository) {}
@@ -37,21 +37,55 @@ export class PortRepository {
    * Assign a port to a project
    */
   async assignPort(assignment: Omit<PortAssignment, 'id' | 'createdAt' | 'updatedAt'>): Promise<void> {
-    await this.db.execute(
-      `INSERT INTO ${PORT_ASSIGNMENTS_TABLE} 
-       (project_name, project_path, app_type, port, status, config_file, env_var, notes)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        assignment.projectName,
-        assignment.projectPath,
-        assignment.appType,
-        assignment.port,
-        assignment.status || 'active',
-        assignment.metadata?.configFile || null,
-        assignment.metadata?.envVar || null,
-        assignment.metadata?.notes || null,
-      ]
-    );
+    // Check if port is already assigned to avoid UNIQUE constraint violation
+    const existingByPort = await this.getByPort(assignment.port);
+    if (existingByPort && existingByPort.status === 'active') {
+      // Port is already assigned - this should not happen if allocator works correctly
+      // but we handle it gracefully
+      throw new Error(
+        `Port ${assignment.port} is already assigned to project "${existingByPort.projectName}" (${existingByPort.appType})`
+      );
+    }
+
+    try {
+      await this.db.execute(
+        `INSERT INTO ${PORT_ASSIGNMENTS_TABLE} 
+         (project_name, project_path, app_type, port, status, config_file, env_var, notes)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          assignment.projectName,
+          assignment.projectPath,
+          assignment.appType,
+          assignment.port,
+          assignment.status || 'active',
+          assignment.metadata?.configFile || null,
+          assignment.metadata?.envVar || null,
+          assignment.metadata?.notes || null,
+        ]
+      );
+    } catch (error: any) {
+      // Handle UNIQUE constraint violations gracefully
+      if (error.message?.includes('UNIQUE constraint') || error.code === 'SQLITE_CONSTRAINT') {
+        // Check what the conflict is
+        const existingByPort = await this.getByPort(assignment.port);
+        const existingByProject = await this.getPort(assignment.projectName, assignment.appType);
+        
+        if (existingByPort) {
+          throw new Error(
+            `Port ${assignment.port} is already assigned to project "${existingByPort.projectName}" (${existingByPort.appType})`
+          );
+        }
+        if (existingByProject) {
+          throw new Error(
+            `Project "${assignment.projectName}" (${assignment.appType}) already has port ${existingByProject.port} assigned`
+          );
+        }
+        // Generic conflict error
+        throw new Error(`Port assignment conflict: ${error.message}`);
+      }
+      // Re-throw other errors
+      throw error;
+    }
   }
 
   /**

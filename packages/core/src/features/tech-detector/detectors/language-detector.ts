@@ -7,7 +7,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { glob } from 'glob';
-import { LanguageInfo } from '../types';
+import { LanguageInfo } from '../types.js';
 
 export class LanguageDetector {
   /**

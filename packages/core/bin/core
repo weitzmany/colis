@@ -6,19 +6,19 @@
  * Handles main package commands like `npx @your-org/core init`
  */
 
-const { program } = require('commander');
-const { initCommand } = require('../dist/features/project-initialization/cli/commands/init');
-const { updateCommand } = require('../dist/features/project-initialization/cli/commands/update');
-const { colorsCommand } = require('../dist/features/project-initialization/cli/commands/colors');
+import { program } from 'commander';
+import { initCommand } from '../dist/features/project-initialization/cli/commands/init.js';
+import { updateCommand } from '../dist/features/project-initialization/cli/commands/update.js';
+import { colorsCommand } from '../dist/features/project-initialization/cli/commands/colors.js';
 
 program
   .name('@your-org/core')
-  .description('Core package with features, rules, experts, and commands')
+  .description('Foundational development toolkit: port management, tech detection, project setup, and shared utilities')
   .version('1.0.0');
 
 program
   .command('init')
-  .description('Initialize project with rules, commands, and Port Manager')
+  .description('Set up your project with rules, commands, Port Manager, and IDE colors')
   .option('-p, --project-name <name>', 'Project name (auto-detected if not provided)')
   .option('-t, --app-type <type>', 'App type (auto-detected if not provided)')
   .option('--overwrite', 'Overwrite existing files')
@@ -33,7 +33,7 @@ program
 
 program
   .command('update')
-  .description('Update project initialization - checks for gaps and updates as needed')
+  .description('Update your project setup - adds missing files and updates existing ones')
   .option('-p, --project-name <name>', 'Project name (auto-detected if not provided)')
   .option('-t, --app-type <type>', 'App type (auto-detected if not provided)')
   .option('--overwrite', 'Overwrite existing files (default: only add missing files)')

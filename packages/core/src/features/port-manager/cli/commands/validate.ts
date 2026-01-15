@@ -4,9 +4,9 @@
  * Validates all port assignments and detects conflicts.
  */
 
-import { PortManager } from '../../port-manager';
-import { GlobalConfigManager } from '../../../../shared/config/global-config';
-import { PortDetector } from '../../utils/port-detector';
+import { PortManager } from '../../port-manager.js';
+import { GlobalConfigManager } from '../../../../shared/config/global-config.js';
+import { PortDetector } from '../../utils/port-detector.js';
 import chalk from 'chalk';
 
 export async function validateCommand(options: {

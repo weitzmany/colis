@@ -7,8 +7,8 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { FrameworkDetector } from './project-detector';
-import { AppType } from '../types';
+import { FrameworkDetector } from './project-detector.js';
+import { AppType } from '../types.js';
 
 export interface DetectedService {
   name: string; // e.g., 'frontend', 'backend', 'admin'
@@ -150,6 +150,10 @@ export class ServiceDetector {
       node: [3000, 3001, 3002, 8080, 8081],
       php: [8000, 8080, 8081],
       python: [5000, 5001, 8000, 8080],
+      'react-native': [8081, 8082, 8083],
+      expo: [8081, 8082, 8083],
+      ionic: [8100, 8101, 8102],
+      flutter: [5000, 5001, 5002],
     };
 
     // Add likely ports for this app type

@@ -4,12 +4,20 @@
  * List all configured domains.
  */
 
-import { DomainManager } from '../../domain-manager';
+import { DomainManager } from '../../domain-manager.js';
+import { CaddyManager } from '../../caddy-manager.js';
+import { HostsManager } from '../../hosts-manager.js';
+import { ServiceDetector } from '../../service-detector.js';
+import { CaddyfileError } from '../../errors.js';
 import chalk from 'chalk';
 
 export async function listCommand() {
   try {
-    const domainManager = new DomainManager();
+    const domainManager = new DomainManager({
+      caddyManager: new CaddyManager(),
+      hostsManager: new HostsManager(),
+      serviceDetector: new ServiceDetector(),
+    });
     const domains = await domainManager.list();
 
     if (domains.length === 0) {
@@ -44,8 +52,16 @@ export async function listCommand() {
       console.log(chalk.gray(`    Status: ${status.join(', ')}`));
       console.log('');
     }
-  } catch (error: any) {
-    console.error(chalk.red(`Error: ${error.message}`));
+  } catch (error) {
+    if (error instanceof CaddyfileError) {
+      console.error(chalk.red(`✗ Failed to read Caddyfile: ${error.message}`));
+      if (error.path) {
+        console.log(chalk.yellow(`  Path: ${error.path}`));
+      }
+    } else {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(`Error: ${errorMessage}`));
+    }
     process.exit(1);
   }
 }

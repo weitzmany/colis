@@ -4,9 +4,9 @@ Core package providing foundational features, rules, experts, and commands for a
 
 ## Quick Start - New Project Setup
 
-### 🎯 Best Workflow for a Brand New Project
+### 🎯 Quick Start: Setting Up a New Project
 
-**When you open a clean folder, follow these 3 steps:**
+**Got a fresh project folder? Get up and running in three simple steps:**
 
 ```bash
 # Step 1: Initialize npm project (if you don't have package.json)
@@ -19,7 +19,7 @@ npm link @your-org/core
 npx @your-org/core init
 ```
 
-**That's it!** Your project is now set up with:
+**Done!** Your project now includes:
 - ✅ All expert personas and user rules in `.cursor/rules/`
 - ✅ General commands in `.cursor/commands/`
 - ✅ Port Manager initialized and configured
@@ -38,9 +38,9 @@ npm link @your-org/core
 npx @your-org/core init
 ```
 
-### ⚙️ One-Time Setup (Only Needed Once)
+### ⚙️ One-Time Setup
 
-Before using `npm link @your-org/core` in projects, you need to link the package globally (one-time setup):
+**First time using the core package?** Link it globally once, then use it in any project:
 
 ```bash
 cd ~/Documents/packages/packages/core
@@ -49,9 +49,9 @@ npm link
 
 This creates a global symlink so you can use `npm link @your-org/core` in any project.
 
-### 🔄 Alternative: File Path Installation
+### 🔄 Alternative Installation Method
 
-If you prefer not to use npm link, you can install directly from the file path:
+**Prefer not to use npm link?** Install directly from the file path instead:
 
 ```bash
 npm init -y
@@ -59,9 +59,9 @@ npm install file:../../packages/packages/core
 npx @your-org/core init
 ```
 
-### 📦 Future: Published Package
+### 📦 Coming Soon: Published Package
 
-When the package is published to npm, you'll be able to use:
+**Once published to npm**, installation will be even simpler:
 
 ```bash
 npm init -y
@@ -69,40 +69,45 @@ npm install @your-org/core
 npx @your-org/core init
 ```
 
-### ⚠️ Important Notes
+### 💡 Pro Tips
 
-1. **npm link is set up** - The package is already linked globally, so you can use `npm link @your-org/core` in any project.
+1. **Already linked globally** — The package is ready to use. Just run `npm link @your-org/core` in any project.
 
-2. **Always run `npx @your-org/core init`** after linking - this ensures everything is set up correctly.
+2. **Always initialize** — After linking, run `npx @your-org/core init` to set everything up correctly.
 
-3. **Benefits of npm link:**
-   - Changes to the package are immediately available (no reinstall needed)
+3. **Why npm link works great:**
+   - See changes instantly (no reinstalling needed)
    - Cleaner than file paths
-   - Works exactly like a published package
-   - Perfect for local development before publishing
+   - Works just like a published package
+   - Perfect for local development
 
 ## Features
 
+The core package provides several foundational features that help streamline development workflows. Each feature is designed to be easy to use and well-documented.
+
 ### Project Initialization
 
-Automatically set up new projects with one command:
+**Purpose**: Automatically set up new projects with all necessary configuration, rules, and tools in one command.
 
+**Quick Start**:
 ```bash
 npx @your-org/core init
 ```
 
 **What it does**:
-- Copies all rules (expert personas, user rules) to `.cursor/rules/`
-- Copies general commands to `.cursor/commands/` (excludes local commands)
-- Initializes Port Manager automatically (mandatory)
-- **Sets up IDE colors** - Generates unique color scheme per project
-- Validates everything is set up correctly
+- ✅ Copies all rules (expert personas, user rules) to `.cursor/rules/`
+- ✅ Copies general commands to `.cursor/commands/` (excludes local commands)
+- ✅ Initializes Port Manager automatically (mandatory)
+- ✅ **Sets up IDE colors** - Generates unique color scheme per project
+- ✅ Validates everything is set up correctly
 
-See [Project Initialization PRD](../../docs/features/project-initialization/PRD.md) for details.
+**Learning Tip**: This command is idempotent - you can run it multiple times safely. It will skip files that already exist unless you use the `--overwrite` flag.
+
+**Learn More**: See [Project Initialization PRD](../../docs/features/project-initialization/PRD.md) for detailed documentation.
 
 ### IDE Colors
 
-Automatically configure unique IDE colors for each project with branch-based themes:
+**Visual project organization** — Each project gets its own color scheme that changes based on your git branch:
 
 ```bash
 npx @your-org/core init
@@ -146,18 +151,22 @@ git checkout development # IDE turns ORANGE
 git checkout feature-x  # IDE uses project KEY_COLOR
 ```
 
-**Skip colors** (if you don't want IDE colors):
+**Prefer to skip IDE colors?** Use the flag:
 ```bash
 npx @your-org/core init --skip-colors
 ```
 
 ### Port Manager
 
-Automatically manage port assignments across all your projects:
+**Purpose**: Automatically manage port assignments across all your projects to prevent conflicts and ensure consistent configuration.
 
+**Why it matters**: Port conflicts are a common source of frustration when working with multiple projects. Port Manager eliminates this by maintaining a centralized registry of port assignments.
+
+**Programmatic Usage**:
 ```typescript
 import { PortManager } from '@your-org/core/features/port-manager';
 
+// Create a Port Manager instance
 const manager = new PortManager({
   database: {
     type: 'sqlite',
@@ -165,38 +174,116 @@ const manager = new PortManager({
   }
 });
 
+// Allocate a port for your project
 const port = await manager.allocate('my-project', 'nextjs');
+console.log(`Assigned port: ${port}`); // e.g., "Assigned port: 3001"
 ```
 
-**CLI Usage**:
+**CLI Commands**:
 ```bash
-# Port Manager is automatically initialized during project init
-# But you can also use it directly:
+# Port Manager initializes automatically during project setup
+# But you can also manage ports manually:
+
+# Set up Port Manager for your project
 npx @your-org/core port-manager init
+
+# Get a port assigned to your project
 npx @your-org/core port-manager allocate --project-name my-project --app-type nextjs
+
+# Verify your port setup (check for conflicts)
+npx @your-org/core port-manager check
+
+# See all your port assignments
+npx @your-org/core port-manager list
 ```
+
+**Learning Tip**: Port Manager automatically detects your project type and suggests appropriate ports. You can override the default port if needed, but the automatic allocation usually works best.
 
 ## Rules and Commands
 
-This package includes Cursor rules and commands that are automatically copied to your project during initialization:
+**Supercharge your IDE** — The core package includes Cursor IDE rules and commands that automatically enhance your development workflow. Everything is copied to your project during initialization.
 
-- **Rules**: Expert personas and user rules → `.cursor/rules/`
-- **Commands**: General commands → `.cursor/commands/general/`
-- **Local Commands**: Excluded (these are for the packages repo only)
+### What Gets Installed
 
-## Package Structure
+- **Expert Rules** → `.cursor/rules/`
+  - **Expert personas**: Specialized AI assistants for different domains
+    - Architecture Expert: System design and scalability guidance
+    - Security Expert: Security best practices and threat modeling
+    - Testing Expert: Test strategy and implementation help
+  - **User rules**: Project-specific guidelines and best practices
+  
+- **Commands** → `.cursor/commands/general/`
+  - Reusable commands for common development tasks
+  - Commands that work across all your projects
+  
+- **Local commands**: Not included (these are for the packages repository only)
+
+### How Expert Personas Help
+
+Think of expert personas as **specialized AI assistants** that provide domain-specific guidance. After initialization, you can ask questions like:
+- "How should I structure this API?" → Architecture Expert helps
+- "Is this code secure?" → Security Expert reviews
+- "What tests should I write?" → Testing Expert guides you
+
+**The best part?** They're automatically available in your project — no extra setup needed.
+
+## What's Inside
+
+**Curious about the package structure?** Here's how everything is organized:
 
 ```
 @your-org/core/
-├── features/          # Core features (Port Manager, etc.)
-├── shared/            # Shared utilities
-├── rules/             # Cursor rules
+├── features/          # Core features (Port Manager, Tech Detector, etc.)
+│   ├── port-manager/  # Port management feature
+│   ├── tech-detector/ # Technology detection feature
+│   ├── domain-manager/# Domain management feature
+│   └── project-initialization/ # Project setup feature
+├── shared/            # Shared utilities used across features
+│   ├── database/      # Database abstractions
+│   └── config/        # Configuration management
+├── rules/             # Cursor IDE rules
+│   ├── experts/       # Expert personas
+│   └── user/          # User rules
 └── commands/          # Cursor commands
+    ├── local/         # Local commands (packages repo only)
+    └── general/       # General commands (copied to projects)
 ```
 
-## Documentation
+**Quick Reference**:
+- **Features**: Ready-to-use modules you can import in your projects
+- **Shared Utilities**: Common code used across features (database, config)
+- **Rules**: Cursor IDE configuration that enhances your development experience
+- **Commands**: Reusable CLI commands for common development tasks
 
-See the [Port Manager PRD](../../docs/features/port-manager/PRD.md) for detailed documentation.
+## Learn More
+
+**Want to dive deeper?** Here's where to find everything you need:
+
+### Getting Started
+- **[Getting Started Guide](./GETTING_STARTED.md)**: Step-by-step guide for new users
+- **This README**: Quick start guide and feature overview
+- **Architecture Documentation** ([ARCHITECTURE.md](./ARCHITECTURE.md)): Deep dive into package architecture and design patterns
+
+### Feature Documentation
+- **Port Manager**: [PRD](../../docs/features/port-manager/PRD.md) - Complete feature documentation
+- **Project Initialization**: [PRD](../../docs/features/project-initialization/PRD.md) - Setup and configuration guide
+
+### Architecture & Strategy
+- **Package Architecture Strategy**: [Overview](../../docs/architecture/PACKAGE_ARCHITECTURE.md) - How packages are organized and work together
+
+### Learning Path
+
+**Just getting started?** Follow this path:
+1. 📖 **Start here**: Read the [Getting Started Guide](./GETTING_STARTED.md) for step-by-step instructions
+2. 🚀 **Try it out**: Run `npx @your-org/core init` in a test project
+3. 🔍 **Explore features**: Check out the features section above to see what's available
+4. 🏗️ **Understand the design**: Read the Architecture Documentation to see how it all fits together
+5. 📚 **Go deeper**: Check individual feature PRDs for advanced usage
+
+**Already familiar?** Jump straight to:
+- **Architecture Documentation** — Design patterns and system structure
+- **Feature PRDs** — Advanced usage and API details
+- **Package Architecture Strategy** — How everything integrates
 
 ## License
 

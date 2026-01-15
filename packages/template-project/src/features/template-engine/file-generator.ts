@@ -1,7 +1,18 @@
 /**
  * File Generator
  * 
- * Generates project structure from templates
+ * Generates project structure from templates.
+ * Handles file creation, directory structure, and template processing.
+ * 
+ * @example
+ * ```typescript
+ * const generator = new FileGenerator();
+ * const result = await generator.generateProject({
+ *   outputPath: './my-project',
+ *   templatePath: './templates/angular',
+ *   context: { projectName: 'my-app', packageManager: 'npm' }
+ * });
+ * ```
  */
 
 import fs from 'fs-extra';
@@ -9,15 +20,50 @@ import * as path from 'path';
 import { TemplateProcessor } from './template-processor.js';
 import { GenerationOptions, GenerationResult, TemplateContext } from './types.js';
 
+/**
+ * Generates project files and directory structure from templates.
+ * 
+ * Processes Handlebars templates, substitutes variables, and creates
+ * the complete project structure in the output directory.
+ */
 export class FileGenerator {
+  /** Template processor for handling Handlebars templates */
   private processor: TemplateProcessor;
 
+  /**
+   * Create a new FileGenerator instance.
+   */
   constructor() {
     this.processor = new TemplateProcessor();
   }
 
   /**
-   * Generate project from template
+   * Generate a complete project from a template.
+   * 
+   * Processes all template files recursively, substitutes variables using
+   * the provided context, and creates the project structure in the output path.
+   * 
+   * @param options - Generation options including paths, context, and behavior flags
+   * @returns Generation result with created files, errors, and warnings
+   * 
+   * @example
+   * ```typescript
+   * const result = await generator.generateProject({
+   *   outputPath: './my-project',
+   *   templatePath: './templates/angular',
+   *   context: {
+   *     projectName: 'my-app',
+   *     packageManager: 'npm',
+   *     port: 4200
+   *   },
+   *   overwrite: false,
+   *   skipExisting: true
+   * });
+   * 
+   * if (result.success) {
+   *   console.log(`Created ${result.filesCreated.length} files`);
+   * }
+   * ```
    */
   async generateProject(options: GenerationOptions): Promise<GenerationResult> {
     const result: GenerationResult = {

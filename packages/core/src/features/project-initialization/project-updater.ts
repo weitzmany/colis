@@ -7,24 +7,26 @@
 
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import { readdir } from 'fs/promises';
+import { execSync } from 'child_process';
 import chalk from 'chalk';
-import { copyRules, CopyRulesResult } from './rules-copier';
-import { copyCommands, CopyCommandsResult } from './commands-copier';
-import { validateSetup, InitValidationResult } from './setup-validator';
-import { initCommand as portManagerInit } from '../port-manager/cli/commands/init';
-import { FrameworkDetector } from '../port-manager/utils/project-detector';
-import { DefaultsInstaller } from '../tech-detector/standards/defaults-installer';
-import { generateProjectName } from '../port-manager/utils/project-name';
-import { generateColorPalette } from './color-manager';
+import { copyRules, CopyRulesResult } from './rules-copier.js';
+import { copyCommands, CopyCommandsResult } from './commands-copier.js';
+import { validateSetup, InitValidationResult } from './setup-validator.js';
+import { initCommand as portManagerInit } from '../port-manager/cli/commands/init.js';
+import { FrameworkDetector } from '../port-manager/utils/project-detector.js';
+import { DefaultsInstaller } from '../tech-detector/standards/defaults-installer.js';
+import { generateProjectName } from '../port-manager/utils/project-name.js';
+import { generateColorPalette } from './color-manager.js';
 import {
   generatePostCheckoutHook,
   setupGitHooksPath,
   ensureSettingsIgnored,
   initializeSettingsJson,
-} from './hook-generator';
-import { PortManager } from '../port-manager/port-manager';
-import { GlobalConfigManager } from '../../shared/config/global-config';
-import { ProjectConfigManager } from '../../shared/config/project-config';
+} from './hook-generator.js';
+import { PortManager } from '../port-manager/port-manager.js';
+import { GlobalConfigManager } from '../../shared/config/global-config.js';
+import { ProjectConfigManager } from '../../shared/config/project-config.js';
 
 export interface UpdateOptions {
   projectName?: string;
@@ -297,7 +299,6 @@ export async function updateProject(options: UpdateOptions = {}): Promise<Update
           
           // Try to initialize settings.json
           try {
-            const { execSync } = require('child_process');
             let branchName = 'main';
             try {
               branchName = execSync('git rev-parse --abbrev-ref HEAD', {
@@ -478,7 +479,7 @@ async function findMissingRules(
     const expertsTarget = path.join(targetRulesPath, 'experts');
 
     if (await fs.pathExists(expertsSource)) {
-      const expertFiles = (await fs.readdir(expertsSource)).filter((f) => f.endsWith('.mdc'));
+      const expertFiles = (await readdir(expertsSource)).filter((f) => f.endsWith('.mdc'));
       for (const file of expertFiles) {
         const targetFile = path.join(expertsTarget, file);
         if (!(await fs.pathExists(targetFile))) {
@@ -492,7 +493,7 @@ async function findMissingRules(
     const userTarget = path.join(targetRulesPath, 'user');
 
     if (await fs.pathExists(userSource)) {
-      const userFiles = (await fs.readdir(userSource)).filter((f) => f.endsWith('.mdc'));
+      const userFiles = (await readdir(userSource)).filter((f) => f.endsWith('.mdc'));
       for (const file of userFiles) {
         const targetFile = path.join(userTarget, file);
         if (!(await fs.pathExists(targetFile))) {

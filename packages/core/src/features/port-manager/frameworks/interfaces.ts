@@ -4,7 +4,7 @@
  * Defines interfaces for framework-specific handlers.
  */
 
-import { ConfigurationResult } from '../types';
+import { ConfigurationResult } from '../types.js';
 
 export interface FrameworkHandler {
   /**

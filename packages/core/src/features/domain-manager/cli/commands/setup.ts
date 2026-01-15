@@ -4,8 +4,17 @@
  * Set up domain for current project.
  */
 
-import { DomainManager } from '../../domain-manager';
-import { generateProjectName } from '../../../port-manager/utils/project-name';
+import { DomainManager } from '../../domain-manager.js';
+import { CaddyManager } from '../../caddy-manager.js';
+import { HostsManager } from '../../hosts-manager.js';
+import { ServiceDetector } from '../../service-detector.js';
+import { generateProjectName } from '../../../port-manager/utils/project-name.js';
+import {
+  CaddyNotInstalledError,
+  DomainValidationError,
+  DomainConfigurationError,
+  HostsFileError,
+} from '../../errors.js';
 import chalk from 'chalk';
 import * as path from 'path';
 
@@ -20,7 +29,11 @@ export async function setupCommand(options: {
 }) {
   try {
     const projectPath = options.path ? path.resolve(options.path) : process.cwd();
-    const domainManager = new DomainManager();
+    const domainManager = new DomainManager({
+      caddyManager: new CaddyManager(),
+      hostsManager: new HostsManager(),
+      serviceDetector: new ServiceDetector(),
+    });
 
     // Check if Caddy is installed
     const caddyInstalled = await domainManager.checkCaddyInstalled();
@@ -80,8 +93,31 @@ export async function setupCommand(options: {
     if (!caddyRunning) {
       console.log(chalk.yellow(`\n⚠ Remember to start Caddy for the domain to work!`));
     }
-  } catch (error: any) {
-    console.error(chalk.red(`Error: ${error.message}`));
+  } catch (error) {
+    if (error instanceof CaddyNotInstalledError) {
+      console.error(chalk.red('✗ Caddy is not installed.'));
+      console.log(chalk.yellow('\nTo install Caddy:'));
+      console.log(chalk.cyan('  macOS: brew install caddy'));
+      console.log(chalk.cyan('  Linux: See https://caddyserver.com/docs/install'));
+      console.log(chalk.cyan('  Or run: domain-manager install'));
+    } else if (error instanceof DomainValidationError) {
+      console.error(chalk.red(`✗ Invalid domain: ${error.message}`));
+      if (error.validationRule) {
+        console.log(chalk.yellow(`  Validation rule: ${error.validationRule}`));
+      }
+    } else if (error instanceof DomainConfigurationError) {
+      console.error(chalk.red(`✗ Configuration error: ${error.message}`));
+      if (error.reason) {
+        console.log(chalk.yellow(`  Reason: ${error.reason}`));
+      }
+    } else if (error instanceof HostsFileError) {
+      console.warn(chalk.yellow(`⚠ ${error.message}`));
+      console.log(chalk.yellow('  Domain is configured in Caddyfile but hosts file update failed.'));
+      console.log(chalk.yellow('  You may need to add the domain manually to your hosts file.'));
+    } else {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(`Error: ${errorMessage}`));
+    }
     process.exit(1);
   }
 }

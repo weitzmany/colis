@@ -671,6 +671,293 @@ security-scan:
    - **Best Practices Sharing**: Share CI/CD best practices across teams
    - **Onboarding Documentation**: Help new team members understand CI/CD workflows
 
+## Database CI/CD Workflow Patterns
+
+### Database Testing in CI
+
+#### Pattern 1: Database Service in CI Pipeline
+
+```yaml
+# GitHub Actions workflow
+jobs:
+  test:
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    
+    steps:
+      - name: Wait for MySQL
+        run: |
+          until mysqladmin ping -h mysql -u root -prootpassword --silent; do
+            sleep 1
+          done
+      
+      - name: Run Database Migrations
+        run: npm run migrate:up
+        env:
+          DB_HOST: mysql
+          DB_USER: root
+          DB_PASSWORD: rootpassword
+          DB_DATABASE: test_db
+      
+      - name: Run Database Tests
+        run: npm run test:database
+```
+
+#### Pattern 2: Database Migration Validation
+
+```yaml
+- name: Validate Migration Files
+  run: |
+    # Check migration file syntax
+    for migration in database/migrations/*.sql; do
+      mysql --host=mysql --user=root --password=rootpassword \
+        --execute="SOURCE $migration" test_db || exit 1
+    done
+    
+    # Verify migration idempotency
+    npm run migrate:up
+    npm run migrate:up  # Should succeed without errors
+    
+    # Verify rollback
+    npm run migrate:down
+    npm run migrate:up  # Should succeed again
+```
+
+#### Pattern 3: Database Schema Testing
+
+```yaml
+- name: Test Database Schema
+  run: |
+    # Verify schema matches expected structure
+    npm run migrate:up
+    
+    # Run schema validation tests
+    npm run test:schema
+    
+    # Verify indexes exist
+    mysql --host=mysql --user=root --password=rootpassword test_db << EOF
+    SELECT COUNT(*) as index_count
+    FROM information_schema.STATISTICS
+    WHERE TABLE_SCHEMA = 'test_db'
+    AND TABLE_NAME = 'users';
+    EOF
+    
+    # Verify foreign keys
+    mysql --host=mysql --user=root --password=rootpassword test_db << EOF
+    SELECT COUNT(*) as fk_count
+    FROM information_schema.KEY_COLUMN_USAGE
+    WHERE TABLE_SCHEMA = 'test_db'
+    AND REFERENCED_TABLE_NAME IS NOT NULL;
+    EOF
+```
+
+### Database Migration CI/CD Workflow
+
+#### Pattern 1: Migration Validation Job
+
+```yaml
+validate-migrations:
+  runs-on: ubuntu-latest
+  services:
+    mysql:
+      image: mysql:8.0
+      env:
+        MYSQL_ROOT_PASSWORD: rootpassword
+        MYSQL_DATABASE: test_db
+      ports:
+        - 3306:3306
+  
+  steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install Dependencies
+      run: npm ci
+    
+    - name: Wait for MySQL
+      run: |
+        until mysqladmin ping -h mysql -u root -prootpassword --silent; do
+          sleep 1
+        done
+    
+    - name: Validate Migration Syntax
+      run: npm run migrate:validate
+    
+    - name: Test Migration Execution
+      run: npm run migrate:test
+    
+    - name: Test Migration Rollback
+      run: npm run migrate:test:rollback
+```
+
+#### Pattern 2: Database Migration Deployment Job
+
+```yaml
+deploy-migrations:
+  needs: [build, validate-migrations]
+  runs-on: ubuntu-latest
+  if: github.ref == 'refs/heads/main'
+  
+  steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Database Connection
+      run: |
+        echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+        echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+        echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> $GITHUB_ENV
+    
+    - name: Backup Database
+      run: |
+        mysqldump \
+          -h ${{ secrets.DB_HOST }} \
+          -u ${{ secrets.DB_USER }} \
+          -p${{ secrets.DB_PASSWORD }} \
+          ${{ secrets.DB_DATABASE }} \
+          > backup_$(date +%Y%m%d_%H%M%S).sql
+        
+        # Upload backup to S3
+        aws s3 cp backup_*.sql s3://${{ secrets.S3_BACKUP_BUCKET }}/backups/
+    
+    - name: Run Migrations
+      run: npm run migrate:up
+      continue-on-error: false
+    
+    - name: Verify Migration Success
+      run: |
+        npm run migrate:status
+        # Verify schema version matches expected
+    
+    - name: Rollback on Failure
+      if: failure()
+      run: |
+        echo "Migration failed, rolling back..."
+        npm run migrate:down -- --to-last
+        exit 1
+```
+
+### Database Testing Patterns in CI/CD
+
+#### Pattern 1: Database Integration Tests
+
+```yaml
+test-database-integration:
+  services:
+    mysql:
+      image: mysql:8.0
+      env:
+        MYSQL_ROOT_PASSWORD: rootpassword
+        MYSQL_DATABASE: test_db
+  
+  steps:
+    - name: Setup Test Database
+      run: |
+        npm run migrate:up
+        npm run seed:test
+    
+    - name: Run Integration Tests
+      run: npm run test:integration
+      env:
+        DB_HOST: mysql
+        DB_USER: root
+        DB_PASSWORD: rootpassword
+        DB_DATABASE: test_db
+    
+    - name: Cleanup Test Database
+      if: always()
+      run: npm run migrate:down -- --all
+```
+
+#### Pattern 2: Database Performance Tests
+
+```yaml
+test-database-performance:
+  services:
+    mysql:
+      image: mysql:8.0
+  
+  steps:
+    - name: Setup Database
+      run: npm run migrate:up
+    
+    - name: Load Test Data
+      run: npm run seed:performance
+    
+    - name: Run Performance Tests
+      run: npm run test:performance
+    
+    - name: Check Slow Queries
+      run: |
+        SLOW_QUERIES=$(mysql -h mysql -u root -prootpassword test_db \
+          -se "SELECT COUNT(*) FROM mysql.slow_log WHERE start_time > DATE_SUB(NOW(), INTERVAL 1 HOUR)")
+        
+        if [ "$SLOW_QUERIES" -gt 10 ]; then
+          echo "⚠️ Warning: $SLOW_QUERIES slow queries detected"
+          exit 1
+        fi
+```
+
+### Database CI/CD Best Practices
+
+1. **Database Testing in CI**:
+   - Use database services in CI pipelines
+   - Run migrations before tests
+   - Test migration rollback procedures
+   - Validate schema after migrations
+   - Clean up test databases after tests
+
+2. **Migration Validation**:
+   - Validate migration file syntax
+   - Test migration idempotency
+   - Verify migration rollback
+   - Check migration dependencies
+   - Validate migration against test data
+
+3. **Database Deployment**:
+   - Backup database before migrations (production)
+   - Run migrations in transaction when possible
+   - Verify migration success
+   - Monitor migration execution time
+   - Rollback on deployment failure
+
+4. **Database Health Checks**:
+   - Verify database connectivity
+   - Check schema version
+   - Monitor slow queries
+   - Verify data integrity
+   - Check database performance metrics
+
+### Database CI/CD Checklist
+
+- [ ] Database service configured in CI pipeline
+- [ ] Database migrations run before tests
+- [ ] Migration validation job implemented
+- [ ] Migration rollback testing automated
+- [ ] Database schema testing automated
+- [ ] Database integration tests in CI
+- [ ] Database performance tests configured
+- [ ] Database backup before production migrations
+- [ ] Database health checks after deployment
+- [ ] Database migration rollback on failure
+- [ ] Database monitoring in CI/CD
+- [ ] Database deployment documentation
+
 ## Notes
 
 - CI/CD patterns are highly reusable
@@ -691,6 +978,280 @@ security-scan:
 - **Deployment strategies**: Choose appropriate deployment strategy based on application needs
 - **Monitoring and metrics**: Track pipeline and deployment metrics for continuous improvement
 - **Tool selection**: Choose CI/CD platform based on project requirements and team expertise
+- **Database testing**: Test database migrations and schema changes in CI
+- **Database validation**: Validate migrations before deployment
+- **Database health checks**: Verify database state after deployment
+- **Analytics testing**: Test analytics data collection and processing in CI
+- **Analytics validation**: Validate analytics data accuracy and completeness
+- **Analytics deployment**: Deploy analytics services and data warehouse in CI/CD
+
+## Analytics & Business Intelligence CI/CD Workflow Patterns
+
+### Pattern 1: Analytics Data Collection CI/CD Workflow
+
+**Description**: CI/CD workflow for analytics data collection services with event tracking and metrics collection
+
+**Pattern**:
+- Test analytics data collection services
+- Validate analytics data accuracy
+- Deploy analytics services
+- Verify analytics endpoints after deployment
+
+**Example**:
+```yaml
+# .github/workflows/analytics-ci-cd.yml
+name: Analytics CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'analytics/**'
+      - '.github/workflows/analytics-ci-cd.yml'
+
+jobs:
+  test-analytics-collection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Test Analytics Collection
+        run: npm run test:analytics
+      
+      - name: Validate Analytics Data
+        run: npm run validate:analytics-data
+  
+  deploy-analytics-services:
+    needs: [test-analytics-collection]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy Analytics API
+        run: |
+          kubectl apply -f k8s/analytics/analytics-api.yaml
+      
+      - name: Verify Analytics Endpoints
+        run: |
+          curl -f https://api.example.com/analytics/health || exit 1
+```
+
+### Pattern 2: Analytics Data Warehouse CI/CD Workflow
+
+**Description**: CI/CD workflow for analytics data warehouse with ETL pipelines and data processing
+
+**Pattern**:
+- Test ETL pipeline services
+- Validate data warehouse migrations
+- Deploy data warehouse infrastructure
+- Verify data warehouse after deployment
+
+**Example**:
+```yaml
+test-etl-pipeline:
+  runs-on: ubuntu-latest
+  services:
+    postgres:
+      image: postgres:14
+      env:
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: test_warehouse
+  
+  steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Test Data Warehouse
+      run: |
+        npm run migrate:analytics:up
+        npm run seed:analytics:test
+    
+    - name: Test ETL Pipeline
+      run: npm run test:etl-pipeline
+      env:
+        DW_HOST: postgres
+        DW_DATABASE: test_warehouse
+    
+    - name: Validate Data Warehouse
+      run: npm run validate:data-warehouse
+
+deploy-data-warehouse:
+  needs: [test-etl-pipeline]
+  runs-on: ubuntu-latest
+  if: github.ref == 'refs/heads/main'
+  
+  steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy Data Warehouse Infrastructure
+      run: terraform apply -target=module.data_warehouse -auto-approve
+    
+    - name: Run Analytics Migrations
+      run: npm run migrate:analytics:up
+    
+    - name: Deploy ETL Pipeline
+      run: kubectl apply -f k8s/analytics/etl-pipeline.yaml
+    
+    - name: Verify Data Warehouse
+      run: |
+        curl -f https://api.example.com/analytics/warehouse/health || exit 1
+```
+
+### Pattern 3: Analytics Dashboard CI/CD Workflow
+
+**Description**: CI/CD workflow for analytics dashboards with frontend and API deployment
+
+**Pattern**:
+- Build analytics dashboard frontend
+- Test dashboard components
+- Deploy dashboard API
+- Deploy dashboard frontend
+- Verify dashboard after deployment
+
+**Example**:
+```yaml
+build-analytics-dashboard:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install Dependencies
+      run: npm ci
+    
+    - name: Build Dashboard
+      run: npm run build:analytics-dashboard
+    
+    - name: Test Dashboard Components
+      run: npm run test:analytics-dashboard
+    
+    - name: Upload Dashboard Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: analytics-dashboard
+        path: dist/analytics-dashboard/
+
+deploy-analytics-dashboard:
+  needs: [build-analytics-dashboard]
+  runs-on: ubuntu-latest
+  if: github.ref == 'refs/heads/main'
+  
+  steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download Dashboard Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: analytics-dashboard
+    
+    - name: Deploy Dashboard API
+      run: kubectl apply -f k8s/analytics/dashboard-api.yaml
+    
+    - name: Deploy Dashboard Frontend
+      run: |
+        aws s3 sync dist/analytics-dashboard/ s3://analytics-dashboard-bucket/
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ secrets.CF_DIST_ID }} \
+          --paths "/analytics/*"
+    
+    - name: Verify Dashboard
+      run: |
+        curl -f https://dashboard.example.com/analytics/health || exit 1
+```
+
+### Pattern 4: Analytics Report Generation CI/CD Workflow
+
+**Description**: CI/CD workflow for analytics report generation with scheduled report jobs
+
+**Pattern**:
+- Test report generation service
+- Validate report templates
+- Deploy report generation service
+- Configure scheduled report jobs
+- Verify report generation after deployment
+
+**Example**:
+```yaml
+test-report-generation:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v3
+    
+    - name: Test Report Generation
+      run: npm run test:report-generation
+    
+    - name: Validate Report Templates
+      run: npm run validate:report-templates
+
+deploy-report-generation:
+  needs: [test-report-generation]
+  runs-on: ubuntu-latest
+  if: github.ref == 'refs/heads/main'
+  
+  steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy Report Generator
+      run: kubectl apply -f k8s/analytics/report-generator.yaml
+    
+    - name: Configure Report Scheduling
+      run: kubectl apply -f k8s/analytics/report-scheduler.yaml
+    
+    - name: Verify Report Generation
+      run: |
+        curl -f https://api.example.com/analytics/reports/health || exit 1
+```
+
+### Analytics CI/CD Best Practices
+
+1. **Analytics Testing in CI**:
+   - Test analytics data collection accuracy
+   - Validate analytics data transformations
+   - Test analytics metric calculations
+   - Validate analytics report generation
+   - Test analytics dashboard rendering
+
+2. **Analytics Deployment**:
+   - Deploy analytics services before application services
+   - Verify analytics endpoints after deployment
+   - Monitor analytics data collection rates
+   - Verify analytics data warehouse connectivity
+   - Test analytics dashboard functionality
+
+3. **Analytics Validation**:
+   - Validate analytics data accuracy
+   - Verify analytics metric calculations
+   - Test analytics data aggregation
+   - Validate analytics report formatting
+   - Test analytics dashboard performance
+
+### Analytics CI/CD Checklist
+
+- [ ] Analytics data collection tests in CI
+- [ ] Analytics data validation automated
+- [ ] Analytics ETL pipeline tests configured
+- [ ] Analytics data warehouse tests automated
+- [ ] Analytics dashboard build and test automated
+- [ ] Analytics report generation tests configured
+- [ ] Analytics services deployment automated
+- [ ] Analytics endpoints verification automated
+- [ ] Analytics data warehouse deployment automated
+- [ ] Analytics dashboard deployment automated
+- [ ] Analytics report scheduling configured
+- [ ] Analytics deployment monitoring configured
 
 ---
 
@@ -706,3 +1267,12 @@ security-scan:
 **Date**: 2026-01-05  
 **Changes**: Enhanced this CI/CD workflows review document by adding comprehensive "DevOps Best Practices for CI/CD Workflows" section covering pipeline efficiency and optimization (build time optimization with dependency caching and incremental builds, resource management with right-sizing and cleanup, artifact management with selective upload and compression), pipeline reliability and resilience (error handling and recovery with retry mechanisms and graceful degradation, health checks and validation with pre/post-deployment verification, pipeline security with secrets management and security scanning), deployment automation and strategies (automated deployment workflows with environment promotion and rollback, deployment strategy implementation with blue-green/canary/rolling deployments, multi-environment management with environment parity and provisioning), CI/CD pipeline monitoring and observability (pipeline metrics with build duration and success rate tracking, deployment monitoring with MTTR and change failure rate, observability integration with logging and distributed tracing), DevOps tools and platform integration (CI/CD platform selection criteria, container and orchestration integration, Infrastructure as Code integration), and DevOps workflow best practices (Git workflow integration with branch strategies and PR workflows, testing strategy in CI/CD with test pyramid and parallelization, documentation and knowledge sharing). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. This addition provides essential DevOps perspective on CI/CD workflows, ensuring that pipelines are efficient, reliable, secure, and well-monitored, with proper deployment automation and best practices for continuous improvement.
 
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this CI/CD workflows review document by adding comprehensive "Database CI/CD Workflow Patterns" section covering database testing in CI (database service in CI pipeline with MySQL service configuration and health checks, database migration validation with syntax checking and idempotency testing, database schema testing with schema validation and index/foreign key verification), database migration CI/CD workflow (migration validation job with syntax validation and rollback testing, database migration deployment job with backup, migration execution, verification, and rollback on failure), database testing patterns in CI/CD (database integration tests with test database setup and cleanup, database performance tests with slow query detection), database CI/CD best practices (database testing in CI with migration execution and cleanup, migration validation with syntax and dependency checking, database deployment with backup and transaction support, database health checks with connectivity and schema verification), and comprehensive database CI/CD checklist (12 items covering database service configuration, migration validation, rollback testing, schema testing, integration tests, performance tests, backup, health checks, rollback, monitoring, documentation). Enhanced "Notes" section with database-specific considerations (database testing, migration validation, database health checks). Updated the "Last Updated" date from 2025-01-05 to 2026-01-05. These additions provide production-ready patterns for integrating database operations into CI/CD pipelines, ensuring database migrations are tested, validated, and safely deployed as part of the continuous integration and deployment process.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this CI/CD workflows review document by adding comprehensive "Analytics & Business Intelligence CI/CD Workflow Patterns" section covering analytics data collection CI/CD workflow (CI/CD workflow for analytics data collection services with event tracking and metrics collection including test analytics data collection services, validate analytics data accuracy, deploy analytics services, verify analytics endpoints after deployment with GitHub Actions workflow example for analytics CI/CD with test-analytics-collection job and deploy-analytics-services job), analytics data warehouse CI/CD workflow (CI/CD workflow for analytics data warehouse with ETL pipelines and data processing including test ETL pipeline services, validate data warehouse migrations, deploy data warehouse infrastructure, verify data warehouse after deployment with GitHub Actions workflow example for test-etl-pipeline job with PostgreSQL service and deploy-data-warehouse job with Terraform and Kubernetes deployment), analytics dashboard CI/CD workflow (CI/CD workflow for analytics dashboards with frontend and API deployment including build analytics dashboard frontend, test dashboard components, deploy dashboard API, deploy dashboard frontend, verify dashboard after deployment with GitHub Actions workflow example for build-analytics-dashboard job with artifact upload and deploy-analytics-dashboard job with S3 and CloudFront deployment), analytics report generation CI/CD workflow (CI/CD workflow for analytics report generation with scheduled report jobs including test report generation service, validate report templates, deploy report generation service, configure scheduled report jobs, verify report generation after deployment with GitHub Actions workflow example for test-report-generation job and deploy-report-generation job with Kubernetes deployment), and analytics CI/CD best practices (analytics testing in CI with data collection accuracy testing, data transformation validation, metric calculation testing, report generation validation, dashboard rendering testing, analytics deployment with analytics services before application services, endpoint verification, data collection rate monitoring, data warehouse connectivity verification, dashboard functionality testing, analytics validation with data accuracy validation, metric calculation verification, data aggregation testing, report formatting validation, dashboard performance testing). Added comprehensive analytics CI/CD checklist (12 items covering data collection tests, data validation, ETL pipeline tests, data warehouse tests, dashboard build/test, report generation tests, services deployment, endpoints verification, data warehouse deployment, dashboard deployment, report scheduling, deployment monitoring). Enhanced "Notes" section with analytics-specific considerations (analytics testing, analytics validation, analytics deployment). This addition provides essential BI/Analytics perspective on CI/CD workflows, ensuring analytics features are properly tested, validated, and deployed in CI/CD pipelines for reliable analytics functionality.

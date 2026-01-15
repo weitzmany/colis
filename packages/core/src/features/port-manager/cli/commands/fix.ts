@@ -5,12 +5,12 @@
  * Handles multiple services in one project with different env variable names.
  */
 
-import { PortManager } from '../../port-manager';
-import { GlobalConfigManager } from '../../../../shared/config/global-config';
-import { PortDetector, PortDetection } from '../../utils/port-detector';
-import { PortFixer, ServicePortMapping } from '../../utils/port-fixer';
-import { ServiceDetector, DetectedService, PortServiceMapping } from '../../utils/service-detector';
-import { generateProjectName, generateServiceProjectName } from '../../utils/project-name';
+import { PortManager } from '../../port-manager.js';
+import { GlobalConfigManager } from '../../../../shared/config/global-config.js';
+import { PortDetector, PortDetection } from '../../utils/port-detector.js';
+import { PortFixer, ServicePortMapping } from '../../utils/port-fixer.js';
+import { ServiceDetector, DetectedService, PortServiceMapping } from '../../utils/service-detector.js';
+import { generateProjectName, generateServiceProjectName } from '../../utils/project-name.js';
 import chalk from 'chalk';
 import * as path from 'path';
 import * as readline from 'readline';

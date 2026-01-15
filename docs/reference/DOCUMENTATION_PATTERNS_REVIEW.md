@@ -1119,6 +1119,206 @@ When creating or reviewing documentation:
 - [ ] Appropriate detail level
 - [ ] User-focused content
 
+## Database Documentation Patterns
+
+### Pattern 1: Database Schema Documentation
+
+```markdown
+# Database Schema Documentation
+
+## Users Table
+
+**Purpose**: Stores user account information
+
+**Columns**:
+- `id` (INT UNSIGNED, PRIMARY KEY, AUTO_INCREMENT) - Unique user identifier
+- `email` (VARCHAR(255), UNIQUE, NOT NULL) - User email address
+- `password_hash` (VARCHAR(255), NOT NULL) - Hashed password
+- `created_at` (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP) - Account creation time
+- `updated_at` (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) - Last update time
+
+**Indexes**:
+- `idx_email` (email) - For fast email lookups
+
+**Relationships**:
+- One-to-one with `user_profiles`
+- One-to-many with `orders`
+
+**Example Queries**:
+\`\`\`sql
+-- Find user by email
+SELECT * FROM users WHERE email = 'user@example.com';
+
+-- Get user with profile
+SELECT u.*, p.bio FROM users u
+LEFT JOIN user_profiles p ON u.id = p.user_id
+WHERE u.id = 1;
+\`\`\`
+```
+
+### Pattern 2: Migration Documentation
+
+```markdown
+# Migration: 001_create_users_table
+
+**Date**: 2026-01-05
+**Author**: David Anderson
+**Description**: Creates users table with authentication fields
+
+## Up Migration
+
+\`\`\`sql
+CREATE TABLE IF NOT EXISTS users (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+\`\`\`
+
+## Down Migration
+
+\`\`\`sql
+DROP TABLE IF EXISTS users;
+\`\`\`
+
+## Testing
+
+- [ ] Migration runs successfully
+- [ ] Rollback works correctly
+- [ ] Migration is idempotent
+- [ ] Indexes are created
+- [ ] Constraints are enforced
+```
+
+### Pattern 3: Database Query Documentation
+
+```markdown
+# Database Query Patterns
+
+## User Queries
+
+### Get User by Email
+
+**Purpose**: Retrieve user by email address
+
+**Query**:
+\`\`\`sql
+SELECT id, name, email, created_at
+FROM users
+WHERE email = ?
+LIMIT 1;
+\`\`\`
+
+**Performance**: Uses `idx_email` index - O(log n)
+**Parameters**: `email` (VARCHAR(255))
+**Returns**: User object or null
+
+### Get Users with Orders
+
+**Purpose**: Retrieve users with their order count
+
+**Query**:
+\`\`\`sql
+SELECT 
+    u.id,
+    u.name,
+    u.email,
+    COUNT(o.id) as order_count,
+    SUM(o.total) as total_spent
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+WHERE u.status = 'active'
+GROUP BY u.id
+ORDER BY total_spent DESC;
+\`\`\`
+
+**Performance**: Uses indexes on `users.status` and `orders.user_id`
+**Parameters**: None
+**Returns**: Array of users with order statistics
+```
+
+### Pattern 4: Database API Documentation
+
+```markdown
+# Database API Documentation
+
+## User Repository
+
+### `findByEmail(email: string): Promise<User | null>`
+
+Finds a user by email address.
+
+**Parameters**:
+- `email` (string): User email address
+
+**Returns**: Promise resolving to User object or null
+
+**Example**:
+\`\`\`typescript
+const user = await userRepository.findByEmail('user@example.com');
+if (user) {
+  console.log(`Found user: ${user.name}`);
+}
+\`\`\`
+
+**Database Query**:
+\`\`\`sql
+SELECT id, name, email, created_at
+FROM users
+WHERE email = ?
+LIMIT 1;
+\`\`\`
+
+**Performance**: Uses `idx_email` index
+**Error Handling**: Throws DatabaseError on connection failure
+```
+
+### Database Documentation Best Practices
+
+1. **Schema Documentation**:
+   - Document all tables and columns
+   - Explain relationships and constraints
+   - Include example queries
+   - Document indexes and their purpose
+   - Explain data types and constraints
+
+2. **Migration Documentation**:
+   - Document migration purpose
+   - Include up and down migrations
+   - Document testing procedures
+   - Explain migration dependencies
+   - Document rollback procedures
+
+3. **Query Documentation**:
+   - Document query purpose
+   - Include performance notes
+   - Document parameters and return values
+   - Include example usage
+   - Explain index usage
+
+4. **API Documentation**:
+   - Document database access methods
+   - Include query examples
+   - Document error handling
+   - Explain performance characteristics
+   - Include usage examples
+
+### Database Documentation Checklist
+
+- [ ] Database schema documented
+- [ ] All tables and columns documented
+- [ ] Relationships documented
+- [ ] Indexes documented with purpose
+- [ ] Migrations documented with up/down
+- [ ] Query patterns documented
+- [ ] Database API documented
+- [ ] Performance notes included
+- [ ] Example queries provided
+- [ ] Error handling documented
+
 ## Notes
 
 - Documentation patterns are highly reusable
@@ -1136,6 +1336,9 @@ When creating or reviewing documentation:
 - Metrics help identify content gaps and optimization opportunities
 - Quality tracking ensures documentation remains useful and current
 - User behavior data guides documentation strategy
+- Database documentation should include schema, migrations, and queries
+- Database query documentation should include performance notes
+- Database migration documentation should include rollback procedures
 
 ---
 
@@ -1160,6 +1363,11 @@ When creating or reviewing documentation:
 **Expertise**: Documentation (Code, API, User Documentation)  
 **Date**: 2026-01-05  
 **Changes**: Reviewed and improved this documentation patterns review document from a documentation perspective. Enhanced documentation structure by verifying table of contents accuracy, ensuring all sections are properly linked, improving code example formatting with consistent syntax highlighting and comments, enhancing cross-references between related sections, and verifying documentation completeness. Added documentation best practices section covering pattern documentation standards (pattern description documentation, pattern usage examples, pattern implementation guidance), code example documentation (complete working examples, pattern implementation examples), and documentation organization (clear section hierarchy, consistent formatting, comprehensive coverage of all documentation patterns). This improvement ensures the documentation patterns review document follows documentation best practices, making it easier for developers to understand and implement documentation patterns.
+
+**Expert**: David Anderson  
+**Expertise**: Database (Schema Design, Query Optimization, Migrations)  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this documentation patterns review document by adding comprehensive "Database Documentation Patterns" section covering database schema documentation (table documentation with purpose, columns with types and constraints, indexes with purpose, relationships with cardinality, example queries), migration documentation (migration metadata with date/author/description, up migration with SQL, down migration with rollback SQL, testing checklist with migration execution/rollback/idempotency/index/constraint verification), database query documentation (query purpose, SQL query with parameters, performance notes with index usage, parameters and return values, example usage), database API documentation (database access method documentation with parameters and return values, query examples, error handling, performance characteristics, usage examples), database documentation best practices (schema documentation with tables/columns/relationships/indexes, migration documentation with purpose/up/down/testing/dependencies/rollback, query documentation with purpose/performance/parameters/examples/index usage, API documentation with access methods/queries/errors/performance/usage), and comprehensive database documentation checklist (10 items covering schema, tables, columns, relationships, indexes, migrations, queries, API, performance, examples, error handling). Enhanced "Notes" section with database-specific documentation considerations (schema/migrations/queries, performance notes, rollback procedures). These additions provide practical, production-ready patterns for documenting database schemas, migrations, queries, and APIs, ensuring database documentation is comprehensive, clear, and useful for developers working with database systems.
 
 ---
 

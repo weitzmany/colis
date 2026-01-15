@@ -3,18 +3,33 @@ import { TaskReader } from '../core/TaskReader';
 import { TaskWriter } from '../core/TaskWriter';
 
 /**
- * Label statistics
+ * Statistics for a label, including task count and list of tasks with that label.
  */
 export interface LabelStats {
+  /** The label name */
   label: string;
+  /** Number of tasks with this label */
   taskCount: number;
+  /** Array of all tasks with this label */
   tasks: Task[];
 }
 
 /**
- * LabelManager - Manage task labels
+ * LabelManager - Manage task labels for categorization and filtering.
+ * 
+ * Provides methods to add, remove, and query labels, as well as label suggestions
+ * based on task content.
+ * 
+ * @example
+ * ```typescript
+ * const labelManager = new LabelManager('/path/to/project');
+ * await labelManager.addLabel('my-project', 1, 'bug');
+ * const suggestions = await labelManager.suggestLabels('my-project', 1);
+ * ```
  */
 export class LabelManager {
+  private static readonly MAX_LABEL_SUGGESTIONS = 5;
+
   private reader: TaskReader;
   private writer: TaskWriter;
 
@@ -24,7 +39,13 @@ export class LabelManager {
   }
 
   /**
-   * Add a label to a task
+   * Add a label to a task.
+   * If the label already exists, the operation is silently skipped.
+   * 
+   * @param projectName The name of the project containing the task.
+   * @param taskId The ID of the task to label.
+   * @param label The label to add.
+   * @throws {Error} If the task is not found.
    */
   async addLabel(
     projectName: string,
@@ -33,7 +54,7 @@ export class LabelManager {
   ): Promise<void> {
     const task = await this.reader.readTask(projectName, taskId);
     if (!task) {
-      throw new Error(`Task ${taskId} not found in project ${projectName}`);
+      throw new Error(`Task "${taskId}" not found in project "${projectName}"`);
     }
 
     const labels = task.labels || [];
@@ -47,7 +68,13 @@ export class LabelManager {
   }
 
   /**
-   * Add multiple labels to a task
+   * Add multiple labels to a task at once.
+   * Duplicate labels are automatically filtered out.
+   * 
+   * @param projectName The name of the project containing the task.
+   * @param taskId The ID of the task to label.
+   * @param labels Array of labels to add.
+   * @throws {Error} If the task is not found.
    */
   async addLabels(
     projectName: string,
@@ -56,7 +83,7 @@ export class LabelManager {
   ): Promise<void> {
     const task = await this.reader.readTask(projectName, taskId);
     if (!task) {
-      throw new Error(`Task ${taskId} not found in project ${projectName}`);
+      throw new Error(`Task "${taskId}" not found in project "${projectName}"`);
     }
 
     const existingLabels = task.labels || [];
@@ -70,7 +97,13 @@ export class LabelManager {
   }
 
   /**
-   * Remove a label from a task
+   * Remove a label from a task.
+   * If the label doesn't exist, the operation is silently skipped.
+   * 
+   * @param projectName The name of the project containing the task.
+   * @param taskId The ID of the task to remove the label from.
+   * @param label The label to remove.
+   * @throws {Error} If the task is not found.
    */
   async removeLabel(
     projectName: string,
@@ -79,7 +112,7 @@ export class LabelManager {
   ): Promise<void> {
     const task = await this.reader.readTask(projectName, taskId);
     if (!task) {
-      throw new Error(`Task ${taskId} not found in project ${projectName}`);
+      throw new Error(`Task "${taskId}" not found in project "${projectName}"`);
     }
 
     const labels = task.labels || [];
@@ -91,7 +124,11 @@ export class LabelManager {
   }
 
   /**
-   * List all labels with task counts
+   * List all labels with their task counts and associated tasks.
+   * Results are sorted by task count (highest first).
+   * 
+   * @param projectName The name of the project to query.
+   * @returns A promise that resolves to an array of label statistics.
    */
   async listLabels(projectName: string): Promise<LabelStats[]> {
     const tasks = await this.reader.readTasks(projectName);
@@ -118,7 +155,13 @@ export class LabelManager {
   }
 
   /**
-   * Get label suggestions based on task content
+   * Get label suggestions based on task content analysis.
+   * Analyzes task title and description for common keywords and suggests relevant labels
+   * that don't already exist on the task.
+   * 
+   * @param projectName The name of the project containing the task.
+   * @param taskId The ID of the task to get suggestions for.
+   * @returns A promise that resolves to an array of suggested label names (up to 5).
    */
   async suggestLabels(
     projectName: string,
@@ -157,6 +200,6 @@ export class LabelManager {
         text.includes(keyword) && !existingLabelNames.has(keyword) && !task.labels?.includes(keyword)
     );
 
-    return suggestions.slice(0, 5); // Return top 5 suggestions
+    return suggestions.slice(0, LabelManager.MAX_LABEL_SUGGESTIONS);
   }
 }

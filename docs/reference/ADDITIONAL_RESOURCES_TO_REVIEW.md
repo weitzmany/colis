@@ -757,6 +757,197 @@ Track the following observability metrics for resource reviews:
    - Number of observability improvements made
    - Observability tool integration status
 
+## Business Intelligence & Analytics Considerations for Resource Reviews
+
+### Analytics Resources and Tools to Review
+
+When reviewing resources, consider Business Intelligence and Analytics tools, patterns, and integrations:
+
+#### 1. Analytics Tools and Libraries
+
+**Analytics Tool Integration**:
+- **Event Tracking Libraries**: Google Analytics, Mixpanel, Amplitude, Segment, PostHog
+- **Data Visualization Libraries**: D3.js, Chart.js, Recharts, Plotly, Apache ECharts
+- **BI Platforms**: Tableau, Power BI, Looker, Metabase, Superset
+- **Analytics SDKs**: Client-side tracking SDKs, server-side tracking APIs
+- **Data Collection Tools**: Event collectors, data pipelines, ETL tools
+
+**Analytics Tool Review Checklist**:
+- [ ] Event tracking libraries identified and documented
+- [ ] Data visualization libraries reviewed
+- [ ] BI platform integrations documented
+- [ ] Analytics SDK usage patterns identified
+- [ ] Data collection tools reviewed
+
+#### 2. Analytics Data Patterns
+
+**Data Collection Patterns**:
+- **Event Tracking**: User actions, feature usage, conversion events
+- **User Properties**: User demographics, segmentation, cohort analysis
+- **Data Layers**: Data layer structure, event schemas, data contracts
+- **Data Validation**: Event validation, data quality checks, schema validation
+- **Data Privacy**: GDPR compliance, data anonymization, consent management
+
+**Analytics Data Pattern Review Checklist**:
+- [ ] Event tracking patterns documented
+- [ ] User property collection patterns identified
+- [ ] Data layer structures reviewed
+- [ ] Data validation patterns documented
+- [ ] Data privacy considerations included
+
+#### 3. Reporting and Dashboard Resources
+
+**Reporting Resources**:
+- **Dashboard Templates**: Pre-built dashboard layouts, KPI displays, widget patterns
+- **Report Templates**: Report generation templates, data export formats, scheduled reports
+- **Visualization Components**: Chart components, data table components, filter components
+- **Analytics APIs**: Reporting APIs, data aggregation APIs, visualization APIs
+
+**Reporting Resource Review Checklist**:
+- [ ] Dashboard templates identified
+- [ ] Report templates documented
+- [ ] Visualization components reviewed
+- [ ] Analytics APIs documented
+- [ ] Reporting patterns identified
+
+#### 4. Analytics Infrastructure Resources
+
+**Analytics Infrastructure**:
+- **Data Warehouses**: Data warehouse schemas, ETL pipelines, data models
+- **Data Lakes**: Data lake structures, data ingestion patterns, data processing
+- **Analytics Databases**: Time-series databases, columnar databases, analytics-optimized databases
+- **Streaming Analytics**: Real-time data processing, event streaming, stream processing
+
+**Analytics Infrastructure Review Checklist**:
+- [ ] Data warehouse patterns documented
+- [ ] Data lake structures reviewed
+- [ ] Analytics database patterns identified
+- [ ] Streaming analytics patterns documented
+- [ ] Infrastructure patterns reviewed
+
+#### 5. Analytics Testing Resources
+
+**Analytics Testing**:
+- **Event Testing**: Event tracking tests, data validation tests, schema validation tests
+- **Dashboard Testing**: Dashboard rendering tests, data accuracy tests, UI interaction tests
+- **Report Testing**: Report generation tests, data export tests, scheduled report tests
+- **Analytics Integration Tests**: End-to-end analytics flow tests, data pipeline tests
+
+**Analytics Testing Resource Review Checklist**:
+- [ ] Event testing patterns documented
+- [ ] Dashboard testing patterns identified
+- [ ] Report testing patterns reviewed
+- [ ] Analytics integration test patterns documented
+- [ ] Testing utilities reviewed
+
+#### 6. Analytics Documentation Resources
+
+**Analytics Documentation**:
+- **Analytics Guides**: Event tracking guides, dashboard creation guides, report generation guides
+- **Analytics APIs**: API documentation, data schema documentation, integration guides
+- **Analytics Best Practices**: Event naming conventions, data collection best practices, dashboard design guidelines
+- **Analytics Metrics**: KPI definitions, metric calculation guides, business metric documentation
+
+**Analytics Documentation Review Checklist**:
+- [ ] Analytics guides documented
+- [ ] Analytics API documentation reviewed
+- [ ] Analytics best practices identified
+- [ ] Analytics metrics documented
+- [ ] Documentation patterns reviewed
+
+### Analytics Integration Patterns Across Resources
+
+**Common Analytics Patterns**:
+
+1. **Event Tracking Pattern**:
+   - Implement event tracking in user-facing applications
+   - Track user actions, feature usage, conversion events
+   - Use consistent event naming conventions
+   - Validate event data before sending
+
+2. **Data Visualization Pattern**:
+   - Use appropriate chart types for different data types
+   - Implement interactive dashboards with drill-down capabilities
+   - Provide data export functionality
+   - Ensure accessibility in visualizations
+
+3. **Reporting Pattern**:
+   - Generate scheduled reports for stakeholders
+   - Provide customizable report templates
+   - Implement data aggregation and filtering
+   - Support multiple export formats
+
+4. **Analytics API Pattern**:
+   - Design APIs for analytics data access
+   - Implement data aggregation endpoints
+   - Provide filtering and pagination
+   - Ensure API security and rate limiting
+
+5. **Data Pipeline Pattern**:
+   - Implement ETL pipelines for data processing
+   - Validate data quality at each stage
+   - Monitor pipeline performance and errors
+   - Implement data retention policies
+
+### Analytics Best Practices for Resource Reviews
+
+1. **Identify Analytics Opportunities**:
+   - Review resources for analytics integration points
+   - Identify user actions worth tracking
+   - Determine key metrics and KPIs
+   - Document analytics requirements
+
+2. **Document Analytics Patterns**:
+   - Document common analytics patterns found in resources
+   - Provide examples of analytics integration
+   - Include analytics best practices
+   - Reference analytics tools and libraries
+
+3. **Recommend Analytics Tools**:
+   - Suggest appropriate analytics tools for each resource category
+   - Document tool integration patterns
+   - Provide tool configuration examples
+   - Include analytics tool comparison
+
+4. **Establish Analytics Standards**:
+   - Define event naming conventions
+   - Define data schema standards
+   - Define dashboard design guidelines
+   - Define reporting standards
+
+5. **Create Analytics Checklists**:
+   - Include analytics checklists in resource review documents
+   - Ensure analytics is considered in all resource categories
+   - Track analytics implementation status
+   - Document analytics metrics and KPIs
+
+### Analytics Metrics for Resource Reviews
+
+Track the following analytics metrics for resource reviews:
+
+1. **Analytics Coverage**:
+   - Number of resource categories with analytics considerations
+   - Number of resources with analytics instrumentation
+   - Percentage of analytics coverage
+
+2. **Analytics Implementation**:
+   - Number of resources with event tracking
+   - Number of resources with data visualization
+   - Number of resources with reporting capabilities
+   - Number of resources with analytics APIs
+
+3. **Analytics Quality**:
+   - Event tracking quality (naming conventions, data validation)
+   - Dashboard quality (design, interactivity, accessibility)
+   - Report quality (accuracy, formatting, scheduling)
+   - API quality (performance, security, documentation)
+
+4. **Analytics Maintenance**:
+   - Last analytics review date
+   - Frequency of analytics updates
+   - Number of analytics improvements made
+   - Analytics tool integration status
+
 ---
 
 ## Review/Contribution
@@ -771,3 +962,7 @@ Track the following observability metrics for resource reviews:
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "Observability Considerations for Resource Reviews" section covering observability patterns in resource categories (scripts with structured logging and execution metrics, CI/CD workflows with pipeline metrics and job-level observability, configuration files with observability configuration, documentation patterns with runbooks and SLO documentation, testing structure with test metrics and performance testing, environment setup with observability tools setup, API structure patterns with request tracing and API metrics, build and deployment scripts with deployment metrics and monitoring, git hooks with execution metrics and monitoring), observability integration patterns (structured logging pattern with JSON format and correlation IDs, metrics collection pattern with execution and resource metrics, distributed tracing pattern with correlation IDs and trace context propagation, alerting pattern with symptom-based alerting and threshold management, dashboard pattern with key metrics and trend analysis), observability best practices for resource reviews (identify observability gaps, document observability patterns, recommend observability tools, establish observability standards, create observability checklists), and observability metrics for resource reviews (observability coverage, observability implementation, observability quality, observability maintenance). Each resource category includes detailed observability checklists covering structured logging, metrics collection, distributed tracing, alerting configuration, and monitoring setup. This addition ensures that observability is considered across all resource categories, providing comprehensive visibility into system operations, performance, and reliability.
 
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Business Intelligence & Analytics Considerations for Resource Reviews" section covering analytics resources and tools to review (analytics tools and libraries including event tracking libraries, data visualization libraries, BI platforms, analytics SDKs, data collection tools with review checklists), analytics data patterns (event tracking, user properties, data layers, data validation, data privacy with review checklists), reporting and dashboard resources (dashboard templates, report templates, visualization components, analytics APIs with review checklists), analytics infrastructure resources (data warehouses, data lakes, analytics databases, streaming analytics with review checklists), analytics testing resources (event testing, dashboard testing, report testing, analytics integration tests with review checklists), analytics documentation resources (analytics guides, analytics APIs, analytics best practices, analytics metrics with review checklists), analytics integration patterns across resources (event tracking pattern, data visualization pattern, reporting pattern, analytics API pattern, data pipeline pattern), analytics best practices for resource reviews (identify analytics opportunities, document analytics patterns, recommend analytics tools, establish analytics standards, create analytics checklists), and analytics metrics for resource reviews (analytics coverage, analytics implementation, analytics quality, analytics maintenance). This addition ensures that Business Intelligence and Analytics considerations are integrated into resource review processes, enabling data-driven decision making, user behavior tracking, and comprehensive business insights across all resource categories.

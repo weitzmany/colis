@@ -1,7 +1,15 @@
 /**
  * Template Registry
  *
- * Manages available templates and their metadata
+ * Manages available templates and their metadata.
+ * Discovers templates from the file system and loads their metadata from template.json files.
+ *
+ * @example
+ * ```typescript
+ * const registry = new TemplateRegistry();
+ * const templates = await registry.discoverTemplates();
+ * const angularTemplate = await registry.getTemplate('angular');
+ * ```
  */
 import fs from 'fs-extra';
 import * as path from 'path';
@@ -9,14 +17,30 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+/**
+ * Manages template discovery and retrieval.
+ *
+ * Templates are stored in directories under `src/templates/`. Each template directory
+ * should contain a `template.json` file with metadata about the template.
+ */
 export class TemplateRegistry {
+    /** Path to templates directory */
     templatesPath;
+    /**
+     * Create a new TemplateRegistry instance.
+     *
+     * @param templatesPath - Optional custom path to templates directory.
+     *                        Defaults to `src/templates` relative to package root.
+     */
     constructor(templatesPath) {
         // Default to src/templates relative to package root
         this.templatesPath = templatesPath || this.getDefaultTemplatesPath();
     }
     /**
-     * Get default templates path
+     * Get default templates path relative to package root.
+     *
+     * @returns Path to default templates directory
+     * @private
      */
     getDefaultTemplatesPath() {
         // Get path relative to package root
@@ -24,7 +48,20 @@ export class TemplateRegistry {
         return path.join(packageRoot, 'src', 'templates');
     }
     /**
-     * Discover all available templates
+     * Discover all available templates in the templates directory.
+     *
+     * Scans the templates directory for subdirectories and loads metadata
+     * from each template's template.json file.
+     *
+     * @returns Array of template metadata objects
+     * @throws {Error} If templates directory cannot be read
+     *
+     * @example
+     * ```typescript
+     * const registry = new TemplateRegistry();
+     * const templates = await registry.discoverTemplates();
+     * console.log(`Found ${templates.length} templates`);
+     * ```
      */
     async discoverTemplates() {
         const templates = [];

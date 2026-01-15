@@ -4,30 +4,93 @@
  * Main class for managing local domains with Caddy reverse proxy.
  */
 
-import { CaddyManager } from './caddy-manager';
-import { HostsManager } from './hosts-manager';
-import { ServiceDetector } from './service-detector';
-import { SetupOptions, DomainSetupResult, DomainConfig, DomainInfo } from './types';
+import { CaddyManager } from './caddy-manager.js';
+import { HostsManager } from './hosts-manager.js';
+import { ServiceDetector } from './service-detector.js';
+import {
+  SetupOptions,
+  DomainSetupResult,
+  DomainConfig,
+  DomainInfo,
+  DEFAULT_PORTS,
+  DOMAIN_SUFFIX,
+} from './types.js';
+import {
+  CaddyNotInstalledError,
+  DomainValidationError,
+  HostsFileError,
+  DomainConfigurationError,
+} from './errors.js';
+import {
+  DomainManagerConfig,
+  ICaddyManager,
+  IHostsManager,
+  IServiceDetector,
+} from './interfaces.js';
 
+/**
+ * Domain Manager
+ * 
+ * Main class for managing local domains with Caddy reverse proxy.
+ * Supports dependency injection for testability and extensibility.
+ */
 export class DomainManager {
-  private caddyManager: CaddyManager;
-  private hostsManager: HostsManager;
-  private serviceDetector: ServiceDetector;
+  private caddyManager: ICaddyManager;
+  private hostsManager: IHostsManager;
+  private serviceDetector: IServiceDetector;
 
-  constructor() {
-    this.caddyManager = new CaddyManager();
-    this.hostsManager = new HostsManager();
-    this.serviceDetector = new ServiceDetector();
+  /**
+   * Create a new DomainManager instance
+   * 
+   * @param config - Optional configuration for customizing behavior
+   * 
+   * @example
+   * ```typescript
+   * // Default configuration
+   * const manager = new DomainManager();
+   * 
+   * // Custom Caddyfile path
+   * const manager = new DomainManager({
+   *   caddyfilePath: '/custom/path/Caddyfile'
+   * });
+   * 
+   * // Custom implementations for testing
+   * const manager = new DomainManager({
+   *   caddyManager: mockCaddyManager,
+   *   hostsManager: mockHostsManager,
+   *   serviceDetector: mockServiceDetector
+   * });
+   * ```
+   */
+  constructor(config?: DomainManagerConfig) {
+    // Use provided implementations or create defaults
+    this.caddyManager = config?.caddyManager || new CaddyManager({
+      caddyfilePath: config?.caddyfilePath,
+    });
+    this.hostsManager = config?.hostsManager || new HostsManager({
+      hostsPath: config?.hostsPath,
+    });
+    this.serviceDetector = config?.serviceDetector || new ServiceDetector();
   }
 
   /**
    * Set up domain for a project
+   * 
+   * @param projectPath - Path to the project directory
+   * @param options - Setup options including project name, ports, and domain
+   * @returns Domain setup result with configuration details
+   * @throws {CaddyNotInstalledError} If Caddy is not installed
+   * @throws {DomainValidationError} If domain name is invalid
+   * @throws {DomainConfigurationError} If domain configuration fails
    */
   async setup(projectPath: string, options: SetupOptions): Promise<DomainSetupResult> {
+    // Validate inputs
+    this.validateSetupInputs(projectPath, options);
+
     // Check if Caddy is installed
     const caddyInstalled = await this.caddyManager.checkCaddyInstalled();
     if (!caddyInstalled) {
-      throw new Error(
+      throw new CaddyNotInstalledError(
         'Caddy is not installed. Please install it first:\n' +
         '  macOS: brew install caddy\n' +
         '  Linux: See https://caddyserver.com/docs/install\n' +
@@ -36,31 +99,25 @@ export class DomainManager {
     }
 
     // Generate domain name if not provided
-    const domain = options.domain || `${options.projectName}.local`;
+    const domain = options.domain || `${options.projectName}${DOMAIN_SUFFIX}`;
+
+    // Validate domain name format
+    if (!this.isValidDomain(domain)) {
+      throw new DomainValidationError(
+        `Invalid domain name: ${domain}. Domain must end with .local and contain only alphanumeric characters, hyphens, and dots.`,
+        domain,
+        'domainFormat'
+      );
+    }
 
     // Detect services if ports not explicitly provided
-    let frontendPort = options.frontendPort;
-    let backendPort = options.backendPort;
-    let port = options.port;
-
-    if (!port && !frontendPort && !backendPort) {
-      const services = await this.serviceDetector.detectServices(projectPath);
-      const frontendService = services.find(s => s.name === 'frontend');
-      const backendService = services.find(s => s.name === 'backend');
-
-      if (frontendService && backendService) {
-        // Multi-service project
-        frontendPort = frontendService.detectedPort || 4200; // Default Angular port
-        backendPort = backendService.detectedPort || 8080; // Default backend port
-      } else if (frontendService) {
-        frontendPort = frontendService.detectedPort || 4200;
-      } else if (backendService) {
-        backendPort = backendService.detectedPort || 8080;
-      } else {
-        // Single service - use provided port or default
-        port = options.port || 3000;
-      }
-    }
+    const detectedPorts = await this.detectServicePorts(
+      projectPath,
+      options
+    );
+    const frontendPort = options.frontendPort || detectedPorts.frontendPort;
+    const backendPort = options.backendPort || detectedPorts.backendPort;
+    const port = options.port || detectedPorts.port;
 
     // Determine if multi-service
     const isMultiService = !!(frontendPort && backendPort);
@@ -75,16 +132,26 @@ export class DomainManager {
       config.frontendPort = frontendPort;
       config.backendPort = backendPort;
     } else {
-      config.port = port || frontendPort || backendPort || 3000;
+      config.port =
+        port || frontendPort || backendPort || DEFAULT_PORTS.SINGLE_SERVICE;
     }
 
     // Add to Caddyfile
-    await this.caddyManager.addDomain({
-      domain,
-      frontendPort: config.frontendPort,
-      backendPort: config.backendPort,
-      port: config.port,
-    });
+    try {
+      await this.caddyManager.addDomain({
+        domain,
+        frontendPort: config.frontendPort,
+        backendPort: config.backendPort,
+        port: config.port,
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new DomainConfigurationError(
+        `Failed to add domain to Caddyfile: ${errorMessage}`,
+        domain,
+        'caddyfile_write'
+      );
+    }
 
     // Add to hosts file (unless skipped)
     let hostsUpdated = false;
@@ -92,9 +159,15 @@ export class DomainManager {
       try {
         await this.hostsManager.addEntry(domain);
         hostsUpdated = true;
-      } catch (error: any) {
-        // Warn but don't fail
-        console.warn(`Warning: Could not update hosts file: ${error.message}`);
+      } catch (error) {
+        // Warn but don't fail - hosts file update is optional
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        // Re-throw as HostsFileError but don't fail the entire operation
+        // This allows the domain to be configured in Caddy even if hosts file update fails
+        throw new HostsFileError(
+          `Could not update hosts file: ${errorMessage}. Domain is configured in Caddyfile but not in hosts file.`,
+          'write'
+        );
       }
     }
 
@@ -108,17 +181,47 @@ export class DomainManager {
 
   /**
    * Remove domain configuration
+   * 
+   * @param domain - Domain name to remove
+   * @throws {DomainValidationError} If domain name is invalid
+   * @throws {DomainConfigurationError} If domain removal fails
    */
   async remove(domain: string): Promise<void> {
+    // Validate domain name
+    if (!domain || typeof domain !== 'string') {
+      throw new DomainValidationError('Domain name is required', undefined, 'domain');
+    }
+
+    if (!this.isValidDomain(domain)) {
+      throw new DomainValidationError(
+        `Invalid domain name: ${domain}`,
+        domain,
+        'domainFormat'
+      );
+    }
+
     // Remove from Caddyfile
-    await this.caddyManager.removeDomain(domain);
+    try {
+      await this.caddyManager.removeDomain(domain);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new DomainConfigurationError(
+        `Failed to remove domain from Caddyfile: ${errorMessage}`,
+        domain,
+        'caddyfile_remove'
+      );
+    }
 
     // Remove from hosts file
     try {
       await this.hostsManager.removeEntry(domain);
-    } catch (error: any) {
-      // Warn but don't fail
-      console.warn(`Warning: Could not remove from hosts file: ${error.message}`);
+    } catch (error) {
+      // Warn but don't fail - hosts file removal is optional
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new HostsFileError(
+        `Could not remove from hosts file: ${errorMessage}. Domain removed from Caddyfile but not from hosts file.`,
+        'write'
+      );
     }
   }
 
@@ -169,6 +272,117 @@ export class DomainManager {
    */
   async checkCaddyRunning(): Promise<boolean> {
     return this.caddyManager.checkCaddyRunning();
+  }
+
+  /**
+   * Validate setup inputs
+   * 
+   * @param projectPath - Project path to validate
+   * @param options - Setup options to validate
+   * @throws {DomainValidationError} If inputs are invalid
+   */
+  private validateSetupInputs(
+    projectPath: string,
+    options: SetupOptions
+  ): void {
+    if (!projectPath || typeof projectPath !== 'string') {
+      throw new DomainValidationError(
+        'Project path is required',
+        undefined,
+        'projectPath'
+      );
+    }
+
+    if (!options.projectName || typeof options.projectName !== 'string') {
+      throw new DomainValidationError(
+        'Project name is required',
+        undefined,
+        'projectName'
+      );
+    }
+  }
+
+  /**
+   * Detect service ports from project structure
+   * 
+   * @param projectPath - Path to project directory
+   * @param options - Setup options with explicit ports
+   * @returns Detected or default ports for services
+   */
+  private async detectServicePorts(
+    projectPath: string,
+    options: SetupOptions
+  ): Promise<{
+    frontendPort?: number;
+    backendPort?: number;
+    port?: number;
+  }> {
+    // If ports are explicitly provided, return them
+    if (options.port || options.frontendPort || options.backendPort) {
+      return {
+        frontendPort: options.frontendPort,
+        backendPort: options.backendPort,
+        port: options.port,
+      };
+    }
+
+    // Detect services from project structure
+    const services = await this.serviceDetector.detectServices(projectPath);
+    const frontendService = services.find(s => s.name === 'frontend');
+    const backendService = services.find(s => s.name === 'backend');
+
+    if (frontendService && backendService) {
+      // Multi-service project
+      return {
+        frontendPort:
+          frontendService.detectedPort || DEFAULT_PORTS.ANGULAR_FRONTEND,
+        backendPort: backendService.detectedPort || DEFAULT_PORTS.BACKEND_API,
+      };
+    }
+
+    if (frontendService) {
+      return {
+        frontendPort:
+          frontendService.detectedPort || DEFAULT_PORTS.ANGULAR_FRONTEND,
+      };
+    }
+
+    if (backendService) {
+      return {
+        backendPort: backendService.detectedPort || DEFAULT_PORTS.BACKEND_API,
+      };
+    }
+
+    // Single service - use default
+    return {
+      port: DEFAULT_PORTS.SINGLE_SERVICE,
+    };
+  }
+
+  /**
+   * Validate domain name format
+   * 
+   * @param domain - Domain name to validate
+   * @returns True if domain is valid, false otherwise
+   */
+  private isValidDomain(domain: string): boolean {
+    // Domain must end with .local
+    if (!domain.endsWith(DOMAIN_SUFFIX)) {
+      return false;
+    }
+
+    // Domain must contain only alphanumeric characters, hyphens, and dots
+    // Must not start or end with hyphen or dot (except .local)
+    const suffixLength = DOMAIN_SUFFIX.length;
+    const domainWithoutLocal = domain.slice(0, -suffixLength);
+    if (!domainWithoutLocal || domainWithoutLocal.length === 0) {
+      return false;
+    }
+
+    // Check format: alphanumeric, hyphens, dots allowed
+    // Cannot start or end with hyphen or dot
+    const domainRegex = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+    return domainRegex.test(domainWithoutLocal);
   }
 }
 

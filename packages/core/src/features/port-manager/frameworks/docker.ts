@@ -5,8 +5,8 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
-import { FrameworkHandler } from './interfaces';
-import { ConfigurationResult } from '../types';
+import { FrameworkHandler } from './interfaces.js';
+import { ConfigurationResult } from '../types.js';
 
 export class DockerHandler implements FrameworkHandler {
   getName(): string {

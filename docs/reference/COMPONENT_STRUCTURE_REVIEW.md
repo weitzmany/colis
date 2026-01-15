@@ -750,6 +750,212 @@ When reviewing component structure, consider:
 - **Component code quality is as important as component design**
 - **Component structure should support code quality goals**
 - **Code review should include component structure evaluation**
+- **Analytics components should support data visualization and interactivity**
+- **Analytics components should optimize for performance with large datasets**
+- **Analytics components should ensure data accuracy and privacy**
+
+## Analytics & Business Intelligence Component Structure Patterns
+
+### Pattern 1: Analytics Dashboard Component Structure
+
+**Description**: Component structure for analytics dashboards with metrics, KPIs, and visualizations
+
+**Pattern**:
+- Dashboard container component
+- Metric card components
+- Chart components (line, bar, pie, etc.)
+- Filter components
+- Export components
+
+**Example Structure**:
+```
+components/
+├── analytics/
+│   ├── dashboard/
+│   │   ├── AnalyticsDashboard.tsx
+│   │   ├── AnalyticsDashboard.test.tsx
+│   │   └── AnalyticsDashboard.module.css
+│   ├── metrics/
+│   │   ├── MetricCard.tsx
+│   │   ├── MetricCard.test.tsx
+│   │   └── MetricCard.module.css
+│   ├── charts/
+│   │   ├── LineChart.tsx
+│   │   ├── BarChart.tsx
+│   │   ├── PieChart.tsx
+│   │   └── ...
+│   ├── filters/
+│   │   ├── TimeRangeFilter.tsx
+│   │   ├── CategoryFilter.tsx
+│   │   └── ...
+│   └── exports/
+│       ├── ExportButton.tsx
+│       └── ExportMenu.tsx
+```
+
+**Example Component**:
+```typescript
+// components/analytics/metrics/MetricCard.tsx
+interface MetricCardProps {
+  title: string;
+  value: number;
+  trend?: 'up' | 'down' | 'stable';
+  change?: number;
+  format?: 'number' | 'currency' | 'percentage';
+}
+
+export function MetricCard({ title, value, trend, change, format }: MetricCardProps) {
+  const formattedValue = formatValue(value, format);
+  
+  return (
+    <div className={styles.metricCard}>
+      <h3>{title}</h3>
+      <div className={styles.value}>{formattedValue}</div>
+      {trend && change && (
+        <div className={styles.trend}>
+          <TrendIcon trend={trend} />
+          <span>{formatChange(change)}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### Pattern 2: Data Visualization Component Structure
+
+**Description**: Component structure for data visualization with charts and graphs
+
+**Pattern**:
+- Chart wrapper components
+- Chart configuration components
+- Chart interaction components (zoom, filter, drill-down)
+- Chart export components
+
+**Example Structure**:
+```
+components/
+├── charts/
+│   ├── ChartContainer.tsx
+│   ├── ChartConfig.tsx
+│   ├── ChartInteractions.tsx
+│   ├── ChartExport.tsx
+│   └── types/
+│       ├── ChartData.ts
+│       └── ChartConfig.ts
+```
+
+**Example Component**:
+```typescript
+// components/charts/ChartContainer.tsx
+interface ChartContainerProps {
+  data: ChartData[];
+  config: ChartConfig;
+  onFilter?: (filters: Filter[]) => void;
+  onExport?: (format: 'png' | 'csv' | 'pdf') => void;
+}
+
+export function ChartContainer({ data, config, onFilter, onExport }: ChartContainerProps) {
+  const [filteredData, setFilteredData] = useState(data);
+  
+  return (
+    <div className={styles.chartContainer}>
+      <ChartConfig config={config} />
+      <ChartInteractions onFilter={onFilter} />
+      <Chart data={filteredData} config={config} />
+      <ChartExport onExport={onExport} />
+    </div>
+  );
+}
+```
+
+### Pattern 3: Analytics Report Component Structure
+
+**Description**: Component structure for analytics reports with data tables and summaries
+
+**Pattern**:
+- Report container component
+- Report header component
+- Report table component
+- Report summary component
+- Report export component
+
+**Example Structure**:
+```
+components/
+├── reports/
+│   ├── ReportContainer.tsx
+│   ├── ReportHeader.tsx
+│   ├── ReportTable.tsx
+│   ├── ReportSummary.tsx
+│   └── ReportExport.tsx
+```
+
+### Pattern 4: Event Tracking Component Structure
+
+**Description**: Component structure for event tracking and analytics integration
+
+**Pattern**:
+- Event tracking hook/utility
+- Event tracking provider
+- Event tracking components
+- Privacy-compliant tracking
+
+**Example Structure**:
+```
+components/
+├── analytics/
+│   ├── tracking/
+│   │   ├── useEventTracking.ts
+│   │   ├── EventTrackingProvider.tsx
+│   │   ├── TrackedButton.tsx
+│   │   └── TrackedLink.tsx
+```
+
+**Example Component**:
+```typescript
+// components/analytics/tracking/useEventTracking.ts
+export function useEventTracking() {
+  const trackEvent = useCallback((event: Event) => {
+    // Anonymize user identifier
+    const anonymizedEvent = {
+      ...event,
+      userId: anonymizeUserId(event.userId)
+    };
+    
+    // Send to analytics service
+    analyticsService.track(anonymizedEvent);
+  }, []);
+  
+  return { trackEvent };
+}
+```
+
+### Analytics Component Best Practices
+
+1. **Performance Optimization**:
+   - Use memoization for expensive calculations
+   - Implement virtual scrolling for large datasets
+   - Lazy load chart libraries
+   - Optimize re-renders with React.memo
+
+2. **Data Handling**:
+   - Validate data before rendering
+   - Handle missing data gracefully
+   - Show loading states during data fetching
+   - Display error states for failed requests
+
+3. **Accessibility**:
+   - Provide alt text for charts
+   - Support keyboard navigation
+   - Ensure color contrast for visualizations
+   - Support screen readers
+
+4. **Privacy & Security**:
+   - Anonymize user data in components
+   - Implement consent management
+   - Secure data transmission
+   - Comply with privacy regulations
 
 ---
 
@@ -774,5 +980,10 @@ When reviewing component structure, consider:
 **Expertise**: Code Quality and Code Review  
 **Date**: 2026-01-05  
 **Changes**: Enhanced this component structure review document by adding comprehensive "Code Quality Considerations for Component Structure" section covering component code quality standards (component code readability with clear component names and consistent naming patterns, component code maintainability with DRY principles and reusable utilities, component code consistency with consistent structure patterns and naming conventions, component code documentation with clear component documentation and inline comments), component structure quality metrics (component organization quality with clear directory structure and logical grouping, component file quality with focused component files and appropriate file organization, component code coverage quality with adequate test coverage and meaningful tests, component maintainability quality with minimal duplication and clear dependencies), code review checklist for component structure (component organization review with directory structure evaluation, component file review with file structure and naming evaluation, component code review with code quality standards, component testing review with component coverage analysis, component maintainability review with duplication and dependency analysis), component structure refactoring (identifying component structure issues with code smells and anti-patterns, refactoring component organization with improved directory structure, refactoring component files with better file organization, refactoring component code with improved code quality), and comprehensive code quality checklist for component structure (component code quality, component organization quality, component file quality, component testing quality, component maintainability quality, component documentation quality). Updated the "Notes" section to include code quality considerations (component code quality importance, component structure support for code quality goals, code review including component structure evaluation). This addition ensures that component structure documentation includes code quality considerations, making component code quality an integral part of component structure standards, ensuring that component organization supports code quality goals, and providing code review guidelines for evaluating component structure quality.
+
+**Expert**: Daniel Kim  
+**Expertise**: Business Intelligence and Analytics  
+**Date**: 2026-01-05  
+**Changes**: Enhanced this component structure review document by adding comprehensive "Analytics & Business Intelligence Component Structure Patterns" section covering analytics dashboard component structure (component structure for analytics dashboards with metrics, KPIs, and visualizations including dashboard container component, metric card components, chart components for line/bar/pie charts, filter components, export components with directory structure example and TypeScript MetricCard component example), data visualization component structure (component structure for data visualization with charts and graphs including chart wrapper components, chart configuration components, chart interaction components for zoom/filter/drill-down, chart export components with directory structure example and TypeScript ChartContainer component example), analytics report component structure (component structure for analytics reports with data tables and summaries including report container component, report header component, report table component, report summary component, report export component with directory structure example), event tracking component structure (component structure for event tracking and analytics integration including event tracking hook/utility, event tracking provider, event tracking components, privacy-compliant tracking with directory structure example and TypeScript useEventTracking hook example with user identifier anonymization), and analytics component best practices (performance optimization with memoization, virtual scrolling, lazy loading, React.memo, data handling with data validation, graceful missing data handling, loading states, error states, accessibility with alt text, keyboard navigation, color contrast, screen reader support, privacy and security with user data anonymization, consent management, secure data transmission, privacy regulation compliance). Enhanced "Notes" section with analytics-specific component considerations (analytics components should support data visualization and interactivity, analytics components should optimize for performance with large datasets, analytics components should ensure data accuracy and privacy). This addition provides essential BI/Analytics perspective on component structure, ensuring analytics components have proper structure, performance optimization, data handling, accessibility, and privacy compliance for reliable analytics functionality.
 
 ---

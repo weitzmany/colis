@@ -1,7 +1,7 @@
 {
   "name": "angular",
   "description": "Angular application template with TypeScript",
-  "type": "frontend",
+  "type": "angular",
   "version": "1.0.0",
   "dependencies": {
     "@angular/animations": "^17.0.0",

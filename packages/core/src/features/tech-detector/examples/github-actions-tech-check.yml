@@ -1,0 +1,164 @@
+# GitHub Actions Workflow for Tech Stack Validation
+# 
+# This workflow validates your project's technology stack against standards
+# and fails the build if non-recommended technologies or outdated versions are detected.
+#
+# Usage:
+# 1. Copy this file to .github/workflows/tech-check.yml in your repository
+# 2. Customize the standards file (.core-tech-standards.json) in your project root
+# 3. Push to trigger the workflow
+
+name: Tech Stack Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  validate-tech-stack:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install @your-org/core
+        run: npm install -g @your-org/core
+
+      - name: Detect and validate tech stack
+        id: tech-detect
+        run: |
+          # Run tech detection with standards checking
+          # --fail-on-warning: Fail build if warnings are detected
+          # --report: Generate JSON report for CI artifacts
+          # --no-interactive: Disable interactive prompts (automatic in CI)
+          tech-detect \
+            --check-standards \
+            --fail-on-warning \
+            --report tech-stack-report.json \
+            --format json
+        continue-on-error: true
+
+      - name: Upload tech stack report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tech-stack-report
+          path: tech-stack-report.json
+          retention-days: 30
+
+      - name: Comment on PR with tech stack info
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            try {
+              const report = JSON.parse(fs.readFileSync('tech-stack-report.json', 'utf8'));
+              
+              let comment = '## 📦 Tech Stack Validation Report\n\n';
+              
+              // Tech stack summary
+              comment += '### Detected Technologies\n\n';
+              comment += '| Category | Name | Version |\n';
+              comment += '|----------|------|--------|\n';
+              
+              if (report.techStack.framework) {
+                comment += `| Framework | ${report.techStack.framework.name} | ${report.techStack.framework.version || 'N/A'} |\n`;
+              }
+              
+              if (report.techStack.languages.length > 0) {
+                const primaryLang = report.techStack.languages.find(l => l.primary) || report.techStack.languages[0];
+                comment += `| Language | ${primaryLang.name} | ${primaryLang.version || 'N/A'} |\n`;
+              }
+              
+              if (report.techStack.buildTools.length > 0) {
+                comment += `| Build Tool | ${report.techStack.buildTools[0].name} | ${report.techStack.buildTools[0].version || 'N/A'} |\n`;
+              }
+              
+              comment += `| Package Manager | ${report.techStack.packageManager.name} | ${report.techStack.packageManager.version || 'N/A'} |\n`;
+              
+              if (report.techStack.runtime) {
+                comment += `| Runtime | ${report.techStack.runtime.name} | ${report.techStack.runtime.version || 'N/A'} |\n`;
+              }
+              
+              // Warnings summary
+              if (report.warnings.count > 0) {
+                comment += '\n### ⚠️ Warnings Detected\n\n';
+                comment += `**Total Warnings:** ${report.warnings.count}\n`;
+                comment += `- Non-recommended technologies: ${report.summary.nonRecommendedCount}\n`;
+                comment += `- Outdated versions: ${report.summary.outdatedVersionCount}\n\n`;
+                
+                comment += '#### Details\n\n';
+                for (const warning of report.warnings.items) {
+                  comment += `- **${warning.category}**: ${warning.message}\n`;
+                  if (warning.recommended) {
+                    comment += `  - Recommended: ${warning.recommended.join(', ')}\n`;
+                  }
+                  if (warning.minimumVersion) {
+                    comment += `  - Minimum version: ${warning.minimumVersion}\n`;
+                  }
+                }
+              } else {
+                comment += '\n### ✅ No Warnings\n\nAll technologies meet the recommended standards!\n';
+              }
+              
+              // Post comment
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (error) {
+              console.error('Error posting comment:', error);
+            }
+
+      - name: Fail if warnings detected
+        if: steps.tech-detect.outcome == 'failure'
+        run: |
+          echo "::error::Tech stack validation failed. Please review the warnings above."
+          exit 1
+
+  # Optional: Enforce standards on specific branches
+  enforce-standards-strict:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install @your-org/core
+        run: npm install -g @your-org/core
+
+      - name: Strict tech stack validation (main branch)
+        run: |
+          # On main branch, fail on ANY warnings
+          tech-detect \
+            --check-standards \
+            --fail-on-warning \
+            --report tech-stack-report-main.json
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tech-stack-report-main
+          path: tech-stack-report-main.json
+          retention-days: 90

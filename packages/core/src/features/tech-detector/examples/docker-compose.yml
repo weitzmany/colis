@@ -1,0 +1,80 @@
+# Docker Compose for Tech Detector
+#
+# This Docker Compose file provides examples for running tech-detect
+# in different scenarios: local development, CI/CD, and multi-project validation.
+#
+# Usage:
+#   docker-compose up tech-detect-local
+#   docker-compose up tech-detect-ci
+#   docker-compose up tech-detect-multi-project
+
+version: '3.8'
+
+services:
+  # Local development: Interactive tech detection with standards checking
+  tech-detect-local:
+    build: .
+    volumes:
+      - .:/workspace
+      - tech-detect-cache:/root/.npm
+    environment:
+      - NODE_ENV=development
+    command: ["--check-standards", "--interactive", "--save"]
+    stdin_open: true
+    tty: true
+
+  # CI/CD: Non-interactive with fail-on-warning and report generation
+  tech-detect-ci:
+    build: .
+    volumes:
+      - .:/workspace
+      - ./reports:/workspace/reports
+    environment:
+      - CI=true
+      - NODE_ENV=production
+    command: [
+      "--check-standards",
+      "--fail-on-warning",
+      "--report", "reports/tech-stack-report.json",
+      "--format", "json"
+    ]
+
+  # Multi-project validation: Scan multiple projects
+  tech-detect-multi-project:
+    build: .
+    volumes:
+      - ../..:/projects
+      - ./reports:/reports
+    environment:
+      - CI=true
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        echo "Scanning multiple projects..."
+        for project in /projects/*/; do
+          echo "Scanning $project..."
+          tech-detect \
+            --path "$project" \
+            --check-standards \
+            --report "/reports/$(basename $project)-report.json" \
+            --format json || true
+        done
+        echo "All projects scanned. Reports saved to /reports/"
+
+  # Standards validator: Only check standards, don't save
+  tech-detect-validator:
+    build: .
+    volumes:
+      - .:/workspace
+    environment:
+      - CI=true
+    command: [
+      "--check-standards",
+      "--skip-warnings=false",
+      "--fail-on-warning",
+      "--format", "table"
+    ]
+
+volumes:
+  tech-detect-cache:
+    driver: local

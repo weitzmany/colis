@@ -21,6 +21,8 @@ export async function detectCommand(options: {
   'check-standards'?: boolean;
   'skip-warnings'?: boolean;
   interactive?: boolean;
+  'fail-on-warning'?: boolean;
+  'report'?: string;
 }) {
   try {
     const projectPath = options.path ? path.resolve(options.path) : process.cwd();
@@ -28,6 +30,12 @@ export async function detectCommand(options: {
     if (!(await fs.pathExists(projectPath))) {
       console.error(chalk.red(`Error: Path does not exist: ${projectPath}`));
       process.exit(1);
+    }
+
+    // Detect CI/CD environment
+    const isCI = detectCIEnvironment();
+    if (isCI) {
+      console.log(chalk.blue('🤖 CI/CD environment detected'));
     }
 
     const detector = new TechDetector();
@@ -44,7 +52,9 @@ export async function detectCommand(options: {
     // Check standards and show warnings (if enabled)
     const checkStandards = options['check-standards'] !== false;
     const skipWarnings = options['skip-warnings'] === true;
-    const interactive = options.interactive !== false;
+    const interactive = options.interactive !== false && !isCI; // Disable interactive in CI
+    const failOnWarning = options['fail-on-warning'] === true;
+    let hasWarnings = false;
 
     if (checkStandards && !skipWarnings) {
       try {
@@ -58,7 +68,21 @@ export async function detectCommand(options: {
         const warnings = await warningDetector.detectWarnings(techStack, standards, userChoices);
 
         if (warnings.length > 0) {
+          hasWarnings = true;
+          
+          // Generate JSON report if requested
+          if (options.report) {
+            await generateCIReport(techStack, warnings, options.report);
+            console.log(chalk.green(`✓ Report saved to ${options.report}`));
+          }
+
           await warningHandler.handleWarnings(warnings, projectPath, interactive);
+
+          // Exit with error code if fail-on-warning is enabled
+          if (failOnWarning) {
+            console.error(chalk.red(`\n✗ ${warnings.length} warning(s) detected. Failing build due to --fail-on-warning flag.`));
+            process.exit(2); // Exit code 2 for warnings
+          }
         }
       } catch (error: any) {
         console.warn(chalk.yellow(`⚠ Standards checking failed: ${error.message}`));
@@ -225,3 +249,102 @@ function printTable(techStack: any) {
   }
 }
 
+/**
+ * Detect CI/CD environment
+ */
+function detectCIEnvironment(): boolean {
+  const ciEnvVars = [
+    'CI',
+    'CONTINUOUS_INTEGRATION',
+    'GITHUB_ACTIONS',
+    'GITLAB_CI',
+    'CIRCLECI',
+    'TRAVIS',
+    'JENKINS_URL',
+    'BUILDKITE',
+    'DRONE',
+    'BITBUCKET_PIPELINES_BUILD_NUMBER',
+    'AWS_CODEBUILD_BUILD_ID',
+    'AZURE_PIPELINES',
+    'TEAMCITY_VERSION',
+  ];
+
+  return ciEnvVars.some((envVar) => process.env[envVar] === 'true' || process.env[envVar] !== undefined);
+}
+
+/**
+ * Generate CI/CD report in JSON format
+ */
+async function generateCIReport(
+  techStack: any,
+  warnings: any[],
+  reportPath: string
+): Promise<void> {
+  const report = {
+    timestamp: new Date().toISOString(),
+    ci: {
+      detected: detectCIEnvironment(),
+      provider: getCIProvider(),
+    },
+    techStack: {
+      framework: techStack.framework ? {
+        name: techStack.framework.name,
+        version: techStack.framework.version,
+      } : null,
+      languages: techStack.languages.map((l: any) => ({
+        name: l.name,
+        version: l.version,
+        primary: l.primary,
+      })),
+      buildTools: techStack.buildTools.map((bt: any) => ({
+        name: bt.name,
+        version: bt.version,
+      })),
+      packageManager: {
+        name: techStack.packageManager.name,
+        version: techStack.packageManager.version,
+      },
+      runtime: techStack.runtime ? {
+        name: techStack.runtime.name,
+        version: techStack.runtime.version,
+      } : null,
+    },
+    warnings: {
+      count: warnings.length,
+      items: warnings.map((w) => ({
+        type: w.type,
+        category: w.category,
+        detected: w.detected,
+        recommended: w.recommended,
+        minimumVersion: w.minimumVersion,
+        message: w.message,
+      })),
+    },
+    summary: {
+      hasWarnings: warnings.length > 0,
+      nonRecommendedCount: warnings.filter((w) => w.type === 'non-recommended').length,
+      outdatedVersionCount: warnings.filter((w) => w.type === 'outdated-version').length,
+    },
+  };
+
+  await fs.writeFile(reportPath, JSON.stringify(report, null, 2), 'utf-8');
+}
+
+/**
+ * Get CI provider name
+ */
+function getCIProvider(): string | null {
+  if (process.env.GITHUB_ACTIONS) return 'GitHub Actions';
+  if (process.env.GITLAB_CI) return 'GitLab CI';
+  if (process.env.CIRCLECI) return 'CircleCI';
+  if (process.env.TRAVIS) return 'Travis CI';
+  if (process.env.JENKINS_URL) return 'Jenkins';
+  if (process.env.BUILDKITE) return 'Buildkite';
+  if (process.env.DRONE) return 'Drone';
+  if (process.env.BITBUCKET_PIPELINES_BUILD_NUMBER) return 'Bitbucket Pipelines';
+  if (process.env.AWS_CODEBUILD_BUILD_ID) return 'AWS CodeBuild';
+  if (process.env.AZURE_PIPELINES) return 'Azure Pipelines';
+  if (process.env.TEAMCITY_VERSION) return 'TeamCity';
+  if (process.env.CI) return 'Generic CI';
+  return null;
+}

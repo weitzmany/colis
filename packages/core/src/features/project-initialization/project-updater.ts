@@ -75,7 +75,7 @@ export async function updateProject(options: UpdateOptions = {}): Promise<Update
     if (!corePackagePath) {
       result.success = false;
       result.errors.push(
-        'Core package not found. Make sure @your-org/core is installed in node_modules.'
+        'Core package not found. Make sure @colis/rig is installed in node_modules.'
       );
       return result;
     }

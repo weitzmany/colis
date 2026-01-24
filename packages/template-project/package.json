@@ -1,6 +1,6 @@
 {
   "name": "@colis/embark",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "description": "Project template package for scaffolding new projects with standard structure and best practices",
   "main": "dist/index.js",

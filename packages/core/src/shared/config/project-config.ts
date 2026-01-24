@@ -10,6 +10,7 @@
  */
 
 import * as fs from 'fs-extra';
+import { readFile } from 'fs/promises';
 import * as path from 'path';
 
 /**
@@ -114,7 +115,7 @@ export class ProjectConfigManager {
     }
 
     try {
-      const content = await fs.readFile(this.configPath, 'utf-8');
+      const content = await readFile(this.configPath, 'utf-8');
       return JSON.parse(content) as ProjectConfig;
     } catch (error) {
       throw new Error(`Failed to load project config: ${error}`);

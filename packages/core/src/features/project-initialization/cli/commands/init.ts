@@ -38,7 +38,7 @@ function displaySuccessMessage(result: any): void {
   console.log(chalk.bold('\n💡 Next steps:'));
   console.log(chalk.cyan('  1. Start coding! Your project is ready to go.'));
   console.log(chalk.cyan('  2. Switch branches to see IDE colors change automatically.'));
-  console.log(chalk.cyan('  3. Use Port Manager to allocate ports: npx @your-org/core port-manager allocate'));
+  console.log(chalk.cyan('  3. Use Port Manager to allocate ports: npx @colis/rig port-manager allocate'));
   console.log(chalk.dim('\n  Happy coding! 🎉\n'));
 }
 

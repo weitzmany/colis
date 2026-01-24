@@ -6,6 +6,7 @@
  */
 
 import * as fs from 'fs-extra';
+import { readFile } from 'fs/promises';
 import * as path from 'path';
 
 /**
@@ -150,7 +151,7 @@ export async function validateSetup(
       // Check if post-checkout hook exists
       if (await fs.pathExists(hookPath)) {
         try {
-          const hookContent = await fs.readFile(hookPath, 'utf-8');
+          const hookContent = await readFile(hookPath, 'utf-8');
           // Check if hook contains KEY_COLOR
           if (hookContent.includes('KEY_COLOR=')) {
             result.colorsValid = true;
@@ -167,7 +168,7 @@ export async function validateSetup(
       // Check if settings.json exists (optional, may not exist if git not initialized)
       if (await fs.pathExists(settingsPath)) {
         try {
-          const settingsContent = await fs.readFile(settingsPath, 'utf-8');
+          const settingsContent = await readFile(settingsPath, 'utf-8');
           const settings = JSON.parse(settingsContent);
           if (settings['workbench.colorCustomizations']) {
             // Settings file exists and has color customizations
@@ -181,7 +182,7 @@ export async function validateSetup(
       // Check if settings.json is in .gitignore
       if (await fs.pathExists(gitignorePath)) {
         try {
-          const gitignoreContent = await fs.readFile(gitignorePath, 'utf-8');
+          const gitignoreContent = await readFile(gitignorePath, 'utf-8');
           if (gitignoreContent.includes('.vscode/settings.json')) {
             // Settings file is properly ignored
           } else {
@@ -202,7 +203,7 @@ export async function validateSetup(
     const errorMessage = error instanceof Error ? error.message : String(error);
     result.errors.push(
       `Validation error: ${errorMessage}\n` +
-      `  Solution: Re-run initialization: npx @your-org/core init`
+      `  Solution: Re-run initialization: npx @colis/rig init`
     );
     return result;
   }

@@ -1,0 +1,154 @@
+---
+description: Package publishing workflow rules - never publish automatically, always inform user
+globs: packages/**/package.json
+alwaysApply: true
+---
+
+# Package Publishing Workflow
+
+## ⚠️ CRITICAL RULES
+
+**NEVER publish packages automatically. ALWAYS inform the user when publishing is needed.**
+
+## Publishing Protocol
+
+When code changes require publishing:
+
+1. **Identify what needs to be published**
+   - List the package(s) that need publishing
+   - Explain why they need to be published
+
+2. **Determine release type**
+   - **PATCH**: Bug fixes, documentation updates, internal changes
+   - **MINOR**: New features, backward-compatible changes
+   - **MAJOR**: Breaking changes, API changes
+
+3. **Provide publish command**
+   - Give exact command to run
+   - Include the release type
+   - Example: `npm run release:patch`
+
+## Template Response
+
+```markdown
+## Ready to Publish
+
+**Package: [package-name]**
+**Release type: [PATCH/MINOR/MAJOR]**
+**Reason: [brief explanation]**
+
+```bash
+cd [package-path]
+npm run release:[patch/minor/major]
+```
+```
+
+## Examples
+
+### Bug Fix (PATCH)
+```markdown
+**You need to publish: `@colis/rig` (core package)**
+**Release type: PATCH** (bug fix - fixing fs.readdir issue)
+
+```bash
+cd /Users/yoavweitzman/Documents/packages/packages/core
+npm run release:patch
+```
+```
+
+### New Feature (MINOR)
+```markdown
+**You need to publish: `@colis/embark` (template-project)**
+**Release type: MINOR** (new feature - added Vue.js support)
+
+```bash
+cd /Users/yoavweitzman/Documents/packages/packages/template-project
+npm run release:minor
+```
+```
+
+### Breaking Change (MAJOR)
+```markdown
+**You need to publish: `@colis/rig` (core package)**
+**Release type: MAJOR** (breaking change - changed API interface)
+
+```bash
+cd /Users/yoavweitzman/Documents/packages/packages/core
+npm run release:major
+```
+```
+
+## What NOT to Do
+
+❌ **NEVER** run `npm publish` yourself
+❌ **NEVER** run `npm version` yourself
+❌ **NEVER** run release scripts automatically
+❌ **NEVER** bump version numbers in package.json
+
+## What TO Do
+
+✅ **ALWAYS** inform the user when publishing is needed
+✅ **ALWAYS** specify the release type (PATCH/MINOR/MAJOR)
+✅ **ALWAYS** provide the exact command to run
+✅ **ALWAYS** explain why publishing is needed
+
+## Release Type Guidelines
+
+### PATCH (x.x.X)
+- Bug fixes
+- Documentation updates
+- Code refactoring (no behavior change)
+- Dependency updates (patch versions)
+- Internal improvements
+
+### MINOR (x.X.0)
+- New features (backward-compatible)
+- New functionality
+- Deprecating features (with warnings)
+- Dependency updates (minor versions)
+
+### MAJOR (X.0.0)
+- Breaking changes
+- Removing features
+- Changing public API
+- Incompatible changes
+- Dependency updates (major versions)
+
+## Multi-Package Publishing Order
+
+When multiple packages need publishing:
+
+1. **Publish dependencies first** (packages that others depend on)
+2. **Then publish dependents** (packages that depend on others)
+
+Example:
+```markdown
+## Ready to Publish (2 packages)
+
+**1. First publish: `@colis/rig` (core package)**
+**Release type: PATCH**
+
+```bash
+cd /Users/yoavweitzman/Documents/packages/packages/core
+npm run release:patch
+```
+
+**2. Then publish: `@colis/embark` (template-project)**  
+**Release type: PATCH**
+
+```bash
+cd /Users/yoavweitzman/Documents/packages/packages/template-project
+npm run release:patch
+```
+```
+
+## Key Principle
+
+**The user controls all publishing. The AI only informs and advises.**
+
+---
+
+## Review/Contribution
+
+**Created**: 2026-01-24
+**Purpose**: Ensure AI never publishes packages automatically, always informs user with correct release type

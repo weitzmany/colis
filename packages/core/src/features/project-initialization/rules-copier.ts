@@ -53,7 +53,7 @@ export interface CopyRulesResult {
  * - Skips identical files (same hash) to save time
  * - Optionally deletes files from project that no longer exist in core package
  * 
- * @param corePackagePath - Path to the core package (usually in node_modules/@your-org/core)
+ * @param corePackagePath - Path to the core package (usually in node_modules/@colis/rig)
  * @param projectPath - Path to the project root directory
  * @param options - Synchronization options
  * @param options.overwrite - If true, overwrite all files regardless of hash. Default: false
@@ -103,7 +103,7 @@ export async function copyRules(
     if (!(await fs.pathExists(sourceRulesPath))) {
       result.errors.push(
         `Source rules directory not found: ${sourceRulesPath}\n` +
-        `  Solution: Make sure @your-org/core is installed: npm install @your-org/core`
+        `  Solution: Make sure @colis/rig is installed: npm install @colis/rig`
       );
       result.success = false;
       return result;

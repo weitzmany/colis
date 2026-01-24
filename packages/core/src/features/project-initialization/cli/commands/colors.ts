@@ -9,6 +9,7 @@ import { generateColorPalette, generateKeyColor, BASE_PALETTE } from '../../colo
 import { generateProjectName } from '../../../port-manager/utils/project-name.js';
 import { PortManager } from '../../../port-manager/index.js';
 import { GlobalConfigManager } from '../../../../shared/config/global-config.js';
+import { readFile } from 'fs/promises';
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as os from 'os';
@@ -83,7 +84,7 @@ async function findProjectsWithHooks(): Promise<Array<{ name: string; path: stri
         
         if (await fs.pathExists(hookPath)) {
           try {
-            const hookContent = await fs.readFile(hookPath, 'utf-8');
+            const hookContent = await readFile(hookPath, 'utf-8');
             const keyColorMatch = hookContent.match(/KEY_COLOR="([^"]+)"/);
             const keyColor = keyColorMatch ? keyColorMatch[1] : 'unknown';
             

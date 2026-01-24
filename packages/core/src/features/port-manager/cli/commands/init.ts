@@ -109,12 +109,12 @@ export async function initCommand(options: {
         } else {
           // No existing allocation, manually find next available port
           console.log(chalk.yellow(`  No existing allocation found. Manual allocation needed.`));
-          console.log(chalk.yellow(`  Run: npx @your-org/core port-manager allocate --project-name="${projectName}" --app-type="${appType}"`));
+          console.log(chalk.yellow(`  Run: npx @colis/rig port-manager allocate --project-name="${projectName}" --app-type="${appType}"`));
           return;
         }
       } catch (getError) {
         console.log(chalk.yellow(`  Could not retrieve port allocation.`));
-        console.log(chalk.yellow(`  Run: npx @your-org/core port-manager allocate --project-name="${projectName}" --app-type="${appType}"`));
+        console.log(chalk.yellow(`  Run: npx @colis/rig port-manager allocate --project-name="${projectName}" --app-type="${appType}"`));
         return;
       }
     } else {

@@ -7,7 +7,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import { readdir } from 'fs/promises';
+import { readdir, readFile } from 'fs/promises';
 import { execSync } from 'child_process';
 import chalk from 'chalk';
 import { copyRules, CopyRulesResult } from './rules-copier.js';
@@ -306,7 +306,7 @@ export async function updateProject(options: UpdateOptions = {}): Promise<Update
           colorsNeedUpdate = true;
           console.log(chalk.yellow('  ⚠ Post-checkout hook not found'));
         } else {
-          const hookContent = await fs.readFile(hookPath, 'utf-8');
+          const hookContent = await readFile(hookPath, 'utf-8');
           if (!hookContent.includes('KEY_COLOR=')) {
             colorsNeedUpdate = true;
             console.log(chalk.yellow('  ⚠ Post-checkout hook missing KEY_COLOR'));
@@ -469,7 +469,7 @@ async function checkCurrentState(
   const hookPath = path.join(projectPath, '.githooks', 'post-checkout');
   if (await fs.pathExists(hookPath)) {
     try {
-      const hookContent = await fs.readFile(hookPath, 'utf-8');
+      const hookContent = await readFile(hookPath, 'utf-8');
       state.colorsConfigured = hookContent.includes('KEY_COLOR=');
     } catch {
       // Ignore
@@ -571,15 +571,23 @@ async function findMissingCommands(
 async function findCorePackagePath(): Promise<string | null> {
   const projectPath = process.cwd();
   const possiblePaths = [
-    path.join(projectPath, 'node_modules', '@your-org', 'core'),
+    path.join(projectPath, 'node_modules', '@colis', 'rig'),
     path.join(projectPath, 'node_modules', 'core'),
   ];
 
+  console.log(chalk.dim('\n🔍 Debug: Searching for core package...'));
+  console.log(chalk.dim(`   Project path: ${projectPath}`));
+  console.log(chalk.dim(`   Checking paths:`));
+  
   for (const possiblePath of possiblePaths) {
-    if (await fs.pathExists(possiblePath)) {
+    const exists = await fs.pathExists(possiblePath);
+    console.log(chalk.dim(`   - ${possiblePath}: ${exists ? '✓ FOUND' : '✗ not found'}`));
+    if (exists) {
+      console.log(chalk.dim(`   Using: ${possiblePath}\n`));
       return possiblePath;
     }
   }
 
+  console.log(chalk.yellow(`   ⚠️  Core package not found in any location\n`));
   return null;
 }

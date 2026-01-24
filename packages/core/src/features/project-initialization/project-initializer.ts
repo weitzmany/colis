@@ -121,8 +121,8 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
     if (!corePackagePath) {
       result.success = false;
       result.errors.push(
-        'Core package not found. Make sure @your-org/core is installed in node_modules.\n' +
-        '  Solution: Run: npm install @your-org/core'
+        'Core package not found. Make sure @colis/rig is installed in node_modules.\n' +
+        '  Solution: Run: npm install @colis/rig'
       );
       return result;
     }
@@ -316,12 +316,12 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         if (errorMessage.includes('UNIQUE constraint') || errorMessage.includes('already assigned') || errorMessage.includes('already exists')) {
           result.warnings.push(`Port Manager: Port conflict detected. ${errorMessage}. You can allocate a port manually later with: port-manager allocate`);
           console.log(chalk.yellow(`  ⚠ Port conflict detected: ${errorMessage.split('\n')[0]}`));
-          console.log(chalk.dim('    💡 You can allocate a port manually: npx @your-org/core port-manager allocate'));
+          console.log(chalk.dim('    💡 You can allocate a port manually: npx @colis/rig port-manager allocate'));
         } else {
           // Other errors are warnings but don't fail initialization
           result.warnings.push(`Port Manager initialization had issues: ${errorMessage}`);
           console.log(chalk.yellow(`  ⚠ Port Manager initialization had issues: ${errorMessage.split('\n')[0]}`));
-          console.log(chalk.dim('    💡 You can initialize manually: npx @your-org/core port-manager init'));
+          console.log(chalk.dim('    💡 You can initialize manually: npx @colis/rig port-manager init'));
         }
         // Don't mark as failed - port allocation is optional for project setup
         result.portManagerInitialized = false;
@@ -329,7 +329,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
     } else {
       result.warnings.push('Port Manager initialization was skipped (not recommended)');
       console.log(chalk.yellow('  ⚠ Port Manager initialization skipped'));
-      console.log(chalk.dim('    💡 Initialize manually: npx @your-org/core port-manager init'));
+      console.log(chalk.dim('    💡 Initialize manually: npx @colis/rig port-manager init'));
     }
 
     // Setup IDE colors and git hooks (unless skipped)
@@ -408,7 +408,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         const errorMsg = error instanceof Error ? error.message : String(error);
         result.warnings.push(`Color setup failed: ${errorMsg}`);
         console.log(chalk.yellow(`  ⚠ Color setup failed: ${errorMsg}`));
-        console.log(chalk.dim('    💡 You can set up colors manually: npx @your-org/core colors'));
+        console.log(chalk.dim('    💡 You can set up colors manually: npx @colis/rig colors'));
       }
     }
 
@@ -478,22 +478,30 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
 /**
  * Find the core package path in node_modules
  * 
- * Searches for @your-org/core package in common node_modules locations.
+ * Searches for @colis/rig package in common node_modules locations.
  * 
  * @returns Promise resolving to core package path if found, null otherwise
  */
 async function findCorePackagePath(): Promise<string | null> {
   const projectPath = process.cwd();
   const possiblePaths = [
-    path.join(projectPath, 'node_modules', '@your-org', 'core'),
+    path.join(projectPath, 'node_modules', '@colis', 'rig'),
     path.join(projectPath, 'node_modules', 'core'),
   ];
 
+  console.log(chalk.dim('\n🔍 Debug: Searching for core package...'));
+  console.log(chalk.dim(`   Project path: ${projectPath}`));
+  console.log(chalk.dim(`   Checking paths:`));
+  
   for (const possiblePath of possiblePaths) {
-    if (await fs.pathExists(possiblePath)) {
+    const exists = await fs.pathExists(possiblePath);
+    console.log(chalk.dim(`   - ${possiblePath}: ${exists ? '✓ FOUND' : '✗ not found'}`));
+    if (exists) {
+      console.log(chalk.dim(`   Using: ${possiblePath}\n`));
       return possiblePath;
     }
   }
 
+  console.log(chalk.yellow(`   ⚠️  Core package not found in any location\n`));
   return null;
 }

@@ -7,7 +7,7 @@
  */
 
 import * as fs from 'fs-extra';
-import { readdir } from 'fs/promises';
+import { readdir, readFile } from 'fs/promises';
 import * as path from 'path';
 import * as crypto from 'crypto';
 
@@ -55,7 +55,7 @@ export interface FileSyncOptions {
  * @returns MD5 hash as hex string
  */
 async function getFileHash(filePath: string): Promise<string> {
-  const content = await fs.readFile(filePath);
+  const content = await readFile(filePath);
   return crypto.createHash('md5').update(content).digest('hex');
 }
 

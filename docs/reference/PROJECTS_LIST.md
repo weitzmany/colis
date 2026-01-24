@@ -1880,7 +1880,7 @@ Subscription & Bills Manager (working name: BillGuard) is a customer-facing full
 
 ### 25. `pet-care-manager/`
 
-**Status**: Planning (Comprehensive PRD Complete)  
+**Status**: Planning (PRD + Architecture Complete)  
 **Priority**: High  
 **Category**: Full-Stack Web + Mobile Application (Customer-Facing)
 
@@ -1893,23 +1893,30 @@ Pet Care Manager is a comprehensive, customer-facing full-stack web and mobile a
 
 #### Key Features
 
+**MVP Features**:
 1. **Pet Profiles**: Create profiles with photos, basic info, species/breed information
 2. **Medication Tracking & Reminders**: Schedule medications with automatic reminders, dose logging, medication history
 3. **Vet Appointment Management**: Schedule appointments, vet contact info, appointment reminders, visit history
 4. **Vaccination Tracking**: Track vaccination dates, automatic booster reminders, vaccination records export
 5. **Health Records Vault**: Store vet notes, lab results, x-rays, health documents with quick emergency access
 
+**Post-MVP** (Phase 2+): Expense tracking & budgeting, family collaboration, grooming schedules, feeding schedules, weight & health monitoring, social features (Phase 3), vet clinic integration (Phase 4)
+
 #### Tech Stack
 
-- **Frontend**: Angular with TypeScript, Tailwind CSS, shadcn/ui components
-- **Backend**: PHP (Slim framework) with Composer, RESTful API
-- **Database**: MySQL 8.0 (via Docker, for structured pet data)
-- **Mobile**: Capacitor (iOS & Android), push notifications
-- **Infrastructure**: Docker containerization, DigitalOcean (MVP), GitHub Actions (CI/CD)
+- **Frontend**: Next.js 15 (React) with TypeScript, Tailwind CSS, shadcn/ui components, Zustand (state management)
+- **Backend**: NestJS (Node.js) with TypeScript, RESTful API, Prisma ORM, JWT authentication
+- **Database**: PostgreSQL 16 (primary), Redis 7 (caching, sessions)
+- **Mobile**: React Native with Expo (iOS & Android), Firebase Cloud Messaging (push notifications)
+- **Infrastructure**: Docker containerization, DigitalOcean (MVP hosting), GitHub Actions (CI/CD)
+- **External Services**: SendGrid (email), Twilio (SMS - Phase 2), Stripe (payments - Phase 2)
 
 #### Documentation
 
-- [PRD](projects/pet-care-manager/PRD.md) - Complete product requirements document
+- [Documentation Index](projects/pet-care-manager/INDEX.md) - Master documentation navigation
+- [PRD Overview](projects/pet-care-manager/PRD_OVERVIEW.md) - Complete product requirements document
+- [Architecture](projects/pet-care-manager/ARCHITECTURE.md) - Technical architecture and system design
+- [Expert Contributions](projects/pet-care-manager/EXPERTS.md) - Expert reviews and sign-offs
 
 #### Timeline
 
@@ -2423,6 +2430,193 @@ Tai Chi Lessons Platform is an online platform for learning and practicing tai c
 **Technology**: Full-stack web + mobile + video streaming  
 **Location**: `~/Documents/packages/docs/projects/tai-chi-lessons/`
 
+### 31. `sports-results-tracker/`
+
+**Status**: Planning (MVP Definition Complete)  
+**Priority**: Medium  
+**Category**: Full-Stack Web Application (Progressive Web App)
+
+#### Overview
+
+Sports Results Tracker is a fast, mobile-first platform for tracking soccer results (and potentially other sports) in real-time. The platform provides live scores, league standings, match fixtures, and personalized team following without the clutter and slow loading times of existing sports websites.
+
+**Target Audience**: Soccer fans (18-45), fantasy soccer players, amateur coaches, casual viewers  
+**Business Model**: Freemium (Free tier with basic features + minimal ads; Premium: $4.99/month for unlimited follows, ad-free, push notifications; Premium+: $9.99/month with API access)
+
+#### Key Features
+
+1. **Live Score Tracking**: Real-time score updates (30s polling in MVP, WebSockets in Phase 2), match status display
+2. **League Standings**: Top 5 leagues (Premier League, La Liga, Serie A, Bundesliga, Ligue 1), position tracking, points/goals data
+3. **Team Following**: Follow up to 5 favorite teams (MVP), personalized views, followed teams appear first
+4. **Match Schedule (Fixtures)**: Next 7 days of fixtures, filter by followed teams, date/time display
+5. **Mobile-Responsive Interface**: Mobile-first design, <2 second load times, touch-optimized controls
+6. **User Accounts** (Phase 2): Full authentication, cloud sync, unlimited team following
+7. **Push Notifications** (Phase 2): Goal alerts, match start reminders, score updates
+8. **Player Statistics** (Phase 2): Goals, assists, cards, form indicators
+9. **Match History** (Phase 2): Historical results, head-to-head records
+10. **Multiple Sports** (Phase 3): Basketball, American football, tennis expansion
+11. **Native Mobile Apps** (Phase 4): iOS and Android native applications
+
+#### Tech Stack
+
+- **Frontend**: React 18 + TypeScript, Tailwind CSS, Zustand (state), React Query (server state), Vite build tool
+- **Backend**: Node.js 20 + Express, RESTful API
+- **Database**: PostgreSQL 16 (matches, standings, teams), Redis 7.2 (live score caching)
+- **Infrastructure**: Vercel (frontend), Railway (backend + DB + Redis)
+- **Data Source**: API-Football (sports data API)
+- **Monitoring**: Sentry (error tracking), Vercel Analytics, UptimeRobot
+
+#### Documentation
+
+- [Documentation Index](../projects/sports-results-tracker/INDEX.md) - Complete navigation guide
+- [PRD Overview](../projects/sports-results-tracker/PRD_OVERVIEW.md) - Product requirements with comprehensive MVP definition
+- [Architecture](../projects/sports-results-tracker/ARCHITECTURE.md) - Technical architecture and system design
+- [Expert Contributions](../projects/sports-results-tracker/EXPERTS.md) - 14 expert reviews and sign-offs
+
+#### Timeline
+
+- **Phase 1 (MVP)** (Weeks 1-10): Live scores, standings, fixtures, following (max 5 teams), mobile-responsive UI
+  - Week 1-2: Data ingestion and API setup
+  - Week 3-4: Core UI and live scores
+  - Week 5-6: Standings and fixtures
+  - Week 7: Following/personalization
+  - Week 8: Polish and bug fixes
+  - Week 9-10: Testing and beta launch
+- **Phase 2 (Enhancement)** (Weeks 11-14): User accounts, push notifications, WebSocket real-time, player stats, match history
+- **Phase 3 (Expansion)** (Weeks 15-20): Additional sports (basketball, football), custom leagues, social features, API access
+- **Phase 4 (Mobile & Monetization)** (Weeks 21-28): Native mobile apps (iOS, Android), premium subscriptions, fantasy integration
+
+**Target Launch**: April 15, 2026 (MVP)
+
+#### Business Value
+
+- **Market Opportunity**: Sports fans frustrated with slow, ad-heavy websites; mobile-first users seeking clean, fast experience
+- **User Value**: Real-time scores without delays, clean interface without clutter, personalized team tracking, <2 second load times
+- **Revenue Model**: Freemium targeting 1,000 users (Month 1), 10,000 (Month 6), 5% premium conversion
+- **Differentiation**: Speed (<2s loads, <1s updates), simplicity (clean UI), mobile-first (touch-optimized)
+- **Success Metrics**: 
+  - User Adoption: 1,000 users in first month
+  - User Engagement: 50% weekly active, 60% monthly retention
+  - Technical: 99% uptime, <2s page loads, 99.9% data accuracy
+  - Business: 5% free-to-premium conversion (Phase 2+)
+
+#### Expert Team
+
+- **Product**: Patricia Martinez (Product Manager) - MVP definition, prioritization, roadmap
+- **Market Research**: Laura Phillips (Market Research) - Competitive analysis, user personas, differentiation strategy
+- **Architecture**: Marcus Johnson (Architecture) - System design, caching strategy, scalability
+- **Backend**: Samuel Rodriguez (Backend) - API design, database schema, data ingestion
+- **Frontend**: Thomas Anderson (Frontend) - React architecture, state management, PWA
+- **UI/UX**: Daisy Thompson (UI/UX) - Mobile-first design, user flows, clean interface
+- **Database**: Benjamin Lee (Database) - PostgreSQL schema, indexes, query optimization
+- **API Design**: Emily Chen (API Design) - RESTful endpoints, response formats, rate limiting
+- **Performance**: James Martinez (Performance) - Caching (Redis + React Query), CDN, bundle optimization
+- **Security**: Ryan Kim (Security) - JWT authentication (Phase 2), rate limiting, HTTPS/TLS
+- **DevOps**: David Cooper (DevOps) - CI/CD, Vercel + Railway deployment, monitoring
+- **Accessibility**: Allison Foster (Accessibility) - WCAG 2.1 AA compliance, keyboard navigation, screen readers
+- **Mobile**: Michael Brown (Mobile) - PWA implementation, offline capability, native apps (Phase 4)
+- **Documentation**: Dorothy Clark (Documentation) - PRD structure, architecture docs, API documentation
+
+#### Academic Classification
+
+**Primary**: Computer Science - Web Development, Real-Time Systems, Sports Technology
+
+**Educational Value**:
+- Demonstrates real-time data delivery and caching strategies (polling → WebSockets evolution)
+- Illustrates mobile-first progressive web app (PWA) development
+- Shows effective use of caching layers (Redis + React Query + CDN)
+- Exemplifies clean, performance-focused architecture (<2s load times)
+- Demonstrates external API integration with rate limit management
+- Illustrates freemium SaaS business model in sports/media sector
+- Shows scalable architecture design (vertical → horizontal scaling)
+
+**Subject Matter Areas**:
+- **Computer Science**: Full-stack development, real-time systems, caching strategies, PWA implementation, API integration, mobile-first design
+- **Software Engineering**: Performance optimization, data ingestion pipelines, RESTful API design, state management (Zustand + React Query)
+- **Database Systems**: Time-series data modeling (match results), query optimization, Redis caching, PostgreSQL for relational data
+- **Security**: JWT authentication, rate limiting, API security, HTTPS/TLS configuration, input validation
+- **Business**: Freemium SaaS model, sports/media market positioning, user acquisition strategies, ad revenue vs subscription tradeoffs
+- **Sports Technology**: Live score delivery, data accuracy requirements, multi-league tracking, sports data API integration
+
+#### Database Considerations
+
+- **Database Type**: PostgreSQL 16 (primary relational database), Redis 7.2 (caching layer)
+- **Schema Design**: Leagues (name, country, season), Teams (name, logo, venue), Matches (scores, status, date/time), Standings (position, points, wins/draws/losses), Users (Phase 2 - accounts, following)
+- **Migration Strategy**: Database migrations for schema evolution, new sport additions, feature expansions
+- **Data Persistence**: PostgreSQL for permanent match data (2 seasons hot data), Redis for live scores (30s TTL)
+- **Backup Strategy**: Automated Railway backups, 2-season data retention, archive old seasons to cold storage (Phase 3)
+- **Query Optimization**: 
+  - Indexes on match_date, league_id, status for fast match lookups
+  - Indexes on league_id, season, position for standings queries
+  - Connection pooling for concurrent requests
+  - Redis caching for live scores (90%+ cache hit rate target)
+- **Data Integrity**: Foreign key constraints (teams → leagues, matches → teams), unique constraints on external API IDs, timestamps for audit
+- **Scalability**: Connection pooling, read replicas for read-heavy queries (Phase 3), Redis cluster for distributed caching (Phase 3)
+- **Security**: Encryption at rest (Railway managed), encryption in transit (TLS 1.3), parameterized queries (SQL injection prevention), rate limiting (100 req/min)
+
+**Type**: Real-Time Sports Tracking Platform (Web + PWA)  
+**Technology**: React 18 + TypeScript + Node.js + PostgreSQL + Redis  
+**Location**: `~/Documents/packages/docs/projects/sports-results-tracker/`
+
+### 32. `social-media-manager/`
+
+**Status**: Planning (Initial Concept)  
+**Priority**: Medium  
+**Category**: Full-Stack Web Application (SaaS Platform)
+
+#### Overview
+
+Social Media Manager is a comprehensive platform to help users manage multiple social media accounts from a single unified dashboard. The platform enables post scheduling, content management, engagement monitoring, and analytics across multiple social platforms (Twitter/X, Instagram, Facebook, LinkedIn, etc.).
+
+**Target Audience**: Small business owners, entrepreneurs, social media managers, content creators  
+**Business Model**: To be determined (freemium, subscription tiers, or one-time purchase)
+
+#### Key Features (Initial Ideas)
+
+1. **Unified Dashboard**: Single interface for all social media accounts
+2. **Post Scheduling**: Schedule and publish posts across multiple platforms
+3. **Content Calendar**: Visual calendar for planning content strategy
+4. **Analytics Dashboard**: Track performance metrics across platforms
+5. **Engagement Monitoring**: Monitor comments, mentions, and messages
+6. **Content Library**: Centralized media and content management
+7. **Team Collaboration**: Multi-user support for teams and clients
+8. **Multi-Account Posting**: Post to multiple platforms simultaneously
+
+#### Value Proposition
+
+Save time and increase efficiency by managing all social media accounts from one centralized platform, eliminating the need to switch between multiple apps and websites.
+
+#### Documentation
+
+- [Initial Concept](../projects/social-media-manager/INITIAL_CONCEPT.md) - Initial project concept and ideas
+
+#### Next Steps
+
+Run comprehensive planning (`/local/plan-project social-media-manager`) to develop:
+- Full PRD with MVP definition
+- Technical architecture
+- Expert team contributions
+- Detailed feature specifications
+
+#### Academic Classification
+
+**Primary**: Computer Science - Full-Stack Web Development, SaaS Platform Development, API Integration
+
+**Educational Value** (To be determined after comprehensive planning):
+- Demonstrates OAuth integration with multiple social platforms
+- Illustrates multi-tenant SaaS architecture
+- Shows content scheduling and queue management systems
+- Exemplifies API rate limiting and quota management
+
+**Subject Matter Areas** (To be expanded):
+- **Computer Science**: Full-stack development, API integration, authentication systems, real-time updates
+- **Software Engineering**: SaaS architecture, multi-tenancy, job queuing, cron scheduling
+- **Business**: SaaS business models, social media marketing, user management
+
+**Type**: Social Media Management SaaS Platform (Web Application)  
+**Technology**: To be determined (likely full-stack with PHP/Node.js backend)  
+**Location**: `~/Documents/packages/docs/projects/social-media-manager/`
+
 ## Non-Code Directories
 
 The following directories exist in `~/Documents/` but are not code projects:
@@ -2537,7 +2731,7 @@ The following directories exist in `~/Documents/` but are not code projects:
 
 ## Summary
 
-**Total Code Projects**: 29 active projects
+**Total Code Projects**: 30 active projects
 
 1. `ulvonix/` - Social Media Bots Platform (CS: distributed systems, automation)
 2. `find-hidden-files/` - Obsidian Plugin (CS: Plugin architecture, file systems)
@@ -2568,6 +2762,7 @@ The following directories exist in `~/Documents/` but are not code projects:
 27. `packages/` - Knowledge Base (Information Science: Knowledge management)
 28. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
 29. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
+30. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
 
 **Academic Focus Areas**:
 - **Primary**: Educational Technology (`learning-games/`)

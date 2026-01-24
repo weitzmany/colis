@@ -620,7 +620,209 @@ The API Gateway Platform is an enterprise-grade, centralized API management solu
 **Technology**: Full-stack backend platform with admin dashboard  
 **Location**: `~/Documents/packages/docs/projects/api-gateway-platform/`
 
-### 10. `habit-tracker/`
+### 10. `authentication-center/`
+
+**Status**: Planning (Comprehensive PRD Complete)  
+**Priority**: Critical (Foundation for all apps)  
+**Category**: Backend Service / Microservice / Infrastructure
+
+#### Overview
+
+The Authentication Center is a production-ready, centralized authentication and authorization service that acts as the single source of truth for user identities across all applications in your ecosystem. It provides secure, scalable authentication with Single Sign-On (SSO), role-based access control, and compliance-ready audit logging.
+
+**Target Audience**: App developers integrating authentication, end users of applications, system administrators  
+**Business Model**: Internal infrastructure service (free for all your apps)
+
+#### Key Features
+
+**MVP Features (Phase 1)**:
+1. **User Registration & Login**: Email/password authentication with Argon2id hashing, email verification, rate limiting
+2. **Session Management**: JWT-based sessions with access tokens (15 min) + refresh tokens (30 days), token validation, session revocation
+3. **Basic RBAC**: Role-based access control with Admin and User roles, role assignment, permission checking
+4. **REST API**: Clean, documented REST API with OpenAPI spec, versioned endpoints, CORS support
+5. **Password Reset**: Secure email-based password reset flow with time-limited tokens
+6. **Basic Admin Panel**: Web interface for user management, user search, role assignment, session management
+
+**Post-MVP Features (Phase 2+)**:
+- OAuth 2.0 / OpenID Connect (Google, GitHub, Facebook login)
+- Multi-Factor Authentication (2FA with TOTP)
+- Advanced permission system (resource-based permissions)
+- GraphQL API
+- Audit logging and compliance reports
+- Mobile SDK (iOS, Android)
+- SSO for Enterprise (SAML, LDAP)
+- User profile management
+
+#### Tech Stack
+
+- **Backend**: Node.js 20 LTS with TypeScript, Express.js framework, Prisma ORM
+- **Database**: PostgreSQL 16 (user data, sessions, roles), Redis 7 (session cache, rate limiting)
+- **Security**: Argon2id (password hashing), JWT with RS256 (RSA signatures), AES-256 (encryption), TLS 1.3
+- **Frontend**: React 18 with TypeScript (admin panel), Vite, Tailwind CSS, React Query
+- **Infrastructure**: Docker, NGINX (reverse proxy, SSL termination), Let's Encrypt (SSL), DigitalOcean or AWS EC2
+- **Monitoring**: Winston (structured logging), health checks, UptimeRobot
+
+#### Documentation
+
+- [Documentation Index](projects/authentication-center/INDEX.md) - Complete navigation guide
+- [PRD Overview](projects/authentication-center/PRD_OVERVIEW.md) - Main requirements document with comprehensive MVP definition
+- [Architecture](projects/authentication-center/ARCHITECTURE.md) - Technical architecture and system design
+- [Expert Contributions](projects/authentication-center/EXPERTS.md) - 15 expert contributions
+
+#### Timeline
+
+- **Phase 1 (MVP)** (Weeks 1-11): Core authentication, password management, RBAC, admin panel, security testing, integration testing
+  - Weeks 1-2: Core auth (registration, login, sessions)
+  - Weeks 3-4: Password management (reset, change, validation)
+  - Weeks 5-6: RBAC system, admin panel
+  - Weeks 7-8: API documentation, integration guides
+  - Weeks 9-10: Security testing, integration testing
+  - Week 11: Launch with 2-3 pilot apps
+- **Phase 2** (Weeks 12-16): OAuth 2.0, Multi-Factor Authentication, audit logging, user profile management
+- **Phase 3** (Weeks 17-20): GraphQL API, advanced permissions, mobile SDK, webhook system
+- **Phase 4** (Weeks 21-28): Enterprise SSO (SAML, LDAP), team/organization support, custom branding
+
+**Target Launch**: March 2026 (MVP launch with 3 pilot apps)
+
+#### Business Value
+
+**Problems Solved**:
+- **Eliminates Duplication**: Every app rebuilds auth from scratch (2-4 weeks per app)
+- **Enhances Security**: Centralized security expertise, automatic security patch deployment
+- **Improves UX**: Single sign-on (SSO) across all apps, one account for all services
+- **Simplifies Compliance**: GDPR, CCPA compliance in one place, centralized audit logging
+- **Reduces Maintenance**: One system to monitor and maintain, centralized user management
+
+**Quantitative Value**:
+- **Time Savings**: Save 2-4 weeks development per app × 10 apps = 20-40 weeks saved
+- **Cost Savings**: Avoid $1,000-$2,000/month in Auth0 fees (for 10 apps @ $100-$200/month each)
+- **Integration Speed**: <4 hours to integrate authentication (vs 2-4 weeks building from scratch)
+- **Security**: Zero critical vulnerabilities (regular security audits, centralized patching)
+- **Performance**: <100ms average API response time, 99.9% uptime
+
+**Architectural Justification**:
+
+This authentication center meets multiple **Architectural Override criteria**, making it REQUIRED to be centralized:
+
+✅ **Centrally Deployed**: Single authentication service that all apps connect to  
+✅ **Security-Critical**: Authentication vulnerabilities affect all applications  
+✅ **Single Source of Truth**: User accounts, sessions, permissions managed centrally  
+✅ **Synchronized Updates Required**: Security patches must deploy to all apps together  
+✅ **Compliance Required**: GDPR, CCPA compliance must be consistent across all apps
+
+**Conclusion**: This MUST be a centralized service for security and compliance reasons.
+
+#### Applications Using This Service
+
+**Current Projects (Planned Integration)**:
+- Chore Allowance Manager
+- Vehicle Maintenance Tracker
+- Learning Games Platform
+- Home Maintenance Tracker
+- Financial Goal Saver
+- Habit Tracker
+- Energy Usage Tracker
+- Meal Planner Grocery
+- [20+ other projects will integrate]
+
+**Benefits for Each App**:
+- ✅ No need to build authentication from scratch
+- ✅ Single sign-on across all apps
+- ✅ Consistent security model
+- ✅ Easy user management
+- ✅ Reduced development time
+- ✅ Centralized compliance
+
+#### Expert Team (15 Experts)
+
+- **Product**: Patricia Martinez (Product Manager) - MVP definition, prioritization, business decisions, feature roadmap
+- **Architecture**: Marcus Johnson (Architecture) - System architecture, scalability planning, technology stack
+- **Backend**: Samuel Rodriguez (Backend) - Service layer, business logic, API design
+- **Security**: Ryan Kim (Security) - Authentication security, threat modeling, encryption, STRIDE analysis
+- **Database**: Benjamin Lee (Database) - Schema design, optimization, data modeling
+- **API Design**: Emily Chen (API Design) - REST API structure, OpenAPI spec, developer experience
+- **Compliance**: Constance White (Compliance) - GDPR, CCPA, data protection, legal compliance
+- **Performance**: James Martinez (Performance) - Caching strategy, query optimization, response time targets
+- **DevOps**: David Cooper (DevOps) - Docker, CI/CD, deployment, monitoring, disaster recovery
+- **UI/UX**: Daisy Thompson (UI/UX) - Admin panel interface and user experience
+- **Accessibility**: Allison Foster (Accessibility) - WCAG 2.1 AA compliance for admin panel
+- **Documentation**: Dorothy Clark (Documentation) - PRD structure, clarity, completeness
+- **Testing**: Robert Brown (Testing) - Testing strategy, security testing, penetration testing
+- **Cloud Infrastructure**: Sarah Kim (Cloud Infrastructure) - Cloud platform, infrastructure recommendations
+- **Observability**: Kevin Martinez (Observability) - Logging, monitoring, metrics, health checks
+
+**All experts contributed to initial planning**
+
+#### Academic Classification
+
+**Primary**: Computer Science - Security, Authentication Systems, Distributed Systems, Backend Infrastructure
+
+**Educational Value**:
+- Demonstrates modern authentication patterns (JWT with RS256, refresh tokens, session management)
+- Illustrates password security best practices (Argon2id hashing, rate limiting, password reset flows)
+- Shows role-based access control (RBAC) implementation
+- Exemplifies RESTful API design with security in mind (authentication, authorization, validation)
+- Demonstrates caching strategies (Redis for session cache, rate limiting, token blacklist)
+- Shows microservice architecture (centralized authentication service consumed by multiple apps)
+- Illustrates security-first development (encryption at rest/transit, secure defaults, defense in depth)
+
+**Subject Matter Areas**:
+- **Computer Science**: Authentication protocols, session management, token-based authentication, cryptographic hashing
+- **Security**: Password security (Argon2id), JWT security (RS256 signatures), encryption (AES-256, TLS 1.3), OWASP Top 10
+- **Software Engineering**: Microservice architecture, API design, middleware patterns, rate limiting algorithms
+- **Infrastructure**: Docker containerization, NGINX reverse proxy, SSL/TLS configuration, load balancing
+- **Compliance**: GDPR compliance (data protection, user rights), CCPA compliance (data deletion, export)
+
+#### Database Considerations
+
+- **Database Type**: PostgreSQL 16 (relational database for user data, sessions, roles), Redis 7 (in-memory cache for session cache, rate limiting)
+- **Schema Design**: 
+  - `users` table (user accounts, email, password hash, email verification, active status, role)
+  - `sessions` table (active sessions, refresh tokens, expiry, IP address, user agent)
+  - `roles` table (user roles, permissions)
+  - `permissions` table (role permissions)
+  - `password_resets` table (password reset tokens, expiry)
+  - `email_verifications` table (email verification tokens, expiry)
+- **Migration Strategy**: Prisma migrations for schema versioning, rollback support, automated migrations in CI/CD
+- **Data Persistence**: PostgreSQL with automated daily backups, 30-day retention, encrypted backups, off-site storage
+- **Backup Strategy**: Automated daily backups (midnight UTC), point-in-time recovery, monthly restore tests, disaster recovery plan
+- **Query Optimization**: 
+  - Indexes on frequently queried fields (`users.email`, `users.role_id`, `sessions.user_id`, `sessions.refresh_token`)
+  - Connection pooling (Prisma default: 10 connections, PgBouncer for additional pooling post-MVP)
+  - Redis caching for token validation (15 min TTL), session data caching
+- **Data Integrity**: Foreign key constraints, unique constraints on email, check constraints for data validation, transaction management
+- **Scalability**: 
+  - Connection pooling for PostgreSQL
+  - Read replicas for read-heavy workloads (post-MVP)
+  - Redis cluster for distributed caching (post-MVP)
+  - Horizontal scaling with multiple app instances + load balancer
+- **Security**: 
+  - Argon2id password hashing (OWASP recommended, high cost parameters)
+  - Encryption at rest (PostgreSQL TDE, AES-256 for sensitive fields)
+  - Encryption in transit (TLS 1.3)
+  - Token blacklist in Redis (revoked tokens)
+  - Secrets management (environment variables, secure secret storage)
+
+#### Success Criteria
+
+**MVP Success Criteria**:
+- **User Adoption**: 3+ apps integrated within first month, 100+ end users
+- **Performance**: <100ms average API response time, 99.9% uptime
+- **Security**: Zero critical vulnerabilities, passed security audit
+- **Integration Time**: Developers integrate basic auth in <4 hours
+- **User Experience**: Users can register, login, reset password without issues
+
+**Post-MVP Goals**:
+- 10+ apps integrated within 6 months
+- 1000+ end users within first year
+- <50ms token validation (cached)
+- Support OAuth 2.0 login (Google, GitHub, Facebook)
+- Multi-Factor Authentication (2FA) available
+
+**Technology**: Backend service (Node.js + TypeScript + Express) with React admin panel  
+**Location**: `~/Documents/packages/docs/projects/authentication-center/`
+
+### 11. `habit-tracker/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -729,7 +931,7 @@ Habit Tracker (HabitFlow) is a customer-facing full-stack web and mobile applica
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/habit-tracker/`
 
-### 11. `home-inventory-manager/`
+### 12. `home-inventory-manager/`
 - **Type**: Home Inventory Application
 - **Technology**: 
   - Backend: PHP (Slim framework), Composer
@@ -757,7 +959,7 @@ Habit Tracker (HabitFlow) is a customer-facing full-stack web and mobile applica
   - Computer Science: Data modeling, search/filtering, API design
   - Software Engineering: UX for organization tools
 
-### 12. `home-maintenance-tracker/`
+### 13. `home-maintenance-tracker/`
 
 **Status**: Planning  
 **Priority**: Medium  
@@ -833,7 +1035,7 @@ Home Maintenance Tracker helps homeowners and renters proactively manage propert
 - **Software Engineering**: UX for maintenance workflows, cross-platform development, CI/CD pipelines
 - **Business**: Freemium business models, user retention strategies, SaaS pricing
 
-### 13. `medical-records-manager/`
+### 14. `medical-records-manager/`
 
 **Status**: Planning  
 **Priority**: High  
@@ -983,7 +1185,7 @@ Home Maintenance Tracker helps homeowners and renters proactively manage propert
   - Computer Science: Access control, data security, API design
   - Software Engineering: UX for sensitive data
 
-### 14. `family-care-coordinator/`
+### 15. `family-care-coordinator/`
 - **Type**: Family Care Coordination Application
 - **Technology**: 
   - Backend: PHP (Slim framework), Composer
@@ -1011,7 +1213,7 @@ Home Maintenance Tracker helps homeowners and renters proactively manage propert
   - Computer Science: Collaboration systems, access control
   - Software Engineering: UX for coordination tools
 
-### 15. `travel-itinerary-wallet/`
+### 16. `travel-itinerary-wallet/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -1122,7 +1324,7 @@ Travel Itinerary & Document Wallet (TripVault) is a customer-facing full-stack w
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/travel-itinerary-wallet/`
 
-### 16. `energy-usage-tracker/`
+### 17. `energy-usage-tracker/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -1230,34 +1432,6 @@ Energy Usage Tracker (EnergyWise) is a customer-facing full-stack web and mobile
 **Type**: Energy & Utilities Application  
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/energy-usage-tracker/`
-
-### 17. `appointment-queue-manager/`
-- **Type**: Appointment & Queue Application
-- **Technology**: 
-  - Backend: PHP (Slim framework), Composer
-  - Frontend: Angular
-  - Database: MySQL (via Docker)
-  - Mobile: Capacitor (iOS & Android)
-- **Location**: `~/Documents/appointment-queue-manager/`
-- **Description**: Appointment scheduling with live queue updates and wait‑time alerts
-- **Structure**:
-  - `backend/` - Scheduling and queue API
-  - `frontend/` - Booking and staff dashboard
-  - `mobile/` - Customer updates and reminders
-  - `docs/` - Project documentation
-- **Key Features**:
-  - Appointment booking
-  - Live queue management
-  - Wait time notifications
-  - Staff scheduling
-- **Status**: Planned
-- **Academic Classification**: Computer Science - Web Development, Human-Computer Interaction
-- **Educational Value**:
-  - Demonstrates real‑time queue systems
-  - Illustrates scheduling workflows and notifications
-- **Subject Matter Areas**:
-  - Computer Science: Real‑time systems, scheduling, API design
-  - Software Engineering: UX for booking and wait times
 
 ### 18. `vehicle-maintenance-tracker/`
 - **Type**: Vehicle Maintenance Application (AutoCare)
@@ -1878,7 +2052,7 @@ Subscription & Bills Manager (working name: BillGuard) is a customer-facing full
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/subscription-bill-manager/`
 
-### 25. `pet-care-manager/`
+### 24. `pet-care-manager/`
 
 **Status**: Planning (PRD + Architecture Complete)  
 **Priority**: High  
@@ -1980,7 +2154,7 @@ Pet Care Manager is a comprehensive, customer-facing full-stack web and mobile a
 - **Scalability**: Read replicas for read-heavy workloads (Phase 2+), connection pooling for concurrent users
 - **Security**: Encryption at rest (AES-256), encryption in transit (TLS 1.2/1.3), GDPR/CCPA compliance for health data
 
-### 26. `financial-goal-saver/`
+### 25. `financial-goal-saver/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: High  
@@ -2091,7 +2265,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/financial-goal-saver/`
 
-### 27. `price-drop-tracker/`
+### 26. `price-drop-tracker/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -2207,7 +2381,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/price-drop-tracker/`
 
-### 28. `packages/`
+### 27. `packages/`
 - **Type**: Documentation/Knowledge Base (Current Workspace)
 - **Technology**: Markdown documentation
 - **Location**: `~/Documents/packages/`
@@ -2230,7 +2404,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
   - Computer Science: Project management, software documentation, design patterns
   - Education: Learning resource organization, curriculum design (if applicable)
 
-### 29. `workspace-documentation-hub/`
+### 28. `workspace-documentation-hub/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: High  
@@ -2321,116 +2495,149 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Next.js + TypeScript + Automated Data Extraction  
 **Location**: `~/Documents/packages/docs/projects/workspace-documentation-hub/`
 
-### 30. `tai-chi-lessons/`
+### 29. `tai-chi-lessons/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
-**Category**: Full-Stack Web + Mobile Application (Customer-Facing)
+**Category**: AI Video Generation Web Application
 
 #### Overview
 
-Tai Chi Lessons Platform is an online platform for learning and practicing tai chi through video lessons, guided practice sessions, and progress tracking. The platform makes this ancient martial art accessible to students of all levels, addressing barriers like limited access to qualified instructors, inflexible class schedules, and lack of structured learning paths.
+Tai Chi Lessons is an **AI-powered video generation engine** that creates beginner-level Tai Chi lessons with Hebrew narration on demand. Unlike traditional video platforms with pre-recorded content, this system generates fresh video lessons by breaking them into short scenes (5-10 seconds each), using AI video providers, and stitching them together with synchronized Hebrew audio narration.
 
-**Target Audience**: Adults aged 30-70 seeking stress relief, gentle exercise, or mindfulness practice; martial arts practitioners; seniors  
-**Business Model**: Freemium (Free tier with 5 beginner lessons; Premium: $19.99/month or $149.99/year; Premium+: $39.99/month)
+**Target Audience**: Hebrew-speaking individuals with no prior Tai Chi experience  
+**Business Model**: Free for MVP (proof-of-concept); Post-MVP freemium (Free: 1 video/week, Premium: $9.99/month unlimited)
 
-#### Key Features
+**Key Differentiator**: Hebrew-first design with separate TTS generation (not relying on video providers for Hebrew speech)
 
-1. **Video Lesson Library**: 8-week beginner course, Yang style content, HD streaming with multi-angle views
-2. **User Accounts & Progress Tracking**: Personal dashboard, progress tracking, bookmarking, practice history and streaks
-3. **Practice Sessions**: Guided practice, solo practice mode, form practice at different speeds, breathing exercises
-4. **Search & Navigation**: Browse by level, search by keyword/duration/instructor, featured content recommendations
-5. **Interactive Features** (Phase 2): AI form analysis, live classes, Q&A sessions, progress assessments
-6. **Community Features** (Phase 2): Discussion forums, social sharing, practice groups, challenges
-7. **Advanced Content** (Phase 3): Multiple styles (Chen, Wu, Sun), weapons forms, push hands, martial applications, qigong
-8. **Personalization**: Learning paths based on goals, adaptive recommendations, customizable routines, offline downloads
+#### Key Features (MVP)
+
+1. **Simple Video Generation UI**: One-button interface ("Generate Tai Chi Lesson"), progress indicator, video player
+2. **Scene-Based Video Generation**: Break 5-minute lesson into 5 short scenes (5-10s each), generate clips using AI video providers
+3. **Hebrew TTS Narration**: Separate Hebrew audio generation (Google Cloud TTS or Azure TTS), synchronized audio overlay using ffmpeg
+4. **Async Job Processing**: Background job queue processes generation (5-10 minutes), progress tracking (0-100%), job status API
+5. **Video Stitching Pipeline**: ffmpeg-based clip concatenation, audio overlay, single MP4 output to object storage (S3/R2)
+
+**Post-MVP Features** (Phase 2+):
+- User authentication and video history
+- Multiple lesson types (Lessons 2-5)
+- Video customization (duration, pace, environment)
+- Difficulty levels (beginner, intermediate, advanced)
+- Download and save videos
+- Additional languages (English, Arabic, Russian)
 
 #### Tech Stack
 
-- **Frontend**: React/Next.js for web, React Native for mobile apps (Phase 2)
-- **Backend**: Node.js/Express or Python/Django, RESTful API
-- **Database**: PostgreSQL or MongoDB
-- **Video Streaming**: AWS S3 + CloudFront or Vimeo API
-- **Authentication**: OAuth 2.0, JWT tokens
-- **Payment**: Stripe integration
-- **Infrastructure**: Cloud-based (AWS), Docker containerization
+- **Frontend**: Angular 18, TypeScript, RxJS (polling), Video.js (player)
+- **Backend**: PHP 8.2+ (Slim Framework 4), REST API, async job queue (Redis-backed)
+- **Database**: MySQL 8+ or PostgreSQL 14+ (video_jobs, video_clips, audio_narrations)
+- **Video Processing**: ffmpeg 6+ (clip stitching, audio overlay)
+- **AI Services**: 
+  - Video generation provider (abstracted interface with fallback)
+  - Hebrew TTS (Google Cloud TTS or Azure TTS)
+- **Object Storage**: S3-compatible (AWS S3, Cloudflare R2, MinIO)
+- **Infrastructure**: DigitalOcean/AWS/Hetzner (4+ CPU, 8+ GB RAM, 50+ GB disk)
 
 #### Documentation
 
-- [PRD](projects/tai-chi-lessons/PRD.md) - Complete product requirements document with MVP definition
+- [Documentation Index](../projects/tai-chi-lessons/INDEX.md) - Complete navigation guide
+- [PRD Overview](../projects/tai-chi-lessons/PRD_OVERVIEW.md) - Product requirements with comprehensive MVP definition
+- [Architecture](../projects/tai-chi-lessons/ARCHITECTURE.md) - System architecture and video pipeline design
+- [Expert Contributions](../projects/tai-chi-lessons/EXPERTS.md) - 15 expert reviews and sign-offs
+
+**Key Documentation**:
+- [Video Generation Pipeline](../projects/tai-chi-lessons/features/video-generation-pipeline.md) - Scene-based generation, lesson structure, prompt engineering
+- [Hebrew TTS Integration](../projects/tai-chi-lessons/features/hebrew-tts-integration.md) - Separate audio generation strategy
+- [API Design](../projects/tai-chi-lessons/technical/api-design.md) - REST endpoints, job lifecycle
+- [FFmpeg Pipeline](../projects/tai-chi-lessons/technical/ffmpeg-pipeline.md) - Video stitching, audio overlay
 
 #### Timeline
 
-- **Phase 1 (MVP)** (Months 1-3): Beginner Yang-style content (50 hours), user accounts, video player, progress tracking, payment integration, basic marketing website
-- **Phase 2 (Launch & Growth)** (Months 4-6): Public launch, user feedback iteration, intermediate content expansion, onboarding improvements
-- **Phase 3 (Scale & Expand)** (Months 7-12): Additional tai chi style (Chen/Wu), live classes, community features, mobile apps
-- **Phase 4 (Advanced)** (Year 2): AI form analysis, weapons forms, international expansion, corporate wellness partnerships
+- **Phase 1 (MVP)** (Weeks 1-11): 
+  - Week 1-2: Backend API, job queue, database schema
+  - Week 3-4: Video provider integration, scene generation
+  - Week 5-6: Hebrew TTS integration, ffmpeg pipeline
+  - Week 7: Frontend UI, job polling
+  - Week 8: End-to-end testing, bug fixes
+  - Week 9-10: Internal testing (10+ video generations)
+  - Week 11: Alpha launch (internal)
+- **Phase 2 (Enhancement)** (Weeks 12-20): User authentication, multiple lesson types, video customization
+- **Phase 3 (Advanced)** (Weeks 21-30): Difficulty levels, download/save, cost optimization (caching), analytics dashboard
+- **Phase 4 (Expansion)**: Additional languages, mobile app, public API, instructor customization
 
-**Target Launch**: Month 4 (Public Launch)
+**Target Launch**: Week 11 (Internal Alpha)
 
 #### Business Value
 
-- **Market Opportunity**: Growing wellness and mindfulness market, aging population seeking low-impact exercise
-- **User Value**: Accessible tai chi instruction regardless of location, flexible scheduling, structured learning paths, progress tracking
-- **Revenue Model**: Freemium SaaS targeting $2K MRR (Month 3), $9K MRR (Month 6), $30K MRR (Month 12)
-- **User Retention**: Habit formation through practice streaks, gamification, community engagement
-- **Success Metrics**: 1,000 users (Month 3), 3,000 (Month 6), 10,000 (Month 12), 10-15% free-to-paid conversion
+- **Market Opportunity**: Hebrew-speaking market with no existing Hebrew Tai Chi content, on-demand video generation (not static library)
+- **User Value**: Clear Hebrew narration for learning, slow beginner-safe movements, on-demand generation, accessible from home
+- **Revenue Model** (Post-MVP): Freemium (Free: 1 video/week, Premium: $9.99/month unlimited, Premium+: $19.99/month with customization)
+- **Cost Control**: Scene-based generation (<$5 per video), prompt caching (Phase 3 reduces to <$2), provider fallback for reliability
+- **Success Metrics** (MVP): 
+  - Generation success: 99% job completion rate
+  - Quality: 90% user satisfaction with movement clarity, 85% Hebrew comprehension rate
+  - Performance: <10 minute generation time, <$5 average cost per video
+  - User adoption: 10 successful generations in first week
 
-#### Expert Team (Needed)
+#### Expert Team
 
-- **Product**: Patricia Martinez (Product Manager) - PRD creation, MVP definition, prioritization
-- **Market Research**: Dr. Sarah Johnson (Market Research) - Competitive analysis, pricing strategy, target audience validation
-- **Architecture**: Marcus Johnson (Architecture) - System architecture, video streaming infrastructure, scalability
-- **Backend**: Samuel Rodriguez (Backend) - API design, authentication, video delivery, database operations
-- **Frontend**: Thomas Anderson (Frontend) - React/Next.js, video player UI, dashboard implementation
-- **Mobile**: Michael Brown (Mobile) - React Native apps (Phase 2), offline content, push notifications
-- **UI/UX**: Daisy Thompson (UI/UX) - User flows, video player UX, practice session design
-- **Database**: Benjamin Lee (Database) - Schema design, query optimization, content metadata management
-- **API Design**: Emily Chen (API Design) - RESTful patterns, video streaming API, progress tracking endpoints
-- **Security**: Ryan Kim (Security) - Authentication, payment security, content protection (DRM)
-- **Performance**: James Martinez (Performance) - Video streaming optimization, CDN configuration, adaptive bitrate
-- **DevOps**: David Cooper (DevOps) - CI/CD, video hosting infrastructure, deployment automation
-- **Observability**: Kevin Martinez (Observability) - Logging, monitoring, video analytics
-- **Copywriter**: Olivia Martinez (Copywriter) - Platform naming, marketing copy, value proposition
-- **Documentation**: Dorothy Clark (Documentation) - Documentation structure, completeness
+- **Product**: Patricia Martinez (Product Manager) - MVP definition, cost-aware prioritization, Hebrew-first strategy
+- **Architecture**: Marcus Johnson (Architecture) - Scene-based video pipeline, provider abstraction, ffmpeg orchestration
+- **Backend**: Samuel Rodriguez (Backend) - PHP/Slim API, job lifecycle, provider interface, error handling
+- **Frontend**: Thomas Anderson (Frontend) - Angular UI, RxJS polling, video player integration
+- **Database**: Benjamin Lee (Database) - Schema design (video_jobs, video_clips, audio_narrations), indexes
+- **DevOps**: David Cooper (DevOps) - ffmpeg installation, object storage, worker deployment, temp file management
+- **API Design**: Emily Chen (API Design) - REST endpoints, job status API, signed URLs
+- **i18n**: Lisa Garcia (i18n) - Hebrew TTS strategy, narration text, multi-language planning
+- **Performance**: James Martinez (Performance) - Generation time optimization, caching strategy (Phase 3)
+- **Security**: Ryan Kim (Security) - API key security, rate limiting, HTTPS enforcement
+- **UI/UX**: Daisy Thompson (UI/UX) - Simple one-button UI, progress indicator, video player
+- **Accessibility**: Allison Foster (Accessibility) - Video player accessibility, keyboard navigation, WCAG compliance
+- **Observability**: Kevin Martinez (Observability) - Job tracking, error monitoring, logging strategy
+- **Copywriter**: Olivia Martinez (Copywriter) - Hebrew narration text, beginner-friendly content
+- **Documentation**: Dorothy Clark (Documentation) - PRD structure, documentation organization
 
 #### Academic Classification
 
-**Primary**: Computer Science - Web Development, Video Streaming Technology, Health & Wellness Technology
+**Primary**: Computer Science - AI Video Generation, Asynchronous Processing, Multimedia Systems, Internationalization
 
 **Educational Value**:
-- Demonstrates full-stack architecture with video streaming (Next.js, Node.js/Django, React Native, PostgreSQL)
-- Illustrates video delivery optimization (CDN, adaptive bitrate, multi-angle views)
-- Shows progress tracking and gamification mechanics for behavior change
-- Exemplifies freemium SaaS business model in wellness sector
-- Demonstrates content management system for educational video content
-- Illustrates community features and social engagement patterns
+- Demonstrates AI video generation pipeline (scene-based approach overcomes provider limitations)
+- Illustrates async job processing with worker queues and progress tracking
+- Shows provider abstraction pattern (swappable AI video providers with fallback)
+- Exemplifies ffmpeg-based multimedia processing (clip stitching, audio overlay)
+- Demonstrates separate TTS strategy for internationalization (Hebrew-first design)
+- Shows cost-aware architecture (scene-based generation controls costs, caching reduces costs)
 
 **Subject Matter Areas**:
-- **Computer Science**: Full-stack development, video streaming, CDN optimization, API design, mobile UX, content delivery
-- **Software Engineering**: Video player implementation, progress tracking systems, modular architecture, microservices patterns
-- **Database Systems**: Content metadata management, user progress storage, query optimization for video content
-- **Security**: OAuth 2.0 authentication, payment processing (Stripe PCI compliance), content protection (DRM), data encryption
-- **Business**: Freemium SaaS model, wellness market positioning, subscription management, content monetization
-- **Health & Wellness**: Mindfulness practice platforms, exercise instruction systems, senior-friendly UX design
+- **Computer Science**: AI video generation, async job processing, provider abstraction, REST API design, polling patterns
+- **Software Engineering**: Video pipeline orchestration, scene-based generation, error handling with retries, modular provider interface
+- **Database Systems**: Job state management, scene-level tracking, progress calculation, status transitions
+- **Multimedia Processing**: ffmpeg video stitching, audio overlay, format conversion, temp file management
+- **Internationalization**: Separate Hebrew TTS generation, language-agnostic video generation, multi-language support planning
+- **Performance Optimization**: Prompt caching, provider selection, parallel generation (Phase 4), cost optimization
+- **Security**: API key management, rate limiting, HTTPS/TLS, input validation
 
 #### Database Considerations
 
-- **Database Type**: PostgreSQL 16 (relational database for structured content and user data) or MongoDB (flexible schema for content metadata)
-- **Schema Design**: Users, lessons (videos), courses, progress tracking, practice sessions, bookmarks, subscriptions, instructors
-- **Migration Strategy**: Database migrations for schema evolution, content updates, new feature additions
-- **Data Persistence**: Persistent storage for user data, progress tracking, video metadata with automated backups
-- **Backup Strategy**: Automated daily backups for user data, separate backup for video content metadata, RTO 4 hours, RPO 24 hours
-- **Query Optimization**: Indexes on user_id, lesson_id, course_id, completion status; caching for frequently accessed content; pagination for lesson libraries
-- **Data Integrity**: Foreign key constraints, unique constraints for user progress records, timestamps for tracking
-- **Scalability**: Read replicas for read-heavy video browsing, connection pooling, CDN for video content delivery
-- **Security**: Encryption at rest (user data, payment info), encryption in transit (TLS 1.3), GDPR compliance, secure video content delivery (pre-signed URLs or DRM)
+- **Database Type**: MySQL 8+ or PostgreSQL 14+ (relational database for job state, scene tracking)
+- **Schema Design**: 
+  - `video_jobs`: Job state (queued → generating_clips → generating_audio → stitching → completed/failed)
+  - `video_clips`: Scene-level clip tracking (5 clips per job, provider task IDs, clip URLs, prompts)
+  - `audio_narrations`: Hebrew TTS audio tracking (narration text, audio URLs, duration)
+- **Migration Strategy**: Version-controlled migrations for schema evolution, new providers, additional languages
+- **Data Persistence**: Job state persistence, scene status transitions, provider metadata (JSON), retry tracking
+- **Backup Strategy**: Automated backups for job history, error logs; temporary files deleted after stitching
+- **Query Optimization**: Indexes on job_id + scene_index, status fields (frequent queries), created_at for history
+- **Data Integrity**: Foreign key constraints (clips/audio → jobs), ENUM status types for safety, timestamps for tracking
+- **Scalability**: Single server MVP (10 concurrent jobs), dedicated worker Phase 2, worker pool Phase 3
+- **Security**: API keys in environment variables (not database), rate limiting per IP, HTTPS for all API requests
 
-**Type**: Online Learning Platform (Wellness & Mindfulness)  
-**Technology**: Full-stack web + mobile + video streaming  
+**Type**: AI Video Generation Engine (Educational Wellness)  
+**Technology**: PHP backend + Angular frontend + AI providers + ffmpeg  
 **Location**: `~/Documents/packages/docs/projects/tai-chi-lessons/`
 
-### 31. `sports-results-tracker/`
+### 30. `sports-results-tracker/`
 
 **Status**: Planning (MVP Definition Complete)  
 **Priority**: Medium  
@@ -2558,7 +2765,7 @@ Sports Results Tracker is a fast, mobile-first platform for tracking soccer resu
 **Technology**: React 18 + TypeScript + Node.js + PostgreSQL + Redis  
 **Location**: `~/Documents/packages/docs/projects/sports-results-tracker/`
 
-### 32. `social-media-manager/`
+### 31. `social-media-manager/`
 
 **Status**: Planning (Initial Concept)  
 **Priority**: Medium  
@@ -2616,6 +2823,198 @@ Run comprehensive planning (`/local/plan-project social-media-manager`) to devel
 **Type**: Social Media Management SaaS Platform (Web Application)  
 **Technology**: To be determined (likely full-stack with PHP/Node.js backend)  
 **Location**: `~/Documents/packages/docs/projects/social-media-manager/`
+
+### 32. `colis-company-showcase/`
+
+**Status**: Planning  
+**Priority**: High  
+**Category**: Full-Stack Web Application (Marketing Website + CMS)
+
+#### Overview
+
+Colis Company Showcase is a professional marketing and portfolio website designed to present the company's services, projects, team, and expertise to potential clients. The platform serves as the primary digital presence for client acquisition and business development, featuring a custom CMS for content management.
+
+**Target Users**: Business decision-makers, potential clients seeking software development services  
+**Business Model**: Marketing/lead generation platform (not revenue-generating itself, but drives client acquisition)
+
+#### Key Features
+
+1. **Company Overview**: Professional company presentation with history, mission, and values
+2. **Project Portfolio Showcase**: Dynamic project grid with all company projects, integrated with `docs/projects/` directory
+3. **Team/Staff Profiles**: Staff member profiles with expertise, roles, and photos
+4. **Services Pages**: Detailed service offerings and technical capabilities
+5. **Blog/News System** (Post-MVP): Content management for insights and updates
+6. **Client Testimonials** (Post-MVP): Social proof and success stories
+7. **Custom CMS**: Content management system for easy updates without developer intervention
+8. **Contact Form**: Lead capture with email notifications
+9. **SEO Optimization**: Search-optimized for client discovery
+
+#### MVP Definition
+
+**Core Problem**: Potential clients cannot discover, evaluate, or contact the company for development services.
+
+**Core User**: Business decision-makers seeking software development partners.
+
+**Core Value**: Professional showcase that builds trust and captures qualified leads.
+
+**MVP Features** (6 essential features):
+1. Company Overview Page
+2. Project Portfolio Showcase (integrated with `docs/projects/`)
+3. Services Page
+4. Team Profiles Page
+5. Contact Form & Information
+6. Basic CMS for Content Management
+
+**MVP Timeline**: 8 weeks development + 1 week testing = 9 weeks total
+
+**Success Metrics**:
+- 500+ unique visitors per month
+- 20+ contact form submissions per month
+- 5% conversion rate (visitors to leads)
+- <2s page load time
+- Top 10 ranking for target keywords (6 months)
+
+#### Value Proposition
+
+- Professional showcase of company expertise and capabilities
+- Transparent portfolio demonstrating successful project delivery
+- Easy-to-navigate presentation of services and team
+- SEO-optimized for client discovery
+- CMS-powered for easy content updates without developer dependency
+
+#### Tech Stack
+
+**Frontend**: Angular 18 (TypeScript)  
+**Backend**: Slim PHP 4 (RESTful API)  
+**Database**: MySQL 8.0+ (production), SQLite (development)  
+**CMS**: Custom Angular-based admin panel with WYSIWYG editor  
+**Hosting**: DigitalOcean / AWS  
+**Web Server**: Nginx  
+**SSL**: Let's Encrypt  
+**CI/CD**: GitHub Actions
+
+#### Documentation
+
+- [Documentation Index](../projects/colis-company-showcase/INDEX.md) - Master overview and navigation
+- [PRD Overview](../projects/colis-company-showcase/PRD_OVERVIEW.md) - Complete product requirements with MVP definition
+- [Architecture](../projects/colis-company-showcase/ARCHITECTURE.md) - Technical architecture and system design
+- [Expert Contributions](../projects/colis-company-showcase/EXPERTS.md) - Expert reviews and sign-offs (14 experts)
+
+#### Timeline & Phases
+
+**Phase 1: MVP** (8 weeks) - Core showcase + basic CMS  
+**Phase 2: Content & Social Proof** (Weeks 10-14) - Blog system, testimonials, case studies, newsletter  
+**Phase 3: Enhancement** (Weeks 15-20) - Advanced features, i18n, analytics dashboard  
+**Phase 4: Advanced Features** (Weeks 21+) - Live chat, social media integration, client portal
+
+#### Expert Team (14 Experts)
+
+- **Product**: Patricia Martinez (Product Manager) - MVP prioritization, business strategy
+- **Architecture**: Marcus Johnson (Architecture) - System design, scalability
+- **Backend**: Samuel Rodriguez (Backend) - API design, PHP implementation
+- **Frontend**: Thomas Anderson (Frontend) - Angular architecture, CMS UI
+- **UI/UX**: Daisy Thompson (UI/UX) - User experience, portfolio presentation
+- **Database**: Benjamin Lee (Database) - MySQL schema, data modeling
+- **API Design**: Emily Chen (API Design) - RESTful API structure
+- **Security**: Ryan Kim (Security) - JWT auth, CMS security
+- **Accessibility**: Allison Foster (Accessibility) - WCAG compliance
+- **Copywriting**: Olivia Martinez (Copywriter) - Company messaging, content strategy
+- **SEO**: Amanda Davis (SEO) - Search optimization, organic traffic
+- **DevOps**: David Cooper (DevOps) - Deployment, CI/CD, hosting
+- **Code Quality**: Jessica Taylor (Code Quality) - Code standards, testing
+- **Documentation**: Dorothy Clark (Documentation) - PRD structure, clarity
+
+#### Academic Classification
+
+**Primary**: Computer Science - Full-Stack Web Development, Content Management Systems, Marketing Technology
+
+**Educational Value**:
+- Demonstrates custom CMS development with WYSIWYG editing
+- Illustrates integration between documentation (`docs/projects/`) and dynamic web application
+- Shows JWT-based authentication for admin access control
+- Exemplifies SEO optimization and client acquisition strategies
+- Demonstrates separation of public API and CMS API endpoints
+- Illustrates responsive, mobile-first web design principles
+
+**Subject Matter Areas**:
+- **Computer Science**: Full-stack development, RESTful API design, CMS architecture, authentication systems
+- **Software Engineering**: Angular + Slim PHP integration, JWT authentication, file upload handling, image optimization
+- **Database Systems**: MySQL schema design, JSON fields for flexible data, full-text search, migration strategies
+- **Security**: JWT authentication, bcrypt password hashing, SQL injection prevention, XSS prevention, CSRF protection, file upload security
+- **Business**: Client acquisition strategies, lead generation, portfolio presentation, marketing website design
+- **SEO**: Search engine optimization, meta tags, structured data (Schema.org), sitemap generation
+- **DevOps**: CI/CD with GitHub Actions, Nginx configuration, SSL/TLS setup, automated deployment
+
+#### Database Considerations
+
+- **Database Type**: MySQL 8.0+ (production relational database), SQLite (development)
+- **Schema Design**: 
+  - `projects` table: title, description, technologies (JSON), thumbnail, status, display_order, full-text search
+  - `team_members` table: name, role, bio, expertise (JSON), photo, social links, display_order
+  - `services` table: title, description, technologies (JSON), icon, display_order
+  - `contact_submissions` table: name, email, company, project_type, message, status, timestamps
+  - `users` table: username, email, password_hash (bcrypt), role, last_login
+  - `blog_posts` table (Phase 2): title, slug, content, author, category, tags (JSON), published_at
+  - `testimonials` table (Phase 2): client, position, company, testimonial, project_id, rating, photo
+- **Migration Strategy**: Version-controlled SQL migration scripts for schema evolution
+- **Data Persistence**: MySQL persistent storage, daily automated backups
+- **Backup Strategy**: Daily database backups with 30-day retention, off-server storage (S3, Dropbox)
+- **Query Optimization**: 
+  - Indexes on: slug (unique), category, status, featured, display_order for fast lookups
+  - Full-text indexes on title, description, long_description for search
+  - Prepared statements (SQL injection prevention)
+  - Connection pooling for concurrent requests
+- **Data Integrity**: Foreign key constraints, unique constraints on slugs, NOT NULL constraints
+- **Scalability**: Vertical scaling initially, horizontal scaling with load balancer (Phase 3)
+- **Security**: 
+  - Bcrypt password hashing (cost factor 12)
+  - Prepared statements (SQL injection prevention)
+  - Input validation and sanitization
+  - File upload security (type whitelist, size limits, filename sanitization)
+  - HTTPS only (TLS 1.2+)
+
+#### Integration Strategy
+
+**docs/projects/ Integration**: 
+- Database sync approach (PHP script reads `docs/projects/` directory)
+- Parses INDEX.md files for project metadata
+- Inserts/updates projects in database
+- Run via cron job (daily sync) or manual trigger
+- Performance: Better than dynamic read, enables querying and filtering
+
+**Email Integration**: 
+- SendGrid or Mailgun API for contact form submissions
+- SMTP fallback option
+- Email notifications to company email on form submission
+
+**Google Analytics Integration**: 
+- GA4 tracking for web analytics
+- Custom events for conversion tracking (contact form submissions)
+- Goal tracking for lead generation
+
+#### Performance Targets
+
+- **Page Load**: <2s desktop, <3s mobile
+- **Time to Interactive**: <3s
+- **First Contentful Paint**: <1.5s
+- **Lighthouse Score**: 90+
+- **Uptime**: 99%+
+
+#### Business Value
+
+- **Generate qualified leads**: 20+ contact form submissions per month (MVP), 50+ per month (6 months)
+- **Professional brand presence**: Trust-building through professional design and portfolio
+- **Showcase technical expertise**: Demonstrate capabilities through project showcase
+- **Build client trust**: Transparency through real projects and team profiles
+- **Demonstrate successful delivery**: Portfolio of completed projects
+
+**ROI**: Very high (ongoing lead generation with minimal direct cost - internal development)
+
+**Expected Impact**: 3-5 qualified leads per month → 20% conversion → 1 new client every 2 months → Average project value $20K-$100K+
+
+**Type**: Marketing Website + CMS (Full-Stack Web Application)  
+**Technology**: Angular 18 + Slim PHP 4 + MySQL 8.0  
+**Location**: `~/Documents/packages/docs/projects/colis-company-showcase/`
 
 ## Non-Code Directories
 
@@ -2731,7 +3130,7 @@ The following directories exist in `~/Documents/` but are not code projects:
 
 ## Summary
 
-**Total Code Projects**: 30 active projects
+**Total Code Projects**: 29 active projects
 
 1. `ulvonix/` - Social Media Bots Platform (CS: distributed systems, automation)
 2. `find-hidden-files/` - Obsidian Plugin (CS: Plugin architecture, file systems)
@@ -2749,20 +3148,21 @@ The following directories exist in `~/Documents/` but are not code projects:
 14. `family-care-coordinator/` - Family Care Coordinator (CS: collaboration, access)
 15. `travel-itinerary-wallet/` - Travel Itinerary & Document Wallet (CS: planning, alerts)
 16. `energy-usage-tracker/` - Energy Usage & Utility Optimizer (CS: analytics, alerts)
-17. `appointment-queue-manager/` - Appointment & Queue Manager (CS: scheduling, real‑time)
-18. `vehicle-maintenance-tracker/` - Vehicle Maintenance Tracker (CS: scheduling, expenses)
-19. `meal-planner-grocery/` - Meal Planner & Grocery (CS: planning, UX)
-20. `recipes/` - Recipes Platform (CS: content discovery, UX)
-21. `chore-allowance-manager/` - Chore & Allowance Manager (CS: routines, rewards)
-22. `mobile-learning-companion/` - Learning Companion Mobile App (CS: mobile UX)
-23. `subscription-bill-manager/` - Subscriptions & Bills Manager (CS: finance analytics)
-24. `pet-care-manager/` - Pet Care Manager (CS: health information systems, mobile, reminders)
-25. `financial-goal-saver/` - Financial Goal Tracker & Automated Savings (CS: FinTech, automated savings)
-26. `price-drop-tracker/` - Price Drop & Deal Tracker (CS: web scraping, scheduled jobs, e-commerce)
-27. `packages/` - Knowledge Base (Information Science: Knowledge management)
-28. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
-29. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
-30. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
+17. `vehicle-maintenance-tracker/` - Vehicle Maintenance Tracker (CS: scheduling, expenses)
+18. `meal-planner-grocery/` - Meal Planner & Grocery (CS: planning, UX)
+19. `recipes/` - Recipes Platform (CS: content discovery, UX)
+20. `chore-allowance-manager/` - Chore & Allowance Manager (CS: routines, rewards)
+21. `mobile-learning-companion/` - Learning Companion Mobile App (CS: mobile UX)
+22. `subscription-bill-manager/` - Subscriptions & Bills Manager (CS: finance analytics)
+23. `pet-care-manager/` - Pet Care Manager (CS: health information systems, mobile, reminders)
+24. `financial-goal-saver/` - Financial Goal Tracker & Automated Savings (CS: FinTech, automated savings)
+25. `price-drop-tracker/` - Price Drop & Deal Tracker (CS: web scraping, scheduled jobs, e-commerce)
+26. `packages/` - Knowledge Base (Information Science: Knowledge management)
+27. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
+28. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
+29. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
+30. `social-media-manager/` - Social Media Management Platform (CS: social technology, automation)
+31. `colis-company-showcase/` - Company Portfolio & Marketing Website (CS: full-stack web, CMS, marketing technology)
 
 **Academic Focus Areas**:
 - **Primary**: Educational Technology (`learning-games/`)

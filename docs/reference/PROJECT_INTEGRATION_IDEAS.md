@@ -2,7 +2,7 @@
 
 This document tracks project ideas that were removed from the main projects list but could be valuable as **features or integrations** in other projects.
 
-**Last Updated**: 2026-01-21
+**Last Updated**: 2026-01-25
 
 ---
 
@@ -65,6 +65,39 @@ This document tracks project ideas that were removed from the main projects list
 - Better user retention when part of a larger app (shopping, inventory, budgeting)
 - Enhances value of inventory and shopping projects with lifecycle tracking
 - Provides cross-project utility (shopping → inventory → budget)
+
+---
+
+### 3. Appointment Queue Manager
+
+**Removed Date**: 2026-01-25
+
+**Original Concept**:
+- Appointment scheduling with live queue updates
+- Wait time notifications and alerts
+- Queue management for walk-ins
+- Staff scheduling and availability
+- Real-time queue status updates
+
+**Why Removed**:
+- Very niche use case (only for businesses with appointment queues)
+- Low differentiation (better as feature in booking/scheduling apps)
+- Low retention potential (only specific business types need queue management)
+- Weak portfolio fit (low synergy with other projects)
+- Better suited as integration in broader scheduling/booking systems
+
+**Integration Opportunities**:
+- **Medical Records Manager**: Add appointment queue and wait time features
+- **Family Care Coordinator**: Schedule appointments with queue tracking
+- **Service booking apps**: Add queue management for service providers
+- **Event management platforms**: Queue management for event check-ins
+- **Business scheduling tools**: Integrate queue system into appointment booking
+
+**Value as Integration**:
+- Enhances appointment/booking systems with queue management
+- Better retention when part of broader scheduling workflow
+- Provides specialized value for healthcare, service, and event use cases
+- Natural fit for businesses that need both scheduling and queue management
 
 ---
 

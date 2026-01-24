@@ -36,8 +36,8 @@ export interface InitOptions {
   appType?: string;
   /** Overwrite existing files. Default: false */
   overwrite?: boolean;
-  /** Skip existing files (default behavior). Default: true */
-  skipExisting?: boolean;
+  /** Delete files from project that don't exist in core package. Default: false */
+  deleteOrphaned?: boolean;
   /** Skip copying rules. Default: false */
   skipRules?: boolean;
   /** Skip copying commands. Default: false */
@@ -201,27 +201,36 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
       
       result.rulesResult = await copyRules(corePackagePath, projectPath, {
         overwrite: options.overwrite,
-        skipExisting: options.skipExisting,
+        deleteOrphaned: options.deleteOrphaned,
       });
 
       // Clear the loading indicator
       process.stdout.write('\r' + ' '.repeat(20) + '\r');
 
       if (result.rulesResult.success) {
-        if (result.rulesResult.copied.length > 0) {
+        const { stats } = result.rulesResult;
+        
+        if (stats.copied > 0) {
           const expertCount = result.rulesResult.copied.filter(f => f.startsWith('experts/')).length;
           const userCount = result.rulesResult.copied.filter(f => f.startsWith('user/')).length;
-          console.log(chalk.green(`  ✓ Copied ${chalk.bold(expertCount.toString())} expert personas and ${chalk.bold(userCount.toString())} user rules`));
+          console.log(chalk.green(`  ✓ Copied ${chalk.bold(stats.copied.toString())} files (${expertCount} expert personas, ${userCount} user rules)`));
         }
-        if (result.rulesResult.skipped.length > 0) {
+        
+        if (stats.skipped > 0) {
           console.log(
-            chalk.yellow(`  ⚠ Skipped ${chalk.bold(result.rulesResult.skipped.length.toString())} existing files (use --overwrite to replace)`)
+            chalk.dim(`  ⊙ Skipped ${chalk.bold(stats.skipped.toString())} identical files (same hash)`)
+          );
+        }
+        
+        if (stats.deleted > 0) {
+          console.log(
+            chalk.yellow(`  ⚠ Deleted ${chalk.bold(stats.deleted.toString())} orphaned files`)
           );
         }
       } else {
         result.success = false;
         result.errors.push(...result.rulesResult.errors);
-        console.log(chalk.red(`  ✗ Failed to copy rules`));
+        console.log(chalk.red(`  ✗ Failed to synchronize rules`));
         result.rulesResult.errors.forEach(err => {
           console.log(chalk.red(`    • ${err}`));
         });
@@ -235,23 +244,33 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
       
       result.commandsResult = await copyCommands(corePackagePath, projectPath, {
         overwrite: options.overwrite,
-        skipExisting: options.skipExisting,
+        deleteOrphaned: options.deleteOrphaned,
       });
 
       // Clear the loading indicator
       process.stdout.write('\r' + ' '.repeat(20) + '\r');
 
       if (result.commandsResult.success) {
-        if (result.commandsResult.copied.length > 0) {
+        const { stats } = result.commandsResult;
+        
+        if (stats.copied > 0) {
           console.log(
-            chalk.green(`  ✓ Copied ${chalk.bold(result.commandsResult.copied.length.toString())} command files`)
+            chalk.green(`  ✓ Copied ${chalk.bold(stats.copied.toString())} command files`)
           );
         }
-        if (result.commandsResult.skipped.length > 0) {
+        
+        if (stats.skipped > 0) {
           console.log(
-            chalk.yellow(`  ⚠ Skipped ${chalk.bold(result.commandsResult.skipped.length.toString())} existing files (use --overwrite to replace)`)
+            chalk.dim(`  ⊙ Skipped ${chalk.bold(stats.skipped.toString())} identical files (same hash)`)
           );
         }
+        
+        if (stats.deleted > 0) {
+          console.log(
+            chalk.yellow(`  ⚠ Deleted ${chalk.bold(stats.deleted.toString())} orphaned files`)
+          );
+        }
+        
         if (result.commandsResult.excluded.length > 0) {
           console.log(
             chalk.dim(`  ⊘ Excluded ${result.commandsResult.excluded.length} local commands (packages repo only)`)
@@ -260,7 +279,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
       } else {
         result.success = false;
         result.errors.push(...result.commandsResult.errors);
-        console.log(chalk.red(`  ✗ Failed to copy commands`));
+        console.log(chalk.red(`  ✗ Failed to synchronize commands`));
         result.commandsResult.errors.forEach(err => {
           console.log(chalk.red(`    • ${err}`));
         });

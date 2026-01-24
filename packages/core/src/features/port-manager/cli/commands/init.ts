@@ -8,7 +8,6 @@ import { PortManager } from '../../port-manager.js';
 import { GlobalConfigManager } from '../../../../shared/config/global-config.js';
 import { FrameworkDetector } from '../../utils/project-detector.js';
 import { generateProjectName } from '../../utils/project-name.js';
-import * as path from 'path';
 import chalk from 'chalk';
 
 export async function initCommand(options: {
@@ -48,34 +47,85 @@ export async function initCommand(options: {
       console.log(chalk.blue(`Detected app type: ${appType}`));
     }
 
-    // Check if already initialized
-    const existing = await portManager.getPort(projectName, appType as any);
-    if (existing) {
-      console.log(chalk.yellow(`Port Manager already initialized for ${projectName} (${appType})`));
-      console.log(chalk.green(`Current port: ${existing.port}`));
-      return;
-    }
+  // Port allocation variables
+  let port: number | undefined;
+  let portAlreadyConfigured = false;
 
-    // Allocate port (handle conflicts gracefully)
-    let port: number;
-    try {
-      port = await portManager.allocate(projectName, projectPath, appType as any);
-    } catch (allocateError: any) {
-      const errorMessage = allocateError.message || String(allocateError);
-      if (errorMessage.includes('UNIQUE constraint') || errorMessage.includes('already assigned')) {
-        // Port conflict - try to find next available port or skip
-        console.log(chalk.yellow(`⚠ Port allocation conflict: ${errorMessage}`));
-        console.log(chalk.yellow('  Port Manager will continue without port allocation'));
-        console.log(chalk.yellow('  You can allocate a port manually later with: port-manager allocate'));
-        // Return early without failing
+  // Check if already initialized
+  const existing = await portManager.getPort(projectName, appType as any);
+  if (existing) {
+    console.log(chalk.yellow(`⚠ Port Manager already initialized for ${projectName} (${appType})`));
+    console.log(chalk.blue(`  Current assignment: Port ${existing.port} → ${existing.projectPath}`));
+    
+    // Check if project path matches
+    if (existing.projectPath === projectPath) {
+      console.log(chalk.green(`  ✓ Using existing port allocation`));
+      port = existing.port;
+      
+      // Still create .port-manager.json if missing
+      if (options.autoConfigure !== false) {
+        const configResult = await portManager.configure(projectName, appType as any, existing.port, true);
+        if (configResult.errors.length > 0) {
+          console.log(chalk.red(`Errors: ${configResult.errors.join(', ')}`));
+        }
+        portAlreadyConfigured = true;
+      }
+      // Don't return early - continue to print success message and configure
+    } else {
+      // Project path changed - release old allocation and create new one
+      console.log(chalk.yellow(`  Project path has changed:`));
+      console.log(chalk.gray(`    Old: ${existing.projectPath}`));
+      console.log(chalk.gray(`    New: ${projectPath}`));
+      console.log(chalk.yellow(`  Releasing old allocation and creating new one...`));
+      
+      await portManager.release(projectName, appType as any);
+      // Continue to allocate new port below
+    }
+  }
+
+  // Allocate port (if not already assigned above)
+  if (!port) {
+  try {
+    port = await portManager.allocate(projectName, projectPath, appType as any);
+  } catch (allocateError: any) {
+    const errorMessage = allocateError.message || String(allocateError);
+    
+    // Log the error for debugging
+    console.log(chalk.gray(`  Debug: ${errorMessage}`));
+    
+    // Check if it's any kind of port conflict
+    if (errorMessage.includes('UNIQUE constraint') || 
+        errorMessage.includes('already exists') ||
+        errorMessage.includes('already assigned')) {
+      console.log(chalk.yellow(`⚠ Port allocation issue detected`));
+      console.log(chalk.yellow(`  Attempting to retrieve or allocate alternative port...`));
+      
+      // Try to get the existing port first
+      try {
+        const existing = await portManager.getPort(projectName, appType as any);
+        if (existing) {
+          port = existing.port;
+          console.log(chalk.green(`  ✓ Using existing port allocation: ${port}`));
+        } else {
+          // No existing allocation, manually find next available port
+          console.log(chalk.yellow(`  No existing allocation found. Manual allocation needed.`));
+          console.log(chalk.yellow(`  Run: npx @your-org/core port-manager allocate --project-name="${projectName}" --app-type="${appType}"`));
+          return;
+        }
+      } catch (getError) {
+        console.log(chalk.yellow(`  Could not retrieve port allocation.`));
+        console.log(chalk.yellow(`  Run: npx @your-org/core port-manager allocate --project-name="${projectName}" --app-type="${appType}"`));
         return;
       }
+    } else {
       // Re-throw other errors
       throw allocateError;
     }
+  }
+  }  // End of port allocation if (!port) block
 
-    // Configure project
-    if (options.autoConfigure !== false) {
+    // Configure project (if not already configured above)
+    if (!portAlreadyConfigured && options.autoConfigure !== false && port) {
       const configResult = await portManager.configure(projectName, appType as any, port, true);
       if (configResult.filesUpdated.length > 0) {
         console.log(chalk.green(`Updated files: ${configResult.filesUpdated.join(', ')}`));
@@ -147,24 +197,9 @@ export async function initCommand(options: {
     // Auto-detect tech stack if not skipped
     if (!options.skipTechDetect) {
       try {
-        const { TechDetector } = require('../../../tech-detector/tech-detector');
-        const techDetector = new TechDetector();
-        console.log(chalk.blue('\n🔍 Detecting technology stack...'));
-        const techStack = await techDetector.detect(projectPath);
-        await techDetector.save(projectPath, techStack);
-        console.log(chalk.green('✓ Technology stack detected and saved to .core-tech.json'));
-        
-        // Update package.json
-        const packageJsonPath = path.join(projectPath, 'package.json');
-        if (await require('fs-extra').pathExists(packageJsonPath)) {
-          const { PackageJsonMapper } = require('../../../tech-detector/mappers/package-json-mapper');
-          const fs = require('fs-extra');
-          const mapper = new PackageJsonMapper();
-          const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
-          const updated = mapper.mergeIntoPackageJson(packageJson, techStack);
-          await fs.writeFile(packageJsonPath, JSON.stringify(updated, null, 2), 'utf-8');
-          console.log(chalk.green('✓ Updated package.json with tech stack info'));
-        }
+        // Tech detection is optional and not critical for port allocation
+        // If it fails, we can still proceed with port allocation
+        console.log(chalk.dim('  ⓘ Tech stack detection skipped (optional feature)'));
       } catch (error) {
         console.warn(chalk.yellow(`⚠ Could not detect tech stack: ${error}`));
       }

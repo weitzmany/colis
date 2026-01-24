@@ -3,9 +3,6 @@
  */
 
 import { DomainManager } from '../domain-manager.js';
-import { CaddyManager } from '../caddy-manager.js';
-import { HostsManager } from '../hosts-manager.js';
-import { ServiceDetector } from '../service-detector.js';
 import {
   CaddyNotInstalledError,
   DomainValidationError,

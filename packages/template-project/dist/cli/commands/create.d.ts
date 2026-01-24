@@ -8,7 +8,7 @@
  * 2. Selects and loads the appropriate template
  * 3. Allocates a port via Port Manager (if available)
  * 4. Generates project structure from template
- * 5. Links @your-org/core for Project Initialization
+ * 5. Links @colis/rig for Project Initialization
  * 6. Runs Project Initialization (rules, commands, Port Manager, colors)
  * 7. Installs dependencies (if not skipped)
  * 8. Initializes Task Manager (if not skipped)
@@ -58,6 +58,8 @@ export interface CreateOptions {
     author?: string;
     /** License type (e.g., 'MIT', 'Apache-2.0') */
     license?: string;
+    /** Use Angular CLI to generate project (default: true for Angular, false otherwise). Set to false to use templates instead. */
+    useNgCli?: boolean;
 }
 /**
  * Create a new project from a template.

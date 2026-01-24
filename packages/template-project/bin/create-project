@@ -8,6 +8,7 @@
 
 import { program } from 'commander';
 import { createCommand } from '../dist/cli/commands/create.js';
+import { updateCommand } from '../dist/cli/commands/update.js';
 
 program
   .name('create-project')
@@ -19,7 +20,7 @@ program
   .alias('new')
   .description('Create a new project')
   .argument('[project-name]', 'Project name')
-  .option('-t, --template <type>', 'Template type (angular, slim, full-stack, frontend, backend, api)', 'angular')
+  .option('-t, --template <type>', 'Template type (angular, slim, full-stack, frontend, backend, api)')
   .option('-p, --package-manager <manager>', 'Package manager (npm, yarn, pnpm)', 'npm')
   .option('--skip-deps', 'Skip dependency installation')
   .option('--skip-git', 'Skip git initialization')
@@ -31,6 +32,8 @@ program
   .option('-d, --description <text>', 'Project description')
   .option('-a, --author <name>', 'Author name')
   .option('-l, --license <type>', 'License type (MIT, Apache-2.0, etc.)')
+  .option('--use-ng-cli', 'Use Angular CLI (ng new) to generate Angular project (default for Angular)')
+  .option('--no-use-ng-cli', 'Use templates instead of Angular CLI for Angular projects')
   .action(async (projectName, options) => {
     // Ensure projectName is a string, not an object
     const name = typeof projectName === 'string' ? projectName : (projectName ? String(projectName) : undefined);
@@ -48,6 +51,25 @@ program
       description: options.description,
       author: options.author,
       license: options.license,
+      useNgCli: options.useNgCli,
+    });
+  });
+
+program
+  .command('update')
+  .description('Update an existing project (sync rules, commands, and configurations)')
+  .option('--overwrite', 'Force overwrite all files regardless of hash')
+  .option('--delete-orphaned', 'Delete files from project that no longer exist in core package')
+  .option('--skip-rules', 'Skip synchronizing rules')
+  .option('--skip-commands', 'Skip synchronizing commands')
+  .option('--check-only', 'Check what would be updated without making changes')
+  .action(async (options) => {
+    await updateCommand({
+      overwrite: options.overwrite,
+      deleteOrphaned: options.deleteOrphaned,
+      skipRules: options.skipRules,
+      skipCommands: options.skipCommands,
+      checkOnly: options.checkOnly,
     });
   });
 

@@ -16,7 +16,9 @@ export default {
     '^@core/(.*)$': '<rootDir>/src/$1',
     '^@core/shared/(.*)$': '<rootDir>/src/shared/$1',
     '^@core/features/(.*)$': '<rootDir>/src/features/$1',
-    '^(\\.{1,2}/.*)\\.js$': '$1'
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+    'inquirer': '<rootDir>/__mocks__/inquirer.ts',
+    'chalk': '<rootDir>/__mocks__/chalk.ts'
   },
   extensionsToTreatAsEsm: ['.ts'],
   transform: {

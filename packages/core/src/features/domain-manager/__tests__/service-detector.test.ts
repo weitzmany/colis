@@ -4,9 +4,10 @@
 
 import { ServiceDetector } from '../service-detector.js';
 import * as fs from 'fs-extra';
-import * as path from 'path';
 
 jest.mock('fs-extra');
+const pathExistsMock = jest.spyOn(fs, 'pathExists') as jest.MockedFunction<any>;
+const readFileMock = jest.spyOn(fs, 'readFile') as jest.MockedFunction<any>;
 
 describe('ServiceDetector', () => {
   let serviceDetector: ServiceDetector;
@@ -20,7 +21,7 @@ describe('ServiceDetector', () => {
     const projectPath = '/path/to/project';
 
     it('should detect frontend service in frontend directory', async () => {
-      (fs.pathExists as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockImplementation((filePath: string) => {
         if (filePath.includes('frontend') && filePath.endsWith('angular.json')) {
           return Promise.resolve(true);
         }
@@ -29,7 +30,7 @@ describe('ServiceDetector', () => {
         }
         return Promise.resolve(false);
       });
-      (fs.readFile as jest.Mock).mockResolvedValue('{}');
+      readFileMock.mockResolvedValue('{}');
 
       const result = await serviceDetector.detectServices(projectPath);
 
@@ -40,7 +41,7 @@ describe('ServiceDetector', () => {
     });
 
     it('should detect frontend service in web directory', async () => {
-      (fs.pathExists as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockImplementation((filePath: string) => {
         if (filePath.includes('web') && filePath.endsWith('package.json')) {
           return Promise.resolve(true);
         }
@@ -49,7 +50,7 @@ describe('ServiceDetector', () => {
         }
         return Promise.resolve(false);
       });
-      (fs.readFile as jest.Mock).mockResolvedValue(
+      readFileMock.mockResolvedValue(
         JSON.stringify({ dependencies: { react: '^18.0.0' } })
       );
 
@@ -62,7 +63,7 @@ describe('ServiceDetector', () => {
     });
 
     it('should detect backend service in backend directory', async () => {
-      (fs.pathExists as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockImplementation((filePath: string) => {
         if (filePath.includes('backend') && filePath.endsWith('package.json')) {
           return Promise.resolve(true);
         }
@@ -71,7 +72,7 @@ describe('ServiceDetector', () => {
         }
         return Promise.resolve(false);
       });
-      (fs.readFile as jest.Mock).mockResolvedValue('{}');
+      readFileMock.mockResolvedValue('{}');
 
       const result = await serviceDetector.detectServices(projectPath);
 
@@ -82,7 +83,7 @@ describe('ServiceDetector', () => {
     });
 
     it('should detect backend service in api directory', async () => {
-      (fs.pathExists as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockImplementation((filePath: string) => {
         if (filePath.includes('api') && filePath.endsWith('composer.json')) {
           return Promise.resolve(true);
         }
@@ -101,7 +102,7 @@ describe('ServiceDetector', () => {
     });
 
     it('should detect both frontend and backend services', async () => {
-      (fs.pathExists as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockImplementation((filePath: string) => {
         if (
           filePath.includes('frontend') ||
           filePath.includes('backend') ||
@@ -111,7 +112,7 @@ describe('ServiceDetector', () => {
         }
         return Promise.resolve(false);
       });
-      (fs.readFile as jest.Mock).mockResolvedValue('{}');
+      readFileMock.mockResolvedValue('{}');
 
       const result = await serviceDetector.detectServices(projectPath);
 
@@ -121,13 +122,13 @@ describe('ServiceDetector', () => {
     });
 
     it('should detect root-level Angular project', async () => {
-      (fs.pathExists as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockImplementation((filePath: string) => {
         if (filePath.endsWith('angular.json')) {
           return Promise.resolve(true);
         }
         return Promise.resolve(false);
       });
-      (fs.readFile as jest.Mock).mockResolvedValue('{}');
+      readFileMock.mockResolvedValue('{}');
 
       const result = await serviceDetector.detectServices(projectPath);
 
@@ -137,13 +138,13 @@ describe('ServiceDetector', () => {
     });
 
     it('should detect port from angular.json', async () => {
-      (fs.pathExists as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockImplementation((filePath: string) => {
         if (filePath.endsWith('angular.json')) {
           return Promise.resolve(true);
         }
         return Promise.resolve(false);
       });
-      (fs.readFile as jest.Mock).mockImplementation((filePath: string) => {
+      readFileMock.mockImplementation((filePath: string) => {
         if (filePath.endsWith('angular.json')) {
           return Promise.resolve(
             JSON.stringify({
@@ -170,13 +171,13 @@ describe('ServiceDetector', () => {
     });
 
     it('should detect port from package.json scripts', async () => {
-      (fs.pathExists as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockImplementation((filePath: string) => {
         if (filePath.endsWith('package.json')) {
           return Promise.resolve(true);
         }
         return Promise.resolve(false);
       });
-      (fs.readFile as jest.Mock).mockResolvedValue(
+      readFileMock.mockResolvedValue(
         JSON.stringify({
           scripts: {
             start: 'node server.js --port 3000',
@@ -190,13 +191,13 @@ describe('ServiceDetector', () => {
     });
 
     it('should detect port from .env file', async () => {
-      (fs.pathExists as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockImplementation((filePath: string) => {
         if (filePath.endsWith('.env') || filePath.endsWith('package.json')) {
           return Promise.resolve(true);
         }
         return Promise.resolve(false);
       });
-      (fs.readFile as jest.Mock).mockImplementation((filePath: string) => {
+      readFileMock.mockImplementation((filePath: string) => {
         if (filePath.endsWith('.env')) {
           return Promise.resolve('PORT=8080\n');
         }
@@ -209,7 +210,7 @@ describe('ServiceDetector', () => {
     });
 
     it('should return empty array if no services detected', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
+      pathExistsMock.mockResolvedValue(false);
 
       const result = await serviceDetector.detectServices(projectPath);
 
@@ -217,8 +218,8 @@ describe('ServiceDetector', () => {
     });
 
     it('should handle errors gracefully', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockRejectedValue(new Error('Read failed'));
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockRejectedValue(new Error('Read failed'));
 
       const result = await serviceDetector.detectServices(projectPath);
 

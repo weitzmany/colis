@@ -277,3 +277,180 @@ composer start  # Slim - runs on http://localhost:8000
 ## Success = All Green Checks ✅
 
 If all checks pass, the template creation worked correctly!
+
+---
+
+## Testing Angular CLI Integration
+
+### Test Command with Angular CLI
+
+```bash
+npx @your-org/template-project create my-ng-cli-app --use-ng-cli
+```
+
+### ✅ Step 1: Angular CLI Structure (30 seconds)
+
+```bash
+cd my-ng-cli-app
+ls -la
+```
+
+**Check:**
+- [ ] Directory `my-ng-cli-app` exists
+- [ ] `package.json` exists (Angular CLI generated)
+- [ ] `angular.json` exists (Angular CLI config)
+- [ ] `src/` directory exists
+- [ ] `src/app/` directory exists
+- [ ] Standard Angular files present (main.ts, app.component.ts, etc.)
+
+### ✅ Step 2: Angular CLI Generated Files (1 minute)
+
+```bash
+cat package.json | grep -E '"name"|"@angular/core"'
+cat angular.json | grep projectType
+ls -la src/app/
+```
+
+**Check:**
+- [ ] `package.json` name: `my-ng-cli-app`
+- [ ] `@angular/core` is in dependencies
+- [ ] `angular.json` has `projectType: "application"`
+- [ ] Standard Angular app components exist
+
+### ✅ Step 3: Project Initialization Still Works (1 minute)
+
+```bash
+ls -la .cursor/rules/experts/ | wc -l
+ls -la .cursor/commands/general/
+port-manager list | grep my-ng-cli-app
+```
+
+**Check:**
+- [ ] `.cursor/` directory exists
+- [ ] Expert rules copied (~26 files)
+- [ ] General commands copied
+- [ ] Port Manager shows your project
+- [ ] Port is allocated (default 4200 for Angular)
+
+### ✅ Step 4: Build & Run Angular CLI Project (2 minutes)
+
+```bash
+npm install  # If --skip-deps was used
+npm start
+# Open http://localhost:4200
+```
+
+**Check:**
+- [ ] Dependencies install successfully
+- [ ] Server starts on port 4200
+- [ ] Angular app loads in browser
+- [ ] No console errors
+
+### Dry Run Test
+
+```bash
+npx @your-org/template-project create test-dry --use-ng-cli --dry-run
+```
+
+**Check:**
+- [ ] Shows command that would be run
+- [ ] Shows Angular CLI command with correct flags
+- [ ] Does not actually create project
+
+### Test with Different Package Managers
+
+**PNPM:**
+```bash
+npx @your-org/template-project create my-pnpm-app --use-ng-cli --package-manager pnpm
+cd my-pnpm-app
+pnpm install
+pnpm start
+```
+
+**Check:**
+- [ ] Project created with pnpm
+- [ ] `pnpm-lock.yaml` exists
+- [ ] Dependencies install with pnpm
+- [ ] App runs correctly
+
+**Yarn:**
+```bash
+npx @your-org/template-project create my-yarn-app --use-ng-cli --package-manager yarn
+cd my-yarn-app
+yarn install
+yarn start
+```
+
+**Check:**
+- [ ] Project created with yarn
+- [ ] `yarn.lock` exists
+- [ ] Dependencies install with yarn
+- [ ] App runs correctly
+
+### Test with Skip Options
+
+```bash
+# Skip deps
+npx @your-org/template-project create test-skip-deps --use-ng-cli --skip-deps
+
+# Skip git
+npx @your-org/template-project create test-skip-git --use-ng-cli --skip-git
+
+# Skip init
+npx @your-org/template-project create test-skip-init --use-ng-cli --skip-init
+```
+
+**Check:**
+- [ ] `--skip-deps`: No `node_modules/`, but project created
+- [ ] `--skip-git`: No `.git/` directory
+- [ ] `--skip-init`: No `.cursor/` directory, no Port Manager entry
+
+---
+
+## Angular CLI vs Template Comparison
+
+### Create Both
+
+```bash
+# Template-based
+npx @your-org/template-project create my-template-app --template angular
+
+# Angular CLI-based
+npx @your-org/template-project create my-cli-app --use-ng-cli
+```
+
+### Compare Structure
+
+```bash
+# Check differences
+diff -r my-template-app my-cli-app --exclude=node_modules --exclude=.git --brief | head -20
+```
+
+**Expected Differences:**
+- Angular CLI app may have different file structure
+- Angular CLI app has latest Angular CLI defaults
+- Template app has customizations
+- Both should have Project Initialization files (`.cursor/`, Port Manager)
+
+---
+
+## Red Flags for Angular CLI Integration
+
+❌ **Angular CLI fails** - `npx @angular/cli@latest new` command errors  
+❌ **Wrong directory structure** - Not standard Angular CLI structure  
+❌ **Project Initialization skipped** - `.cursor/` missing when not using `--skip-init`  
+❌ **Port not allocated** - Port Manager doesn't show the project  
+❌ **Build fails** - `npm run build` has errors  
+❌ **Server won't start** - `npm start` fails  
+
+---
+
+## Angular CLI Integration Success Criteria
+
+✅ Angular CLI generates standard Angular project structure  
+✅ Project Initialization still runs and adds Cursor rules  
+✅ Port Manager allocates a port  
+✅ Package manager choice is respected  
+✅ Skip options work correctly  
+✅ Dry run shows correct command  
+✅ Project builds and runs successfully

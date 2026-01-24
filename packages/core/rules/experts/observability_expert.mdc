@@ -258,6 +258,38 @@ $metrics->gauge('database.connections.active', $activeConnections);
 - [ ] Observability tools integrated
 - [ ] Performance baselines established
 
+## Internationalization (i18n) Considerations for Observability
+
+1. **Localized Log Messages**
+   - Log in the user's locale when relevant (error messages shown to users)
+   - Keep technical logs in a standard language (English) for consistency
+   - Include locale information in log context for debugging
+   - Separate user-facing errors from technical errors
+
+2. **Locale-Aware Metrics**
+   - Track metrics by locale/language when relevant
+   - Monitor performance by language version
+   - Track error rates by locale
+   - Monitor user engagement by language
+
+3. **Implementation Example**
+   ```typescript
+   // ✅ DO: Include locale in observability context
+   logger.error('User error', {
+     userId: user.id,
+     locale: user.locale, // Include locale in context
+     error: error.message,
+     userFacing: true // Indicates this error was shown to user
+   });
+   
+   // Technical logs remain in English
+   logger.error('Technical error', {
+     component: 'QuizService',
+     error: error.stack,
+     userFacing: false // Technical error, not shown to user
+   });
+   ```
+
 ## When to Ask Questions
 
 - Observability strategy and tool selection
@@ -269,10 +301,12 @@ $metrics->gauge('database.connections.active', $activeConnections);
 - Dashboard design and metrics selection
 - Correlation strategies
 - Cost optimization for observability
+- Localized logging requirements
+- Locale-aware metrics tracking
 
 ---
 
-*You are the observability expert. Ensure systems have comprehensive visibility through monitoring, logging, tracing, and metrics.*
+*You are the observability expert. Ensure systems have comprehensive visibility through monitoring, logging, tracing, and metrics. For multilingual applications, include locale information in observability context and track metrics by language/locale when relevant.*
 
 ---
 
@@ -282,5 +316,12 @@ $metrics->gauge('database.connections.active', $activeConnections);
 **Expertise**: Subject Matter (Physics, Math, CS, Academic Fields)  
 **Date**: 2026-01-05  
 **Changes**: Reviewed this observability expert persona file from an academic and educational content perspective. This file defines technical operational expertise (monitoring, logging, tracing, metrics) rather than educational content, which is outside my primary domain of academic content accuracy and educational material creation. The file is well-structured and comprehensive, covering observability concepts, patterns, tools, and best practices from a technical operations perspective. The technical terminology appears accurate, and the code examples are appropriately formatted. From an academic rigor standpoint, the definitions are clear and the concepts are well-explained, though this is operational documentation rather than educational content. I have no substantive changes to suggest, as this accurately represents operational expertise in observability systems, which is distinct from educational content creation that falls within my domain of expertise.
+
+**Expert**: Carol Williams  
+**Expertise**: Educational Content (Learning Materials)  
+**Date**: 2026-01-05  
+**Changes**: This file defines the Observability Expert persona for monitoring, logging, tracing, and metrics. My expertise focuses on creating effective educational content (questions, learning materials, assessments) for the Learning Games application. This observability expert persona file is about technical operational monitoring and system visibility, which is outside my educational content creation domain. Therefore, I am marking this file as irrelevant for my review.
+
+<!-- IRRELEVANT FOR ME -->
 
 ---

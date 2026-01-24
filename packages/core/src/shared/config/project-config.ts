@@ -139,7 +139,18 @@ export class ProjectConfigManager {
    * ```
    */
   async save(config: ProjectConfig): Promise<void> {
-    await fs.writeFile(this.configPath, JSON.stringify(config, null, 2), 'utf-8');
+    try {
+      console.log('[DEBUG project-config] Attempting to save config to:', this.configPath);
+      console.log('[DEBUG project-config] Using fs.outputFile (fs-extra method)');
+      
+      // Use fs-extra's outputFile instead of writeFile
+      // outputFile creates parent directories automatically if needed
+      await fs.outputFile(this.configPath, JSON.stringify(config, null, 2), 'utf-8');
+      console.log('[DEBUG project-config] Successfully saved config');
+    } catch (error) {
+      console.error('[DEBUG project-config] Error in save():', error);
+      throw error;
+    }
   }
 
   /**

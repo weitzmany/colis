@@ -34,8 +34,8 @@ describe('PortManager', () => {
 
   it('should allocate a port', async () => {
     const port = await portManager.allocate('test-project', '/tmp/test', 'node');
-    expect(port).toBeGreaterThanOrEqual(3000);
-    expect(port).toBeLessThanOrEqual(3099);
+    expect(port).toBeGreaterThanOrEqual(3201);
+    expect(port).toBeLessThanOrEqual(3299);
   });
 
   it('should get allocated port', async () => {

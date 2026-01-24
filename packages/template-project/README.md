@@ -48,6 +48,47 @@ npx @your-org/template-project create my-project \
 - `--description <text>`: Project description
 - `--author <name>`: Author name
 - `--license <type>`: License type (MIT, Apache-2.0, etc.)
+- `--use-ng-cli`: Use Angular CLI (ng new) to generate Angular project (default for Angular templates)
+- `--no-use-ng-cli`: Use templates instead of Angular CLI for Angular projects
+
+### Using Angular CLI
+
+**Angular projects now use Angular CLI by default!**
+
+When you create an Angular project, it will automatically use the Angular CLI (`ng new`) to generate the project:
+
+```bash
+# Uses Angular CLI by default for Angular templates
+npx @your-org/template-project create my-angular-app
+
+# Or explicitly specify
+npx @your-org/template-project create my-angular-app --use-ng-cli
+```
+
+If you prefer to use the customized templates instead of Angular CLI, you can opt out:
+
+```bash
+# Use templates instead of Angular CLI
+npx @your-org/template-project create my-angular-app --no-use-ng-cli
+```
+
+This will:
+- Use Angular CLI (`ng new`) to generate a standard Angular project structure
+- **Always skip git initialization** (`--skip-git`) to maintain monorepo structure at root
+- **Automatically remove any nested `.git` directories** after project creation
+- Respect your package manager choice (`--package-manager`)
+- Skip dependency installation if `--skip-deps` is specified
+- Still run Project Initialization to set up Cursor rules, commands, and Port Manager
+
+**When Angular CLI is used (default):**
+- ✅ Latest official Angular project structure
+- ✅ Angular CLI-specific features
+- ✅ Always up-to-date with Angular releases
+
+**When templates are used (`--no-use-ng-cli`):**
+- ✅ Customized project structure
+- ✅ Pre-configured integrations
+- ✅ Consistency across different project types
 
 ## What Gets Set Up Automatically
 
@@ -144,6 +185,36 @@ npx @your-org/template-project create my-api --template backend
 - Nodemon for development
 - GitHub Actions CI workflow
 - GitLab CI configuration
+
+## PRD Templates
+
+This package includes Product Requirements Document (PRD) templates to help you plan your projects before implementation.
+
+### Available Templates
+
+Located in `templates/`:
+
+1. **Full PRD Template** (`PRD_TEMPLATE.md`)
+   - Comprehensive planning document
+   - Includes MVP definition, roadmap, risks, approval sign-offs
+   - Best for complex projects with multiple stakeholders
+
+2. **Quick Start PRD** (`PRD_QUICK_START.md`)
+   - Streamlined planning document
+   - Focus on core MVP features
+   - Best for rapid planning and iteration
+
+### Usage
+
+```bash
+# Copy template to your project
+cp packages/template-project/templates/PRD_TEMPLATE.md ./my-project-prd.md
+
+# Use with Task Master AI (if available)
+npx taskmaster-ai parse-prd my-project-prd.md
+```
+
+See [templates/README.md](templates/README.md) for detailed usage instructions.
 
 ## Integration with Project Initialization
 

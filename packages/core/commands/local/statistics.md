@@ -1,6 +1,6 @@
 # Calculate Statistics for Expert Reviews Tracker
 
-Calculate and update statistics rows (Total, Benford's Law MAD scores, and Acceptance p-values) in both the expert review statistics table and the files reviewed statistics table.
+Calculate and update statistics rows (Total, Benford's Law MAD scores, and Acceptance p-values) in the expert review statistics table, and update the total row in the files reviewed statistics table.
 
 ## Usage
 
@@ -39,25 +39,13 @@ No parameters required.
    - Find the "## Files Reviewed Statistics" section
    - Find the header row (starts with "| File Path")
    - Find the separator row (next line after header, starts with "|-----------")
-   - Find all data rows (lines starting with "|" that are not "**Total**", "Benford:", or "Acceptance:")
-   - Data rows end when we hit "| **Total**", "| Benford:", "| Acceptance:", or a section header ("##" or "###")
-8. **Parse Files Data**: Extract all data rows (exclude Total, Benford, and Acceptance rows)
+   - Find all data rows (lines starting with "|" that are not "**Total**")
+   - Data rows end when we hit "| **Total**" or a section header ("##" or "###")
+8. **Parse Files Data**: Extract all data rows (exclude Total row)
 9. **Calculate Files Total Row**:
    - Sum the "Reviews" column (column index 1)
-   - Update or insert "| **Total** | **[sum]** |" row after Benford and Acceptance rows
-10. **Calculate Files Benford Row**:
-    - Calculate MAD (Mean Absolute Deviation) score for Benford's Law for the "Reviews" column
-    - Format with emoji based on MAD score breakpoints
-    - Insert after data rows, before Total row
-11. **Calculate Files Acceptance Row**:
-    - For the "Reviews" column:
-      - K = number of files (number of rows)
-      - N = sum of review counts
-      - x = minimum review count
-      - p = P(X ≤ x) where X ~ Binomial(N, 1/K)
-    - Format p-value as percentage with emoji based on breakpoints
-    - Insert after Benford row, before Total row
-12. **Output**: Display confirmation message for both tables
+   - Update or insert "| **Total** | **[sum]** |" row after all data rows
+10. **Output**: Display confirmation message
 
 ## Statistics Calculations
 
@@ -135,22 +123,6 @@ For each numeric column (excluding dates and averages), calculate a binomial p-v
 - **p** = P(X ≤ x) where X ~ Binomial(N, 1/K)
 
 This tests the null hypothesis that values are evenly distributed across experts. Lower p-values indicate more uneven distribution.
-
-### Files Reviewed Statistics Table Statistics
-
-The Files Reviewed Statistics table also includes Total, Benford, and Acceptance rows:
-
-#### Files Total Row
-- **File Path**: "**Total**"
-- **Reviews**: Sum of all review counts
-
-#### Files Benford Row
-- **File Path**: "Benford:"
-- **Reviews**: MAD score for Benford's Law analysis of review counts (formatted with emoji)
-
-#### Files Acceptance Row
-- **File Path**: "Acceptance:"
-- **Reviews**: Binomial p-value for distribution evenness of review counts across files (formatted as percentage with emoji)
 
 **Acceptance Row**:
 - **Expert Name**: "Acceptance:"

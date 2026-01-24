@@ -237,9 +237,11 @@ export class PortRepository {
    * Find available port in range
    */
   async findAvailablePortInRange(start: number, end: number): Promise<number | null> {
+    // Get ALL ports in range (not just active) to avoid UNIQUE constraint errors
+    // Even if a port is inactive/released, it might still exist in DB with UNIQUE constraint
     const results = await this.db.query<{ port: number }>(
       `SELECT port FROM ${PORT_ASSIGNMENTS_TABLE} 
-       WHERE port BETWEEN ? AND ? AND status = 'active' 
+       WHERE port BETWEEN ? AND ? 
        ORDER BY port`,
       [start, end]
     );

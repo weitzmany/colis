@@ -32,6 +32,7 @@ export interface UpdateOptions {
   projectName?: string;
   appType?: string;
   overwrite?: boolean;
+  deleteOrphaned?: boolean; // Delete files from project that don't exist in core package
   skipRules?: boolean;
   skipCommands?: boolean;
   skipPortManager?: boolean;
@@ -108,64 +109,87 @@ export async function updateProject(options: UpdateOptions = {}): Promise<Update
       return result;
     }
 
-    // Update rules - only copy missing files
+    // Update rules - sync with hash comparison
     if (!options.skipRules) {
-      console.log(chalk.blue('📋 Updating rules...'));
+      console.log(chalk.blue('📋 Synchronizing rules...'));
       
-      // First, check what's missing
-      const missingRules = await findMissingRules(corePackagePath, projectPath);
-      
-      if (missingRules.length > 0) {
-        result.rulesResult = await copyRules(corePackagePath, projectPath, {
-          overwrite: options.overwrite || false,
-          skipExisting: !options.overwrite, // Skip existing unless overwrite is true
-        });
+      result.rulesResult = await copyRules(corePackagePath, projectPath, {
+        overwrite: options.overwrite || false,
+        deleteOrphaned: options.deleteOrphaned || false,
+      });
 
-        if (result.rulesResult.success) {
-          if (result.rulesResult.copied.length > 0) {
-            console.log(chalk.green(`  ✓ Copied ${result.rulesResult.copied.length} rule files`));
-            result.added.push(...result.rulesResult.copied.map((f) => `rule: ${f}`));
-          }
-          if (result.rulesResult.skipped.length > 0 && options.overwrite) {
-            console.log(chalk.yellow(`  ⚠ Skipped ${result.rulesResult.skipped.length} existing files (use --overwrite to update)`));
-          }
-        } else {
-          result.success = false;
-          result.errors.push(...result.rulesResult.errors);
-          console.log(chalk.red(`  ✗ Failed to copy rules: ${result.rulesResult.errors.join(', ')}`));
+      if (result.rulesResult.success) {
+        const { stats } = result.rulesResult;
+        
+        if (stats.copied > 0) {
+          console.log(chalk.green(`  ✓ Copied ${stats.copied} rule files (modified or new)`));
+          result.added.push(...result.rulesResult.copied.map((f) => `rule: ${f}`));
+        }
+        
+        if (stats.skipped > 0) {
+          console.log(chalk.dim(`  ⊙ Skipped ${stats.skipped} identical files (same hash)`));
+        }
+        
+        if (stats.deleted > 0) {
+          console.log(chalk.yellow(`  ⚠ Deleted ${stats.deleted} orphaned files`));
+          result.updated.push(...result.rulesResult.deleted.map((f) => `deleted rule: ${f}`));
+        }
+        
+        if (stats.total === stats.skipped) {
+          console.log(chalk.green('  ✓ All rules up to date'));
         }
       } else {
-        console.log(chalk.green('  ✓ All rules up to date'));
+        result.success = false;
+        result.errors.push(...result.rulesResult.errors);
+        console.log(chalk.red(`  ✗ Failed to synchronize rules`));
+        result.rulesResult.errors.forEach((err) => {
+          console.log(chalk.red(`    • ${err}`));
+        });
       }
     }
 
-    // Update commands - only copy missing files
+    // Update commands - sync with hash comparison
     if (!options.skipCommands) {
-      console.log(chalk.blue('⚡ Updating commands...'));
+      console.log(chalk.blue('⚡ Synchronizing commands...'));
       
-      const missingCommands = await findMissingCommands(corePackagePath, projectPath);
-      
-      if (missingCommands.length > 0) {
-        result.commandsResult = await copyCommands(corePackagePath, projectPath, {
-          overwrite: options.overwrite || false,
-          skipExisting: !options.overwrite,
-        });
+      result.commandsResult = await copyCommands(corePackagePath, projectPath, {
+        overwrite: options.overwrite || false,
+        deleteOrphaned: options.deleteOrphaned || false,
+      });
 
-        if (result.commandsResult.success) {
-          if (result.commandsResult.copied.length > 0) {
-            console.log(chalk.green(`  ✓ Copied ${result.commandsResult.copied.length} command files`));
-            result.added.push(...result.commandsResult.copied.map((f) => `command: ${f}`));
-          }
-          if (result.commandsResult.skipped.length > 0 && options.overwrite) {
-            console.log(chalk.yellow(`  ⚠ Skipped ${result.commandsResult.skipped.length} existing files (use --overwrite to update)`));
-          }
-        } else {
-          result.success = false;
-          result.errors.push(...result.commandsResult.errors);
-          console.log(chalk.red(`  ✗ Failed to copy commands: ${result.commandsResult.errors.join(', ')}`));
+      if (result.commandsResult.success) {
+        const { stats } = result.commandsResult;
+        
+        if (stats.copied > 0) {
+          console.log(chalk.green(`  ✓ Copied ${stats.copied} command files (modified or new)`));
+          result.added.push(...result.commandsResult.copied.map((f) => `command: ${f}`));
+        }
+        
+        if (stats.skipped > 0) {
+          console.log(chalk.dim(`  ⊙ Skipped ${stats.skipped} identical files (same hash)`));
+        }
+        
+        if (stats.deleted > 0) {
+          console.log(chalk.yellow(`  ⚠ Deleted ${stats.deleted} orphaned files`));
+          result.updated.push(...result.commandsResult.deleted.map((f) => `deleted command: ${f}`));
+        }
+        
+        if (result.commandsResult.excluded.length > 0) {
+          console.log(
+            chalk.dim(`  ⊘ Excluded ${result.commandsResult.excluded.length} local commands (packages repo only)`)
+          );
+        }
+        
+        if (stats.total === stats.skipped) {
+          console.log(chalk.green('  ✓ All commands up to date'));
         }
       } else {
-        console.log(chalk.green('  ✓ All commands up to date'));
+        result.success = false;
+        result.errors.push(...result.commandsResult.errors);
+        console.log(chalk.red(`  ✗ Failed to synchronize commands`));
+        result.commandsResult.errors.forEach((err) => {
+          console.log(chalk.red(`    • ${err}`));
+        });
       }
     }
 

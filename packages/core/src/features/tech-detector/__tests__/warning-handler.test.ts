@@ -6,9 +6,8 @@
 
 import { WarningHandler } from '../standards/warning-handler.js';
 import { Warning } from '../standards/warning-detector.js';
-import { StandardsLoader } from '../standards/standards-loader.js';
+import type { UserChoices } from '../standards/standards-loader.js';
 import * as fs from 'fs-extra';
-import * as path from 'path';
 import inquirer from 'inquirer';
 import { jest } from '@jest/globals';
 
@@ -16,6 +15,10 @@ import { jest } from '@jest/globals';
 jest.mock('fs-extra');
 jest.mock('inquirer');
 jest.mock('../standards/standards-loader.js');
+const pathExistsMock = jest.spyOn(fs, 'pathExists') as jest.MockedFunction<any>;
+const readFileMock = jest.spyOn(fs, 'readFile') as jest.MockedFunction<any>;
+const writeFileMock = jest.spyOn(fs, 'writeFile') as jest.MockedFunction<any>;
+const promptMock = jest.spyOn(inquirer, 'prompt') as jest.MockedFunction<any>;
 
 describe('WarningHandler', () => {
   let handler: WarningHandler;
@@ -68,9 +71,9 @@ describe('WarningHandler', () => {
         },
       ];
 
-      (inquirer.prompt as jest.Mock).mockResolvedValue({ action: 'ignore' });
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
+      promptMock.mockResolvedValue({ action: 'ignore' });
+      pathExistsMock.mockResolvedValue(false);
+      writeFileMock.mockResolvedValue(undefined);
 
       const responses = await handler.handleWarnings(warnings, mockProjectPath, true);
 
@@ -89,9 +92,9 @@ describe('WarningHandler', () => {
         message: 'Non-recommended framework detected: Vue',
       };
 
-      (inquirer.prompt as jest.Mock).mockResolvedValue({ action: 'add-recommendation' });
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
+      promptMock.mockResolvedValue({ action: 'add-recommendation' });
+      pathExistsMock.mockResolvedValue(false);
+      writeFileMock.mockResolvedValue(undefined);
 
       const response = await (handler as any).handleNonRecommendedWarning(warning, mockProjectPath);
 
@@ -109,12 +112,12 @@ describe('WarningHandler', () => {
         message: 'Non-recommended framework detected: Vue',
       };
 
-      (inquirer.prompt as jest.Mock).mockResolvedValue({ action: 'ignore' });
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
+      promptMock.mockResolvedValue({ action: 'ignore' });
+      pathExistsMock.mockResolvedValue(false);
+      writeFileMock.mockResolvedValue(undefined);
 
       const mockStandardsLoader = {
-        saveUserChoices: jest.fn().mockResolvedValue(undefined),
+        saveUserChoices: jest.fn<(projectPath: string, choices: UserChoices) => Promise<void>>().mockResolvedValue(undefined as void),
       };
       (handler as any).standardsLoader = mockStandardsLoader;
 
@@ -135,7 +138,7 @@ describe('WarningHandler', () => {
         message: 'Version 13.5.0 is below recommended minimum 14.0.0',
       };
 
-      (inquirer.prompt as jest.Mock)
+      promptMock
         .mockResolvedValueOnce({ action: 'update-version' })
         .mockResolvedValueOnce({ run: false });
 
@@ -154,9 +157,9 @@ describe('WarningHandler', () => {
         message: 'Version 13.5.0 is below recommended minimum 14.0.0',
       };
 
-      (inquirer.prompt as jest.Mock).mockResolvedValue({ action: 'change-recommendation' });
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
+      promptMock.mockResolvedValue({ action: 'change-recommendation' });
+      pathExistsMock.mockResolvedValue(false);
+      writeFileMock.mockResolvedValue(undefined);
 
       const response = await (handler as any).handleVersionWarning(warning, mockProjectPath);
 
@@ -174,13 +177,13 @@ describe('WarningHandler', () => {
         message: 'Non-recommended framework detected: Vue.js',
       };
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
+      pathExistsMock.mockResolvedValue(false);
+      writeFileMock.mockResolvedValue(undefined);
 
       await (handler as any).addRecommendation(warning, mockProjectPath);
 
       expect(fs.writeFile).toHaveBeenCalled();
-      const writeCall = (fs.writeFile as jest.Mock).mock.calls[0];
+      const writeCall = writeFileMock.mock.calls[0];
       const writtenData = JSON.parse(writeCall[1]);
       expect(writtenData.frameworks.recommended).toContain('vue-js');
     });
@@ -200,13 +203,13 @@ describe('WarningHandler', () => {
         },
       };
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(JSON.stringify(existingStandards));
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(JSON.stringify(existingStandards));
+      writeFileMock.mockResolvedValue(undefined);
 
       await (handler as any).addRecommendation(warning, mockProjectPath);
 
-      const writeCall = (fs.writeFile as jest.Mock).mock.calls[0];
+      const writeCall = writeFileMock.mock.calls[0];
       const writtenData = JSON.parse(writeCall[1]);
       expect(writtenData.languages.recommended).toContain('typescript');
       expect(writtenData.languages.recommended).toContain('python');
@@ -223,13 +226,13 @@ describe('WarningHandler', () => {
         message: 'Version 13.5.0 is below recommended minimum 14.0.0',
       };
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
+      pathExistsMock.mockResolvedValue(false);
+      writeFileMock.mockResolvedValue(undefined);
 
       await (handler as any).changeRecommendation(warning, mockProjectPath);
 
       expect(fs.writeFile).toHaveBeenCalled();
-      const writeCall = (fs.writeFile as jest.Mock).mock.calls[0];
+      const writeCall = writeFileMock.mock.calls[0];
       const writtenData = JSON.parse(writeCall[1]);
       expect(writtenData.frameworks.minimumVersions['next-js']).toBe('13.5.0');
     });
@@ -259,14 +262,14 @@ describe('WarningHandler', () => {
       };
 
       const mockStandardsLoader = {
-        saveUserChoices: jest.fn().mockResolvedValue(undefined),
+        saveUserChoices: jest.fn<(projectPath: string, choices: UserChoices) => Promise<void>>().mockResolvedValue(undefined as void),
       };
       (handler as any).standardsLoader = mockStandardsLoader;
 
       await (handler as any).ignoreWarning(warning, mockProjectPath);
 
       expect(mockStandardsLoader.saveUserChoices).toHaveBeenCalled();
-      const choices = mockStandardsLoader.saveUserChoices.mock.calls[0][1];
+      const choices = mockStandardsLoader.saveUserChoices.mock.calls[0][1] as UserChoices;
       expect(choices.ignoredWarnings?.frameworks?.vue).toBeDefined();
     });
 
@@ -280,14 +283,14 @@ describe('WarningHandler', () => {
       };
 
       const mockStandardsLoader = {
-        saveUserChoices: jest.fn().mockResolvedValue(undefined),
+        saveUserChoices: jest.fn<(projectPath: string, choices: UserChoices) => Promise<void>>().mockResolvedValue(undefined as void),
       };
       (handler as any).standardsLoader = mockStandardsLoader;
 
       await (handler as any).ignoreWarning(warning, mockProjectPath);
 
       expect(mockStandardsLoader.saveUserChoices).toHaveBeenCalled();
-      const choices = mockStandardsLoader.saveUserChoices.mock.calls[0][1];
+      const choices = mockStandardsLoader.saveUserChoices.mock.calls[0][1] as UserChoices;
       expect(choices.ignoredWarnings?.versions?.['next-js']).toBeDefined();
       expect(choices.ignoredWarnings?.versions?.['next-js'].current).toBe('13.5.0');
       expect(choices.ignoredWarnings?.versions?.['next-js'].recommended).toBe('14.0.0');

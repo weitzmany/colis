@@ -32,23 +32,40 @@ Documentation structure rules are enforced by `.cursor/rules/user/documentation_
 
 See [Documentation Structure Guide](./guides/DOCUMENTATION_STRUCTURE.md) for complete details.
 
+## 🏗️ Architecture
+
+**Package Strategy**: Core + Asset Packages (Hybrid Placement)
+- **Core package** (`@your-org/core`): Orchestrates initialization and lifecycle management
+- **Asset packages**: Provide hooks, templates, rules, and tooling consumed by core
+- **Monorepo**: Single repository with clear package boundaries, optimized for shared tooling
+
+**Key Decisions**:
+- Git workflow uses hybrid placement: core orchestrates, git-workflow package provides assets
+- Monorepo for all packages with extraction path if needed
+- Lifecycle management: init, verify, repair, update commands
+
+See [Package Architecture Strategy](./architecture/PACKAGE_ARCHITECTURE.md) for complete details.
+
 ## 🎯 Features
 
 All feature documentation is located in the `features/` directory.
 
-### Package PRDs (Placeholders / Early Ideas)
+### Feature PRDs
 
-**Rules & Consistency Packages:**
+**Core Features** (part of `@your-org/core` package):
+- [Project Initialization](./features/project-initialization/PRD.md) - Automated project setup with lifecycle management (verify, repair, update)
+- [Port Manager](./features/port-manager/PRD.md) - Automated port management with central registry (MySQL/SQLite)
+
+**Asset & Workflow Packages** (consumed by core):
+- [Git Workflow](./features/git-workflow/PRD.md) - Standardized git hooks, templates, and lifecycle tools
 - [Cursor Standards](./features/cursor-standards/PRD.md) - Main package for all Cursor rules, commands, and experts
 - [Cursor Standards Rules](./features/cursor-standards-rules/PRD.md) - Rules-only package
 - [Cursor Standards Commands](./features/cursor-standards-commands/PRD.md) - Commands-only package
 - [Full Review](./features/full-review/PRD.md) - Comprehensive review routine command
 - [Experts](./features/experts/PRD.md) - Expert personas package
-- [Git Workflow](./features/git-workflow/PRD.md) - Standardized git workflow rules and templates
 
 **Tool Packages:**
 - [Tasks](./features/tasks/PRD.md) - Task management and tracking utilities
-- [Port Manager](./features/port-manager/PRD.md) - Automated port management with central registry (MySQL/SQLite)
 - [Documentation Validation](./features/documentation-validation/PRD.md) - Documentation validation tools
 - [Authentication Tool](./features/authentication-tool/PRD.md) - Reusable authentication system
 - [Database Migration Tool](./features/database-migration-tool/PRD.md) - Database migration utilities
@@ -83,6 +100,7 @@ _Note: These are placeholder PRDs with basic ideas. More details will be added a
 - [.cursor Directory](./guides/CURSOR_DIRECTORY.md) - Cursor IDE configuration directory
 - [Security and Secrets](./guides/SECURITY_AND_SECRETS.md) - Rules for handling passwords, keys, tokens, and secrets
 - [Port Management Strategy](./guides/PORT_MANAGEMENT_STRATEGY.md) - Strategy for managing ports across projects to ensure consistency and prevent conflicts
+- [Project Commands](./guides/PROJECT_COMMANDS.md) - Command definitions for New Project and Kill Project
 
 ### Reference
 - [Projects List](./reference/PROJECTS_LIST.md) - List of all projects in ~/Documents/
@@ -105,6 +123,7 @@ _Note: These are placeholder PRDs with basic ideas. More details will be added a
 - [Git Hooks Review](./reference/GIT_HOOKS_REVIEW.md) - Git hooks patterns
 - [Database Schemas Review](./reference/DATABASE_SCHEMAS_REVIEW.md) - Database migration patterns
 - [Projects Ports Reference](./reference/PROJECTS_PORTS.md) - Port assignments and configurations for all projects
+- [Project Selection Criteria](./reference/PROJECT_SELECTION_CRITERIA.md) - Criteria for selecting new or least wanted projects
 
 _Additional topic directories will be created as needed._
 

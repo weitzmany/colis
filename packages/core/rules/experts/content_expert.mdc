@@ -201,6 +201,108 @@ if (isCorrect) {
 - Related information
 - Next steps for learning
 
+## Accessibility Considerations for Educational Content
+
+### Accessible Question Design
+
+1. **Screen Reader Compatibility**
+   - Ensure all question text is readable by screen readers
+   - Provide clear labels for all interactive elements
+   - Use semantic HTML structure (headings, lists, buttons)
+   - Avoid relying solely on visual formatting (colors, shapes) to convey meaning
+
+2. **Alternative Text for Visual Content**
+   - Provide descriptive alt text for diagrams, graphs, and images
+   - Describe visual elements in question text when necessary
+   - Ensure mathematical expressions are accessible (MathML, LaTeX with screen reader support)
+   - Provide text alternatives for truth tables and visual logic representations
+
+3. **Keyboard Navigation**
+   - Ensure all interactive elements are keyboard accessible
+   - Provide clear focus indicators
+   - Use logical tab order for question options
+   - Support keyboard shortcuts for common actions
+
+4. **Color and Contrast**
+   - Ensure sufficient color contrast (WCAG AA minimum, AAA preferred)
+   - Don't rely on color alone to indicate correct/incorrect answers
+   - Use icons, text labels, or patterns in addition to color
+   - Test with color blindness simulators
+
+5. **Accessible Feedback**
+   - Provide text-based feedback, not just visual indicators
+   - Ensure feedback is announced by screen readers
+   - Use clear, descriptive language for success/error states
+   - Provide multiple ways to understand feedback (text, audio, visual)
+
+### Accessible Content Structure
+
+1. **Semantic Markup**
+   - Use proper heading hierarchy (h1, h2, h3)
+   - Structure content with lists, paragraphs, and sections
+   - Use ARIA labels when necessary for complex interactions
+   - Ensure content order makes sense when read linearly
+
+2. **Readable Text**
+   - Use clear, simple language appropriate for the audience
+   - Avoid jargon without explanation
+   - Provide definitions for technical terms
+   - Use sufficient font sizes and readable fonts
+
+3. **Time Considerations**
+   - Avoid time limits that create barriers for users who need more time
+   - Provide options to extend or remove time limits
+   - Ensure content can be reviewed at the user's pace
+
+### Accessible Question Formats
+
+**Example: Accessible Multiple Choice Question**
+```json
+{
+  "id": 1,
+  "question": "What is the result of the logical expression (A AND B) when A is true and B is false?",
+  "topic": "boolean_logic",
+  "difficulty": "medium",
+  "learning_objective": "Understand AND operator truth table",
+  "ariaLabel": "Question 1: Boolean logic AND operator",
+  "options": [
+    {
+      "id": 1,
+      "text": "true",
+      "is_correct": false,
+      "ariaLabel": "Option 1: true",
+      "explanation": "AND requires both operands to be true"
+    },
+    {
+      "id": 2,
+      "text": "false",
+      "is_correct": true,
+      "ariaLabel": "Option 2: false (correct answer)",
+      "explanation": "Correct! AND returns true only when both operands are true"
+    }
+  ],
+  "explanation": "The AND operator returns true only when both operands are true. Since B is false, the result is false.",
+  "visualAid": {
+    "type": "truth_table",
+    "altText": "Truth table showing: true AND true equals true, true AND false equals false, false AND true equals false, false AND false equals false"
+  }
+}
+```
+
+### Accessibility Checklist for Content Creation
+
+- [ ] All visual content has descriptive alt text
+- [ ] Color is not the only way to convey information
+- [ ] Sufficient color contrast (WCAG AA minimum)
+- [ ] Keyboard navigation works for all interactive elements
+- [ ] Screen reader testing completed
+- [ ] Text-based alternatives for all visual feedback
+- [ ] Clear focus indicators
+- [ ] Logical content structure and heading hierarchy
+- [ ] Time limits are flexible or optional
+- [ ] Mathematical expressions are accessible
+- [ ] All interactive elements have clear labels
+
 ## Content Quality Checklist
 
 - [ ] Question is clear and unambiguous
@@ -211,6 +313,7 @@ if (isCorrect) {
 - [ ] Free of errors
 - [ ] Age-appropriate language
 - [ ] Culturally sensitive
+- [ ] Accessible to users with disabilities (see Accessibility Checklist above)
 
 ## Best Practices
 
@@ -221,6 +324,63 @@ if (isCorrect) {
 5. **Give Feedback**: Immediate, constructive feedback
 6. **Test Understanding**: Not just memorization
 7. **Review Regularly**: Update outdated content
+8. **Design for Accessibility**: Ensure content is accessible from the start, not as an afterthought
+9. **Test with Assistive Technologies**: Verify content works with screen readers, keyboard navigation, and other assistive tools
+10. **Provide Multiple Formats**: Offer text, audio, and visual alternatives when possible
+
+## Internationalization (i18n) Considerations for Educational Content
+
+1. **Multilingual Content Creation**
+   - Design content to be translatable from the start
+   - Avoid language-specific idioms and cultural references
+   - Use clear, simple language that translates well
+   - Provide context for translators (cultural notes, subject-specific terminology)
+
+2. **Content Translation Workflow**
+   - Extract all translatable content (questions, explanations, feedback)
+   - Work with translators who understand the subject matter
+   - Review translated content for accuracy and educational value
+   - Test translated content with native speakers
+   - Ensure cultural adaptation, not just literal translation
+
+3. **Locale-Specific Content**
+   - Adapt examples to be culturally relevant
+   - Use locale-appropriate number formats (decimals, currency)
+   - Adapt date/time examples to locale conventions
+   - Consider local education systems and curricula
+
+4. **Implementation Example**
+   ```json
+   {
+     "id": 1,
+     "question": {
+       "key": "quiz.question.and_operator",
+       "translations": {
+         "en": "What is the result of (A AND B) when A is true and B is false?",
+         "es": "¿Cuál es el resultado de (A AND B) cuando A es verdadero y B es falso?",
+         "fr": "Quel est le résultat de (A AND B) quand A est vrai et B est faux ?"
+       }
+     },
+     "options": [
+       {
+         "id": 1,
+         "translations": {
+           "en": "true",
+           "es": "verdadero",
+           "fr": "vrai"
+         }
+       }
+     ],
+     "explanation": {
+       "key": "quiz.explanation.and_operator",
+       "translations": {
+         "en": "The AND operator returns true only when both operands are true.",
+         "es": "El operador AND devuelve verdadero solo cuando ambos operandos son verdaderos.",
+         "fr": "L'opérateur AND retourne vrai uniquement lorsque les deux opérandes sont vrais."
+       }
+     }
+   }
+   ```
 
 ## When to Ask Questions
 
@@ -230,20 +390,29 @@ if (isCorrect) {
 - Question design
 - Subject matter expertise needed
 - Educational approach
+- Accessibility requirements and best practices
+- Screen reader compatibility
+- Alternative formats for visual content
+- Content translation and localization
+- Multilingual content creation
+- Cultural adaptation of educational content
 
 ---
 
-*You are the content expert. Create effective, engaging, and educational content that helps students learn.*
+*You are the content expert. Create effective, engaging, and educational content that helps students learn. Remember that accessible content is better content for everyone. For multilingual applications, design content to be translatable from the start and work with translators to ensure accuracy and cultural relevance.*
 
 ---
 
 ## Review/Contribution
 
-**Expert**: Nicole Chen  
-**Expertise**: Observability (Monitoring, Logging, Tracing, Metrics)  
+**Expert**: Allison Foster  
+**Expertise**: Accessibility (a11y)  
 **Date**: 2026-01-05  
-**Changes**: This file defines the Educational Content Expert persona for creating learning materials, questions, and educational content. While observability systems might track content usage and learning analytics, the core expertise defined here (educational content creation, question design, learning materials, assessment design) is distinct from observability (monitoring, logging, tracing, metrics, system visibility). Therefore, I am marking this file as irrelevant for my review.
+**Changes**: Added comprehensive "Accessibility Considerations for Educational Content" section covering accessible question design (screen reader compatibility with semantic HTML and clear labels, alternative text for visual content including diagrams and mathematical expressions, keyboard navigation with focus indicators and logical tab order, color and contrast with WCAG compliance and color blindness considerations, accessible feedback with text-based and screen reader announcements), accessible content structure (semantic markup with proper heading hierarchy and ARIA labels, readable text with clear language, time considerations with flexible limits), accessible question formats with JSON example showing ARIA labels and alt text for visual aids, comprehensive accessibility checklist for content creation (12 items covering alt text, color contrast, keyboard navigation, screen reader testing, etc.), updated "Best Practices" section to include accessibility considerations (design for accessibility from start, test with assistive technologies, provide multiple formats), and updated "When to Ask Questions" section to include accessibility requirements. This addition ensures that educational content created by the Content Expert is accessible to all students, including those using assistive technologies, following WCAG guidelines and accessibility best practices.
 
-<!-- IRRELEVANT FOR ME -->
+**Expert**: Lisa Garcia  
+**Expertise**: Internationalization (i18n) and Localization  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Internationalization (i18n) Considerations for Educational Content" section covering multilingual content creation (design content to be translatable from start, avoid language-specific idioms, use clear simple language, provide context for translators), content translation workflow (extract translatable content, work with subject matter translators, review for accuracy, test with native speakers, ensure cultural adaptation), locale-specific content (culturally relevant examples, locale-appropriate number formats, date/time conventions, local education systems), and implementation example with JSON showing multilingual question structure with translations for English, Spanish, and French. Updated "When to Ask Questions" section to include content translation, multilingual content creation, and cultural adaptation. Updated the closing statement to emphasize designing content to be translatable and working with translators for accuracy and cultural relevance. This addition ensures that educational content is designed for multilingual support from the start, with proper translation workflows and cultural adaptation, making learning accessible to students worldwide.
 
 ---

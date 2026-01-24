@@ -1,14 +1,16 @@
 export default {
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.test.ts', '**/?(*.)+(spec|test).ts'],
   transform: {
     '^.+\\.ts$': ['ts-jest', {
       useESM: true,
       tsconfig: {
-        module: 'ES2022',
-        moduleResolution: 'node16'
+        module: 'ESNext',
+        moduleResolution: 'bundler',
+        isolatedModules: true
       }
     }],
   },

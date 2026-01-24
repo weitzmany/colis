@@ -25,11 +25,11 @@
     }
   },
   "scripts": {
-    "start": "php -S localhost:{{port}} -t public public/index.php",
-    "test": "phpunit",
-    "analyse": "phpstan analyse src",
-    "cs-check": "phpcs --standard=PSR12 src",
-    "cs-fix": "phpcbf --standard=PSR12 src"
+    "start": "/usr/bin/env php -S localhost:{{port}} -t public public/index.php",
+    "test": "/usr/bin/env phpunit",
+    "analyse": "/usr/bin/env phpstan analyse src",
+    "cs-check": "/usr/bin/env phpcs --standard=PSR12 src",
+    "cs-fix": "/usr/bin/env phpcbf --standard=PSR12 src"
   },
   {{#if author}}
   "authors": [

@@ -5,7 +5,7 @@
  */
 
 import { WarningDetector } from '../standards/warning-detector.js';
-import { TechStack, FrameworkInfo, LanguageInfo, BuildToolInfo, PackageManagerInfo, RuntimeInfo } from '../types.js';
+import { TechStack } from '../types.js';
 import { TechStandards, UserChoices } from '../standards/standards-loader.js';
 
 describe('WarningDetector', () => {

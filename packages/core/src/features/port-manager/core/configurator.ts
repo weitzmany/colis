@@ -35,15 +35,21 @@ export class ConfigurationManager {
 
     // Save project configuration
     try {
+      console.log('[DEBUG configurator] About to save .port-manager.json');
       await configManager.save({
         projectName,
         appType: appType as any,
         port,
         autoConfigure: true,
       });
+      console.log('[DEBUG configurator] Successfully saved .port-manager.json');
       result.filesCreated.push('.port-manager.json');
     } catch (error) {
-      result.errors.push(`Failed to create .port-manager.json: ${error}`);
+      const errorMsg = `Failed to create .port-manager.json: ${error}`;
+      console.error('[DEBUG configurator] ERROR:', errorMsg);
+      result.errors.push(errorMsg);
+      // STOP IMMEDIATELY - this is a critical failure
+      throw new Error(errorMsg);
     }
 
     // Update framework-specific configuration files

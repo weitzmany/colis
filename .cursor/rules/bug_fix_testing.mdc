@@ -1,0 +1,216 @@
+---
+description: Every bug fix must include automated tests to prevent regressions
+globs: **/*
+alwaysApply: true
+---
+
+# Bug Fix Testing Rule
+
+## ⚠️ CRITICAL RULE
+
+**Every bug fix MUST include automated tests to prevent the bug from happening again.**
+
+## The Rule
+
+When a user reports a bug or issue:
+
+1. **Fix the bug** - Resolve the immediate problem
+2. **Write a test** - Create an automated test that would catch this bug
+3. **Add to verification** - Ensure the test runs automatically
+
+## Why This Matters
+
+- **Prevents Regressions**: Same bug won't happen again
+- **Documents Expected Behavior**: Tests serve as living documentation
+- **Builds Confidence**: You know if something breaks
+- **Saves Time**: Automated testing is faster than manual verification
+
+## Examples
+
+### Example 1: Missing File
+
+**User Report**: ".vscode/settings.json disappeared"
+
+**Fix**: Update code to ensure `.vscode/settings.json` is created and not deleted
+
+**Test**: Add verification that checks if `.vscode/settings.json` exists:
+```typescript
+// In verification step
+const vscodeSettingsPath = path.join(outputPath, '.vscode', 'settings.json');
+const hasVscodeSettings = await fs.pathExists(vscodeSettingsPath);
+verificationResults.push({ 
+  check: '.vscode/settings.json', 
+  passed: hasVscodeSettings
+});
+```
+
+### Example 2: Port Not Configured
+
+**User Report**: "Frontend still uses default port 4200, not Port Manager's allocated port"
+
+**Fix**: Update code to read `.port-manager.json` and configure `package.json`
+
+**Test**: Add verification that checks if port is configured:
+```typescript
+const packageJson = await fs.readJson(angularPackageJsonPath);
+const startScript = packageJson.scripts?.start || '';
+const hasPort = startScript.includes('--port');
+verificationResults.push({ 
+  check: 'Frontend port configured', 
+  passed: hasPort, 
+  details: hasPort ? startScript : 'Not configured' 
+});
+```
+
+### Example 3: Missing Configuration
+
+**User Report**: ".cursor/, .githooks/, .port-manager.json are missing"
+
+**Fix**: Ensure `initializeProject()` runs for all project types
+
+**Test**: Add verification for each expected file/directory:
+```typescript
+// Check .cursor/rules/
+const cursorRulesPath = path.join(outputPath, '.cursor', 'rules');
+const hasRules = await fs.pathExists(cursorRulesPath);
+verificationResults.push({ check: '.cursor/rules/', passed: hasRules });
+
+// Check .githooks/
+const githooksPath = path.join(outputPath, '.githooks', 'post-checkout');
+const hasGithooks = await fs.pathExists(githooksPath);
+verificationResults.push({ check: '.githooks/', passed: hasGithooks });
+
+// Check .port-manager.json
+const portManagerPath = path.join(outputPath, '.port-manager.json');
+const hasPortManager = await fs.pathExists(portManagerPath);
+verificationResults.push({ check: '.port-manager.json', passed: hasPortManager });
+```
+
+### Example 4: Angular .vscode Files Deleted
+
+**User Report**: "ng cli created .vscode with jsons. it is now disappeared."
+
+**Fix**: Merge all Angular `.vscode` files instead of deleting them
+
+**Test**: Add verification for Angular `.vscode` files:
+```typescript
+const vscodeFiles = ['extensions.json', 'launch.json', 'tasks.json', 'mcp.json'];
+const existingFiles = [];
+for (const file of vscodeFiles) {
+  if (await fs.pathExists(path.join(outputPath, '.vscode', file))) {
+    existingFiles.push(file);
+  }
+}
+verificationResults.push({ 
+  check: '.vscode/ Angular files', 
+  passed: existingFiles.length > 0, 
+  details: existingFiles.length > 0 ? existingFiles.join(', ') : 'Missing' 
+});
+```
+
+## Test Types
+
+### 1. Existence Tests
+Check if files/directories exist:
+```typescript
+const exists = await fs.pathExists(filePath);
+```
+
+### 2. Content Tests
+Check if file contains expected content:
+```typescript
+const content = await fs.readFile(filePath, 'utf-8');
+const hasExpectedContent = content.includes('expected-string');
+```
+
+### 3. Configuration Tests
+Check if configuration is set correctly:
+```typescript
+const config = await fs.readJson(configPath);
+const isConfigured = config.someProperty === expectedValue;
+```
+
+### 4. Integration Tests
+Check if different parts work together:
+```typescript
+// Check if port from Port Manager matches port in package.json
+const portManagerConfig = await fs.readJson('.port-manager.json');
+const packageJson = await fs.readJson('package.json');
+const portMatches = packageJson.scripts.start.includes(portManagerConfig.port);
+```
+
+## Where to Add Tests
+
+### End-to-End Verification
+Add to the verification step that runs after project creation:
+```typescript
+// In create.ts, after project creation
+console.log(chalk.blue('\n🔍 Verifying project setup...'));
+const verificationResults: Array<{ check: string; passed: boolean; details?: string }> = [];
+
+// Add your test here
+verificationResults.push({ 
+  check: 'Your feature', 
+  passed: testPassed, 
+  details: 'Details about the test' 
+});
+```
+
+### Unit Tests
+For testable functions, add unit tests:
+```typescript
+// In __tests__/ directory
+describe('Feature Name', () => {
+  it('should not delete .vscode/settings.json', async () => {
+    // Test implementation
+  });
+});
+```
+
+## Workflow
+
+1. **User Reports Bug** → Document the issue
+2. **Investigate Root Cause** → Understand why it happened
+3. **Implement Fix** → Resolve the bug
+4. **Write Test** → Create automated verification
+5. **Verify Test Catches Bug** → Ensure test would have caught the original bug
+6. **Add to Verification** → Include in automated test suite
+7. **Document** → Add example to this rule file
+
+## Best Practices
+
+1. **Test the Bug First**: Before fixing, write a test that fails due to the bug
+2. **Keep Tests Simple**: Each test should check one thing
+3. **Make Tests Fast**: Tests should run quickly
+4. **Make Tests Reliable**: Tests should pass/fail consistently
+5. **Add Meaningful Details**: Include helpful error messages
+
+## Test Coverage Checklist
+
+For each bug fix, ensure:
+- [ ] Test exists that would catch this bug
+- [ ] Test is added to automated verification
+- [ ] Test passes after the fix
+- [ ] Test would fail if bug reappeared
+- [ ] Test has clear failure message
+- [ ] Test is documented
+
+## Benefits
+
+- ✅ **Prevents Regressions**: Won't break again
+- ✅ **Documents Behavior**: Tests show what should happen
+- ✅ **Faster Development**: Catch bugs early
+- ✅ **Higher Confidence**: Know when things work
+- ✅ **Better Code Quality**: Forces thinking about edge cases
+
+## Key Principle
+
+**If a user reports it once, make sure it never happens again by adding automated verification.**
+
+---
+
+## Review/Contribution
+
+**Expert**: AI Assistant
+**Date**: 2026-01-18
+**Changes**: Created comprehensive bug fix testing rule covering the principle that every bug fix must include automated tests, examples of real bugs and their tests (missing files, port configuration, missing configuration, Angular .vscode files), test types (existence, content, configuration, integration), where to add tests (E2E verification, unit tests), workflow from bug report to test implementation, best practices, test coverage checklist, and benefits. This rule ensures that bugs don't reappear by adding automated verification for every fix.

@@ -7,14 +7,20 @@ import { CaddyfileError } from '../errors.js';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as os from 'os';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 
 jest.mock('fs-extra');
 jest.mock('child_process');
-jest.mock('util');
+// Use var for hoisting compatibility with jest.mock factory
+var execAsyncMock = jest.fn();
+jest.mock('util', () => ({
+  promisify: jest.fn(() => execAsyncMock),
+}));
 
-const execAsync = promisify(exec);
+// Initialize spies at top level
+const pathExistsMock: any = jest.spyOn(fs, 'pathExists').mockImplementation((() => Promise.resolve(false)) as any);
+const readFileMock: any = jest.spyOn(fs, 'readFile').mockImplementation((() => Promise.resolve('')) as any);
+const writeFileMock: any = jest.spyOn(fs, 'writeFile').mockImplementation((() => Promise.resolve()) as any);
+const mkdirpMock: any = jest.spyOn(fs, 'mkdirp').mockImplementation((() => Promise.resolve('')) as any);
 
 describe('CaddyManager', () => {
   let caddyManager: CaddyManager;
@@ -22,6 +28,7 @@ describe('CaddyManager', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    execAsyncMock.mockResolvedValue({ stdout: '', stderr: '' });
     caddyManager = new CaddyManager();
     mockCaddyfilePath = path.join(os.homedir(), '.caddy', 'Caddyfile');
   });
@@ -29,8 +36,8 @@ describe('CaddyManager', () => {
   describe('readCaddyfile', () => {
     it('should read existing Caddyfile', async () => {
       const content = 'test.local {\n    reverse_proxy localhost:3000\n}';
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(content);
 
       const result = await caddyManager.readCaddyfile();
 
@@ -39,7 +46,7 @@ describe('CaddyManager', () => {
     });
 
     it('should return empty string if file does not exist', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
+      pathExistsMock.mockResolvedValue(false);
 
       const result = await caddyManager.readCaddyfile();
 
@@ -48,8 +55,8 @@ describe('CaddyManager', () => {
     });
 
     it('should throw CaddyfileError if read fails', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockRejectedValue(new Error('Read failed'));
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockRejectedValue(new Error('Read failed'));
 
       await expect(caddyManager.readCaddyfile()).rejects.toThrow(
         CaddyfileError
@@ -59,10 +66,10 @@ describe('CaddyManager', () => {
 
   describe('addDomain', () => {
     beforeEach(() => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.mkdirp as jest.Mock).mockResolvedValue(undefined);
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
-      (execAsync as jest.Mock).mockResolvedValue({ stdout: '', stderr: '' });
+      pathExistsMock.mockResolvedValue(false);
+      mkdirpMock.mockResolvedValue(undefined);
+      writeFileMock.mockResolvedValue(undefined);
+      execAsyncMock.mockResolvedValue({ stdout: '', stderr: '' });
     });
 
     it('should validate domain name', async () => {
@@ -83,7 +90,7 @@ describe('CaddyManager', () => {
     });
 
     it('should add single-service domain block', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
+      pathExistsMock.mockResolvedValue(false);
 
       await caddyManager.addDomain({
         domain: 'test.local',
@@ -91,13 +98,13 @@ describe('CaddyManager', () => {
       });
 
       expect(fs.writeFile).toHaveBeenCalled();
-      const writtenContent = (fs.writeFile as jest.Mock).mock.calls[0][1];
+      const writtenContent = writeFileMock.mock.calls[0][1];
       expect(writtenContent).toContain('test.local {');
       expect(writtenContent).toContain('reverse_proxy localhost:3000');
     });
 
     it('should add multi-service domain block', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
+      pathExistsMock.mockResolvedValue(false);
 
       await caddyManager.addDomain({
         domain: 'test.local',
@@ -105,7 +112,7 @@ describe('CaddyManager', () => {
         backendPort: 8080,
       });
 
-      const writtenContent = (fs.writeFile as jest.Mock).mock.calls[0][1];
+      const writtenContent = writeFileMock.mock.calls[0][1];
       expect(writtenContent).toContain('test.local {');
       expect(writtenContent).toContain('reverse_proxy localhost:4200');
       expect(writtenContent).toContain('handle /api/*');
@@ -114,34 +121,34 @@ describe('CaddyManager', () => {
 
     it('should remove existing domain before adding', async () => {
       const existingContent = 'old.local {\n    reverse_proxy localhost:3000\n}';
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(existingContent);
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(existingContent);
 
       await caddyManager.addDomain({
         domain: 'test.local',
         port: 3000,
       });
 
-      const writtenContent = (fs.writeFile as jest.Mock).mock.calls[0][1];
+      const writtenContent = writeFileMock.mock.calls[0][1];
       expect(writtenContent).toContain('test.local');
       expect(writtenContent).not.toContain('old.local');
     });
 
     it('should add header to new file', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
+      pathExistsMock.mockResolvedValue(false);
 
       await caddyManager.addDomain({
         domain: 'test.local',
         port: 3000,
       });
 
-      const writtenContent = (fs.writeFile as jest.Mock).mock.calls[0][1];
+      const writtenContent = writeFileMock.mock.calls[0][1];
       expect(writtenContent).toContain('# Auto-generated by domain-manager');
     });
 
     it('should throw CaddyfileError if write fails', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.writeFile as jest.Mock).mockRejectedValue(
+      pathExistsMock.mockResolvedValue(false);
+      writeFileMock.mockRejectedValue(
         new Error('Write failed')
       );
 
@@ -165,21 +172,21 @@ describe('CaddyManager', () => {
       const content = `test.local {
     reverse_proxy localhost:3000
 }`;
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
-      (execAsync as jest.Mock).mockResolvedValue({ stdout: '', stderr: '' });
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(content);
+      writeFileMock.mockResolvedValue(undefined);
+      execAsyncMock.mockResolvedValue({ stdout: '', stderr: '' });
 
       await caddyManager.removeDomain('test.local');
 
       expect(fs.writeFile).toHaveBeenCalled();
-      const writtenContent = (fs.writeFile as jest.Mock).mock.calls[0][1];
+      const writtenContent = writeFileMock.mock.calls[0][1];
       expect(writtenContent).not.toContain('test.local');
     });
 
     it('should return early if file does not exist', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockRejectedValue(
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockRejectedValue(
         new CaddyfileError('File not found', 'read', mockCaddyfilePath)
       );
 
@@ -190,9 +197,9 @@ describe('CaddyManager', () => {
 
     it('should throw CaddyfileError if write fails', async () => {
       const content = 'test.local {\n    reverse_proxy localhost:3000\n}';
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
-      (fs.writeFile as jest.Mock).mockRejectedValue(
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(content);
+      writeFileMock.mockRejectedValue(
         new Error('Write failed')
       );
 
@@ -207,8 +214,8 @@ describe('CaddyManager', () => {
       const content = `test.local {
     reverse_proxy localhost:3000
 }`;
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(content);
 
       const result = await caddyManager.listDomains();
 
@@ -226,8 +233,8 @@ describe('CaddyManager', () => {
         reverse_proxy localhost:8080
     }
 }`;
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(content);
 
       const result = await caddyManager.listDomains();
 
@@ -239,8 +246,8 @@ describe('CaddyManager', () => {
     });
 
     it('should return empty array if file does not exist', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockRejectedValue(
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockRejectedValue(
         new CaddyfileError('File not found', 'read', mockCaddyfilePath)
       );
 
@@ -257,8 +264,8 @@ describe('CaddyManager', () => {
 test2.local {
     reverse_proxy localhost:4000
 }`;
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(content);
 
       const result = await caddyManager.listDomains();
 
@@ -270,7 +277,7 @@ test2.local {
 
   describe('checkCaddyInstalled', () => {
     it('should return true if Caddy is installed', async () => {
-      (execAsync as jest.Mock).mockResolvedValue({ stdout: '', stderr: '' });
+      execAsyncMock.mockResolvedValue({ stdout: '', stderr: '' });
 
       const result = await caddyManager.checkCaddyInstalled();
 
@@ -278,7 +285,7 @@ test2.local {
     });
 
     it('should return false if Caddy is not installed', async () => {
-      (execAsync as jest.Mock).mockRejectedValue(new Error('Command failed'));
+      execAsyncMock.mockRejectedValue(new Error('Command failed'));
 
       const result = await caddyManager.checkCaddyInstalled();
 
@@ -288,7 +295,7 @@ test2.local {
 
   describe('checkCaddyRunning', () => {
     it('should return true if Caddy is running', async () => {
-      (execAsync as jest.Mock).mockResolvedValue({
+      execAsyncMock.mockResolvedValue({
         stdout: '12345',
         stderr: '',
       });
@@ -299,7 +306,7 @@ test2.local {
     });
 
     it('should return false if Caddy is not running', async () => {
-      (execAsync as jest.Mock).mockResolvedValue({ stdout: '', stderr: '' });
+      execAsyncMock.mockResolvedValue({ stdout: '', stderr: '' });
 
       const result = await caddyManager.checkCaddyRunning();
 

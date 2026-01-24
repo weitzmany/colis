@@ -6,11 +6,13 @@
 
 import { StandardsLoader, TechStandards, UserChoices } from '../standards/standards-loader.js';
 import * as fs from 'fs-extra';
-import * as path from 'path';
 import { jest } from '@jest/globals';
 
 // Mock fs-extra
 jest.mock('fs-extra');
+const pathExistsMock = jest.spyOn(fs, 'pathExists') as jest.MockedFunction<any>;
+const readFileMock = jest.spyOn(fs, 'readFile') as jest.MockedFunction<any>;
+const writeFileMock = jest.spyOn(fs, 'writeFile') as jest.MockedFunction<any>;
 
 describe('StandardsLoader', () => {
   let loader: StandardsLoader;
@@ -51,8 +53,8 @@ describe('StandardsLoader', () => {
         },
       };
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.readFile as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockResolvedValue(false);
+      readFileMock.mockImplementation((filePath: string) => {
         if (filePath.includes('default-standards.json')) {
           return Promise.resolve(JSON.stringify(mockDefaultStandards));
         }
@@ -101,7 +103,7 @@ describe('StandardsLoader', () => {
         },
       };
 
-      (fs.pathExists as jest.Mock).mockImplementation((filePath: string) => {
+      pathExistsMock.mockImplementation((filePath: string) => {
         if (filePath.includes('.core-tech-standards.json')) {
           return Promise.resolve(true);
         }
@@ -111,7 +113,7 @@ describe('StandardsLoader', () => {
         return Promise.resolve(false);
       });
 
-      (fs.readFile as jest.Mock).mockImplementation((filePath: string) => {
+      readFileMock.mockImplementation((filePath: string) => {
         if (filePath.includes('default-standards.json')) {
           return Promise.resolve(JSON.stringify(mockDefaultStandards));
         }
@@ -130,8 +132,8 @@ describe('StandardsLoader', () => {
     });
 
     it('should handle invalid JSON gracefully', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue('invalid json');
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue('invalid json');
 
       const standards = await loader.loadStandards(mockProjectPath);
 
@@ -140,8 +142,8 @@ describe('StandardsLoader', () => {
     });
 
     it('should return empty standards when default file is missing', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.readFile as jest.Mock).mockRejectedValue(new Error('File not found'));
+      pathExistsMock.mockResolvedValue(false);
+      readFileMock.mockRejectedValue(new Error('File not found'));
 
       const standards = await loader.loadStandards(mockProjectPath);
 
@@ -166,8 +168,8 @@ describe('StandardsLoader', () => {
         },
       };
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(JSON.stringify(mockChoices));
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(JSON.stringify(mockChoices));
 
       const choices = await loader.loadUserChoices(mockProjectPath);
 
@@ -176,7 +178,7 @@ describe('StandardsLoader', () => {
     });
 
     it('should return empty object when file does not exist', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
+      pathExistsMock.mockResolvedValue(false);
 
       const choices = await loader.loadUserChoices(mockProjectPath);
 
@@ -184,8 +186,8 @@ describe('StandardsLoader', () => {
     });
 
     it('should handle invalid JSON gracefully', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue('invalid json');
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue('invalid json');
 
       const choices = await loader.loadUserChoices(mockProjectPath);
 
@@ -206,7 +208,7 @@ describe('StandardsLoader', () => {
         },
       };
 
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
+      writeFileMock.mockResolvedValue(undefined);
 
       await loader.saveUserChoices(mockProjectPath, choices);
 
@@ -219,7 +221,7 @@ describe('StandardsLoader', () => {
 
     it('should handle write errors', async () => {
       const choices: UserChoices = {};
-      (fs.writeFile as jest.Mock).mockRejectedValue(new Error('Write failed'));
+      writeFileMock.mockRejectedValue(new Error('Write failed'));
 
       await expect(loader.saveUserChoices(mockProjectPath, choices)).rejects.toThrow();
     });
@@ -261,8 +263,8 @@ describe('StandardsLoader', () => {
         },
       };
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.readFile as jest.Mock).mockResolvedValue(JSON.stringify(mockStandards));
+      pathExistsMock.mockResolvedValue(false);
+      readFileMock.mockResolvedValue(JSON.stringify(mockStandards));
 
       const defaults = await loader.getNewProjectDefaults(mockProjectPath);
 
@@ -295,8 +297,8 @@ describe('StandardsLoader', () => {
         },
       };
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
-      (fs.readFile as jest.Mock).mockResolvedValue(JSON.stringify(mockStandards));
+      pathExistsMock.mockResolvedValue(false);
+      readFileMock.mockResolvedValue(JSON.stringify(mockStandards));
 
       const defaults = await loader.getNewProjectDefaults(mockProjectPath);
 

@@ -194,3 +194,23 @@ You are a specialized **Subject Matter Expert** agent. Your role is to provide a
 ---
 
 *You are the subject matter expert. Ensure all content is accurate, appropriate, and educationally valuable.*
+
+---
+
+## Review/Contribution
+
+**Expert**: Allison Foster  
+**Expertise**: Accessibility (a11y)  
+**Date**: 2026-01-05  
+**Changes**: This file defines the Subject Matter Expert persona for academic content (Physics, Math, CS). My accessibility expertise focuses on WCAG compliance, screen readers, keyboard navigation, and accessible UI/UX patterns. This expert persona file is about academic content accuracy and educational value, which is outside my accessibility domain. While accessible educational content is important, this particular file defines expert responsibilities and does not require accessibility review.
+
+<!-- IRRELEVANT FOR ME -->
+
+**Expert**: Samuel Rodriguez  
+**Expertise**: Backend Development  
+**Date**: 2026-01-05  
+**Changes**: This file defines the Subject Matter Expert persona for academic content accuracy in Physics, Mathematics, and Computer Science. While backend APIs might serve educational content and backend systems might store academic data, the core expertise defined here (academic content accuracy, educational value, subject matter knowledge) is distinct from backend development (API design, database operations, server-side logic, backend architecture). Therefore, I am marking this file as irrelevant for my review.
+
+<!-- IRRELEVANT FOR ME -->
+
+---

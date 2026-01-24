@@ -54,7 +54,6 @@ export async function detectCommand(options: {
     const skipWarnings = options['skip-warnings'] === true;
     const interactive = options.interactive !== false && !isCI; // Disable interactive in CI
     const failOnWarning = options['fail-on-warning'] === true;
-    let hasWarnings = false;
 
     if (checkStandards && !skipWarnings) {
       try {
@@ -68,7 +67,6 @@ export async function detectCommand(options: {
         const warnings = await warningDetector.detectWarnings(techStack, standards, userChoices);
 
         if (warnings.length > 0) {
-          hasWarnings = true;
           
           // Generate JSON report if requested
           if (options.report) {

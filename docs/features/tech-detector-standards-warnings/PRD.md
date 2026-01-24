@@ -430,6 +430,19 @@ What would you like to do?
 - Add `--skip-warnings` flag to skip all warnings
 - Add `--interactive` flag (default: true) for prompts
 
+### CI/CD Usage Guidance (DevOps Review)
+
+**Current Behavior (as implemented)**:
+- Standards checking is best-effort and does **not** fail the command on warnings.
+- `--skip-warnings` disables warning prompts entirely (useful for non-interactive CI steps).
+- `--no-interactive` (CLI shorthand for `--interactive=false`) still performs checks but skips prompts.
+- Warnings are currently printed but not emitted as machine-readable artifacts.
+
+**Planned Enhancements**:
+- `--fail-on-warning` to exit non-zero when warnings are detected (CI gate).
+- `--report <path>` to emit warnings as JSON for pipeline artifacts.
+- CI-friendly summary output with counts by category (framework, language, build tool, etc.).
+
 ## Usage Examples
 
 ### Basic Usage with Warnings
@@ -728,5 +741,10 @@ npx @your-org/core tech-detect detect --no-interactive
 **Expertise**: Business Intelligence and Analytics  
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive "Business Intelligence & Analytics Considerations" section covering analytics metrics and KPIs (tech stack detection analytics with detection patterns, framework adoption rates, version distribution, tech stack combinations, standards compliance trends; warning analytics with warning frequency, resolution rates, resolution time, user choice patterns, warning effectiveness; standards analytics with standards adoption, custom recommendations, standards override patterns, version update rates, compliance scores), data collection strategy (event tracking for tech detection, warnings, user actions, standards updates, compliance; data points including detected technology, recommended alternatives, user actions, project context, timestamps, standards configuration), reporting and dashboards (tech stack analytics dashboard with adoption overview, version distribution, framework popularity, tech stack combinations, compliance trends; warning analytics dashboard with warning frequency, resolution rates, resolution time, effectiveness, user choice patterns; standards compliance dashboard with compliance scores, adoption rates, update rates, custom recommendations, override analysis), analytics architecture (data collection with event tracking, anonymous data, opt-in analytics, data privacy; data processing with aggregation, compliance calculations, trend analysis, pattern recognition; data storage with analytics database, aggregated metrics, data retention), analytics implementation phases (Phase 1: basic analytics with MVP tracking and dashboards; Phase 2: advanced analytics with trends, patterns, predictive analytics, team-level metrics; Phase 3: AI-powered insights with recommendations, anomaly detection, predictive compliance, automated optimization), analytics tools integration (recommended tools for event tracking, visualization, BI platforms, data warehousing; integration points for tech detector, warning system, user actions, standards updates, CLI commands), and analytics best practices (data privacy with opt-in, anonymization, GDPR compliance, data minimization; analytics quality with validation, error handling, performance, reliability; analytics value with actionable insights, user benefits, privacy transparency, continuous improvement). This addition ensures that the Tech Detector Standards Warnings feature includes comprehensive analytics capabilities for tracking tech adoption, warning effectiveness, standards compliance, and user behavior, enabling data-driven decision making and continuous improvement of standards and recommendations.
+
+**Expert**: Devin Patel  
+**Expertise**: DevOps, CI/CD, and Deployment  
+**Date**: 2026-01-20  
+**Changes**: Documented the DevOps review requested via `/local/feature-review feature=core/tech-detector expert=rand docs=true`, capturing CI/CD usage guidance and current operational constraints (non-interactive usage and best-effort checks), plus a short backlog of CI-focused enhancements (fail-on-warning and JSON reports). Implementation changes are deferred due to planning mode restrictions.
 
 ---

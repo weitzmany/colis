@@ -5,34 +5,34 @@
 import { HostsManager } from '../hosts-manager.js';
 import { HostsFileError } from '../errors.js';
 import * as fs from 'fs-extra';
-import * as path from 'path';
-import * as os from 'os';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 
 jest.mock('fs-extra');
 jest.mock('child_process');
-jest.mock('util');
+// Use var for hoisting compatibility with jest.mock factory
+var execAsyncMock = jest.fn();
+jest.mock('util', () => ({
+  promisify: jest.fn(() => execAsyncMock),
+}));
 
-const execAsync = promisify(exec);
+// Initialize spies at top level
+const pathExistsMock: any = jest.spyOn(fs, 'pathExists').mockImplementation((() => Promise.resolve(false)) as any);
+const readFileMock: any = jest.spyOn(fs, 'readFile').mockImplementation((() => Promise.resolve('')) as any);
+const writeFileMock: any = jest.spyOn(fs, 'writeFile').mockImplementation((() => Promise.resolve()) as any);
+const copyMock: any = jest.spyOn(fs, 'copy').mockImplementation((() => Promise.resolve()) as any);
 
 describe('HostsManager', () => {
   let hostsManager: HostsManager;
-  let mockHostsPath: string;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    execAsyncMock.mockResolvedValue({ stdout: '', stderr: '' });
     hostsManager = new HostsManager();
-    mockHostsPath =
-      process.platform === 'win32'
-        ? 'C:\\Windows\\System32\\drivers\\etc\\hosts'
-        : '/etc/hosts';
   });
 
   describe('hasEntry', () => {
     it('should return true if domain exists in hosts file', async () => {
       const content = '127.0.0.1\ttest.local\n';
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      readFileMock.mockResolvedValue(content);
 
       const result = await hostsManager.hasEntry('test.local');
 
@@ -41,7 +41,7 @@ describe('HostsManager', () => {
 
     it('should return false if domain does not exist', async () => {
       const content = '127.0.0.1\tother.local\n';
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      readFileMock.mockResolvedValue(content);
 
       const result = await hostsManager.hasEntry('test.local');
 
@@ -50,7 +50,7 @@ describe('HostsManager', () => {
 
     it('should ignore comments', async () => {
       const content = '# 127.0.0.1\ttest.local\n';
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      readFileMock.mockResolvedValue(content);
 
       const result = await hostsManager.hasEntry('test.local');
 
@@ -58,7 +58,7 @@ describe('HostsManager', () => {
     });
 
     it('should return false if read fails', async () => {
-      (fs.readFile as jest.Mock).mockRejectedValue(new Error('Read failed'));
+      readFileMock.mockRejectedValue(new Error('Read failed'));
 
       const result = await hostsManager.hasEntry('test.local');
 
@@ -68,11 +68,11 @@ describe('HostsManager', () => {
 
   describe('addEntry', () => {
     beforeEach(() => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue('');
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
-      (fs.copy as jest.Mock).mockResolvedValue(undefined);
-      (execAsync as jest.Mock).mockResolvedValue({ stdout: '', stderr: '' });
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue('');
+      writeFileMock.mockResolvedValue(undefined);
+      copyMock.mockResolvedValue(undefined);
+      execAsyncMock.mockResolvedValue({ stdout: '', stderr: '' });
     });
 
     it('should validate domain name', async () => {
@@ -93,7 +93,7 @@ describe('HostsManager', () => {
     });
 
     it('should skip if entry already exists', async () => {
-      (fs.readFile as jest.Mock).mockResolvedValue(
+      readFileMock.mockResolvedValue(
         '127.0.0.1\ttest.local\n'
       );
 
@@ -103,34 +103,34 @@ describe('HostsManager', () => {
     });
 
     it('should add entry to hosts file', async () => {
-      (fs.readFile as jest.Mock).mockResolvedValue('');
+      readFileMock.mockResolvedValue('');
 
       await hostsManager.addEntry('test.local', '127.0.0.1');
 
       expect(fs.writeFile).toHaveBeenCalled();
-      const writtenContent = (fs.writeFile as jest.Mock).mock.calls[0][1];
+      const writtenContent = writeFileMock.mock.calls[0][1];
       expect(writtenContent).toContain('127.0.0.1');
       expect(writtenContent).toContain('test.local');
     });
 
     it('should create backup before adding entry', async () => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue('');
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue('');
 
       await hostsManager.addEntry('test.local');
 
       if (process.platform === 'win32') {
         expect(fs.copy).toHaveBeenCalled();
       } else {
-        expect(execAsync).toHaveBeenCalledWith(
+        expect(execAsyncMock).toHaveBeenCalledWith(
           expect.stringContaining('sudo cp')
         );
       }
     });
 
     it('should throw HostsFileError if write fails', async () => {
-      (fs.readFile as jest.Mock).mockResolvedValue('');
-      (fs.writeFile as jest.Mock).mockRejectedValue(
+      readFileMock.mockResolvedValue('');
+      writeFileMock.mockRejectedValue(
         new Error('Permission denied')
       );
 
@@ -142,12 +142,12 @@ describe('HostsManager', () => {
 
   describe('removeEntry', () => {
     beforeEach(() => {
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(
         '127.0.0.1\ttest.local\n'
       );
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
-      (execAsync as jest.Mock).mockResolvedValue({ stdout: '', stderr: '' });
+      writeFileMock.mockResolvedValue(undefined);
+      execAsyncMock.mockResolvedValue({ stdout: '', stderr: '' });
     });
 
     it('should validate domain name', async () => {
@@ -157,7 +157,7 @@ describe('HostsManager', () => {
     });
 
     it('should skip if entry does not exist', async () => {
-      (fs.readFile as jest.Mock).mockResolvedValue('127.0.0.1\tother.local\n');
+      readFileMock.mockResolvedValue('127.0.0.1\tother.local\n');
 
       await hostsManager.removeEntry('test.local');
 
@@ -166,28 +166,28 @@ describe('HostsManager', () => {
 
     it('should remove entry from hosts file', async () => {
       const content = '127.0.0.1\ttest.local\n127.0.0.1\tother.local\n';
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      readFileMock.mockResolvedValue(content);
 
       await hostsManager.removeEntry('test.local');
 
       expect(fs.writeFile).toHaveBeenCalled();
-      const writtenContent = (fs.writeFile as jest.Mock).mock.calls[0][1];
+      const writtenContent = writeFileMock.mock.calls[0][1];
       expect(writtenContent).not.toContain('test.local');
       expect(writtenContent).toContain('other.local');
     });
 
     it('should preserve comments and empty lines', async () => {
       const content = '# Comment\n127.0.0.1\ttest.local\n\n';
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      readFileMock.mockResolvedValue(content);
 
       await hostsManager.removeEntry('test.local');
 
-      const writtenContent = (fs.writeFile as jest.Mock).mock.calls[0][1];
+      const writtenContent = writeFileMock.mock.calls[0][1];
       expect(writtenContent).toContain('# Comment');
     });
 
     it('should throw HostsFileError if read fails', async () => {
-      (fs.readFile as jest.Mock).mockRejectedValue(new Error('Read failed'));
+      readFileMock.mockRejectedValue(new Error('Read failed'));
 
       await expect(hostsManager.removeEntry('test.local')).rejects.toThrow(
         HostsFileError
@@ -195,7 +195,7 @@ describe('HostsManager', () => {
     });
 
     it('should throw HostsFileError if write fails', async () => {
-      (fs.writeFile as jest.Mock).mockRejectedValue(
+      writeFileMock.mockRejectedValue(
         new Error('Permission denied')
       );
 
@@ -211,7 +211,7 @@ describe('HostsManager', () => {
 127.0.0.1\ttest2.local
 127.0.0.1\tother.com
 `;
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      readFileMock.mockResolvedValue(content);
 
       const result = await hostsManager.listEntries();
 
@@ -222,7 +222,7 @@ describe('HostsManager', () => {
       const content = `# 127.0.0.1\ttest.local
 127.0.0.1\ttest.local
 `;
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      readFileMock.mockResolvedValue(content);
 
       const result = await hostsManager.listEntries();
 
@@ -230,7 +230,7 @@ describe('HostsManager', () => {
     });
 
     it('should return empty array if read fails', async () => {
-      (fs.readFile as jest.Mock).mockRejectedValue(new Error('Read failed'));
+      readFileMock.mockRejectedValue(new Error('Read failed'));
 
       const result = await hostsManager.listEntries();
 
@@ -239,7 +239,7 @@ describe('HostsManager', () => {
 
     it('should handle multiple spaces and tabs', async () => {
       const content = '127.0.0.1   test.local\n127.0.0.1\ttest2.local\n';
-      (fs.readFile as jest.Mock).mockResolvedValue(content);
+      readFileMock.mockResolvedValue(content);
 
       const result = await hostsManager.listEntries();
 

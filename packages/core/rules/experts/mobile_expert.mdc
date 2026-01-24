@@ -234,6 +234,101 @@ const routes: Routes = [
 # 4. Test touch interactions
 ```
 
+## Compliance Requirements for Mobile Applications
+
+### Mobile Privacy Compliance
+
+1. **COPPA Compliance (Children Under 13)**
+   - **Mobile Data Collection**: Parental consent required before collecting data from mobile apps
+   - **Device Identifiers**: Limit collection of device identifiers (UDID, advertising ID) for children
+   - **Location Data**: Parental consent required for location data from children
+   - **Mobile Permissions**: Clear explanation of why mobile permissions are needed
+   - **App Store Compliance**: Comply with app store privacy requirements (Apple App Store, Google Play)
+
+2. **GDPR Compliance (EU Users)**
+   - **Mobile Consent**: Clear consent for mobile data collection and processing
+   - **Location Privacy**: Explicit consent for location tracking
+   - **Device Identifiers**: Consent for device identifier collection
+   - **Mobile Analytics**: Consent for mobile analytics and tracking
+   - **Right to Deletion**: Ability to delete mobile app data
+
+3. **Mobile Data Collection Best Practices**
+   ```typescript
+   // ✅ DO: Implement mobile privacy compliance
+   class MobileDataCollection {
+     async requestConsent(userId: string, dataType: string): Promise<boolean> {
+       const user = await this.getUser(userId);
+       
+       if (user.age < 13) {
+         // COPPA: Require parental consent
+         return await this.hasParentalConsent(userId, dataType);
+       }
+       
+       if (this.isEUResident(user)) {
+         // GDPR: Explicit consent
+         return await this.getExplicitConsent(userId, dataType);
+       }
+       
+       // Standard consent
+       return await this.getConsent(userId, dataType);
+     }
+     
+     async collectLocationData(userId: string): Promise<LocationData | null> {
+       // Check consent for location data
+       if (!await this.requestConsent(userId, 'location')) {
+         return null; // Cannot collect without consent
+       }
+       
+       // Collect location with user awareness
+       return await this.getLocation(userId);
+     }
+   }
+   ```
+
+### Mobile Accessibility Compliance
+
+1. **Mobile Accessibility Requirements**
+   - **Touch Targets**: Minimum 44x44px (WCAG requirement)
+   - **Screen Reader Support**: VoiceOver (iOS), TalkBack (Android)
+   - **Keyboard Navigation**: Full keyboard support on mobile
+   - **Color Contrast**: WCAG AA contrast on mobile screens
+   - **Text Scaling**: Support for dynamic text sizing
+   - **Focus Indicators**: Visible focus indicators on mobile
+
+2. **Mobile Accessibility Implementation**
+   ```typescript
+   // ✅ DO: Implement mobile accessibility
+   // Touch targets meet WCAG requirements
+   <button 
+     style={{ minWidth: '44px', minHeight: '44px' }}
+     aria-label="Submit quiz"
+     accessibilityRole="button">
+     Submit
+   </button>
+   
+   // Screen reader support
+   <Image
+     source={diagram}
+     accessible={true}
+     accessibilityLabel="Flowchart showing user authentication process"
+   />
+   ```
+
+### Mobile Compliance Checklist
+
+- [ ] COPPA: Parental consent for mobile data collection
+- [ ] COPPA: Limited device identifier collection for children
+- [ ] COPPA: Parental consent for location data
+- [ ] GDPR: Explicit consent for mobile data processing
+- [ ] GDPR: Consent for location tracking
+- [ ] GDPR: Right to delete mobile app data
+- [ ] Mobile accessibility: Touch targets 44x44px minimum
+- [ ] Mobile accessibility: Screen reader support (VoiceOver, TalkBack)
+- [ ] Mobile accessibility: Keyboard navigation support
+- [ ] Mobile accessibility: Color contrast WCAG AA
+- [ ] Mobile accessibility: Dynamic text sizing support
+- [ ] App store privacy compliance (Apple, Google)
+
 ## Best Practices
 
 1. **Mobile-First**: Design for mobile, enhance for desktop
@@ -242,6 +337,10 @@ const routes: Routes = [
 4. **Offline Support**: PWA for offline capability
 5. **Responsive**: Works on all screen sizes
 6. **Test Real Devices**: Don't rely only on emulators
+7. **Privacy by Design**: Build mobile privacy compliance from the start
+8. **Accessibility First**: Ensure mobile apps are accessible to all users
+9. **Consent Management**: Clear consent for mobile data collection
+10. **App Store Compliance**: Meet app store privacy requirements
 
 ## When to Ask Questions
 
@@ -251,7 +350,22 @@ const routes: Routes = [
 - Performance optimization
 - Testing strategy
 - Device compatibility
+- Mobile privacy compliance (COPPA, GDPR)
+- Mobile accessibility compliance
+- Mobile consent management
+- App store privacy requirements
 
 ---
 
-*You are the mobile expert. Ensure the application provides an excellent mobile experience.*
+*You are the mobile expert. Ensure the application provides an excellent mobile experience while complying with privacy regulations (COPPA, GDPR) and accessibility requirements (WCAG, ADA, Section 508).*
+
+---
+
+## Review/Contribution
+
+**Expert**: Constance White  
+**Expertise**: Compliance (Educational/Legal)  
+**Date**: 2026-01-05  
+**Changes**: Added comprehensive "Compliance Requirements for Mobile Applications" section covering mobile privacy compliance (COPPA compliance with parental consent for mobile data collection, device identifiers, location data, mobile permissions, app store compliance, GDPR compliance with mobile consent, location privacy, device identifiers, mobile analytics, right to deletion, mobile data collection best practices with TypeScript code examples showing consent management and location data collection), mobile accessibility compliance (mobile accessibility requirements with touch targets 44x44px, screen reader support, keyboard navigation, color contrast, text scaling, focus indicators, mobile accessibility implementation with code examples), and comprehensive mobile compliance checklist (12 items covering COPPA, GDPR, mobile accessibility, app store compliance). Updated "Best Practices" section to include privacy by design, accessibility first, consent management, and app store compliance. Updated "When to Ask Questions" section to include mobile privacy compliance, mobile accessibility compliance, mobile consent management, and app store privacy requirements. Updated the closing statement to explicitly mention privacy regulations (COPPA, GDPR) and accessibility requirements (WCAG, ADA, Section 508). This addition ensures that mobile applications comply with all relevant privacy and accessibility regulations, protecting user data and ensuring mobile apps are accessible to all users.
+
+---

@@ -48,7 +48,7 @@ npx /Users/yoavweitzman/Documents/packages/packages/template-project create my-a
 After setup, create a new project:
 
 ```bash
-# Basic usage (interactive prompts)
+# Basic usage (interactive prompts) - Angular projects use Angular CLI by default
 create-project create my-awesome-app
 
 # With options
@@ -57,12 +57,38 @@ create-project create my-awesome-app \
   --package-manager pnpm \
   --description "My awesome app"
 
+# Use templates instead of Angular CLI for Angular projects
+create-project create my-angular-app \
+  --no-use-ng-cli \
+  --package-manager pnpm
+
 # Skip certain steps
 create-project create my-awesome-app \
   --skip-deps \
   --skip-git \
   --skip-task-manager
 ```
+
+### Using Angular CLI (Default for Angular)
+
+**Angular projects now use Angular CLI by default!**
+
+```bash
+# Uses Angular CLI automatically for Angular templates
+create-project create my-ng-app
+
+# Explicitly specify Angular CLI (same as default)
+create-project create my-ng-app --use-ng-cli
+
+# Use templates instead of Angular CLI
+create-project create my-ng-app --no-use-ng-cli
+```
+
+This will:
+- Run `ng new` to generate the Angular project
+- Respect your package manager choice
+- Still run Project Initialization to add Cursor rules and commands
+- Skip dependencies/git if requested
 
 ## Troubleshooting
 

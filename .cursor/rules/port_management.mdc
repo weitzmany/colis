@@ -1,0 +1,209 @@
+# Port Management Rule
+
+## ⚠️ CRITICAL RULE
+
+**When needing to decide on a port for any reason - ALWAYS use the port-manager package.**
+
+## Rule Details
+
+### Port Manager is Source of Truth
+
+**Port Manager** (`@yoavweitzman/port-manager`) is the single source of truth for port allocation across all projects.
+
+1. **Never hardcode ports** in project configuration
+2. **Never manually assign ports** arbitrarily
+3. **Always use port-manager** to allocate ports
+4. **Always read from `.port-manager.json`** for port information
+
+### When Port Decision is Needed
+
+**Scenarios requiring port allocation:**
+- Creating a new project
+- Adding a new service to a project
+- Configuring development servers
+- Configuring API servers
+- Configuring database connections (if local)
+- Configuring any networked service
+
+**Action: Use Port Manager**
+
+```bash
+# Allocate a new port for a project
+npx port-manager allocate <project-name>
+
+# Or use the package directly in code
+```
+
+### Port Configuration Files
+
+**Port Manager creates**: `.port-manager.json`
+
+```json
+{
+  "projectName": "my-project",
+  "ports": {
+    "frontend": 4200,
+    "backend": 3000,
+    "database": 5432
+  },
+  "allocatedAt": "2026-01-22T...",
+  "managedBy": "port-manager"
+}
+```
+
+**Your project configuration should READ from this file:**
+
+```typescript
+// ✅ DO: Read port from port-manager
+import { readPortConfig } from '@yoavweitzman/port-manager';
+
+const config = await readPortConfig();
+const port = config.ports.frontend;
+
+// Then use in package.json, angular.json, vite.config.js, etc.
+```
+
+```json
+// ✅ DO: Reference port-manager allocated port in scripts
+{
+  "scripts": {
+    "start": "ng serve --port $(node -p \"require('./.port-manager.json').ports.frontend\")"
+  }
+}
+```
+
+```bash
+# ❌ DON'T: Hardcode ports
+{
+  "scripts": {
+    "start": "ng serve --port 4200"
+  }
+}
+```
+
+### Port Manager Benefits
+
+1. **Conflict Prevention**: Prevents port conflicts across projects
+2. **Central Management**: All ports managed in one place
+3. **Documentation**: Ports are documented and traceable
+4. **Automation**: Projects can automatically use allocated ports
+5. **Consistency**: Same approach across all projects
+
+### Integration with Project Creation
+
+When creating new projects:
+
+1. **First Step**: Allocate port using port-manager
+2. **Second Step**: Configure project to read from `.port-manager.json`
+3. **Third Step**: Verify project uses allocated port
+
+**Example: Project Initialization**
+
+```bash
+# 1. Allocate port
+npx port-manager allocate my-new-project
+
+# 2. Create project (reads .port-manager.json)
+npx create-my-project my-new-project
+
+# 3. Verify
+npx port-manager list
+```
+
+### Port Manager Commands
+
+```bash
+# Allocate a new port for a project
+npx port-manager allocate <project-name>
+
+# List all allocated ports
+npx port-manager list
+
+# Check if a port is available
+npx port-manager check <port>
+
+# Release a port
+npx port-manager release <project-name>
+
+# Get port for a specific project
+npx port-manager get <project-name>
+```
+
+### Template Projects and Port Manager
+
+**Template projects** (like `template-project` package) should:
+
+1. **NOT include hardcoded ports** in templates
+2. **Include port-manager integration** in generated projects
+3. **Read from `.port-manager.json`** during project creation
+4. **Configure scripts** to read from `.port-manager.json`
+
+### Documentation References
+
+- Port Manager package: `packages/port-manager/`
+- Port Manager documentation: Check package README
+- Project initialization guide: `docs/features/project-initialization/PRD.md`
+- Template project guide: `docs/features/project-template/PRD.md`
+
+### Verification Checklist
+
+When creating or configuring a project, verify:
+
+- [ ] Port allocated using port-manager
+- [ ] `.port-manager.json` exists in project root
+- [ ] Project configuration reads from `.port-manager.json`
+- [ ] No hardcoded ports in configuration files
+- [ ] Scripts use port from `.port-manager.json`
+- [ ] README documents port usage
+- [ ] Development server uses correct port
+- [ ] API server (if applicable) uses correct port
+
+### Common Port Conflicts to Avoid
+
+**DO NOT manually assign these common ports:**
+- 3000 (common Node.js default)
+- 4200 (Angular default)
+- 5173 (Vite default)
+- 8080 (common development server)
+- 3001, 3002, etc. (common incremental ports)
+
+**INSTEAD: Let port-manager assign available ports.**
+
+### Exception Handling
+
+**If port-manager is not available:**
+- Document the port allocation manually
+- Plan to migrate to port-manager when available
+- Track port assignments to avoid conflicts
+- **Do NOT** randomly pick ports
+
+**If port conflict occurs:**
+- Use port-manager to check allocation
+- Resolve conflict by reallocating port
+- Update project configuration
+- Document resolution
+
+## Key Principle
+
+**Port Manager is the source of truth. Never decide ports manually. Always use port-manager for port allocation and management.**
+
+## Integration with Other Rules
+
+This rule integrates with:
+- **Project Initialization**: Use port-manager during project creation
+- **Template Projects**: Templates should include port-manager integration
+- **Package Development**: Packages that create projects should use port-manager
+- **Development Workflow**: Always check allocated ports before running projects
+
+---
+
+## Review/Contribution
+
+**Created**: 2026-01-22  
+**Purpose**: Establish port-manager as single source of truth for port allocation  
+**Scope**: All projects, all development workflows  
+**Status**: Active - Must be followed  
+
+---
+
+**This is a workspace-level rule that applies to all projects and development activities.**

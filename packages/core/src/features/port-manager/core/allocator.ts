@@ -10,39 +10,73 @@ import { PortConflictError, PortRangeExhaustedError, PortInUseError } from '../e
 import * as net from 'net';
 
 export class PortAllocator {
+  /**
+   * Port ranges organized by technology
+   * Each tech gets 100 ports in a dedicated, non-overlapping range
+   * 
+   * Frontend Frameworks (3xxx-4xxx):
+   * - React:     3001-3099 (default 3000 reserved)
+   * - Next.js:   3101-3199 (default 3100 reserved)
+   * - Node:      3201-3299
+   * - Angular:   4201-4299 (default 4200 reserved)
+   * 
+   * Backend Frameworks (5xxx):
+   * - Vue:       5001-5099 (default 5000 reserved)
+   * - Python:    5101-5199 (Django, Flask)
+   * 
+   * Mobile & Native (8xxx):
+   * - PHP:       8001-8099 (default 8000 reserved)
+   * - React Native: 8101-8199 (default 8081 reserved)
+   * - Expo:      8201-8299
+   * - Ionic:     8301-8399 (default 8300 reserved)
+   * - Flutter:   8401-8499
+   * 
+   * Infrastructure (9xxx):
+   * - Docker:    9001-9099 (default 9000 reserved)
+   */
   private defaultRanges: { [key: string]: PortRange } = {
-    node: { start: 3001, end: 3099 },      // Skip 3000 (default)
-    nextjs: { start: 3001, end: 3099 },   // Skip 3000 (default)
-    angular: { start: 4201, end: 4299 },  // Skip 4200 (default)
-    react: { start: 4001, end: 4099 },    // Skip 4000 (default)
-    python: { start: 5001, end: 5099 },  // Skip 5000 (default)
-    php: { start: 8001, end: 8099 },      // Skip 8000 (default)
-    docker: { start: 3001, end: 3999 },   // Skip 3000 (default)
-    'react-native': { start: 8081, end: 8199 }, // Metro bundler default: 8081
-    expo: { start: 8081, end: 8199 },     // Expo uses Metro bundler (default: 8081)
-    ionic: { start: 8100, end: 8199 },    // Ionic dev server (default: 8100)
-    flutter: { start: 5000, end: 5099 },  // Flutter web dev server (default: 5000)
+    // Frontend Frameworks (3xxx-4xxx)
+    react: { start: 3001, end: 3099 },      // Skip 3000 (default)
+    nextjs: { start: 3101, end: 3199 },     // Skip 3100 (default)
+    node: { start: 3201, end: 3299 },       // Express, Fastify, etc.
+    angular: { start: 4201, end: 4299 },    // Skip 4200 (default)
+
+    // Backend Frameworks (5xxx)
+    vue: { start: 5001, end: 5099 },        // Skip 5000 (default)
+    python: { start: 5101, end: 5199 },     // Django, Flask
+
+    // Mobile & Native (8xxx)
+    php: { start: 8001, end: 8099 },        // Skip 8000 (default)
+    slim: { start: 8001, end: 8099 },       // Slim uses same range as PHP
+    'react-native': { start: 8101, end: 8199 }, // Skip 8081/8100 (defaults)
+    expo: { start: 8201, end: 8299 },       // Expo projects
+    ionic: { start: 8301, end: 8399 },      // Skip 8300 (default)
+    flutter: { start: 8401, end: 8499 },    // Flutter web
+
+    // Infrastructure (9xxx)
+    docker: { start: 9001, end: 9099 },     // Skip 9000 (default)
   };
 
   /**
    * Default ports that should never be assigned by Port Manager
    * These are reserved for projects that don't use Port Manager
-   * Includes mobile development server defaults
    */
   private reservedDefaultPorts: number[] = [
-    3000,   // Node.js/Next.js default
+    3000,   // React/Node.js default
+    3100,   // Next.js default
     4200,   // Angular default
-    4000,   // React default
-    5000,   // Python/Flutter default
+    5000,   // Vue/Python default
     8000,   // PHP default
     8081,   // React Native Metro bundler default
-    8100,   // Ionic dev server default
+    8100,   // React Native alternative
+    8300,   // Ionic default
+    9000,   // Docker default
   ];
 
   constructor(
     private repository: PortRepository,
     private customRanges?: { [key: string]: PortRange }
-  ) {}
+  ) { }
 
   /**
    * Allocate a port for a project
@@ -53,14 +87,20 @@ export class PortAllocator {
     appType: AppType,
     preferredPort?: number
   ): Promise<number> {
+    // DEBUG: Log allocation attempt
+    console.log(`[DEBUG allocator] Allocating port for ${projectName} (${appType})`);
+    console.log(`[DEBUG allocator] preferredPort: ${preferredPort || 'undefined'}`);
+
     // Check if port is already assigned
     const existing = await this.repository.getPort(projectName, appType);
     if (existing && existing.status === 'active') {
+      console.log(`[DEBUG allocator] Found existing assignment: port ${existing.port}`);
       return existing.port;
     }
 
     // If preferred port is provided, check if it's available
     if (preferredPort) {
+      console.log(`[DEBUG allocator] Checking preferred port ${preferredPort}`);
       // Reject if it's a reserved default port
       if (this.reservedDefaultPorts.includes(preferredPort)) {
         throw new PortConflictError(
@@ -94,8 +134,11 @@ export class PortAllocator {
     }
 
     // Find available port in range
+    console.log(`[DEBUG allocator] Finding available port in range`);
     const range = this.getRangeForAppType(appType);
+    console.log(`[DEBUG allocator] Range: ${range.start}-${range.end}`);
     let port = await this.repository.findAvailablePortInRange(range.start, range.end);
+    console.log(`[DEBUG allocator] findAvailablePortInRange returned: ${port}`);
 
     if (!port) {
       throw new PortRangeExhaustedError(

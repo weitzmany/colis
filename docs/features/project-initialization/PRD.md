@@ -60,20 +60,24 @@ Project Initialization solves these problems with a single command that:
 2. **Automatically Copies Commands**: Copies general commands (excludes local commands for packages repo)
 3. **Initializes Port Manager**: Automatically initializes Port Manager (mandatory)
 4. **Configures IDE Colors**: Sets up unique project colors with branch-based themes (automatic)
-5. **Validates Setup**: Verifies all files were copied correctly
-6. **Single Command**: One command (`npx @your-org/core init`) does everything
-7. **Smart Filtering**: Automatically excludes "local" commands/rules meant only for the packages repo
+5. **Initializes Git Workflow**: Automatically sets up git configuration, hooks, templates (mandatory)
+6. **Validates Setup**: Verifies all files were copied correctly
+7. **Single Command**: One command (`npx @your-org/core init`) does everything
+8. **Smart Filtering**: Automatically excludes "local" commands/rules meant only for the packages repo
+9. **Lifecycle Management**: Provides ongoing verify, repair, and update capabilities
 
 ## Goals
 
 ### Primary Goals
 
 1. **Automate Project Setup**: Eliminate manual copying of rules and commands
-2. **Ensure Consistency**: All projects have the same rules and commands
+2. **Ensure Consistency**: All projects have the same rules, commands, and git workflows
 3. **Mandatory Port Manager**: Ensure Port Manager is initialized in all projects
-4. **Visual Project Distinction**: Provide unique IDE colors per project with branch-based themes
-5. **Single Command Setup**: One command initializes everything
-6. **Error Prevention**: Prevent setup errors through automation
+4. **Mandatory Git Workflow**: Ensure standardized git configuration in all projects
+5. **Visual Project Distinction**: Provide unique IDE colors per project with branch-based themes
+6. **Single Command Setup**: One command initializes everything
+7. **Lifecycle Management**: Provide ongoing verify, repair, and update capabilities
+8. **Error Prevention**: Prevent setup errors through automation
 
 ### Success Metrics
 
@@ -292,9 +296,64 @@ Each project gets a complete color palette derived from KEY_COLOR:
 - [IDE Colors Usage Guide](../../guides/IDE_COLORS_USAGE.md) - User guide for IDE colors
 - [IDE Colors Reference](../../reference/IDE_COLORS_REFERENCE.md) - Complete color reference
 
-### Feature 5: Setup Validation
+### Feature 5: Git Workflow Initialization
 
-**Description**: Validates that all files were copied correctly and Port Manager is initialized.
+**Description**: Automatically initializes git workflow using the `@your-org/git-workflow` package (mandatory).
+
+**What Gets Configured**:
+- **Git Repository**: Initializes git repository if not already initialized
+- **Git Hooks**: Installs standardized hooks (pre-commit, commit-msg, pre-push, post-checkout, post-merge)
+- **Commit Template**: Sets up `.gitmessage` with conventional commits format
+- **PR Templates**: Creates `.github/PULL_REQUEST_TEMPLATE.md`
+- **Issue Templates**: Creates bug report, feature request templates in `.github/ISSUE_TEMPLATE/`
+- **`.gitignore`**: Copies appropriate `.gitignore` based on project type (nodejs, python, go, etc.)
+- **`.gitattributes`**: Configures line endings, binary files, diff settings
+- **Git Config**: Configures commit template path, default branch, etc.
+- **GitHub CLI (`gh`)**: Installs if missing and validates authentication
+- **Issue Routing**: Configures packages repo mapping for standardized issue workflows
+- **Remote Repo**: Creates GitHub repo if missing and configures `origin`
+- **Contributor Attribution**: Registers expert mailbox and configures git user.name/user.email
+
+**Integration with Git Workflow Package**:
+Core consumes the `@your-org/git-workflow` package for:
+- Asset copying (hooks, templates, configs)
+- Git initialization and configuration
+- Project type detection for appropriate `.gitignore`
+- Hook installation and permission setup
+- GitHub CLI installation and authentication checks
+- Packages repo issue workflows (open/read)
+- Expert mailbox registration and attribution mapping
+
+**Implementation**:
+```typescript
+import { GitWorkflow } from '@your-org/git-workflow';
+
+// During project initialization
+await GitWorkflow.init({
+  projectRoot: process.cwd(),
+  projectType: detectProjectType(), // 'nodejs', 'python', 'go', etc.
+  options: {
+    hooksEnabled: ['pre-commit', 'commit-msg', 'pre-push', 'post-checkout'],
+    commitTemplate: true,
+    prTemplate: true,
+    issueTemplates: true
+  }
+});
+```
+
+**Options**:
+- `--skip-git`: Skip git workflow initialization (not recommended)
+- `--skip-gh`: Skip GitHub CLI installation/auth checks (not recommended)
+- `--skip-remote`: Skip GitHub repo creation (not recommended)
+- `--git-hooks <list>`: Specify which hooks to enable (default: all)
+- Default: Git workflow is always initialized
+
+**See Also**:
+- [Git Workflow Package PRD](../git-workflow/PRD.md) - Complete git workflow specification
+
+### Feature 6: Setup Validation
+
+**Description**: Validates that all files were copied correctly, Port Manager is initialized, and Git Workflow is configured.
 
 **Checks**:
 - All expert personas exist in `.cursor/rules/experts/`
@@ -307,11 +366,22 @@ Each project gets a complete color palette derived from KEY_COLOR:
 - Git hooks path is configured correctly
 - `.vscode/settings.json` is in `.gitignore`
 - Color settings are initialized in `settings.json`
+- Git repository is initialized
+- Git hooks are installed and executable
+- Commit template is configured
+- `.gitignore` and `.gitattributes` exist
+- PR and issue templates exist
+- GitHub CLI (`gh`) is installed and authenticated
+- Packages repo issue access verified (can list/view issues)
+- GitHub remote repository exists and `origin` is configured
+- Expert mailbox mapped and git user.name/user.email configured
 
 **Error Handling**:
 - Report missing files
 - Report incorrectly copied files
 - Report Port Manager initialization failures
+- Report Git Workflow initialization failures
+- Report GitHub CLI installation/auth failures
 - Provide clear error messages with solutions
 
 ### Feature 6: Conflict Resolution
@@ -328,26 +398,229 @@ Each project gets a complete color palette derived from KEY_COLOR:
 - `--skip-existing`: Skip existing files (default)
 - `--interactive`: Ask user for each conflict
 
+## Lifecycle Management
+
+Beyond initial project setup, Project Initialization provides ongoing lifecycle management through verify, repair, and update commands.
+
+### Feature 7: Project Health Check (`verify`)
+
+**Description**: Verifies the health of project configuration, including rules, commands, Port Manager, IDE colors, and Git Workflow.
+
+**What It Checks**:
+- **Rules & Commands**: All expected files present and up-to-date
+- **Port Manager**: Port allocated, database healthy, no conflicts
+- **IDE Colors**: Hook exists, settings configured correctly
+- **Git Workflow**: Repository initialized, hooks working, templates configured
+- **Issue Access**: `gh` can list/view issues in the packages repo
+- **Remote Repo**: `origin` points to existing GitHub repo
+- **Contributor Attribution**: git user.name/user.email matches expert mapping
+
+**Implementation**:
+```typescript
+// Core verify command
+async function verifyProject() {
+  const results = {
+    rules: await verifyRulesAndCommands(),
+    portManager: await PortManager.verify(),
+    ideColors: await verifyIDEColors(),
+    gitWorkflow: await GitWorkflow.verify({ projectRoot: process.cwd() })
+  };
+  
+  return generateHealthReport(results);
+}
+```
+
+**Usage**:
+```bash
+npx @your-org/core verify
+```
+
+**Output Example**:
+```
+Project Health Check
+====================
+✓ Rules and commands: Healthy
+✓ Port Manager: Healthy (port 3000)
+⚠ IDE Colors: Warning (settings.json outdated)
+✗ Git Workflow: Error (pre-commit hook missing)
+
+Issues Found:
+- IDE Colors: settings.json doesn't match latest color scheme
+- Git Workflow: pre-commit hook is missing or not executable
+
+Recommendations:
+- Run 'npx @your-org/core repair' to fix issues automatically
+```
+
+### Feature 8: Automated Repairs (`repair`)
+
+**Description**: Automatically repairs common project configuration issues detected by the verify command.
+
+**What It Repairs**:
+- **Missing Files**: Restore missing rules, commands, hooks, templates
+- **Broken Hooks**: Fix permissions, restore content
+- **Port Conflicts**: Reallocate ports if conflicts detected
+- **Outdated Configs**: Update configurations to latest standards
+- **Git Issues**: Fix git configuration, hook permissions, template paths
+
+**Implementation**:
+```typescript
+// Core repair command
+async function repairProject() {
+  const health = await verifyProject();
+  
+  const results = {
+    rules: await repairRulesAndCommands(health.rules.issues),
+    portManager: await PortManager.repair(health.portManager.issues),
+    ideColors: await repairIDEColors(health.ideColors.issues),
+    gitWorkflow: await GitWorkflow.repair({
+      projectRoot: process.cwd(),
+      issues: health.gitWorkflow.issues
+    })
+  };
+  
+  return generateRepairReport(results);
+}
+```
+
+**Usage**:
+```bash
+npx @your-org/core repair
+```
+
+**Output Example**:
+```
+Repairing Project Configuration
+================================
+✓ Rules and commands: No repairs needed
+✓ Port Manager: No repairs needed
+✓ IDE Colors: Repaired settings.json
+✓ Git Workflow: Restored pre-commit hook
+
+Repairs Completed:
+- IDE Colors: Updated settings.json to latest color scheme
+- Git Workflow: Restored pre-commit hook with correct permissions
+
+Run 'npx @your-org/core verify' to confirm all issues resolved.
+```
+
+### Feature 9: Configuration Updates (`update`)
+
+**Description**: Updates project configuration to the latest core package standards, including rules, commands, and git workflow.
+
+**What It Updates**:
+- **Rules & Commands**: Update to latest versions from core
+- **Git Workflow**: Update hooks, templates, configs to latest standards
+- **IDE Colors**: Update color schemes if new versions available
+- **Port Manager**: Update to latest version if schema changes
+
+**Options**:
+- `--force`: Force update even if user modifications detected
+- `--backup`: Create backups before updating (default: true)
+- `--interactive`: Prompt for each update (default: false)
+- `--dry-run`: Show what would be updated without making changes
+
+**Implementation**:
+```typescript
+// Core update command
+async function updateProject(options: UpdateOptions) {
+  const results = {
+    rules: await updateRulesAndCommands(options),
+    gitWorkflow: await GitWorkflow.update({
+      projectRoot: process.cwd(),
+      options
+    }),
+    ideColors: await updateIDEColors(options),
+    portManager: await PortManager.update(options)
+  };
+  
+  return generateUpdateReport(results);
+}
+```
+
+**Usage**:
+```bash
+# Update all configurations
+npx @your-org/core update
+
+# Dry run to see what would be updated
+npx @your-org/core update --dry-run
+
+# Force update with backups
+npx @your-org/core update --force --backup
+
+# Interactive mode
+npx @your-org/core update --interactive
+```
+
+**Output Example**:
+```
+Updating Project Configuration
+===============================
+✓ Rules and commands: Updated 3 files
+✓ Git Workflow: Updated pre-commit and commit-msg hooks
+✓ IDE Colors: No updates available
+✓ Port Manager: No updates available
+
+Updates Applied:
+- Rules: Updated accessibility_expert.mdc, ui_ux_expert.mdc, security_expert.mdc
+- Git Workflow: Updated pre-commit (v1.2 → v1.3), commit-msg (v1.1 → v1.2)
+
+Backups Created:
+- .cursor/rules/experts/.backup-2026-01-22/
+- .git/hooks/.backup-2026-01-22/
+
+Run 'npx @your-org/core verify' to confirm everything is working.
+```
+
 ## Technical Architecture
 
 ### Command Structure
 
 ```bash
+# Initialize new project
 npx @your-org/core init [options]
+
+# Verify project health
+npx @your-org/core verify [options]
+
+# Repair project issues
+npx @your-org/core repair [options]
+
+# Update project configuration
+npx @your-org/core update [options]
 ```
 
 ### Options
 
+**Init Command**:
 - `--project-name <name>`: Specify project name (auto-detected if not provided)
 - `--app-type <type>`: Specify app type (auto-detected if not provided)
 - `--overwrite`: Overwrite existing files
 - `--skip-existing`: Skip existing files (default)
 - `--interactive`: Ask user for each conflict
 - `--skip-port-manager`: Skip Port Manager initialization (not recommended)
+- `--skip-git`: Skip Git Workflow initialization (not recommended)
+- `--skip-gh`: Skip GitHub CLI installation/auth checks (not recommended)
 - `--skip-colors`: Skip IDE color setup (default: colors are configured)
 - `--skip-rules`: Skip copying rules
 - `--skip-commands`: Skip copying commands
 - `--dry-run`: Show what would be done without making changes
+
+**Verify Command**:
+- `--verbose`: Show detailed health check information
+- `--json`: Output results as JSON
+
+**Repair Command**:
+- `--verbose`: Show detailed repair information
+- `--dry-run`: Show what would be repaired without making changes
+
+**Update Command**:
+- `--force`: Force update even if user modifications detected
+- `--backup`: Create backups before updating (default: true)
+- `--interactive`: Prompt for each update
+- `--dry-run`: Show what would be updated without making changes
+- `--no-backup`: Skip creating backups (not recommended)
 
 ### Implementation Structure
 
@@ -466,6 +739,27 @@ Project Initialization integrates with IDE Color Manager by:
 - [IDE Colors Usage Guide](../../guides/IDE_COLORS_USAGE.md) - Complete user guide
 - [IDE Colors Reference](../../reference/IDE_COLORS_REFERENCE.md) - Color reference documentation
 
+## Integration with Git Workflow Package
+
+Project Initialization integrates with Git Workflow Package (`@your-org/git-workflow`) by:
+
+1. **Automatic Initialization**: Calls `GitWorkflow.init()` during project setup
+2. **Mandatory Requirement**: Git workflow initialization is mandatory (unless `--skip-git` is used)
+3. **Project Type Detection**: Automatically detects project type for appropriate `.gitignore`
+4. **Lifecycle Integration**: Provides verify, repair, and update capabilities via Git Workflow APIs
+5. **Health Monitoring**: Integrates git workflow health checks into unified project health reporting
+6. **Automated Repairs**: Uses Git Workflow repair capabilities for fixing git configuration issues
+7. **Version Management**: Coordinates git workflow updates with core package updates
+
+**Git Workflow Functions Used**:
+- `GitWorkflow.init(options)`: Initialize git workflow during project setup
+- `GitWorkflow.verify(options)`: Check git configuration health
+- `GitWorkflow.repair(options)`: Fix git configuration issues
+- `GitWorkflow.update(options)`: Update git workflow to latest standards
+
+**See Also**:
+- [Git Workflow Package PRD](../git-workflow/PRD.md) - Complete git workflow specification
+
 ## Error Handling
 
 ### File Copy Errors
@@ -515,10 +809,13 @@ Project Initialization integrates with IDE Color Manager by:
 ## Dependencies
 
 - **Port Manager**: Required (mandatory initialization)
+- **Git Workflow Package** (`@your-org/git-workflow`): Required (mandatory initialization)
+- **GitHub CLI (`gh`)**: Required for PR/issue workflows and repo management
 - **Color Manager**: Built-in color generation and palette management
 - **fs-extra**: For file operations
 - **chalk**: For colored output
 - **inquirer**: For interactive prompts (if interactive mode)
+- **simple-git**: For git operations
 
 ## Testing Strategy
 
@@ -565,30 +862,50 @@ Project Initialization integrates with IDE Color Manager by:
 
 ## Success Criteria
 
-### Must Have
+### Must Have (Initialization)
 
 - ✅ Automatically copy rules to `.cursor/rules/`
 - ✅ Automatically copy general commands to `.cursor/commands/`
 - ✅ Exclude local commands (packages repo only)
 - ✅ Automatically initialize Port Manager (mandatory)
+- ✅ Automatically initialize Git Workflow (mandatory)
+- ✅ Ensure GitHub CLI (`gh`) is installed and authenticated
 - ✅ Automatically configure IDE colors with unique KEY_COLOR
 - ✅ Create post-checkout hook for branch-based color updates
 - ✅ Validate setup after initialization
 - ✅ Handle file conflicts
 - ✅ Single command setup
+- ✅ Create GitHub repo on init when missing
+- ✅ Register expert mailbox and set git author identity
+
+### Must Have (Lifecycle Management)
+
+- ✅ Project health verification (verify command)
+- ✅ Automated repairs for common issues (repair command)
+- ✅ Configuration updates to latest standards (update command)
+- ✅ Git workflow health checks
+- ✅ Git workflow repairs (missing/broken hooks, templates)
+- ✅ Git workflow updates to latest versions
+- ✅ Issue workflow access checks (packages repo)
+- ✅ Unified health reporting across all components
 
 ### Should Have
 
 - ⏳ Interactive conflict resolution
-- ⏳ Dry run mode
+- ⏳ Dry run mode for all commands
 - ⏳ Detailed progress output
 - ⏳ Error recovery suggestions
+- ⏳ Backup/restore functionality for updates
+- ⏳ Interactive update mode (prompt per file)
+- ⏳ JSON output format for programmatic use
 
 ### Nice to Have
 
-- ⏳ Update mechanism for existing projects
-- ⏳ Customization options
-- ⏳ Template support
+- ⏳ Scheduled automatic health checks
+- ⏳ Customization options for workflows
+- ⏳ Template support for different project types
+- ⏳ Plugin system for extending lifecycle management
+- ⏳ Dashboard for visualizing project health trends
 
 ---
 
@@ -601,5 +918,25 @@ Project Initialization integrates with IDE Color Manager by:
 **Expert**: Documentation Expert  
 **Date**: 2026-01-05  
 **Changes**: Added comprehensive IDE Color Manager documentation to Project Initialization PRD. Added Feature 4: IDE Color Manager section covering color generation algorithm, base color palette, generated color palette structure, IDE UI elements styled, implementation details, options, and important notes. Updated overview, solution, goals, success metrics, user stories, technical architecture, usage examples, integration sections, error handling, dependencies, testing strategy, and success criteria to include IDE color management. Added references to IDE Colors Usage Guide and IDE Colors Reference documentation. This ensures the PRD comprehensively documents the complete project initialization feature including IDE color configuration.
+
+**Expert**: System Architect  
+**Date**: 2026-01-22  
+**Changes**: Extended Project Initialization PRD to include Git Workflow integration and full lifecycle management capabilities. Added Feature 5: Git Workflow Initialization (mandatory git setup via @your-org/git-workflow package), updated Feature 6: Setup Validation to include git checks, and added comprehensive Lifecycle Management section with Feature 7: Project Health Check (verify command), Feature 8: Automated Repairs (repair command), and Feature 9: Configuration Updates (update command). Updated command structure to include verify/repair/update commands, expanded options for all commands, added git workflow integration documentation, updated dependencies to include git-workflow package, and revised success criteria to include lifecycle management must-haves. This extends Project Initialization from one-time setup to ongoing project configuration management, providing health monitoring, automated repairs, and configuration updates for rules, commands, Port Manager, IDE colors, and Git Workflow.
+
+**Expert**: System Architect  
+**Date**: 2026-01-22  
+**Changes**: Added GitHub CLI (`gh`) management to Project Initialization. Updated Git Workflow initialization to install and authenticate `gh`, expanded setup validation to verify `gh` readiness, added `--skip-gh` option, and updated dependencies and success criteria to require gh installation/authentication for standardized PR/issue workflows.
+
+**Expert**: System Architect  
+**Date**: 2026-01-22  
+**Changes**: Added packages repo issue workflow support to Project Initialization. Updated Git Workflow initialization to include issue routing, expanded setup validation and health checks to verify issue access via `gh`, and updated lifecycle success criteria to include packages repo issue checks.
+
+**Expert**: System Architect  
+**Date**: 2026-01-22  
+**Changes**: Added GitHub repo creation during init. Updated Git Workflow initialization to create a remote repo when missing and configure `origin`, added `--skip-remote` option, expanded setup validation and health checks to verify remote repo existence, and updated success criteria to include repo creation on init.
+
+**Expert**: System Architect  
+**Date**: 2026-01-22  
+**Changes**: Added expert mailbox registration for contributor attribution. Updated Git Workflow initialization to register expert mailbox mapping and configure git author identity, expanded setup validation and health checks to verify mapping and attribution, and updated success criteria to require author identity setup.
 
 ---

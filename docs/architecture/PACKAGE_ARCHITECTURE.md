@@ -12,6 +12,29 @@ The package architecture follows a **core + feature packages** model where:
 1. **Core Package** (`@your-org/core`) - Contains foundational features, rules, experts, and commands
 2. **Feature Packages** - Specialized packages that depend on core (e.g., `@your-org/task-manager`)
 
+## Repository Strategy Decision (Projects)
+
+**Context**: Small team (1–3 devs), mixed needs across frontend/backend/mobile, and a desire for consistent tooling and onboarding.
+
+**Decision**: Use a **monorepo with clear app boundaries** as the default for new projects.
+
+**Rationale**:
+- Fast onboarding and one-command setup
+- Shared tooling and consistent workflows
+- Easier cross-cutting changes and dependency management
+- Keeps optionality to split later if parts diverge
+
+**Boundaries**:
+- Separate app folders (e.g., `apps/frontend`, `apps/backend`, `apps/mobile`)
+- Shared packages/utilities in `packages/`
+- Independent build/deploy pipelines per app when needed
+
+**Split Criteria (Revisit to multi-repo)**:
+- Independent release cadence becomes a blocker
+- Ownership splits into separate teams
+- Security/compliance boundaries require isolation
+- Tooling and dependency graphs become too complex in monorepo
+
 ## Architecture Model
 
 ### Core Package Structure

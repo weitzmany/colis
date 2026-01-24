@@ -1,0 +1,1 @@
+{"version":3,"file":"monorepo-enforcer.d.ts","sourceRoot":"","sources":["../../src/utils/monorepo-enforcer.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AA+CH;;GAEG;AACH,wBAAsB,wBAAwB,CAAC,WAAW,EAAE,MAAM,GAAG,OAAO,CAAC;IAC3E,OAAO,EAAE,MAAM,EAAE,CAAC;IAClB,MAAM,EAAE,MAAM,EAAE,CAAC;CAClB,CAAC,CAqCD"}

@@ -54,7 +54,7 @@ Execute this command to review a specific feature:
   - For `expert="rand"`: Use `/local/expert` command or random selection from `.cursor/rules/experts/`
   - For `expert="all"`: Get all experts from `.cursor/rules/experts/` and review sequentially
 
-#### `docs` (optional, default=false)
+#### `docs` (optional, default=true)
 - If `true`: Read relevant documentation in `docs/` directory before review
 - **Documentation Lookup**:
   - Check `docs/features/<feature-name>/PRD.md` (if exists)

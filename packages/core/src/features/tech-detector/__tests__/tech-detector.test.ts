@@ -12,7 +12,6 @@ import { PackageManagerDetector } from '../detectors/package-manager-detector.js
 import { RuntimeDetector } from '../detectors/runtime-detector.js';
 import { TechStack } from '../types.js';
 import * as fs from 'fs-extra';
-import * as path from 'path';
 import { jest } from '@jest/globals';
 
 // Mock detectors
@@ -22,6 +21,9 @@ jest.mock('../detectors/build-tool-detector.js');
 jest.mock('../detectors/package-manager-detector.js');
 jest.mock('../detectors/runtime-detector.js');
 jest.mock('fs-extra');
+const pathExistsMock = jest.spyOn(fs, 'pathExists') as jest.MockedFunction<any>;
+const readFileMock = jest.spyOn(fs, 'readFile') as jest.MockedFunction<any>;
+const writeFileMock = jest.spyOn(fs, 'writeFile') as jest.MockedFunction<any>;
 
 describe('TechDetector', () => {
   let detector: TechDetector;
@@ -173,7 +175,7 @@ describe('TechDetector', () => {
         version: '1.0.0',
       };
 
-      (fs.writeFile as jest.Mock).mockResolvedValue(undefined);
+      writeFileMock.mockResolvedValue(undefined);
 
       await detector.save(projectPath, techStack);
 
@@ -197,7 +199,7 @@ describe('TechDetector', () => {
         version: '1.0.0',
       };
 
-      (fs.writeFile as jest.Mock).mockRejectedValue(new Error('Write failed'));
+      writeFileMock.mockRejectedValue(new Error('Write failed'));
 
       await expect(detector.save(projectPath, techStack)).rejects.toThrow();
     });
@@ -222,8 +224,8 @@ describe('TechDetector', () => {
         version: '1.0.0',
       };
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(JSON.stringify(techStack));
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(JSON.stringify(techStack));
 
       const loaded = await detector.load(projectPath);
 
@@ -234,7 +236,7 @@ describe('TechDetector', () => {
     it('should return null when file does not exist', async () => {
       const projectPath = '/test/project';
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
+      pathExistsMock.mockResolvedValue(false);
 
       const loaded = await detector.load(projectPath);
 
@@ -244,8 +246,8 @@ describe('TechDetector', () => {
     it('should return null when file is invalid JSON', async () => {
       const projectPath = '/test/project';
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue('invalid json');
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue('invalid json');
 
       const loaded = await detector.load(projectPath);
 
@@ -285,8 +287,8 @@ describe('TechDetector', () => {
       });
       mockRuntimeDetector.detect.mockResolvedValue(null);
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(true);
-      (fs.readFile as jest.Mock).mockResolvedValue(JSON.stringify(existingStack));
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(JSON.stringify(existingStack));
 
       const updated = await detector.update(projectPath);
 
@@ -311,7 +313,7 @@ describe('TechDetector', () => {
       });
       mockRuntimeDetector.detect.mockResolvedValue(null);
 
-      (fs.pathExists as jest.Mock).mockResolvedValue(false);
+      pathExistsMock.mockResolvedValue(false);
 
       const updated = await detector.update(projectPath);
 

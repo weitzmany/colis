@@ -1,0 +1,22 @@
+#!/bin/sh
+# Post-checkout hook - Update IDE colors on branch switch
+# Part of @your-org/git-workflow package
+# Version: 1.0.0
+
+# Get current branch name
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Check if IDE colors script exists (from project-initialization)
+IDE_COLORS_SCRIPT=".vscode/update-colors.sh"
+
+if [ -f "$IDE_COLORS_SCRIPT" ]; then
+  echo "🎨 Updating IDE colors for branch: $BRANCH"
+  sh "$IDE_COLORS_SCRIPT" "$BRANCH"
+else
+  # If no custom script, try to detect and update colors manually
+  if [ -f ".vscode/settings.json" ]; then
+    echo "🎨 IDE color updates available - branch: $BRANCH"
+  fi
+fi
+
+exit 0

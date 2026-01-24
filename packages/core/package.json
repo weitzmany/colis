@@ -1,6 +1,6 @@
 {
   "name": "@colis/rig",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Foundational development toolkit with port management, tech detection, project initialization, and shared utilities for all projects",
   "type": "module",
   "main": "dist/index.js",
@@ -43,7 +43,9 @@
     "clean:port-registry": "tsx scripts/clean-port-registry.ts",
     "prepublishOnly": "npm run clean && npm run build",
     "postinstall": "node lib/postinstall.js",
-    "dist:cleanup": "npm run clean && npm run build && npm test"
+    "release:patch": "npm version patch && npm run clean && npm run build && npm publish",
+    "release:minor": "npm version minor && npm run clean && npm run build && npm publish",
+    "release:major": "npm version major && npm run clean && npm run build && npm publish"
   },
   "keywords": [
     "core",

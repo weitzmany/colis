@@ -26,7 +26,10 @@
     "format:check": "prettier --check src/",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build && npm run typecheck",
-    "postinstall": "node lib/init-taskmaster.js"
+    "postinstall": "node lib/init-taskmaster.js",
+    "release:patch": "npm version patch && npm run clean && npm run build && npm publish",
+    "release:minor": "npm version minor && npm run clean && npm run build && npm publish",
+    "release:major": "npm version major && npm run clean && npm run build && npm publish"
   },
   "bin": {
     "task-manager-init": "./bin/init-taskmaster.js"

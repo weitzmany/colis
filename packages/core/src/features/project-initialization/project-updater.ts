@@ -443,12 +443,12 @@ async function checkCurrentState(
   const userPath = path.join(rulesPath, 'user');
 
   if (await fs.pathExists(expertsPath)) {
-    const expertFiles = (await fs.readdir(expertsPath)).filter((f) => f.endsWith('.mdc'));
+    const expertFiles = (await readdir(expertsPath)).filter((f) => f.endsWith('.mdc'));
     state.rulesCount += expertFiles.length;
   }
 
   if (await fs.pathExists(userPath)) {
-    const userFiles = (await fs.readdir(userPath)).filter((f) => f.endsWith('.mdc'));
+    const userFiles = (await readdir(userPath)).filter((f) => f.endsWith('.mdc'));
     state.rulesCount += userFiles.length;
   }
 
@@ -457,7 +457,7 @@ async function checkCurrentState(
   const generalPath = path.join(commandsPath, 'general');
 
   if (await fs.pathExists(generalPath)) {
-    const commandFiles = (await fs.readdir(generalPath)).filter((f) => f.endsWith('.md'));
+    const commandFiles = (await readdir(generalPath)).filter((f) => f.endsWith('.md'));
     state.commandsCount = commandFiles.length;
   }
 
@@ -550,7 +550,7 @@ async function findMissingCommands(
     const generalTarget = path.join(targetCommandsPath, 'general');
 
     if (await fs.pathExists(generalSource)) {
-      const commandFiles = (await fs.readdir(generalSource)).filter((f) => f.endsWith('.md'));
+      const commandFiles = (await readdir(generalSource)).filter((f) => f.endsWith('.md'));
       for (const file of commandFiles) {
         const targetFile = path.join(generalTarget, file);
         if (!(await fs.pathExists(targetFile))) {

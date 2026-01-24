@@ -1,6 +1,6 @@
 {
   "name": "@colis/embark",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "type": "module",
   "description": "Project template package for scaffolding new projects with standard structure and best practices",
   "main": "dist/index.js",
@@ -30,7 +30,10 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "clean": "rm -rf dist",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "npm run clean && npm run build",
+    "release:patch": "npm version patch && npm run clean && npm run build && npm publish",
+    "release:minor": "npm version minor && npm run clean && npm run build && npm publish",
+    "release:major": "npm version major && npm run clean && npm run build && npm publish"
   },
   "keywords": [
     "template",
@@ -42,7 +45,7 @@
   "author": "Colis",
   "license": "MIT",
   "dependencies": {
-    "@colis/rig": "^1.0.0",
+    "@colis/rig": "^1.0.3",
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
     "fs-extra": "^11.2.0",

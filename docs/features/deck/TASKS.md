@@ -351,7 +351,7 @@ See [Analytics Dashboard Package PRD](../telemetry-package/PRD.md) for complete 
 
 #### 7.6 Gamification
 - [ ] Points/rewards for task completion
-- [ ] Streaks and achievements
+- [ ] Streaks and decorations
 - [ ] Rankings
 - [ ] Progress tracking
 

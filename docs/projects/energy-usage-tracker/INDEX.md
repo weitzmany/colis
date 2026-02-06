@@ -17,7 +17,7 @@ Energy Usage Tracker (EnergyWise) is a customer-facing full-stack web and mobile
 ## Global/Shared Features
 
 This project may use the following general features (if they exist in [../general/](../general/INDEX.md)):
-- [Authentication System](../general/authentication/PRD.md) - User authentication and authorization (if available)
+- [Authentication System](../general/anchorage/PRD.md) - User authentication and authorization (if available)
 - [Translation System](../general/translations/PRD.md) - Multi-language support (Phase 2+, if needed)
 - [Notification System](../general/notifications/PRD.md) - Multi-channel notifications (if available)
 

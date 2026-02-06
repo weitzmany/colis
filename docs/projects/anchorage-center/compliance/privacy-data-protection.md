@@ -1,4 +1,4 @@
-# Authentication Center - Privacy & Data Protection
+# Anchorage Center - Privacy & Data Protection
 
 ## Data Collected
 

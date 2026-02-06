@@ -1,12 +1,14 @@
-# Authentication Center - Product Requirements Document
+# Anchorage Center - Product Requirements Document
 
 ## Executive Summary
 
 ### Project Vision
-Build a production-ready, centralized authentication and authorization service that acts as the single source of truth for user identities across all applications in your ecosystem. This service will provide secure, scalable authentication with Single Sign-On (SSO), role-based access control, and compliance-ready audit logging.
+Build a production-ready, centralized anchorage and authorization service that acts as the single source of truth for user identities across all applications in your ecosystem. This service will provide secure, scalable anchorage with Single Sign-On (SSO), role-based access control, and compliance-ready audit logging.
+
+**Formerly**: authentication-center
 
 ### Target Users
-- **Primary**: Developers integrating authentication into applications
+- **Primary**: Developers integrating anchorage into applications
 - **Secondary**: End users of applications (transparent experience)
 - **Tertiary**: System administrators managing users and permissions
 
@@ -22,7 +24,7 @@ Build a production-ready, centralized authentication and authorization service t
 - **Uptime**: 99.9% service availability
 - **Response Time**: <100ms for token validation
 - **Security**: Zero critical vulnerabilities
-- **Adoption**: All new apps use auth center by default
+- **Adoption**: All new apps use anchorage center by default
 
 ## Problem Statement
 
@@ -31,7 +33,7 @@ Build a production-ready, centralized authentication and authorization service t
 **Current Pain Points:**
 
 1. **Duplication of Effort**
-   - Every app rebuilds authentication from scratch
+   - Every app rebuilds anchorage from scratch
    - Same bugs and security issues replicated across projects
    - Inconsistent user experience across apps
 
@@ -65,7 +67,7 @@ Build a production-ready, centralized authentication and authorization service t
 
 ### Current Solutions and Their Limitations
 
-**Build In-App Authentication:**
+**Build In-App Anchorage:**
 - ❌ Time-consuming (2-4 weeks per app)
 - ❌ Security expertise required
 - ❌ Maintenance burden
@@ -87,9 +89,9 @@ Build a production-ready, centralized authentication and authorization service t
 
 ### Proposed Solution
 
-Build a **custom, centralized authentication center** that combines the best of all approaches:
+Build a **custom, centralized anchorage center** that combines the best of all approaches:
 
-- **Centralized Service**: One authentication service for all apps
+- **Centralized Service**: One anchorage service for all apps
 - **Open Standards**: OAuth 2.0, OpenID Connect, JWT
 - **Developer-Friendly**: Simple REST/GraphQL API
 - **Production-Ready**: Built with security, scalability, compliance in mind
@@ -100,7 +102,7 @@ Build a **custom, centralized authentication center** that combines the best of 
 **1. Eliminates Duplication:**
 - Apps integrate in hours using SDK or API
 - Security updates deploy once, protect all apps
-- Consistent authentication across ecosystem
+- Consistent anchorage across ecosystem
 
 **2. Enhances Security:**
 - Centralized security expertise
@@ -112,7 +114,7 @@ Build a **custom, centralized authentication center** that combines the best of 
 - Single sign-on (SSO) across all apps
 - One account, one password
 - Unified profile management
-- Consistent authentication flow
+- Consistent anchorage flow
 
 **4. Simplifies Compliance:**
 - GDPR, CCPA compliance built-in
@@ -152,12 +154,12 @@ Build a **custom, centralized authentication center** that combines the best of 
 
 **Background:**
 - Full-stack developer building apps in your ecosystem
-- Needs authentication for new project
+- Needs anchorage for new project
 - Limited security expertise
 - Wants to ship features fast
 
 **Needs:**
-- Quick authentication integration (<1 day)
+- Quick anchorage integration (<1 day)
 - Clear documentation and examples
 - Minimal configuration
 - Secure by default
@@ -169,7 +171,7 @@ Build a **custom, centralized authentication center** that combines the best of 
 - Managing user sessions
 
 **Goals:**
-- Integrate authentication in <4 hours
+- Integrate anchorage in <4 hours
 - Focus on app features, not auth
 - Know users are secure
 - Easy to add features later (MFA, SSO)
@@ -230,16 +232,16 @@ Build a **custom, centralized authentication center** that combines the best of 
 
 ### MVP Scope
 
-**Core Problem**: Apps need secure authentication but building it from scratch takes weeks and creates security risks.
+**Core Problem**: Apps need secure anchorage but building it from scratch takes weeks and creates security risks.
 
-**Core User**: App developers integrating authentication into new projects.
+**Core User**: App developers integrating anchorage into new projects.
 
-**Core Value**: Production-ready authentication in <4 hours with zero security expertise required.
+**Core Value**: Production-ready anchorage in <4 hours with zero security expertise required.
 
 ### MVP Features (Must-Have)
 
 #### 1. User Registration & Login
-**Description**: Basic email/password authentication with secure password hashing.
+**Description**: Basic email/password anchorage with secure password hashing.
 
 **Why in MVP**: Core functionality - can't have auth without registration and login.
 
@@ -262,7 +264,7 @@ Build a **custom, centralized authentication center** that combines the best of 
 #### 2. Session Management
 **Description**: JWT-based sessions with access tokens and refresh tokens.
 
-**Why in MVP**: Essential for maintaining user authentication state.
+**Why in MVP**: Essential for maintaining user anchorage state.
 
 **User Story**: As a developer, I want my app to validate user sessions so that authenticated users can access protected resources.
 
@@ -304,7 +306,7 @@ Build a **custom, centralized authentication center** that combines the best of 
 
 **Why in MVP**: Primary interface for app integration.
 
-**User Story**: As a developer, I want a simple API to integrate authentication so that I can add auth to my app quickly.
+**User Story**: As a developer, I want a simple API to integrate anchorage so that I can add auth to my app quickly.
 
 **Requirements**:
 - RESTful API design
@@ -358,7 +360,7 @@ Build a **custom, centralized authentication center** that combines the best of 
 **Admin Panel Stack**:
 - Frontend: React or Vue.js
 - UI Components: Tailwind CSS or Material-UI
-- Authentication: Uses same auth center (dogfooding)
+- Anchorage: Uses same auth center (dogfooding)
 
 ### MVP Success Criteria
 
@@ -446,7 +448,7 @@ Build a **custom, centralized authentication center** that combines the best of 
    - Requires OAuth flow, provider integration
    - Estimated: 2-3 weeks development
 
-2. **Multi-Factor Authentication (2FA)** (Phase 2)
+2. **Multi-Factor Anchorage (2FA)** (Phase 2)
    - Why post-MVP: Adds complexity, not required for all apps
    - TOTP-based (Google Authenticator, Authy)
    - SMS-based 2FA
@@ -510,7 +512,7 @@ Build a **custom, centralized authentication center** that combines the best of 
 ### Phase 2: Enhanced Security & Compliance (Weeks 12-16)
 **Priority: High**
 - OAuth 2.0 / OpenID Connect (Google, GitHub, Facebook login)
-- Multi-Factor Authentication (TOTP-based)
+- Multi-Factor Anchorage (TOTP-based)
 - Audit logging and compliance reports
 - User profile management
 - Advanced rate limiting
@@ -590,7 +592,7 @@ Build a **custom, centralized authentication center** that combines the best of 
 ## Timeline & Milestones
 
 ### Phase 1: MVP (Weeks 1-11)
-- ✅ **Week 1-2**: Core authentication (registration, login, sessions)
+- ✅ **Week 1-2**: Core anchorage (registration, login, sessions)
 - ✅ **Week 3-4**: Password management (reset, change, validation)
 - ✅ **Week 5-6**: RBAC system, admin panel
 - ✅ **Week 7-8**: API documentation, integration guides
@@ -599,7 +601,7 @@ Build a **custom, centralized authentication center** that combines the best of 
 
 ### Phase 2: Enhanced Security (Weeks 12-16)
 - OAuth 2.0 / OpenID Connect
-- Multi-Factor Authentication
+- Multi-Factor Anchorage
 - Audit logging and compliance
 - User profile management
 
@@ -652,7 +654,7 @@ Build a **custom, centralized authentication center** that combines the best of 
   - Rapid patch deployment process
 
 **Risk 2: Single Point of Failure**
-- **Impact**: High - all apps lose authentication
+- **Impact**: High - all apps lose anchorage
 - **Likelihood**: Low
 - **Mitigation**:
   - High availability setup (load balancer + multiple instances)
@@ -662,7 +664,7 @@ Build a **custom, centralized authentication center** that combines the best of 
   - Health monitoring and alerts
 
 **Risk 3: Performance Bottleneck**
-- **Impact**: Medium - slow authentication affects all apps
+- **Impact**: Medium - slow anchorage affects all apps
 - **Likelihood**: Medium (at scale)
 - **Mitigation**:
   - Redis caching for token validation

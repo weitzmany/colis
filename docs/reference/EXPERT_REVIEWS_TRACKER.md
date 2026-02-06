@@ -109,7 +109,7 @@ This document tracks all expert reviews and contributions across the project.
 | `docs/features/accessibility-audit-tool/PRD.md` | 2 |
 | `docs/features/backend-api-testing-framework/PRD.md` | 2 |
 | `docs/features/compass/PRD.md` | 2 |
-| `docs/features/gamification-engagement/PRD.md` | 2 |
+| `docs/features/morale/PRD.md` | 2 |
 | `docs/features/observability-package/PRD.md` | 2 |
 | `docs/features/commissioning/PRD.md` | 2 |
 | `docs/features/question-bank-content-library/PRD.md` | 2 |
@@ -218,7 +218,7 @@ This document tracks all expert reviews and contributions across the project.
 | `.cursor/rules/user/package_development_workflow.mdc` | 0 |
 | `.cursor/rules/user/review_implementation.mdc` | 0 |
 | `docs/architecture/PACKAGE_ARCHITECTURE.md` | 0 |
-| `docs/features/authentication-tool/PRD.md` | 0 |
+| `docs/features/anchorage-tool/PRD.md` | 0 |
 | `docs/features/compass-rules/PRD.md` | 0 |
 | `docs/features/certification/PRD.md` | 0 |
 | `docs/features/error-handling-recovery/PRD.md` | 0 |
@@ -496,7 +496,7 @@ This document tracks all expert reviews and contributions across the project.
   - `docs/features/backend-api-testing-framework/PRD.md`
   - `docs/features/compass/PRD.md`
   - `docs/features/database-migration-tool/PRD.md`
-  - `docs/features/gamification-engagement/PRD.md`
+  - `docs/features/morale/PRD.md`
   - `docs/features/market-research-competitive-analysis-package/PRD.md`
   - `docs/features/observability-package/PRD.md`
   - `docs/features/port-manager/PRD.md`
@@ -544,7 +544,7 @@ This document tracks all expert reviews and contributions across the project.
   - `.cursor/rules/experts/seo_expert.mdc`
   - `.cursor/rules/user/security_and_secrets.mdc`
   - `docs/features/accessibility-audit-tool/PRD.md`
-  - `docs/features/gamification-engagement/PRD.md`
+  - `docs/features/morale/PRD.md`
   - `docs/features/question-bank-content-library/PRD.md`
   - `docs/guides/CURSOR_DIRECTORY.md`
   - `docs/guides/EDUCATIONAL_CONTENT_CREATION.md`

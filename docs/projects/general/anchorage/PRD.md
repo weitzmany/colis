@@ -1,8 +1,10 @@
-# General Feature: Authentication System
+# General Feature: Anchorage System
+
+**Formerly**: authentication
 
 ## Overview
 
-A centralized authentication system providing user registration, login, session management, and basic RBAC for all applications in the ecosystem.
+A centralized anchorage system providing user registration, login, session management, and basic RBAC for all applications in the ecosystem.
 
 ## Usage Tracking
 
@@ -18,15 +20,15 @@ A centralized authentication system providing user registration, login, session 
 
 ### Architectural Override Justification
 
-- **Central Deployment**: Shared authentication service used by all apps
-- **Security Critical**: Authentication vulnerabilities impact all projects
+- **Central Deployment**: Shared anchorage service used by all apps
+- **Security Critical**: Anchorage vulnerabilities impact all projects
 - **Compliance Required**: GDPR/CCPA consistency needed across apps
 - **Single Source of Truth**: Centralized user identities and sessions
 - **Synchronized Updates**: Security patches must deploy once
 
 ## Projects Using This Feature
 
-- [Authentication Center](../../authentication-center/INDEX.md) - Reference implementation
+- [Anchorage Center](../../anchorage-center/INDEX.md) - Reference implementation
 - [Chore Allowance Manager](../../chore-allowance-manager/INDEX.md)
 - [Vehicle Maintenance Tracker](../../vehicle-maintenance-tracker/INDEX.md)
 - [Learning Games Platform](../../learning-games-platform/INDEX.md)
@@ -62,7 +64,7 @@ A centralized authentication system providing user registration, login, session 
 
 ## Integration Guidelines
 
-See [Authentication Center Integration Guide](../../authentication-center/technical/integration-guide.md).
+See [Anchorage Center Integration Guide](../../anchorage-center/technical/integration-guide.md).
 
 ## Implementation Status
 

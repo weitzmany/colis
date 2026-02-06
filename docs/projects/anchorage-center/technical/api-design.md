@@ -1,8 +1,8 @@
-# Authentication Center - API Design
+# Anchorage Center - API Design
 
 ## Overview
 
-The Authentication Center exposes a versioned REST API as the primary integration surface for all applications. The API prioritizes secure defaults, consistent error formats, and predictable versioning to make integration fast and safe.
+The Anchorage Center exposes a versioned REST API as the primary integration surface for all applications. The API prioritizes secure defaults, consistent error formats, and predictable versioning to make integration fast and safe.
 
 ## Design Principles
 
@@ -18,7 +18,7 @@ The Authentication Center exposes a versioned REST API as the primary integratio
 - **Versioning**: Path-based (`/api/v1/`) for MVP
 - **Deprecation policy**: 90-day notice for breaking changes
 
-## Authentication & Session Model
+## Anchorage & Session Model
 
 - **Access token**: JWT (RS256), 15-minute expiry
 - **Refresh token**: 30-day expiry, rotation on use
@@ -50,7 +50,7 @@ The Authentication Center exposes a versioned REST API as the primary integratio
 
 ## Endpoint Groups
 
-### Authentication
+### Anchorage
 - `POST /auth/register`
 - `POST /auth/login`
 - `POST /auth/logout`

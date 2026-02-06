@@ -1,4 +1,4 @@
-# Authentication Center - Security Standards
+# Anchorage Center - Security Standards
 
 ## Standards Alignment
 

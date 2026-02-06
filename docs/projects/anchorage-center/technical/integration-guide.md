@@ -1,12 +1,12 @@
-# Authentication Center - Integration Guide
+# Anchorage Center - Integration Guide
 
 ## Overview
 
-This guide explains how applications integrate with the Authentication Center for registration, login, session management, and user authorization.
+This guide explains how applications integrate with the Anchorage Center for registration, login, session management, and user authorization.
 
 ## Prerequisites
 
-- Application registered with the Authentication Center
+- Application registered with the Anchorage Center
 - Allowed origins configured for web apps
 - API key issued for server-to-server integrations
 

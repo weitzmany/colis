@@ -17,7 +17,7 @@
 
 This project uses the following general features (recommended for creation in [../general/](../general/) if 3+ projects adopt):
 - **Authentication System** - User registration, login, JWT authentication (Used by 10+ projects - RECOMMENDED for general/)
-- **Note**: Once 3+ projects confirm authentication needs, move to `../general/authentication/PRD.md`
+- **Note**: Once 3+ projects confirm authentication needs, move to `../general/anchorage/PRD.md`
 
 ### Project-Specific Features
 

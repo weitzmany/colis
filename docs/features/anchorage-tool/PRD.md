@@ -1,15 +1,16 @@
-# Authentication Tool Package - PRD
+# Anchorage Tool Package - PRD
 
 **Status**: Placeholder / Early Idea  
-**Last Updated**: 2026-01-05
+**Last Updated**: 2026-01-05  
+**Formerly**: authentication-tool
 
 ## Package Name
 
-`@your-org/tool-auth`
+`@colis/anchorage-tool`
 
 ## Main Idea
 
-Reusable authentication system package that can be integrated into projects. Provides login, registration, session management, and token handling.
+Reusable anchorage system package that can be integrated into projects. Provides login, registration, session management, and token handling.
 
 ## Package Type
 
@@ -17,7 +18,7 @@ Tool Package
 
 ## Core Components
 
-- Authentication logic
+- Anchorage logic
 - Session management
 - Token handling
 - User management
@@ -37,12 +38,12 @@ Tool Package
 
 ## Mobile Requirements
 
-When implemented, this authentication tool should:
+When implemented, this anchorage tool should:
 
 - **Mobile Secure Storage**: Use platform-specific secure storage (iOS Keychain, Android Keystore)
-- **Biometric Authentication**: Support biometric authentication on mobile devices (Face ID, Touch ID, fingerprint)
+- **Biometric Anchorage**: Support biometric anchorage on mobile devices (Face ID, Touch ID, fingerprint)
 - **Token Refresh**: Handle token refresh seamlessly for mobile network interruptions
-- **Offline Authentication**: Support offline authentication state management
+- **Offline Anchorage**: Support offline anchorage state management
 - **Mobile Session Management**: Optimize session management for mobile app lifecycle
 - **Mobile Device Registration**: Support device registration and multi-device management
 
@@ -52,19 +53,19 @@ When documenting this package for web publication:
 
 1. **Package Documentation SEO**
    - Use descriptive, keyword-rich titles and descriptions
-   - Include relevant keywords naturally (authentication, login, session management, security)
+   - Include relevant keywords naturally (anchorage, login, session management, security)
    - Structure documentation with proper heading hierarchy (H1-H6)
    - Include comprehensive examples and integration guides for content depth
 
 2. **Security Documentation SEO**
    - Document security best practices with clear, searchable content
-   - Include authentication flow diagrams and explanations
+   - Include anchorage flow diagrams and explanations
    - Use semantic HTML structure in documentation
-   - Add internal links to related security and authentication documentation
+   - Add internal links to related security and anchorage documentation
 
 3. **Content Quality for Search**
-   - Ensure documentation answers common authentication implementation queries
-   - Include troubleshooting sections for common authentication issues
+   - Ensure documentation answers common anchorage implementation queries
+   - Include troubleshooting sections for common anchorage issues
    - Provide comprehensive API reference documentation
    - Maintain documentation freshness with security updates
 

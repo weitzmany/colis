@@ -1,8 +1,8 @@
-# General Feature: Authentication System - Architecture
+# General Feature: Anchorage System - Architecture
 
 ## System Overview
 
-The Authentication System is delivered as a centralized service that exposes a secure REST API for all applications, with optional SDKs post-MVP.
+The Anchorage System is delivered as a centralized service that exposes a secure REST API for all applications, with optional SDKs post-MVP.
 
 ## Core Components
 

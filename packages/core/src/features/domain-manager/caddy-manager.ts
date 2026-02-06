@@ -211,8 +211,8 @@ export class CaddyManager implements ICaddyManager {
       const line = lines[i];
       lineNumber = i + 1;
 
-      // Check for domain declaration: "domain.local {"
-      const domainMatch = line.match(/^(\S+\.local)\s*\{/);
+      // Check for domain declaration: "domain.local {" or "http://domain.local {"
+      const domainMatch = line.match(/^(?:http:\/\/)?(\S+\.local)\s*\{/);
       if (domainMatch) {
         // Save previous domain if exists
         if (currentDomain && currentConfig) {
@@ -302,7 +302,9 @@ export class CaddyManager implements ICaddyManager {
    * Generate Caddy domain block
    */
   private generateDomainBlock(config: CaddyDomainBlock): string {
-    let block = `${config.domain} {\n`;
+    // Use http:// explicitly for .local domains to prevent automatic HTTPS
+    // This prevents SSL certificate errors in browsers
+    let block = `http://${config.domain} {\n`;
 
     if (config.frontendPort && config.backendPort) {
       // Multi-service: frontend + backend API
@@ -336,8 +338,9 @@ export class CaddyManager implements ICaddyManager {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
 
-      // Check if this is the domain we want to remove
-      if (line.match(new RegExp(`^${domain.replace(/\./g, '\\.')}\\s*\\{`))) {
+      // Check if this is the domain we want to remove (with or without http://)
+      const domainPattern = new RegExp(`^(?:http:\\/\\/)?${domain.replace(/\./g, '\\.')}\\s*\\{`);
+      if (line.match(domainPattern)) {
         inDomainBlock = true;
         braceCount = 1;
         continue; // Skip this line

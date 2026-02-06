@@ -45,7 +45,7 @@ An AI-powered logo generation platform that creates professional, ready-to-use l
 - [Privacy and Payments Compliance](compliance/privacy-and-payments.md)
 
 ### Global/Shared Features
-This project uses the general [Authentication System](../general/authentication/PRD.md) and anticipates i18n post-MVP. See the [General Features Index](../general/INDEX.md) for shared feature status.
+This project uses the general [Authentication System](../general/anchorage/PRD.md) and anticipates i18n post-MVP. See the [General Features Index](../general/INDEX.md) for shared feature status.
 
 ---
 

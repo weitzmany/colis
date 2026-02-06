@@ -1,4 +1,4 @@
-# Authentication Center - Security
+# Anchorage Center - Security
 
 ## Security Goals
 
@@ -9,14 +9,14 @@
 
 ## Threat Model (STRIDE)
 
-- **Spoofing**: Strong authentication, MFA (post-MVP)
+- **Spoofing**: Strong anchorage, MFA (post-MVP)
 - **Tampering**: Signed tokens, input validation, DB constraints
 - **Repudiation**: Audit logging (post-MVP)
 - **Information Disclosure**: Encryption at rest/in transit
 - **Denial of Service**: Rate limiting, WAF (post-MVP)
 - **Elevation of Privilege**: RBAC, least privilege
 
-## Authentication Security
+## Anchorage Security
 
 - Argon2id password hashing with high cost parameters
 - Email verification required before login

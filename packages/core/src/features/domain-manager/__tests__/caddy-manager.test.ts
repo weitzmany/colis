@@ -99,7 +99,7 @@ describe('CaddyManager', () => {
 
       expect(fs.writeFile).toHaveBeenCalled();
       const writtenContent = writeFileMock.mock.calls[0][1];
-      expect(writtenContent).toContain('test.local {');
+      expect(writtenContent).toContain('http://test.local {');
       expect(writtenContent).toContain('reverse_proxy localhost:3000');
     });
 
@@ -113,14 +113,14 @@ describe('CaddyManager', () => {
       });
 
       const writtenContent = writeFileMock.mock.calls[0][1];
-      expect(writtenContent).toContain('test.local {');
+      expect(writtenContent).toContain('http://test.local {');
       expect(writtenContent).toContain('reverse_proxy localhost:4200');
       expect(writtenContent).toContain('handle /api/*');
       expect(writtenContent).toContain('reverse_proxy localhost:8080');
     });
 
     it('should remove existing domain before adding', async () => {
-      const existingContent = 'old.local {\n    reverse_proxy localhost:3000\n}';
+      const existingContent = 'http://old.local {\n    reverse_proxy localhost:3000\n}';
       pathExistsMock.mockResolvedValue(true);
       readFileMock.mockResolvedValue(existingContent);
 
@@ -130,7 +130,7 @@ describe('CaddyManager', () => {
       });
 
       const writtenContent = writeFileMock.mock.calls[0][1];
-      expect(writtenContent).toContain('test.local');
+      expect(writtenContent).toContain('http://test.local');
       expect(writtenContent).not.toContain('old.local');
     });
 
@@ -169,7 +169,7 @@ describe('CaddyManager', () => {
     });
 
     it('should remove domain from Caddyfile', async () => {
-      const content = `test.local {
+      const content = `http://test.local {
     reverse_proxy localhost:3000
 }`;
       pathExistsMock.mockResolvedValue(true);
@@ -196,7 +196,7 @@ describe('CaddyManager', () => {
     });
 
     it('should throw CaddyfileError if write fails', async () => {
-      const content = 'test.local {\n    reverse_proxy localhost:3000\n}';
+      const content = 'http://test.local {\n    reverse_proxy localhost:3000\n}';
       pathExistsMock.mockResolvedValue(true);
       readFileMock.mockResolvedValue(content);
       writeFileMock.mockRejectedValue(
@@ -211,6 +211,21 @@ describe('CaddyManager', () => {
 
   describe('listDomains', () => {
     it('should parse single-service domain', async () => {
+      const content = `http://test.local {
+    reverse_proxy localhost:3000
+}`;
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(content);
+
+      const result = await caddyManager.listDomains();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].domain).toBe('test.local');
+      expect(result[0].config.port).toBe(3000);
+      expect(result[0].config.isMultiService).toBe(false);
+    });
+
+    it('should parse single-service domain without http prefix (backward compatibility)', async () => {
       const content = `test.local {
     reverse_proxy localhost:3000
 }`;
@@ -226,7 +241,7 @@ describe('CaddyManager', () => {
     });
 
     it('should parse multi-service domain', async () => {
-      const content = `test.local {
+      const content = `http://test.local {
     reverse_proxy localhost:4200
 
     handle /api/* {
@@ -257,11 +272,29 @@ describe('CaddyManager', () => {
     });
 
     it('should handle multiple domains', async () => {
+      const content = `http://test1.local {
+    reverse_proxy localhost:3000
+}
+
+http://test2.local {
+    reverse_proxy localhost:4000
+}`;
+      pathExistsMock.mockResolvedValue(true);
+      readFileMock.mockResolvedValue(content);
+
+      const result = await caddyManager.listDomains();
+
+      expect(result).toHaveLength(2);
+      expect(result[0].domain).toBe('test1.local');
+      expect(result[1].domain).toBe('test2.local');
+    });
+
+    it('should handle mixed format domains (backward compatibility)', async () => {
       const content = `test1.local {
     reverse_proxy localhost:3000
 }
 
-test2.local {
+http://test2.local {
     reverse_proxy localhost:4000
 }`;
       pathExistsMock.mockResolvedValue(true);

@@ -25,7 +25,7 @@ This project uses the following general features (or will reference them when ex
 
 **Current Status**: All features are project-specific until general features are extracted.
 
-- **Authentication System** (Candidate for `../general/authentication/`) - User authentication and authorization
+- **Authentication System** (Candidate for `../general/anchorage/`) - User authentication and authorization
 - **Notification System** (Candidate for `../general/notifications/`) - Email, push, and SMS notifications
 - **File Storage System** (Project-Specific) - Secure medical document storage with encryption
 

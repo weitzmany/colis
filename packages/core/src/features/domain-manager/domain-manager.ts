@@ -18,7 +18,6 @@ import {
 import {
   CaddyNotInstalledError,
   DomainValidationError,
-  HostsFileError,
   DomainConfigurationError,
 } from './errors.js';
 import {
@@ -161,13 +160,13 @@ export class DomainManager {
         hostsUpdated = true;
       } catch (error) {
         // Warn but don't fail - hosts file update is optional
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        // Re-throw as HostsFileError but don't fail the entire operation
         // This allows the domain to be configured in Caddy even if hosts file update fails
-        throw new HostsFileError(
-          `Could not update hosts file: ${errorMessage}. Domain is configured in Caddyfile but not in hosts file.`,
-          'write'
-        );
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.warn(`⚠️  Could not update hosts file: ${errorMessage}`);
+        console.warn(`   Domain is configured in Caddyfile but not in hosts file.`);
+        console.warn(`   Run manually: echo "127.0.0.1 ${domain}" | sudo tee -a /etc/hosts`);
+        // Don't throw - just warn and continue
+        hostsUpdated = false;
       }
     }
 
@@ -218,10 +217,10 @@ export class DomainManager {
     } catch (error) {
       // Warn but don't fail - hosts file removal is optional
       const errorMessage = error instanceof Error ? error.message : String(error);
-      throw new HostsFileError(
-        `Could not remove from hosts file: ${errorMessage}. Domain removed from Caddyfile but not from hosts file.`,
-        'write'
-      );
+      console.warn(`⚠️  Could not remove from hosts file: ${errorMessage}`);
+      console.warn(`   Domain removed from Caddyfile but not from hosts file.`);
+      console.warn(`   Remove manually: sudo sed -i '' "/${domain}/d" /etc/hosts`);
+      // Don't throw - just warn and continue
     }
   }
 

@@ -1,8 +1,8 @@
-# Authentication Center - Database Schema
+# Anchorage Center - Database Schema
 
 ## Overview
 
-The Authentication Center stores user identities, sessions, roles, and security artifacts in PostgreSQL, with Redis used for caching and rate limiting. This document captures the logical schema and core relationships.
+The Anchorage Center stores user identities, sessions, roles, and security artifacts in PostgreSQL, with Redis used for caching and rate limiting. This document captures the logical schema and core relationships.
 
 ## Core Tables
 

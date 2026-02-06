@@ -1,8 +1,8 @@
-# Authentication Center - Expert Contributions
+# Anchorage Center - Expert Contributions
 
 ## Expert Team
 
-This authentication center project has been planned with contributions from multiple expert domains to ensure comprehensive coverage of security, architecture, compliance, performance, and user experience.
+This anchorage center project has been planned with contributions from multiple expert domains to ensure comprehensive coverage of security, architecture, compliance, performance, and user experience.
 
 ### Product Management
 
@@ -58,10 +58,10 @@ This authentication center project has been planned with contributions from mult
 ### Security
 
 **Ryan Kim** - Security Expert  
-**Role**: Authentication security, threat modeling, encryption, security best practices
+**Role**: Anchorage security, threat modeling, encryption, security best practices
 
 **Contributions**:
-- Authentication flow security design
+- Anchorage flow security design
 - Password hashing strategy (Argon2id)
 - Token security (JWT with RS256)
 - Encryption at rest and in transit (TLS 1.3, AES-256)
@@ -107,7 +107,7 @@ This authentication center project has been planned with contributions from mult
 - OpenAPI 3.0 specification planning
 - API rate limiting design
 - CORS configuration
-- API authentication patterns
+- API anchorage patterns
 
 **Sign-off**: Pending review
 

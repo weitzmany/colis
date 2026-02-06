@@ -1,8 +1,8 @@
-# Authentication Center - Architecture
+# Anchorage Center - Architecture
 
 ## System Overview
 
-The Authentication Center is a microservice-based authentication and authorization platform designed to serve multiple applications within your ecosystem. It provides centralized user management, secure authentication, session handling, and role-based access control.
+The Anchorage Center is a microservice-based anchorage and authorization platform designed to serve multiple applications within your ecosystem. It provides centralized user management, secure anchorage, session handling, and role-based access control.
 
 ### High-Level Architecture Diagram
 
@@ -22,7 +22,7 @@ The Authentication Center is a microservice-based authentication and authorizati
                         REST / GraphQL API
                                │
 ┌──────────────────────────────┼────────────────────────────────────┐
-│                    Authentication Center                           │
+│                    Anchorage Center                           │
 │                                                                    │
 │  ┌────────────────────────────────────────────────────────────┐  │
 │  │                      API Gateway Layer                      │  │
@@ -85,7 +85,7 @@ The Authentication Center is a microservice-based authentication and authorizati
 
 ### Data Flow
 
-#### Authentication Flow (Login)
+#### Anchorage Flow (Login)
 ```
 1. User → App: Enter credentials
 2. App → Auth Center: POST /auth/login
@@ -214,10 +214,10 @@ src/
 
 ### Business Logic
 
-#### Authentication Service
+#### Anchorage Service
 ```typescript
 class AuthService {
-  // Core authentication methods
+  // Core anchorage methods
   async register(email: string, password: string): Promise<User>
   async login(email: string, password: string): Promise<AuthTokens>
   async logout(refreshToken: string): Promise<void>
@@ -416,7 +416,7 @@ If main branch:
 
 ## Security Architecture
 
-### Authentication Flow
+### Anchorage Flow
 
 **Registration:**
 ```
@@ -470,7 +470,7 @@ Example:
 
 **Middleware:**
 ```typescript
-// Require authentication
+// Require anchorage
 app.get('/api/v1/users', authenticate, getUsers)
 
 // Require specific permission
@@ -633,7 +633,7 @@ User (1) → (many) EmailVerifications
 
 **See detailed API specification in [API Design Document](technical/api-design.md)**
 
-**Authentication:**
+**Anchorage:**
 - `POST /api/v1/auth/register`
 - `POST /api/v1/auth/login`
 - `POST /api/v1/auth/logout`

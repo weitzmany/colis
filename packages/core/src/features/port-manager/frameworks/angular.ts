@@ -57,6 +57,34 @@ export class AngularHandler implements FrameworkHandler {
       result.errors.push(`Failed to update angular.json: ${error}`);
     }
 
+    // Update package.json to display domain URL if domain is configured
+    try {
+      const packageJsonPath = path.join(projectPath, 'package.json');
+      if (await fs.pathExists(packageJsonPath)) {
+        const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+        
+        // Check if domain is configured
+        const portManagerPath = path.join(projectPath, '.port-manager.json');
+        if (await fs.pathExists(portManagerPath)) {
+          const portManagerConfig = JSON.parse(await fs.readFile(portManagerPath, 'utf-8'));
+          if (portManagerConfig.domain) {
+            // Update start script to show domain URL
+            const domain = portManagerConfig.domain;
+            const originalStart = packageJson.scripts?.start || `ng serve --port ${port}`;
+            
+            // Wrap ng serve with a script that displays the domain URL
+            packageJson.scripts.start = `${originalStart} & echo "" && echo "  ➜ Domain: http://${domain}/" && wait`;
+            
+            await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2), 'utf-8');
+            result.filesUpdated.push('package.json');
+          }
+        }
+      }
+    } catch (error) {
+      // Non-critical error - domain display is optional
+      result.errors.push(`Warning: Could not update package.json for domain display: ${error}`);
+    }
+
     return result;
   }
 

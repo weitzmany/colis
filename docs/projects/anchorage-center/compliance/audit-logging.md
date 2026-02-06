@@ -1,4 +1,4 @@
-# Authentication Center - Audit Logging
+# Anchorage Center - Audit Logging
 
 ## Purpose
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Manages user sessions using JWT access tokens and refresh tokens, enabling secure authentication state across applications.
+Manages user sessions using JWT access tokens and refresh tokens, enabling secure anchorage state across applications.
 
 ## User Stories
 

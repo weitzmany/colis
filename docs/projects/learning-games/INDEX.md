@@ -52,7 +52,7 @@ This project uses the following general features (or will once they're extracted
 #### Potential General Features (Not Yet Extracted)
 - **Authentication System** (⚠️ Candidate) - JWT authentication, user registration/login, password reset
   - Status: Currently project-specific, candidate for extraction (7+ projects use it)
-  - Will reference [../../general/authentication/PRD.md](../../general/authentication/PRD.md) once extracted
+  - Will reference [../../general/anchorage/PRD.md](../../general/anchorage/PRD.md) once extracted
 - **Notification System** (⚠️ Candidate) - Email/push notifications for practice reminders
   - Status: Currently project-specific, candidate for extraction (5+ projects use it)
   - Will reference [../../general/notifications/PRD.md](../../general/notifications/PRD.md) once extracted

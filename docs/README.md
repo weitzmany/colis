@@ -68,7 +68,7 @@ All feature documentation is located in the `features/` directory.
 **Tool Packages:**
 - [Tasks](./features/tasks/PRD.md) - Task management and tracking utilities
 - [Certification](./features/certification/PRD.md) - Documentation validation tools (formerly: documentation-validation)
-- [Authentication Tool](./features/authentication-tool/PRD.md) - Reusable authentication system
+- [Authentication Tool](./features/anchorage-tool/PRD.md) - Reusable authentication system
 - [Database Migration Tool](./features/database-migration-tool/PRD.md) - Database migration utilities
 - [API Client Library](./features/api-client-library/PRD.md) - HTTP client library
 - [Validation Tool](./features/validation-tool/PRD.md) - Input and schema validation

@@ -1,13 +1,14 @@
-# Gamification and Learning Engagement Feature
+# Morale and Learning Engagement Feature
 
 ## Product Requirements Document (PRD)
 
-**Feature Name**: Gamification and Learning Engagement System  
+**Feature Name**: Morale and Learning Engagement System  
 **Status**: Planning  
 **Priority**: High (P1)  
 **Created By**: Carol Williams (Educational Content Expert)  
 **Created Date**: 2026-01-05  
-**Last Updated**: 2026-01-05
+**Last Updated**: 2026-01-05  
+**Formerly**: gamification-and-engagement
 
 ---
 
@@ -23,14 +24,14 @@ Educational research consistently shows that student motivation and engagement a
 
 ### Solution
 
-Implement a comprehensive gamification and engagement system that leverages game design principles to enhance learning motivation, track progress, and celebrate achievements while maintaining educational rigor and avoiding superficial reward systems.
+Implement a comprehensive morale and engagement system that leverages game design principles to enhance learning motivation, track progress, and celebrate decorations while maintaining educational rigor and avoiding superficial reward systems.
 
 ### Business Value
 
 - **Increased Retention**: Gamified learning experiences show 60% higher retention rates
 - **Higher Engagement**: Students spend 40% more time on gamified platforms
 - **Better Completion Rates**: Achievement systems increase course completion by 35%
-- **Improved Learning Outcomes**: Properly designed gamification improves test scores by 14%
+- **Improved Learning Outcomes**: Properly designed morale improves test scores by 14%
 - **Competitive Advantage**: Differentiation in the educational technology market
 
 ---
@@ -69,13 +70,13 @@ Implement a comprehensive gamification and engagement system that leverages game
 2. **University Students (18+)**
    - Motivation: Skill development, grades
    - Pain points: Overwhelm, unclear progress
-   - Needs: Clear milestones, achievement tracking, mastery visualization
+   - Needs: Clear milestones, decoration tracking, mastery visualization
 
 ### Secondary Users
 
 1. **Educators/Teachers**
    - Need visibility into student engagement
-   - Want to use gamification to motivate students
+   - Want to use morale to motivate students
    - Require analytics on engagement patterns
 
 2. **Parents**
@@ -132,7 +133,7 @@ interface XPResult {
 - [ ] Achievement badges for mastery levels
 - [ ] Achievement badges for consistency (daily learning)
 - [ ] Achievement badges for improvement (growth)
-- [ ] Secret achievements for exploration
+- [ ] Secret decorations for exploration
 - [ ] Achievement display on profile
 
 **Achievement Categories**:
@@ -267,9 +268,9 @@ interface Challenge {
 - Study groups and teams
 - Collaborative challenges
 - Mentorship pairing
-- Discussion achievements
+- Discussion decorations
 
-#### 9. Adaptive Gamification
+#### 9. Adaptive Morale
 
 - Personalized challenge difficulty
 - Dynamic reward scheduling
@@ -281,9 +282,9 @@ interface Challenge {
 
 ## Educational Design Principles
 
-### 1. Learning-First Gamification
+### 1. Learning-First Morale
 
-Gamification should enhance learning, not distract from it.
+Morale should enhance learning, not distract from it.
 
 **DO**:
 - Reward understanding, not just completion
@@ -299,7 +300,7 @@ Gamification should enhance learning, not distract from it.
 
 ### 2. Growth Mindset Reinforcement
 
-All gamification elements should promote a growth mindset.
+All morale elements should promote a growth mindset.
 
 **Examples**:
 - "You're making progress!" instead of "You're smart!"
@@ -319,7 +320,7 @@ Research shows excessive extrinsic rewards can undermine intrinsic motivation.
 
 ### 4. Age-Appropriate Design
 
-Different age groups respond differently to gamification.
+Different age groups respond differently to morale.
 
 **Younger Students (10-14)**:
 - More visual rewards (badges, animations)
@@ -340,15 +341,15 @@ Different age groups respond differently to gamification.
 ### Data Models
 
 ```typescript
-interface UserGamification {
+interface UserMorale {
   userId: string;
   experiencePoints: number;
   level: number;
-  achievements: UserAchievement[];
+  decorations: UserAchievement[];
   streakData: StreakData;
   challenges: UserChallenge[];
   rewards: UserReward[];
-  settings: GamificationSettings;
+  settings: MoraleSettings;
 }
 
 interface StreakData {
@@ -360,7 +361,7 @@ interface StreakData {
 }
 
 interface UserAchievement {
-  achievementId: string;
+  decorationId: string;
   earnedAt: Date;
   progress: number;
   isComplete: boolean;
@@ -370,20 +371,20 @@ interface UserAchievement {
 ### API Endpoints
 
 ```
-POST   /api/v1/gamification/activity      - Log learning activity, award XP
-GET    /api/v1/gamification/profile       - Get user gamification profile
-GET    /api/v1/gamification/achievements  - Get achievements and progress
-GET    /api/v1/gamification/ranking   - Get ranking data
-POST   /api/v1/gamification/streak/freeze - Use streak freeze
-GET    /api/v1/gamification/challenges    - Get available challenges
-POST   /api/v1/gamification/challenges/{id}/join - Join a challenge
+POST   /api/v1/morale/activity      - Log learning activity, award XP
+GET    /api/v1/morale/profile       - Get user morale profile
+GET    /api/v1/morale/decorations  - Get decorations and progress
+GET    /api/v1/morale/ranking   - Get ranking data
+POST   /api/v1/morale/streak/freeze - Use streak freeze
+GET    /api/v1/morale/challenges    - Get available challenges
+POST   /api/v1/morale/challenges/{id}/join - Join a challenge
 ```
 
 ### Event System
 
 ```typescript
-// Events that trigger gamification updates
-interface GamificationEvent {
+// Events that trigger morale updates
+interface MoraleEvent {
   type: 'lesson_completed' | 'question_answered' | 'topic_mastered' | 
         'daily_login' | 'streak_continued' | 'challenge_completed';
   userId: string;
@@ -392,13 +393,13 @@ interface GamificationEvent {
 }
 
 // Event handler
-async function handleGamificationEvent(event: GamificationEvent): Promise<GamificationUpdate> {
-  // Calculate XP, check achievements, update streaks
+async function handleMoraleEvent(event: MoraleEvent): Promise<MoraleUpdate> {
+  // Calculate XP, check decorations, update streaks
   const xpUpdate = await calculateXP(event);
-  const newAchievements = await checkAchievements(event);
+  const newDecorations = await checkDecorations(event);
   const streakUpdate = await updateStreak(event);
   
-  return { xpUpdate, newAchievements, streakUpdate };
+  return { xpUpdate, newDecorations, streakUpdate };
 }
 ```
 
@@ -421,14 +422,14 @@ async function handleGamificationEvent(event: GamificationEvent): Promise<Gamifi
 
 ### Visual Design
 
-**Color Palette for Gamification**:
-- Gold/Yellow: XP, achievements, rewards
+**Color Palette for Morale**:
+- Gold/Yellow: XP, decorations, rewards
 - Green: Streaks, growth, progress
 - Blue: Challenges, quests
-- Purple: Rare achievements, mastery
+- Purple: Rare decorations, mastery
 
 **Animation Guidelines**:
-- Celebrate achievements with appropriate animations
+- Celebrate decorations with appropriate animations
 - Progress bars should animate smoothly
 - Avoid distracting from learning content
 - Respect reduced motion preferences
@@ -448,7 +449,7 @@ async function handleGamificationEvent(event: GamificationEvent): Promise<Gamifi
 2. **Learning Correlation**:
    - XP vs. mastery score correlation
    - Achievement holders vs. learning outcomes
-   - Gamification engagement vs. retention
+   - Morale engagement vs. retention
 
 3. **System Health**:
    - Achievement distribution (are they too easy/hard?)
@@ -457,7 +458,7 @@ async function handleGamificationEvent(event: GamificationEvent): Promise<Gamifi
 
 ### A/B Testing Plan
 
-Test gamification element effectiveness:
+Test morale element effectiveness:
 - XP award amounts
 - Achievement criteria
 - Notification timing
@@ -471,7 +472,7 @@ Test gamification element effectiveness:
 
 | Risk | Impact | Likelihood | Mitigation |
 |------|--------|------------|------------|
-| Gamification distracts from learning | High | Medium | Learning-first design, regular UX testing |
+| Morale distracts from learning | High | Medium | Learning-first design, regular UX testing |
 | Rankings cause anxiety | Medium | Medium | Opt-in, anonymous options, growth focus |
 | Extrinsic motivation undermines intrinsic | High | Medium | Gradual reward reduction, mastery focus |
 | Feature becomes gimmicky | Medium | Low | Research-based design, expert review |
@@ -483,7 +484,7 @@ Test gamification element effectiveness:
 
 ### Phase 1: MVP (Weeks 1-8)
 - [ ] XP system implementation
-- [ ] Basic achievement system
+- [ ] Basic decoration system
 - [ ] Progress visualization
 - [ ] Streak tracking
 
@@ -495,7 +496,7 @@ Test gamification element effectiveness:
 
 ### Phase 3: Advanced (Weeks 17-24)
 - [ ] Social features
-- [ ] Adaptive gamification
+- [ ] Adaptive morale
 - [ ] Analytics dashboard
 - [ ] A/B testing framework
 
@@ -504,12 +505,12 @@ Test gamification element effectiveness:
 ## References
 
 1. **Research Foundation**:
-   - Deterding, S. et al. (2011). Gamification: Toward a Definition
-   - Kapp, K. M. (2012). The Gamification of Learning and Instruction
+   - Deterding, S. et al. (2011). Morale: Toward a Definition
+   - Kapp, K. M. (2012). The Morale of Learning and Instruction
    - Ryan, R. M., & Deci, E. L. (2000). Self-Determination Theory
 
 2. **Best Practices**:
-   - Duolingo gamification case study
+   - Duolingo morale case study
    - Khan Academy mastery system
    - Kahoot! engagement design
 
@@ -520,12 +521,12 @@ Test gamification element effectiveness:
 **Expert**: Carol Williams  
 **Expertise**: Educational Content (Learning Materials)  
 **Date**: 2026-01-05  
-**Changes**: Created comprehensive Gamification and Learning Engagement PRD covering problem statement (student motivation and engagement challenges), solution (comprehensive gamification system with educational rigor), business value (retention, engagement, completion rates, learning outcomes), success metrics (session duration, active users, completion rates, mastery), target audience (students ages 10-18, university students, educators, parents), core features (XP system with educational considerations, achievement system with multiple categories, progress visualization with mastery levels, streak system with milestones), enhanced features (rankings with safety considerations, challenges and quests, rewards and unlockables), future features (social learning, adaptive gamification), educational design principles (learning-first gamification, growth mindset reinforcement, avoiding extrinsic motivation traps, age-appropriate design), technical architecture (data models, API endpoints, event system), user experience (notification design, visual design guidelines), analytics and monitoring (engagement metrics, learning correlation, A/B testing), risk assessment with mitigations, implementation timeline (three phases over 24 weeks), and research references. This feature is designed to enhance student motivation and engagement while maintaining educational rigor and promoting intrinsic motivation for learning.
+**Changes**: Created comprehensive Morale and Learning Engagement PRD covering problem statement (student motivation and engagement challenges), solution (comprehensive morale system with educational rigor), business value (retention, engagement, completion rates, learning outcomes), success metrics (session duration, active users, completion rates, mastery), target audience (students ages 10-18, university students, educators, parents), core features (XP system with educational considerations, decoration system with multiple categories, progress visualization with mastery levels, streak system with milestones), enhanced features (rankings with safety considerations, challenges and quests, rewards and unlockables), future features (social learning, adaptive morale), educational design principles (learning-first morale, growth mindset reinforcement, avoiding extrinsic motivation traps, age-appropriate design), technical architecture (data models, API endpoints, event system), user experience (notification design, visual design guidelines), analytics and monitoring (engagement metrics, learning correlation, A/B testing), risk assessment with mitigations, implementation timeline (three phases over 24 weeks), and research references. This feature is designed to enhance student motivation and engagement while maintaining educational rigor and promoting intrinsic motivation for learning.
 
 **Expert**: Marcus Thompson  
 **Expertise**: Market Research & Product Strategy  
 **Date**: 2026-01-05  
-**Changes**: Enhanced this gamification PRD by adding comprehensive "Market Research and Competitive Analysis" section covering competitive analysis (competitive platform analysis with Brilliant, Prodigy, CodeCombat, Photomath feature comparison and market positioning, competitive pricing analysis with subscription model comparison and value proposition analysis, competitive user feedback analysis with user review analysis and satisfaction comparison), market demand research (market demand validation with user needs research and pain point analysis for student engagement, market size analysis with TAM/SAM/SOM calculations for educational gamification market, willingness-to-pay analysis with pricing sensitivity research and value perception analysis for educational tools), market opportunity assessment (market opportunity scoring with opportunity size and growth potential for gamified learning, competitive gap analysis with market gap identification and opportunity prioritization, market timing analysis with market readiness and competitive landscape timing), and comprehensive market research integration checklist (competitive analysis, feature gap identification, competitive advantage, pricing analysis, market positioning, user feedback analysis, market demand validation, market size analysis, willingness-to-pay analysis, market opportunity scoring, competitive gap analysis, market timing analysis). This addition ensures that the gamification feature is informed by comprehensive market research, enabling data-driven product decisions based on competitive landscape, market demand, and market opportunities for educational gamification.
+**Changes**: Enhanced this morale PRD by adding comprehensive "Market Research and Competitive Analysis" section covering competitive analysis (competitive platform analysis with Brilliant, Prodigy, CodeCombat, Photomath feature comparison and market positioning, competitive pricing analysis with subscription model comparison and value proposition analysis, competitive user feedback analysis with user review analysis and satisfaction comparison), market demand research (market demand validation with user needs research and pain point analysis for student engagement, market size analysis with TAM/SAM/SOM calculations for educational morale market, willingness-to-pay analysis with pricing sensitivity research and value perception analysis for educational tools), market opportunity assessment (market opportunity scoring with opportunity size and growth potential for gamified learning, competitive gap analysis with market gap identification and opportunity prioritization, market timing analysis with market readiness and competitive landscape timing), and comprehensive market research integration checklist (competitive analysis, feature gap identification, competitive advantage, pricing analysis, market positioning, user feedback analysis, market demand validation, market size analysis, willingness-to-pay analysis, market opportunity scoring, competitive gap analysis, market timing analysis). This addition ensures that the morale feature is informed by comprehensive market research, enabling data-driven product decisions based on competitive landscape, market demand, and market opportunities for educational morale.
 
 ---
 

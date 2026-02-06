@@ -1,4 +1,4 @@
-# Feature: Multi-Factor Authentication (Post-MVP)
+# Feature: Multi-Factor Anchorage (Post-MVP)
 
 ## Overview
 

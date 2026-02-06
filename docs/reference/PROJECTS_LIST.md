@@ -516,7 +516,7 @@ Project Health Dashboard is a centralized, customer-facing web-based dashboard a
 - **Security**: OAuth 2.0, JWT authentication, data encryption (at rest and in transit), RBAC
 - **Business Intelligence**: KPI definition, analytics architecture, ETL pipelines, data warehouse design, predictive analytics
 
-### 9. `authentication-center/`
+### 9. `anchorage-center/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Critical (Foundation for all apps)  
@@ -560,10 +560,10 @@ The Authentication Center is a production-ready, centralized authentication and 
 
 #### Documentation
 
-- [Documentation Index](projects/authentication-center/INDEX.md) - Complete navigation guide
-- [PRD Overview](projects/authentication-center/PRD_OVERVIEW.md) - Main requirements document with comprehensive MVP definition
-- [Architecture](projects/authentication-center/ARCHITECTURE.md) - Technical architecture and system design
-- [Expert Contributions](projects/authentication-center/EXPERTS.md) - 15 expert contributions
+- [Documentation Index](projects/anchorage-center/INDEX.md) - Complete navigation guide
+- [PRD Overview](projects/anchorage-center/PRD_OVERVIEW.md) - Main requirements document with comprehensive MVP definition
+- [Architecture](projects/anchorage-center/ARCHITECTURE.md) - Technical architecture and system design
+- [Expert Contributions](projects/anchorage-center/EXPERTS.md) - 15 expert contributions
 - Additional docs: `features/`, `technical/`, `business/`, `compliance/`
 
 #### Timeline
@@ -717,7 +717,7 @@ This authentication center meets multiple **Architectural Override criteria**, m
 - Multi-Factor Authentication (2FA) available
 
 **Technology**: Backend service (Node.js + TypeScript + Express) with React admin panel  
-**Location**: `~/Documents/packages/docs/projects/authentication-center/`
+**Location**: `~/Documents/packages/docs/projects/anchorage-center/`
 
 ### 10. `habit-tracker/`
 

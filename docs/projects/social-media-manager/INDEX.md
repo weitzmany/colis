@@ -18,7 +18,7 @@ Social Media Manager is a comprehensive SaaS platform designed to help users man
 ### Global/Shared Features
 
 This project uses the following general features (documented in [../general/](../general/INDEX.md)):
-- [Authentication System](../general/authentication/PRD.md) - User authentication and authorization (OAuth 2.0)
+- [Authentication System](../general/anchorage/PRD.md) - User authentication and authorization (OAuth 2.0)
 - [Translation System](../general/translations/PRD.md) - Multi-language support (i18n)
 - [Staff Management](../general/staff-management/PRD.md) - Admin/staff user management
 

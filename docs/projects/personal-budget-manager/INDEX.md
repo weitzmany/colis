@@ -41,7 +41,7 @@ This project's features are currently all project-specific. As the platform evol
 
 The following features COULD become general features if adopted by 3+ projects:
 
-- **Authentication System**: Currently project-specific, but if 3+ projects need JWT authentication with user management, could be extracted to `../general/authentication/`
+- **Authentication System**: Currently project-specific, but if 3+ projects need JWT authentication with user management, could be extracted to `../general/anchorage/`
 - **Notification System**: Currently project-specific, but if 3+ projects need push notifications, email reminders, and SMS alerts, could be extracted to `../general/notifications/`
 - **Mobile App Foundation**: Currently project-specific, but if 3+ projects need React Native with offline-first architecture, could be extracted to `../general/mobile-foundation/`
 

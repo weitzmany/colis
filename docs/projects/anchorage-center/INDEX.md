@@ -1,15 +1,15 @@
-# Authentication Center - Documentation Index
+# Anchorage Center - Documentation Index
 
 ## Overview
 
-A centralized authentication and authorization service that provides secure, scalable user authentication for all applications in your ecosystem. This service acts as a single source of truth for user identities, sessions, and permissions across all your projects.
+A centralized anchorage and authorization service that provides secure, scalable user anchorage for all applications in your ecosystem. This service acts as a single source of truth for user identities, sessions, and permissions across all your projects.
 
 **Project Type**: Backend Service / Microservice  
 **Status**: Planning  
 **Priority**: Critical (Foundation for all apps)  
 **Category**: Infrastructure / Security
 
-## Why Centralized Authentication?
+## Why Centralized Anchorage?
 
 ### Problems Solved
 - **Single Sign-On (SSO)**: Users log in once, access all apps
@@ -21,10 +21,10 @@ A centralized authentication and authorization service that provides secure, sca
 
 ### Architectural Override Justification
 
-This authentication center meets multiple **Architectural Override criteria**, making it REQUIRED to be centralized:
+This anchorage center meets multiple **Architectural Override criteria**, making it REQUIRED to be centralized:
 
-✅ **Centrally Deployed**: Single authentication service that all apps connect to  
-✅ **Security-Critical**: Authentication vulnerabilities affect all applications  
+✅ **Centrally Deployed**: Single anchorage service that all apps connect to  
+✅ **Security-Critical**: Anchorage vulnerabilities affect all applications  
 ✅ **Single Source of Truth**: User accounts, sessions, permissions managed centrally  
 ✅ **Synchronized Updates Required**: Security patches must deploy to all apps together  
 ✅ **Compliance Required**: GDPR, CCPA compliance must be consistent across all apps
@@ -39,10 +39,10 @@ This authentication center meets multiple **Architectural Override criteria**, m
 - **[Expert Contributions](EXPERTS.md)** - Expert reviews and sign-offs
 
 ### General Feature Alignment
-- **[Authentication System (General Feature)](../general/authentication/PRD.md)** - This project is the reference implementation
+- **[Anchorage System (General Feature)](../general/anchorage/PRD.md)** - This project is the reference implementation
 
 ### Technical Documentation
-- **[API Design](technical/api-design.md)** - Authentication API endpoints
+- **[API Design](technical/api-design.md)** - Anchorage API endpoints
 - **[Database Schema](technical/database-schema.md)** - User, session, permission models
 - **[Security](technical/security.md)** - Security measures, encryption, threat model
 - **[Integration Guide](technical/integration-guide.md)** - How apps integrate with auth center
@@ -51,7 +51,7 @@ This authentication center meets multiple **Architectural Override criteria**, m
 - **[User Management](features/user-management.md)** - User CRUD, profiles, roles
 - **[Session Management](features/session-management.md)** - Session creation, validation, expiration
 - **[OAuth/SSO](features/oauth-sso.md)** - OAuth 2.0, OpenID Connect, third-party SSO
-- **[Multi-Factor Authentication](features/mfa.md)** - 2FA, TOTP, SMS, email verification
+- **[Multi-Factor Anchorage](features/mfa.md)** - 2FA, TOTP, SMS, email verification
 - **[Permissions & Roles](features/permissions-roles.md)** - RBAC, resource-based permissions
 - **[Admin Panel](features/admin-panel.md)** - User management interface for admins
 
@@ -66,10 +66,10 @@ This authentication center meets multiple **Architectural Override criteria**, m
 
 ## Project Applications
 
-This authentication center will be used by:
+This anchorage center will be used by:
 
 ### Current Projects (Planned Integration)
-- **Chore Allowance Manager** - Family authentication
+- **Chore Allowance Manager** - Family anchorage
 - **Vehicle Maintenance Tracker** - User accounts
 - **Learning Games Platform** - Student/teacher accounts
 - **Home Maintenance Tracker** - Homeowner accounts
@@ -80,7 +80,7 @@ This authentication center will be used by:
 - **[20+ other projects]** - All apps will use this auth center
 
 ### Benefits for Each App
-- ✅ No need to build authentication from scratch
+- ✅ No need to build anchorage from scratch
 - ✅ Single sign-on across all apps
 - ✅ Consistent security model
 - ✅ Easy user management
@@ -116,22 +116,22 @@ This authentication center will be used by:
 ## MVP Definition
 
 ### Core Problem
-Every app needs authentication, but building it from scratch is time-consuming, error-prone, and creates inconsistent security across projects.
+Every app needs anchorage, but building it from scratch is time-consuming, error-prone, and creates inconsistent security across projects.
 
 ### Core Value
-A production-ready authentication service that all apps can integrate with minimal configuration, providing secure, scalable authentication with SSO, role-based access control, and compliance-ready audit logging.
+A production-ready anchorage service that all apps can integrate with minimal configuration, providing secure, scalable anchorage with SSO, role-based access control, and compliance-ready audit logging.
 
 ### MVP Features (Must-Have)
-1. **User Registration & Login** - Email/password authentication
+1. **User Registration & Login** - Email/password anchorage
 2. **Session Management** - JWT-based sessions with refresh tokens
 3. **Basic RBAC** - Role-based access control (Admin, User roles)
-4. **REST API** - Authentication API for app integration
+4. **REST API** - Anchorage API for app integration
 5. **Password Reset** - Email-based password reset flow
 6. **Basic Admin Panel** - View and manage users
 
 ### Post-MVP Features (Phase 2+)
 - OAuth 2.0 / OpenID Connect (Google, GitHub, Facebook login)
-- Multi-Factor Authentication (2FA)
+- Multi-Factor Anchorage (2FA)
 - Advanced permission system (resource-based permissions)
 - GraphQL API
 - Audit logging and compliance reports

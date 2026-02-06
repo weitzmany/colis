@@ -1564,7 +1564,7 @@ Port Manager, as part of `@your-org/core`, shares dependencies with the core pac
 
 ## Analytics Integration
 
-Port Manager integrates with the **Analytics Dashboard Package** (`@your-org/core/features/analytics-dashboard`) to provide comprehensive port usage analytics and insights.
+Port Manager integrates with the **Analytics Dashboard Package** (`@your-org/core/features/telemetry`) to provide comprehensive port usage analytics and insights.
 
 ### Integration Overview
 
@@ -1574,7 +1574,7 @@ Port Manager automatically tracks port-related events and sends them to the Anal
 
 **Port Allocation Events**:
 ```typescript
-import { EventTracker } from '@your-org/core/features/analytics-dashboard';
+import { EventTracker } from '@your-org/core/features/telemetry';
 
 const tracker = new EventTracker({ feature: 'port-manager' });
 
@@ -1632,7 +1632,7 @@ tracker.track('port_released', {
 Port Manager analytics are available through the Analytics Dashboard Package:
 
 ```typescript
-import { AnalyticsDashboard } from '@your-org/core/features/analytics-dashboard';
+import { AnalyticsDashboard } from '@your-org/core/features/telemetry';
 
 const dashboard = new AnalyticsDashboard();
 
@@ -1660,7 +1660,7 @@ With the Analytics Dashboard Package, Port Manager can provide:
 - **Trend Analysis**: Analyze trends in port usage over time
 - **Cross-Feature Analytics**: Compare port usage with other feature metrics
 
-See [Analytics Dashboard Package PRD](../analytics-dashboard-package/PRD.md) for complete analytics capabilities.
+See [Analytics Dashboard Package PRD](../telemetry-package/PRD.md) for complete analytics capabilities.
 
 ## Business Value Analysis
 

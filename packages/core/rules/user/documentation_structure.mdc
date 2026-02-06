@@ -29,7 +29,7 @@ The `docs/` directory structure:
 ## Directory Naming Convention
 
 - Use **kebab-case** for all directory names
-- Feature examples: `features/user-authentication/`, `features/analytics-dashboard/`
+- Feature examples: `features/user-authentication/`, `features/telemetry/`
 - Topic examples: `guides/`, `reference/`, `architecture/`, `patterns/`
 
 ## File Organization
@@ -78,7 +78,7 @@ docs/
 │   ├── user-authentication/
 │   │   ├── PRD.md
 │   │   └── TASKS.md
-│   └── analytics-dashboard/
+│   └── telemetry/
 │       ├── PRD.md
 │       └── TASKS.md
 ├── guides/

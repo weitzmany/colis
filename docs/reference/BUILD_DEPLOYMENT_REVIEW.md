@@ -851,12 +851,12 @@ echo "✅ Database health check complete"
 # Deploy analytics dashboard
 - name: Build Analytics Dashboard
   run: |
-    npm run build:analytics-dashboard
+    npm run build:telemetry
     
 - name: Deploy Analytics Dashboard
   run: |
     # Deploy dashboard frontend
-    aws s3 sync dist/analytics-dashboard s3://analytics-dashboard-bucket/
+    aws s3 sync dist/telemetry s3://telemetry-bucket/
     
     # Deploy dashboard API
     kubectl apply -f k8s/analytics/dashboard-api.yaml

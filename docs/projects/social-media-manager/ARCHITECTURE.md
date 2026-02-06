@@ -134,7 +134,7 @@ src/
 │   │   │   ├── calendar.service.ts
 │   │   │   └── drag-drop.directive.ts
 │   │   ├── analytics/
-│   │   │   ├── analytics-dashboard.component.ts
+│   │   │   ├── telemetry.component.ts
 │   │   │   ├── analytics-chart.component.ts
 │   │   │   └── analytics.service.ts
 │   │   └── settings/

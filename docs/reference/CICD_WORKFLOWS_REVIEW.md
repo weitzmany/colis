@@ -1119,7 +1119,7 @@ deploy-data-warehouse:
 
 **Example**:
 ```yaml
-build-analytics-dashboard:
+build-telemetry:
   runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v3
@@ -1133,19 +1133,19 @@ build-analytics-dashboard:
       run: npm ci
     
     - name: Build Dashboard
-      run: npm run build:analytics-dashboard
+      run: npm run build:telemetry
     
     - name: Test Dashboard Components
-      run: npm run test:analytics-dashboard
+      run: npm run test:telemetry
     
     - name: Upload Dashboard Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: analytics-dashboard
-        path: dist/analytics-dashboard/
+        name: telemetry
+        path: dist/telemetry/
 
-deploy-analytics-dashboard:
-  needs: [build-analytics-dashboard]
+deploy-telemetry:
+  needs: [build-telemetry]
   runs-on: ubuntu-latest
   if: github.ref == 'refs/heads/main'
   
@@ -1155,14 +1155,14 @@ deploy-analytics-dashboard:
     - name: Download Dashboard Artifacts
       uses: actions/download-artifact@v3
       with:
-        name: analytics-dashboard
+        name: telemetry
     
     - name: Deploy Dashboard API
       run: kubectl apply -f k8s/analytics/dashboard-api.yaml
     
     - name: Deploy Dashboard Frontend
       run: |
-        aws s3 sync dist/analytics-dashboard/ s3://analytics-dashboard-bucket/
+        aws s3 sync dist/telemetry/ s3://telemetry-bucket/
         aws cloudfront create-invalidation \
           --distribution-id ${{ secrets.CF_DIST_ID }} \
           --paths "/analytics/*"
@@ -1275,4 +1275,4 @@ deploy-report-generation:
 **Expert**: Daniel Kim  
 **Expertise**: Business Intelligence and Analytics  
 **Date**: 2026-01-05  
-**Changes**: Enhanced this CI/CD workflows review document by adding comprehensive "Analytics & Business Intelligence CI/CD Workflow Patterns" section covering analytics data collection CI/CD workflow (CI/CD workflow for analytics data collection services with event tracking and metrics collection including test analytics data collection services, validate analytics data accuracy, deploy analytics services, verify analytics endpoints after deployment with GitHub Actions workflow example for analytics CI/CD with test-analytics-collection job and deploy-analytics-services job), analytics data warehouse CI/CD workflow (CI/CD workflow for analytics data warehouse with ETL pipelines and data processing including test ETL pipeline services, validate data warehouse migrations, deploy data warehouse infrastructure, verify data warehouse after deployment with GitHub Actions workflow example for test-etl-pipeline job with PostgreSQL service and deploy-data-warehouse job with Terraform and Kubernetes deployment), analytics dashboard CI/CD workflow (CI/CD workflow for analytics dashboards with frontend and API deployment including build analytics dashboard frontend, test dashboard components, deploy dashboard API, deploy dashboard frontend, verify dashboard after deployment with GitHub Actions workflow example for build-analytics-dashboard job with artifact upload and deploy-analytics-dashboard job with S3 and CloudFront deployment), analytics report generation CI/CD workflow (CI/CD workflow for analytics report generation with scheduled report jobs including test report generation service, validate report templates, deploy report generation service, configure scheduled report jobs, verify report generation after deployment with GitHub Actions workflow example for test-report-generation job and deploy-report-generation job with Kubernetes deployment), and analytics CI/CD best practices (analytics testing in CI with data collection accuracy testing, data transformation validation, metric calculation testing, report generation validation, dashboard rendering testing, analytics deployment with analytics services before application services, endpoint verification, data collection rate monitoring, data warehouse connectivity verification, dashboard functionality testing, analytics validation with data accuracy validation, metric calculation verification, data aggregation testing, report formatting validation, dashboard performance testing). Added comprehensive analytics CI/CD checklist (12 items covering data collection tests, data validation, ETL pipeline tests, data warehouse tests, dashboard build/test, report generation tests, services deployment, endpoints verification, data warehouse deployment, dashboard deployment, report scheduling, deployment monitoring). Enhanced "Notes" section with analytics-specific considerations (analytics testing, analytics validation, analytics deployment). This addition provides essential BI/Analytics perspective on CI/CD workflows, ensuring analytics features are properly tested, validated, and deployed in CI/CD pipelines for reliable analytics functionality.
+**Changes**: Enhanced this CI/CD workflows review document by adding comprehensive "Analytics & Business Intelligence CI/CD Workflow Patterns" section covering analytics data collection CI/CD workflow (CI/CD workflow for analytics data collection services with event tracking and metrics collection including test analytics data collection services, validate analytics data accuracy, deploy analytics services, verify analytics endpoints after deployment with GitHub Actions workflow example for analytics CI/CD with test-analytics-collection job and deploy-analytics-services job), analytics data warehouse CI/CD workflow (CI/CD workflow for analytics data warehouse with ETL pipelines and data processing including test ETL pipeline services, validate data warehouse migrations, deploy data warehouse infrastructure, verify data warehouse after deployment with GitHub Actions workflow example for test-etl-pipeline job with PostgreSQL service and deploy-data-warehouse job with Terraform and Kubernetes deployment), analytics dashboard CI/CD workflow (CI/CD workflow for analytics dashboards with frontend and API deployment including build analytics dashboard frontend, test dashboard components, deploy dashboard API, deploy dashboard frontend, verify dashboard after deployment with GitHub Actions workflow example for build-telemetry job with artifact upload and deploy-telemetry job with S3 and CloudFront deployment), analytics report generation CI/CD workflow (CI/CD workflow for analytics report generation with scheduled report jobs including test report generation service, validate report templates, deploy report generation service, configure scheduled report jobs, verify report generation after deployment with GitHub Actions workflow example for test-report-generation job and deploy-report-generation job with Kubernetes deployment), and analytics CI/CD best practices (analytics testing in CI with data collection accuracy testing, data transformation validation, metric calculation testing, report generation validation, dashboard rendering testing, analytics deployment with analytics services before application services, endpoint verification, data collection rate monitoring, data warehouse connectivity verification, dashboard functionality testing, analytics validation with data accuracy validation, metric calculation verification, data aggregation testing, report formatting validation, dashboard performance testing). Added comprehensive analytics CI/CD checklist (12 items covering data collection tests, data validation, ETL pipeline tests, data warehouse tests, dashboard build/test, report generation tests, services deployment, endpoints verification, data warehouse deployment, dashboard deployment, report scheduling, deployment monitoring). Enhanced "Notes" section with analytics-specific considerations (analytics testing, analytics validation, analytics deployment). This addition provides essential BI/Analytics perspective on CI/CD workflows, ensuring analytics features are properly tested, validated, and deployed in CI/CD pipelines for reliable analytics functionality.

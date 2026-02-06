@@ -754,14 +754,14 @@ echo "Analytics data warehouse setup complete!"
 **Example**:
 ```bash
 #!/bin/bash
-# scripts/setup-analytics-dashboard.sh
+# scripts/setup-telemetry.sh
 
 set -e
 
 echo "Setting up analytics dashboard..."
 
 # Build dashboard frontend
-cd frontend/analytics-dashboard
+cd frontend/telemetry
 npm install
 npm run build
 

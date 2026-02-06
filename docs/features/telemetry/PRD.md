@@ -1,15 +1,16 @@
-# Analytics Dashboard Package - PRD
+# Telemetry Package - PRD
 
-**Feature Name**: Analytics Dashboard Package  
-**Type**: Core Package Feature (part of `@your-org/core` package)  
+**Feature Name**: Telemetry Package  
+**Type**: Core Package Feature (part of `@colis/rig` package)  
 **Status**: Planning  
 **Priority**: P1 (High)  
 **Created**: 2026-01-05  
-**Package Architecture**: Core Package Feature
+**Package Architecture**: Core Package Feature  
+**Formerly**: analytics-dashboard
 
 ## Package Context
 
-Analytics Dashboard Package is a **core feature** within the `@your-org/core` package. It provides unified analytics infrastructure that can be used by all packages and features, including:
+Telemetry Package is a **core feature** within the `@colis/rig` package. It provides unified analytics infrastructure that can be used by all packages and features, including:
 
 - **Port Manager**: Port usage analytics and insights
 - **Task Manager**: Task completion analytics, productivity metrics
@@ -29,8 +30,8 @@ Analytics Dashboard Package provides a unified analytics infrastructure for all 
 npm install @your-org/core
 
 // Use Analytics Dashboard
-import { AnalyticsDashboard } from '@your-org/core/features/analytics-dashboard';
-import { EventTracker } from '@your-org/core/features/analytics-dashboard';
+import { AnalyticsDashboard } from '@your-org/core/features/telemetry';
+import { EventTracker } from '@your-org/core/features/telemetry';
 
 // Track events
 const tracker = new EventTracker();
@@ -400,7 +401,7 @@ Feature → EventTracker SDK → Event Queue → Data Processor → Analytics Da
 ### Port Manager Integration
 
 ```typescript
-import { EventTracker } from '@your-org/core/features/analytics-dashboard';
+import { EventTracker } from '@your-org/core/features/telemetry';
 
 const tracker = new EventTracker({ feature: 'port-manager' });
 
@@ -421,7 +422,7 @@ tracker.track('port_conflict', {
 ### Task Manager Integration
 
 ```typescript
-import { EventTracker } from '@your-org/core/features/analytics-dashboard';
+import { EventTracker } from '@your-org/core/features/telemetry';
 
 const tracker = new EventTracker({ feature: 'task-manager' });
 
@@ -443,7 +444,7 @@ tracker.track('task_completed', {
 ### Tech Detector Integration
 
 ```typescript
-import { EventTracker } from '@your-org/core/features/analytics-dashboard';
+import { EventTracker } from '@your-org/core/features/telemetry';
 
 const tracker = new EventTracker({ feature: 'tech-detector' });
 
@@ -467,7 +468,7 @@ tracker.track('standards_compliance', {
 ### Basic Event Tracking
 
 ```typescript
-import { EventTracker } from '@your-org/core/features/analytics-dashboard';
+import { EventTracker } from '@your-org/core/features/telemetry';
 
 const tracker = new EventTracker({
   apiKey: process.env.ANALYTICS_API_KEY,
@@ -486,7 +487,7 @@ tracker.track('user_action', {
 ### Dashboard Generation
 
 ```typescript
-import { AnalyticsDashboard } from '@your-org/core/features/analytics-dashboard';
+import { AnalyticsDashboard } from '@your-org/core/features/telemetry';
 
 const dashboard = new AnalyticsDashboard({
   apiKey: process.env.ANALYTICS_API_KEY

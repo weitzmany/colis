@@ -48,7 +48,7 @@ docs/
 - Use **kebab-case** for all directory names
 - Feature examples:
   - `features/user-authentication`
-  - `features/analytics-dashboard`
+  - `features/telemetry`
   - `features/data-processing`
 - Topic examples:
   - `guides/` - General guides

@@ -160,7 +160,7 @@
 
 ### Analytics Integration (via Analytics Dashboard Package)
 
-Task Manager integrates with the **Analytics Dashboard Package** (`@your-org/core/features/analytics-dashboard`) to provide comprehensive task analytics and insights.
+Task Manager integrates with the **Analytics Dashboard Package** (`@your-org/core/features/telemetry`) to provide comprehensive task analytics and insights.
 
 #### Integration Overview
 
@@ -170,7 +170,7 @@ Task Manager automatically tracks task-related events and sends them to the Anal
 
 **Task Lifecycle Events**:
 ```typescript
-import { EventTracker } from '@your-org/core/features/analytics-dashboard';
+import { EventTracker } from '@your-org/core/features/telemetry';
 
 const tracker = new EventTracker({ feature: 'task-manager' });
 
@@ -241,7 +241,7 @@ tracker.track('task_dependency_added', {
 Task Manager analytics are available through the Analytics Dashboard Package:
 
 ```typescript
-import { AnalyticsDashboard } from '@your-org/core/features/analytics-dashboard';
+import { AnalyticsDashboard } from '@your-org/core/features/telemetry';
 
 const dashboard = new AnalyticsDashboard();
 
@@ -269,7 +269,7 @@ With the Analytics Dashboard Package, Task Manager can provide:
 - **Trend Analysis**: Analyze trends in task completion and productivity over time
 - **Cross-Feature Analytics**: Compare task metrics with other feature metrics (e.g., port usage, tech adoption)
 
-See [Analytics Dashboard Package PRD](../analytics-dashboard-package/PRD.md) for complete analytics capabilities.
+See [Analytics Dashboard Package PRD](../telemetry-package/PRD.md) for complete analytics capabilities.
 
 ### Phase 5: Automation (Future)
 

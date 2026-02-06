@@ -1,4 +1,6 @@
-# Family Care Coordinator - PRD
+# Family Care Coordinator - PRD (Legacy)
+
+**Note**: This original PRD has been superseded by [PRD_OVERVIEW.md](PRD_OVERVIEW.md). It is kept for historical context.
 
 **Status**: Planning / Proposal  
 **Last Updated**: 2026-01-05

@@ -6,7 +6,7 @@ You discovered a critical conflict: **Two packages were creating git hooks in di
 
 ### The Conflict
 
-1. **`@your-org/core`** (project-initialization feature):
+1. **`@your-org/core`** (commissioning feature):
    - Creates: `.githooks/post-checkout` (for IDE colors)
    - Sets: `git config core.hooksPath .githooks`
    - Result: Git looks for hooks in `.githooks/`
@@ -203,7 +203,7 @@ git push
 1. **Test the fix**: Run the test scenarios above
 2. **Verify in chore-allowance-manager**: Ensure hooks are in `.githooks/` and all work
 3. **Test monorepo enforcement**: Verify nested `.git` removal still works
-4. **Update template-project**: Ensure it works with the new git-workflow
+4. **Update embark**: Ensure it works with the new git-workflow
 
 ## Key Takeaways
 

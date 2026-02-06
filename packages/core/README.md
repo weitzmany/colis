@@ -23,6 +23,7 @@ npx @your-org/core init
 - ✅ All expert personas and user rules in `.cursor/rules/`
 - ✅ General commands in `.cursor/commands/`
 - ✅ Port Manager initialized and configured
+- ✅ **Local domain configured** - Automatic `.local` domain with Caddy reverse proxy
 - ✅ Technology stack detected and saved
 - ✅ **IDE colors configured** - Unique colors per project with branch-based themes
 
@@ -98,12 +99,13 @@ npx @your-org/core init
 - ✅ Copies all rules (expert personas, user rules) to `.cursor/rules/`
 - ✅ Copies general commands to `.cursor/commands/` (excludes local commands)
 - ✅ Initializes Port Manager automatically (mandatory)
+- ✅ **Sets up local domain** - Automatic `.local` domain with Caddy (e.g., `my-project.local`)
 - ✅ **Sets up IDE colors** - Generates unique color scheme per project
 - ✅ Validates everything is set up correctly
 
 **Learning Tip**: This command is idempotent - you can run it multiple times safely. It will skip files that already exist unless you use the `--overwrite` flag.
 
-**Learn More**: See [Project Initialization PRD](../../docs/features/project-initialization/PRD.md) for detailed documentation.
+**Learn More**: See [Project Initialization PRD](../../docs/features/commissioning/PRD.md) for detailed documentation.
 
 ### IDE Colors
 
@@ -155,6 +157,49 @@ git checkout feature-x  # IDE uses project KEY_COLOR
 ```bash
 npx @your-org/core init --skip-colors
 ```
+
+### Domain Manager
+
+**Purpose**: Automatically set up local domains for your projects using Caddy reverse proxy, eliminating the need to remember port numbers.
+
+**Why it matters**: Instead of accessing `localhost:4200`, your projects get memorable domains like `my-project.local`. Domain Manager automatically configures Caddy and your hosts file.
+
+**Automatic Setup**:
+```bash
+# Happens automatically during project initialization
+npx @colis/rig init
+
+# Your project is now accessible at:
+# http://my-project.local
+```
+
+**Manual Domain Management**:
+```bash
+# Setup a domain manually
+npx @colis/rig domain-manager setup --project-name my-project
+
+# List all configured domains
+npx @colis/rig domain-manager list
+
+# Remove a domain
+npx @colis/rig domain-manager remove my-project.local
+```
+
+**What it does**:
+- ✅ Generates domain name from project name (e.g., `my-project.local`)
+- ✅ Detects project services and ports automatically
+- ✅ Configures Caddy reverse proxy rules
+- ✅ Updates system hosts file
+- ✅ Supports multi-service projects (frontend + backend)
+
+**Skip domain setup** (if you prefer ports):
+```bash
+npx @colis/rig init --skip-domain
+```
+
+**Learning Tip**: Domain Manager works seamlessly with Port Manager. Ports are allocated first, then domains are configured to route to those ports.
+
+**Learn More**: See [Domain Manager PRD](../../docs/features/domain-manager/PRD.md) for detailed documentation.
 
 ### Port Manager
 
@@ -237,7 +282,7 @@ Think of expert personas as **specialized AI assistants** that provide domain-sp
 │   ├── port-manager/  # Port management feature
 │   ├── tech-detector/ # Technology detection feature
 │   ├── domain-manager/# Domain management feature
-│   └── project-initialization/ # Project setup feature
+│   └── commissioning/ # Project setup feature
 ├── shared/            # Shared utilities used across features
 │   ├── database/      # Database abstractions
 │   └── config/        # Configuration management
@@ -266,7 +311,7 @@ Think of expert personas as **specialized AI assistants** that provide domain-sp
 
 ### Feature Documentation
 - **Port Manager**: [PRD](../../docs/features/port-manager/PRD.md) - Complete feature documentation
-- **Project Initialization**: [PRD](../../docs/features/project-initialization/PRD.md) - Setup and configuration guide
+- **Project Initialization**: [PRD](../../docs/features/commissioning/PRD.md) - Setup and configuration guide
 
 ### Architecture & Strategy
 - **Package Architecture Strategy**: [Overview](../../docs/architecture/PACKAGE_ARCHITECTURE.md) - How packages are organized and work together

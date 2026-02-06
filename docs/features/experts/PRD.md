@@ -5,7 +5,7 @@
 
 ## Package Name
 
-`@your-org/cursor-standards-experts` or `@your-org/rule-experts`
+`@your-org/compass-experts` or `@your-org/rule-experts`
 
 ## Main Idea
 
@@ -25,15 +25,15 @@ Rules & Consistency Package
 ## Distribution
 
 - Standalone npm package
-- Can be installed separately: `npm install @your-org/cursor-standards-experts`
-- Part of cursor-standards monorepo
+- Can be installed separately: `npm install @your-org/compass-experts`
+- Part of compass monorepo
 - Automatically copies experts to `.cursor/rules/experts/`
 
 ## Notes
 
-- Sub-package of cursor-standards
+- Sub-package of compass
 - For projects that only need expert personas
-- May be included in main cursor-standards package
+- May be included in main compass package
 - Should include all expert personas (accessibility, API design, architecture, backend, etc.)
 
 ## SEO Considerations for Package Documentation

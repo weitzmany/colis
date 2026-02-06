@@ -1,0 +1,82 @@
+{
+  "name": "@colis/deck",
+  "version": "1.0.0",
+  "description": "Task management package for reading and managing tasks from taskmaster-ai (formerly: task-manager)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./features/task-management": "./dist/features/task-management/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "lib",
+    "bin"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm run typecheck",
+    "postinstall": "node lib/init-taskmaster.js",
+    "release:patch": "npm version patch && npm run clean && npm run build && npm publish",
+    "release:minor": "npm version minor && npm run clean && npm run build && npm publish",
+    "release:major": "npm version major && npm run clean && npm run build && npm publish"
+  },
+  "bin": {
+    "deck-init": "./bin/init-taskmaster.js"
+  },
+  "keywords": [
+    "task-management",
+    "taskmaster",
+    "task-tracker",
+    "project-management",
+    "todo",
+    "tasks",
+    "productivity",
+    "workflow"
+  ],
+  "author": "Your Organization",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/packages.git",
+    "directory": "packages/deck"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/packages/issues"
+  },
+  "homepage": "https://github.com/your-org/packages/tree/main/packages/deck#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@your-org/core": "^1.0.0",
+    "taskmaster-ai": "^1.0.0"
+  },
+  "peerDependencies": {
+    "chokidar": "^3.5.3",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/ws": "^8.5.9",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "zod": "^3.22.0"
+  }
+}

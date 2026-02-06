@@ -33,8 +33,8 @@ An npm package can distribute any type of files, not just JavaScript code. You c
    └─> Contains: templates/.cursor/rules/, templates/.cursor/commands/, etc.
 
 2. Project Installs Package
-   npm install @your-org/cursor-standards
-   └─> Package installed to: node_modules/@your-org/cursor-standards/
+   npm install @your-org/compass
+   └─> Package installed to: node_modules/@your-org/compass/
 
 3. Postinstall Script Runs
    postinstall: "node lib/install.js"
@@ -49,7 +49,7 @@ An npm package can distribute any type of files, not just JavaScript code. You c
 ### What Goes in the Package
 
 ```
-cursor-standards/
+compass/
 ├── package.json              # Package metadata and scripts
 ├── README.md                 # Package documentation
 ├── LICENSE                   # License file
@@ -91,7 +91,7 @@ cursor-standards/
 
 ```json
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "version": "1.0.0",
   "description": "Cursor IDE rules, commands, and expert personas",
   
@@ -128,7 +128,7 @@ The installation script (`lib/install.js`) does the following:
 1. **Locate Package Directory**:
    ```javascript
    const PACKAGE_DIR = path.resolve(__dirname, '..');
-   // Points to: node_modules/@your-org/cursor-standards/
+   // Points to: node_modules/@your-org/compass/
    ```
 
 2. **Locate Project Root**:
@@ -200,7 +200,7 @@ Define:
 ```bash
 # Create package file
 npm pack
-# Creates: your-org-cursor-standards-1.0.0.tgz
+# Creates: your-org-compass-1.0.0.tgz
 
 # Test in a project
 cd /path/to/test-project
@@ -227,12 +227,12 @@ npm publish --access public
 
 ```bash
 # Install from npm
-npm install --save-dev @your-org/cursor-standards
+npm install --save-dev @your-org/compass
 ```
 
 ### What Happens
 
-1. Package downloads to `node_modules/@your-org/cursor-standards/`
+1. Package downloads to `node_modules/@your-org/compass/`
 2. `postinstall` script runs automatically
 3. Script copies files from `templates/` to project `.cursor/`
 4. Rules and commands are ready to use
@@ -401,7 +401,7 @@ README.md
 
 ```bash
 # Update package
-npm update @your-org/cursor-standards
+npm update @your-org/compass
 
 # Reinstall files (if needed)
 npx install-cursor-rules --force
@@ -511,7 +511,7 @@ if (needsUpdate()) {
 ### Directory Structure
 
 ```
-cursor-standards/
+compass/
 ├── package.json
 ├── README.md
 ├── LICENSE
@@ -529,7 +529,7 @@ cursor-standards/
 
 ### Installation Flow
 
-1. User: `npm install @your-org/cursor-standards`
+1. User: `npm install @your-org/compass`
 2. npm: Downloads package to `node_modules/`
 3. npm: Runs `postinstall` script
 4. Script: Copies `templates/.cursor/` → `.cursor/`
@@ -539,7 +539,7 @@ cursor-standards/
 
 ```bash
 # Install
-npm install --save-dev @your-org/cursor-standards
+npm install --save-dev @your-org/compass
 
 # Files automatically installed to .cursor/
 
@@ -547,7 +547,7 @@ npm install --save-dev @your-org/cursor-standards
 npx validate-documentation
 
 # Update
-npm update @your-org/cursor-standards
+npm update @your-org/compass
 ```
 
 ## Summary

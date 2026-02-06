@@ -1,9 +1,9 @@
-import { TaskManager } from '@your-org/task-manager';
+import { TaskManager } from '@colis/deck';
 import * as path from 'path';
 
 async function demonstrateWorkflow() {
   console.log('🚀 Task Manager Workflow Demonstration\n');
-  
+
   const projectRoot = process.cwd();
   const manager = new TaskManager(projectRoot, { autoInit: true });
   const projectName = 'demo-project';

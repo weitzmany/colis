@@ -6,6 +6,7 @@
  */
 
 import * as fs from 'fs-extra';
+import { statSync } from 'fs';
 import * as path from 'path';
 import { FrameworkDetector } from './project-detector.js';
 import { AppType } from '../types.js';
@@ -53,16 +54,25 @@ export class ServiceDetector {
     // Check common service directories
     for (const dir of commonServiceDirs) {
       const servicePath = path.join(projectPath, dir);
-      if (await fs.pathExists(servicePath) && (await fs.stat(servicePath)).isDirectory()) {
-        const appType = await this.frameworkDetector.detect(servicePath);
-        if (appType) {
-          services.push({
-            name: dir,
-            path: dir,
-            appType: appType,
-            detectedPorts: [],
-          });
+      try {
+        // Check if path exists and is a directory
+        if (await fs.pathExists(servicePath)) {
+          const stats = statSync(servicePath);
+          if (stats.isDirectory()) {
+            const appType = await this.frameworkDetector.detect(servicePath);
+            if (appType) {
+              services.push({
+                name: dir,
+                path: dir,
+                appType: appType,
+                detectedPorts: [],
+              });
+            }
+          }
         }
+      } catch (error) {
+        // Skip this directory if we can't access it
+        continue;
       }
     }
 
@@ -238,12 +248,12 @@ export class ServiceDetector {
     if (!ranges) return false;
 
     // Check if port is in the common range or close to default
-    return ranges.includes(port) || 
-           (appType === 'angular' && port >= 4200 && port <= 4299) ||
-           (appType === 'node' && port >= 3000 && port <= 3099) ||
-           (appType === 'node' && port >= 8080 && port <= 8089) ||
-           (appType === 'php' && port >= 8000 && port <= 8099) ||
-           (appType === 'php' && port >= 8080 && port <= 8089);
+    return ranges.includes(port) ||
+      (appType === 'angular' && port >= 4200 && port <= 4299) ||
+      (appType === 'node' && port >= 3000 && port <= 3099) ||
+      (appType === 'node' && port >= 8080 && port <= 8089) ||
+      (appType === 'php' && port >= 8000 && port <= 8099) ||
+      (appType === 'php' && port >= 8080 && port <= 8089);
   }
 
   /**

@@ -48,7 +48,7 @@ export * from './features/tech-detector';
 export * from './features/domain-manager';
 
 // Export Project Initialization feature
-export * from './features/project-initialization';
+export * from './features/commissioning';
 
 // Export shared database utilities
 export * from './shared/database';

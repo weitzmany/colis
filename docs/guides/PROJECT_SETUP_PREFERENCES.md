@@ -123,7 +123,7 @@ For libraries, tools, or other project types:
 
 ## Related Documentation
 
-- [Project Initialization PRD](../features/project-initialization/PRD.md) - Automated project setup
+- [Project Initialization PRD](../features/commissioning/PRD.md) - Automated project setup
 - [Port Manager PRD](../features/port-manager/PRD.md) - Port assignment and management
 - [Project Purpose](../reference/PROJECT_PURPOSE.md) - Project goals and structure
 

@@ -25,7 +25,7 @@ A monorepo is a single repository containing multiple packages. All packages are
 ### Structure
 
 ```
-cursor-standards/
+compass/
 ├── package.json              # Root package.json (workspace config)
 ├── packages/
 │   ├── core/                 # Main package
@@ -59,7 +59,7 @@ cursor-standards/
 ```json
 // Root package.json
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -102,30 +102,30 @@ Scoped packages use the format `@scope/package-name`. They group related package
 
 ```
 @your-org/
-├── cursor-standards/         # Main package
-├── cursor-standards-rules/   # Rules only
-├── cursor-standards-commands/# Commands only
-└── cursor-standards-experts/ # Experts only
+├── compass/         # Main package
+├── compass-rules/   # Rules only
+├── compass-commands/# Commands only
+└── compass-experts/ # Experts only
 ```
 
 ### Package Names
 
 ```json
-// @your-org/cursor-standards
+// @your-org/compass
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "version": "1.0.0"
 }
 
-// @your-org/cursor-standards-rules
+// @your-org/compass-rules
 {
-  "name": "@your-org/cursor-standards-rules",
+  "name": "@your-org/compass-rules",
   "version": "1.0.0"
 }
 
-// @your-org/cursor-standards-commands
+// @your-org/compass-commands
 {
-  "name": "@your-org/cursor-standards-commands",
+  "name": "@your-org/compass-commands",
   "version": "1.0.0"
 }
 ```
@@ -141,13 +141,13 @@ Scoped packages use the format `@scope/package-name`. They group related package
 
 ```bash
 # Install main package (includes all)
-npm install @your-org/cursor-standards
+npm install @your-org/compass
 
 # Install only rules
-npm install @your-org/cursor-standards-rules
+npm install @your-org/compass-rules
 
 # Install only commands
-npm install @your-org/cursor-standards-commands
+npm install @your-org/compass-commands
 ```
 
 ## Strategy 3: Package Relationships
@@ -159,13 +159,13 @@ The main package can depend on or reference sub-packages.
 #### Option A: Main Package Includes All
 
 ```json
-// @your-org/cursor-standards/package.json
+// @your-org/compass/package.json
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "dependencies": {
-    "@your-org/cursor-standards-rules": "^1.0.0",
-    "@your-org/cursor-standards-commands": "^1.0.0",
-    "@your-org/cursor-standards-experts": "^1.0.0"
+    "@your-org/compass-rules": "^1.0.0",
+    "@your-org/compass-commands": "^1.0.0",
+    "@your-org/compass-experts": "^1.0.0"
   }
 }
 ```
@@ -175,12 +175,12 @@ When user installs main package, sub-packages are installed automatically.
 #### Option B: Main Package References Sub-Packages
 
 ```json
-// @your-org/cursor-standards/package.json
+// @your-org/compass/package.json
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "peerDependencies": {
-    "@your-org/cursor-standards-rules": "^1.0.0",
-    "@your-org/cursor-standards-commands": "^1.0.0"
+    "@your-org/compass-rules": "^1.0.0",
+    "@your-org/compass-commands": "^1.0.0"
   }
 }
 ```
@@ -190,12 +190,12 @@ User must install sub-packages separately, but main package can use them.
 #### Option C: Optional Dependencies
 
 ```json
-// @your-org/cursor-standards/package.json
+// @your-org/compass/package.json
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "optionalDependencies": {
-    "@your-org/cursor-standards-rules": "^1.0.0",
-    "@your-org/cursor-standards-commands": "^1.0.0"
+    "@your-org/compass-rules": "^1.0.0",
+    "@your-org/compass-commands": "^1.0.0"
   }
 }
 ```
@@ -209,9 +209,9 @@ Sub-packages are installed if available, but not required.
 Each package has its own repository:
 
 ```
-cursor-standards/          # Main package repo
-cursor-standards-rules/    # Rules package repo
-cursor-standards-commands/ # Commands package repo
+compass/          # Main package repo
+compass-rules/    # Rules package repo
+compass-commands/ # Commands package repo
 ```
 
 ### Benefits
@@ -245,19 +245,19 @@ cursor-standards-commands/ # Commands package repo
 ### Option 1: Monorepo with Workspaces (Recommended)
 
 ```
-cursor-standards/
+compass/
 ├── package.json              # Workspace root
 ├── packages/
-│   ├── core/                 # @your-org/cursor-standards
+│   ├── core/                 # @your-org/compass
 │   │   ├── package.json
 │   │   └── templates/
-│   ├── rules/                # @your-org/cursor-standards-rules
+│   ├── rules/                # @your-org/compass-rules
 │   │   ├── package.json
 │   │   └── templates/.cursor/rules/
-│   ├── commands/             # @your-org/cursor-standards-commands
+│   ├── commands/             # @your-org/compass-commands
 │   │   ├── package.json
 │   │   └── templates/.cursor/commands/
-│   └── experts/              # @your-org/cursor-standards-experts
+│   └── experts/              # @your-org/compass-experts
 │       ├── package.json
 │       └── templates/.cursor/rules/experts/
 └── lerna.json
@@ -273,10 +273,10 @@ cursor-standards/
 
 ```
 @your-org/
-├── cursor-standards/         # Main (includes all)
-├── cursor-standards-rules/    # Rules only
-├── cursor-standards-commands/# Commands only
-└── cursor-standards-experts/ # Experts only
+├── compass/         # Main (includes all)
+├── compass-rules/    # Rules only
+├── compass-commands/# Commands only
+└── compass-experts/ # Experts only
 ```
 
 **Benefits**:
@@ -293,7 +293,7 @@ cursor-standards/
 
 ```json
 {
-  "name": "@your-org/cursor-standards-monorepo",
+  "name": "@your-org/compass-monorepo",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -311,12 +311,12 @@ cursor-standards/
 ```json
 // packages/core/package.json
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "version": "1.0.0",
   "dependencies": {
-    "@your-org/cursor-standards-rules": "workspace:*",
-    "@your-org/cursor-standards-commands": "workspace:*",
-    "@your-org/cursor-standards-experts": "workspace:*"
+    "@your-org/compass-rules": "workspace:*",
+    "@your-org/compass-commands": "workspace:*",
+    "@your-org/compass-experts": "workspace:*"
   },
   "postinstall": "node lib/install-all.js"
 }
@@ -327,7 +327,7 @@ cursor-standards/
 ```json
 // packages/rules/package.json
 {
-  "name": "@your-org/cursor-standards-rules",
+  "name": "@your-org/compass-rules",
   "version": "1.0.0",
   "files": ["templates/"],
   "postinstall": "node lib/install-rules.js"
@@ -339,14 +339,14 @@ cursor-standards/
 #### Main Package
 
 ```json
-// @your-org/cursor-standards/package.json
+// @your-org/compass/package.json
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "version": "1.0.0",
   "dependencies": {
-    "@your-org/cursor-standards-rules": "^1.0.0",
-    "@your-org/cursor-standards-commands": "^1.0.0",
-    "@your-org/cursor-standards-experts": "^1.0.0"
+    "@your-org/compass-rules": "^1.0.0",
+    "@your-org/compass-commands": "^1.0.0",
+    "@your-org/compass-experts": "^1.0.0"
   },
   "postinstall": "node lib/install-all.js"
 }
@@ -355,9 +355,9 @@ cursor-standards/
 #### Rules Package
 
 ```json
-// @your-org/cursor-standards-rules/package.json
+// @your-org/compass-rules/package.json
 {
-  "name": "@your-org/cursor-standards-rules",
+  "name": "@your-org/compass-rules",
   "version": "1.0.0",
   "files": ["templates/.cursor/rules/"],
   "postinstall": "node lib/install-rules.js"
@@ -370,25 +370,25 @@ cursor-standards/
 
 ```bash
 # Install main package (includes all sub-packages)
-npm install @your-org/cursor-standards
+npm install @your-org/compass
 ```
 
 ### Pattern 2: Install Selectively
 
 ```bash
 # Install only what you need
-npm install @your-org/cursor-standards-rules
-npm install @your-org/cursor-standards-commands
+npm install @your-org/compass-rules
+npm install @your-org/compass-commands
 ```
 
 ### Pattern 3: Install Main + Extend
 
 ```bash
 # Install main package
-npm install @your-org/cursor-standards
+npm install @your-org/compass
 
 # Add additional packages
-npm install @your-org/cursor-standards-experts
+npm install @your-org/compass-experts
 ```
 
 ## Version Management
@@ -398,9 +398,9 @@ npm install @your-org/cursor-standards-experts
 Each package has its own version:
 
 ```
-@your-org/cursor-standards: 1.0.0
-@your-org/cursor-standards-rules: 1.2.0
-@your-org/cursor-standards-commands: 1.1.0
+@your-org/compass: 1.0.0
+@your-org/compass-rules: 1.2.0
+@your-org/compass-commands: 1.1.0
 ```
 
 ### Synchronized Versioning
@@ -408,9 +408,9 @@ Each package has its own version:
 All packages share the same version:
 
 ```
-@your-org/cursor-standards: 1.0.0
-@your-org/cursor-standards-rules: 1.0.0
-@your-org/cursor-standards-commands: 1.0.0
+@your-org/compass: 1.0.0
+@your-org/compass-rules: 1.0.0
+@your-org/compass-commands: 1.0.0
 ```
 
 ### Recommended Approach
@@ -519,7 +519,7 @@ lerna publish --conventional-commits --conventional-graduate
 ### Monorepo Approach
 
 ```
-cursor-standards/
+compass/
 ├── package.json              # Workspace root
 ├── lerna.json                # Lerna config
 ├── packages/
@@ -543,14 +543,14 @@ cursor-standards/
 
 ```bash
 # Option 1: Install everything
-npm install @your-org/cursor-standards
+npm install @your-org/compass
 
 # Option 2: Install only rules
-npm install @your-org/cursor-standards-rules
+npm install @your-org/compass-rules
 
 # Option 3: Install main + specific packages
-npm install @your-org/cursor-standards
-npm install @your-org/cursor-standards-experts
+npm install @your-org/compass
+npm install @your-org/compass-experts
 ```
 
 ## Summary

@@ -40,7 +40,7 @@ The `@your-org/core` package is a foundational infrastructure package that provi
 │   │   ├── port-manager/      # Port management feature
 │   │   ├── tech-detector/     # Technology detection feature
 │   │   ├── domain-manager/    # Domain management feature
-│   │   └── project-initialization/  # Project setup feature
+│   │   └── commissioning/  # Project setup feature
 │   ├── shared/                # Shared utilities
 │   │   ├── database/          # Database abstractions
 │   │   └── config/            # Configuration utilities
@@ -419,7 +419,7 @@ ProjectInitializer.initialize() (Application Layer)
 
 - [Package Architecture Strategy](../../docs/architecture/PACKAGE_ARCHITECTURE.md)
 - [Port Manager PRD](../../docs/features/port-manager/PRD.md)
-- [Project Initialization PRD](../../docs/features/project-initialization/PRD.md)
+- [Project Initialization PRD](../../docs/features/commissioning/PRD.md)
 
 ---
 

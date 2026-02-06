@@ -237,7 +237,7 @@ HabitFlow is a mobile-first, gamified habit tracking platform that makes habit f
 
 - **Mobile App** (Phase 2): React Native app with offline mode (requires 3-4 weeks additional development)
 - **Gamification** (Phase 2): Badges, levels, points system (adds complexity, can iterate after MVP)
-- **Social Features** (Phase 3): Accountability partners, friend connections, leaderboards (requires MVP validation first)
+- **Social Features** (Phase 3): Accountability partners, friend connections, rankings (requires MVP validation first)
 - **Advanced Analytics** (Phase 2): Pattern analysis, habit correlations, AI insights (MVP analytics are sufficient to start)
 - **Goals & Challenges** (Phase 2): Habit goals, community challenges (adds complexity)
 - **Habit Library** (Phase 3): Pre-made habits, community habits, recommendations (can be built after MVP)
@@ -283,7 +283,7 @@ HabitFlow is a mobile-first, gamified habit tracking platform that makes habit f
    - Accountability partners
    - Friend connections
    - Progress sharing
-   - Leaderboards (opt-in)
+   - Rankings (opt-in)
    - Private groups
 
 2. **Habit Library** [Priority: Medium]
@@ -428,7 +428,7 @@ For detailed business model, see [Business Model section](#business-model) below
 
 ### Phase 3: Advanced Features (Months 7-12)
 
-- **Month 7-8**: Social Features (friends, accountability partners, leaderboards)
+- **Month 7-8**: Social Features (friends, accountability partners, rankings)
 - **Month 9-10**: Habit Library & Premium Features (habit templates, streak freeze, export)
 - **Month 11-12**: Optimization & Scaling (performance, marketing, user acquisition)
 

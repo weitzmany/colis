@@ -5,6 +5,7 @@
  */
 
 import * as fs from 'fs-extra';
+import { readFile } from 'fs/promises';
 import * as path from 'path';
 import { AppType } from '../types.js';
 
@@ -59,7 +60,7 @@ export class FrameworkDetector {
   private async isNextJs(projectPath: string): Promise<boolean> {
     const packageJsonPath = path.join(projectPath, 'package.json');
     if (await fs.pathExists(packageJsonPath)) {
-      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+      const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
       return (
         packageJson.dependencies?.next !== undefined ||
         packageJson.devDependencies?.next !== undefined
@@ -78,7 +79,7 @@ export class FrameworkDetector {
     }
     const packageJsonPath = path.join(projectPath, 'package.json');
     if (await fs.pathExists(packageJsonPath)) {
-      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+      const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
       return (
         packageJson.dependencies?.['@angular/core'] !== undefined ||
         packageJson.devDependencies?.['@angular/core'] !== undefined
@@ -93,7 +94,7 @@ export class FrameworkDetector {
   private async isReact(projectPath: string): Promise<boolean> {
     const packageJsonPath = path.join(projectPath, 'package.json');
     if (await fs.pathExists(packageJsonPath)) {
-      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+      const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
       return (
         packageJson.dependencies?.react !== undefined ||
         packageJson.devDependencies?.react !== undefined

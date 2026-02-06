@@ -1,6 +1,6 @@
 {
   "name": "@colis/rig",
-  "version": "1.0.9",
+  "version": "1.7.0",
   "description": "Foundational development toolkit with port management, tech detection, project initialization, and shared utilities for all projects",
   "type": "module",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
     "./features/port-manager": "./dist/features/port-manager/index.js",
     "./features/tech-detector": "./dist/features/tech-detector/index.js",
     "./features/domain-manager": "./dist/features/domain-manager/index.js",
-    "./features/project-initialization": "./dist/features/project-initialization/index.js",
+    "./features/commissioning": "./dist/features/commissioning/index.js",
     "./rules": "./rules",
     "./commands": "./commands"
   },

@@ -198,14 +198,14 @@ Beginner     → Developing   → Proficient   → Advanced     → Expert
 
 ### Enhanced Features (Phase 2)
 
-#### 5. Leaderboards
+#### 5. Rankings
 
 **Description**: Social comparison with appropriate safeguards.
 
 **Requirements**:
-- [ ] Class/group leaderboards
-- [ ] Weekly leaderboards (reset for fresh competition)
-- [ ] Multiple leaderboard categories (XP, streaks, mastery)
+- [ ] Class/group rankings
+- [ ] Weekly rankings (reset for fresh competition)
+- [ ] Multiple ranking categories (XP, streaks, mastery)
 - [ ] Opt-in participation
 - [ ] Anonymous option
 - [ ] Focus on growth, not just ranking
@@ -213,7 +213,7 @@ Beginner     → Developing   → Proficient   → Advanced     → Expert
 **Safety Considerations**:
 - No public shaming for low positions
 - Celebrate improvement, not just top positions
-- Option to hide from leaderboards
+- Option to hide from rankings
 - Show "your best" alongside ranking
 
 #### 6. Challenges and Quests
@@ -294,7 +294,7 @@ Gamification should enhance learning, not distract from it.
 **DON'T**:
 - Reward guessing or clicking through
 - Punish incorrect answers heavily
-- Create anxiety around leaderboards
+- Create anxiety around rankings
 - Replace learning with game-playing
 
 ### 2. Growth Mindset Reinforcement
@@ -373,7 +373,7 @@ interface UserAchievement {
 POST   /api/v1/gamification/activity      - Log learning activity, award XP
 GET    /api/v1/gamification/profile       - Get user gamification profile
 GET    /api/v1/gamification/achievements  - Get achievements and progress
-GET    /api/v1/gamification/leaderboard   - Get leaderboard data
+GET    /api/v1/gamification/ranking   - Get ranking data
 POST   /api/v1/gamification/streak/freeze - Use streak freeze
 GET    /api/v1/gamification/challenges    - Get available challenges
 POST   /api/v1/gamification/challenges/{id}/join - Join a challenge
@@ -452,7 +452,7 @@ async function handleGamificationEvent(event: GamificationEvent): Promise<Gamifi
 
 3. **System Health**:
    - Achievement distribution (are they too easy/hard?)
-   - Leaderboard participation rate
+   - Ranking participation rate
    - Streak abandon rate
 
 ### A/B Testing Plan
@@ -472,7 +472,7 @@ Test gamification element effectiveness:
 | Risk | Impact | Likelihood | Mitigation |
 |------|--------|------------|------------|
 | Gamification distracts from learning | High | Medium | Learning-first design, regular UX testing |
-| Leaderboards cause anxiety | Medium | Medium | Opt-in, anonymous options, growth focus |
+| Rankings cause anxiety | Medium | Medium | Opt-in, anonymous options, growth focus |
 | Extrinsic motivation undermines intrinsic | High | Medium | Gradual reward reduction, mastery focus |
 | Feature becomes gimmicky | Medium | Low | Research-based design, expert review |
 | Cheating/gaming the system | Medium | Low | Activity verification, anti-cheat measures |
@@ -488,7 +488,7 @@ Test gamification element effectiveness:
 - [ ] Streak tracking
 
 ### Phase 2: Enhanced (Weeks 9-16)
-- [ ] Leaderboards
+- [ ] Rankings
 - [ ] Challenges and quests
 - [ ] Rewards and unlockables
 - [ ] Notification system
@@ -520,7 +520,7 @@ Test gamification element effectiveness:
 **Expert**: Carol Williams  
 **Expertise**: Educational Content (Learning Materials)  
 **Date**: 2026-01-05  
-**Changes**: Created comprehensive Gamification and Learning Engagement PRD covering problem statement (student motivation and engagement challenges), solution (comprehensive gamification system with educational rigor), business value (retention, engagement, completion rates, learning outcomes), success metrics (session duration, active users, completion rates, mastery), target audience (students ages 10-18, university students, educators, parents), core features (XP system with educational considerations, achievement system with multiple categories, progress visualization with mastery levels, streak system with milestones), enhanced features (leaderboards with safety considerations, challenges and quests, rewards and unlockables), future features (social learning, adaptive gamification), educational design principles (learning-first gamification, growth mindset reinforcement, avoiding extrinsic motivation traps, age-appropriate design), technical architecture (data models, API endpoints, event system), user experience (notification design, visual design guidelines), analytics and monitoring (engagement metrics, learning correlation, A/B testing), risk assessment with mitigations, implementation timeline (three phases over 24 weeks), and research references. This feature is designed to enhance student motivation and engagement while maintaining educational rigor and promoting intrinsic motivation for learning.
+**Changes**: Created comprehensive Gamification and Learning Engagement PRD covering problem statement (student motivation and engagement challenges), solution (comprehensive gamification system with educational rigor), business value (retention, engagement, completion rates, learning outcomes), success metrics (session duration, active users, completion rates, mastery), target audience (students ages 10-18, university students, educators, parents), core features (XP system with educational considerations, achievement system with multiple categories, progress visualization with mastery levels, streak system with milestones), enhanced features (rankings with safety considerations, challenges and quests, rewards and unlockables), future features (social learning, adaptive gamification), educational design principles (learning-first gamification, growth mindset reinforcement, avoiding extrinsic motivation traps, age-appropriate design), technical architecture (data models, API endpoints, event system), user experience (notification design, visual design guidelines), analytics and monitoring (engagement metrics, learning correlation, A/B testing), risk assessment with mitigations, implementation timeline (three phases over 24 weeks), and research references. This feature is designed to enhance student motivation and engagement while maintaining educational rigor and promoting intrinsic motivation for learning.
 
 **Expert**: Marcus Thompson  
 **Expertise**: Market Research & Product Strategy  

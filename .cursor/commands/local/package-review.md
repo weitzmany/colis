@@ -32,7 +32,7 @@ Execute this command to review a specific package:
 ### Parameters
 
 #### `package` (mandatory)
-- Format: `<package>` (e.g., `core`, `task-manager`, `template-project`)
+- Format: `<package>` (e.g., `core`, `deck`, `embark`)
 - **Validation**:
   - If empty: Exit with error code 1 and message "Error: package parameter is required"
   - If wrong format (contains `/`): Exit with error code 1 and message "Error: package parameter must be top-level (no '/' allowed)"
@@ -40,8 +40,8 @@ Execute this command to review a specific package:
 - **Package Location**: Packages are located in `packages/<package>/`
 - **Examples**:
   - `core` → `packages/core/`
-  - `task-manager` → `packages/task-manager/`
-  - `template-project` → `packages/template-project/`
+  - `deck` → `packages/deck/`
+  - `embark` → `packages/embark/`
 
 #### `expert` (optional)
 - If empty or expert not found: Review from your point of view (general review)
@@ -393,8 +393,8 @@ Execute this command to review a specific package:
 
 **Expert Matching Examples**:
 - `core` → Architecture Expert (Arthur Davis) or General Review
-- `task-manager` → Database Expert (David Anderson) or General Review
-- `template-project` → Documentation Expert (Dorothy Clark) or Architecture Expert (Arthur Davis)
+- `deck` → Database Expert (David Anderson) or General Review
+- `embark` → Documentation Expert (Dorothy Clark) or Architecture Expert (Arthur Davis)
 
 ### Documentation Reading (`docs=true`)
 

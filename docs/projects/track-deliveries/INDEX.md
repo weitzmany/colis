@@ -7,7 +7,7 @@
 **Status**: Planning / Proposal  
 **Priority**: Medium  
 **Category**: Full-Stack Web & Mobile Application (Customer-Facing)  
-**Last Updated**: 2026-01-24
+**Last Updated**: 2026-01-25
 
 ## Quick Links
 
@@ -19,23 +19,28 @@
 
 ### Core Documentation
 - **[PRD Overview](PRD_OVERVIEW.md)** - Executive summary, problem statement, MVP definition, and high-level requirements
-- **[Architecture](ARCHITECTURE.md)** - System architecture, technical design, infrastructure, and integrations
+- **[Architecture](ARCHITECTURE.md)** - System architecture overview with references to technical details
 - **[Expert Contributions](EXPERTS.md)** - Expert team contributions, reviews, and sign-offs
 
 ### Project-Specific Features
-- **[Tracking Management](features/tracking-management.md)** - Add/manage tracking numbers, auto-detect carriers, group shipments
+- **[Tracking Management](features/tracking-management.md)** - Add/manage tracking numbers, auto-detect carriers, package notes
 - **[Unified Timeline](features/unified-timeline.md)** - Single timeline view, status history, delivery windows
 - **[Alerts & Notifications](features/alerts-notifications.md)** - Status change alerts, delivery notifications, delay warnings
-- **[Carrier Integrations](features/carrier-integrations.md)** - Multi-carrier API integrations, retailer linking
+- **[Carrier Integrations](features/carrier-integrations.md)** - Multi-carrier API integrations, polling strategy
 - **[Search & Organization](features/search-organization.md)** - Search, filter, archive packages
 - **[Reports & Export](features/reports-export.md)** - Delivery history, statistics, export functionality
 
 ### Technical Documentation
-- **[API Design](technical/api-design.md)** - RESTful API endpoints, request/response formats, webhooks
+- **[Frontend Architecture](technical/frontend-architecture.md)** - Next.js structure, components, routing
+- **[Backend Architecture](technical/backend-architecture.md)** - Services, jobs, modules, runtime
+- **[API Design](technical/api-design.md)** - RESTful endpoints, request/response formats
 - **[Database Schema](technical/database-schema.md)** - Data models, relationships, migrations
-- **[Security](technical/security.md)** - Authentication, authorization, data protection, PCI compliance
-- **[Mobile Architecture](technical/mobile-architecture.md)** - React Native structure, offline support, push notifications
-- **[Third-Party Integrations](technical/third-party-integrations.md)** - Carrier APIs, tracking services, notification providers
+- **[Security](technical/security.md)** - Authentication, authorization, data protection
+- **[Mobile Architecture](technical/mobile-architecture.md)** - Responsive web MVP, native app Phase 2
+- **[Third-Party Integrations](technical/third-party-integrations.md)** - Carrier APIs, email provider
+- **[Infrastructure Architecture](technical/infrastructure-architecture.md)** - Hosting, CI/CD, deployment
+- **[Performance & Scalability](technical/performance-scalability.md)** - Caching, scaling, targets
+- **[Observability](technical/observability.md)** - Monitoring, logging, alerting
 
 ### Business Documentation
 - **[Business Model](business/business-model.md)** - Free vs premium tiers, pricing strategy, revenue model
@@ -101,87 +106,6 @@ See [General Features Index](../general/INDEX.md) for more information.
 4. **Organization** - Keep delivery history, notes, and archives in one place
 5. **Mobile Access** - Check package status on the go with mobile app
 
-## Technology Overview
-
-### Frontend Stack
-- **Next.js** (React) with TypeScript - Modern, performant web framework
-- **Responsive Design** - Mobile-first approach for all screen sizes
-- **State Management** - React Context or Zustand for state management
-
-### Backend Stack
-- **Node.js** with Express or NestJS - Scalable server framework
-- **PostgreSQL or MySQL** - Relational database for structured data
-- **Redis** - Caching and job queue for background tasks
-- **Webhooks** - Real-time carrier status updates where available
-
-### Mobile Stack
-- **React Native** - Cross-platform iOS and Android development
-- **Expo** - Simplified development and deployment
-- **Push Notifications** - Real-time delivery status alerts
-- **Offline Support** - Access tracking history without internet
-
-### Infrastructure
-- **Docker** - Containerized deployment
-- **CI/CD** - Automated testing and deployment
-- **Cloud Hosting** - AWS, DigitalOcean, or Heroku
-- **Monitoring** - Error tracking, performance monitoring, uptime monitoring
-
-## Business Model Overview
-
-### Free Tier
-- Track up to 10 active packages
-- Basic status alerts (email only)
-- 30-day delivery history
-
-### Premium Tier ($4.99/month or $49.99/year)
-- Unlimited packages
-- Advanced alerts (push, SMS, email)
-- Full delivery history
-- Export reports (CSV/PDF)
-- Priority support
-
-**Revenue Model**: Freemium subscription with monthly/annual plans
-
-## Success Criteria
-
-### User Metrics
-- **Monthly Active Users**: 1,000+ users within 3 months
-- **User Retention**: 60%+ weekly return rate
-- **Average Packages per User**: 3-5 packages tracked simultaneously
-
-### Business Metrics
-- **Free to Premium Conversion**: 5-10% conversion rate
-- **Revenue per User**: $2-3 average (including free users)
-- **Customer Acquisition Cost**: < $10 per user
-
-### Technical Metrics
-- **Tracking Accuracy**: 95%+ accurate status updates
-- **Notification Delivery**: 99%+ successful notification delivery
-- **Uptime**: 99.5%+ uptime
-- **API Response Time**: < 500ms average
-
-## Expert Team
-
-### Core Team
-- **Patricia Martinez** (Product Manager) - Overall planning, prioritization, business decisions
-- **Dorothy Clark** (Documentation) - PRD structure, clarity, completeness
-
-### Technical Team
-- **Samuel Rodriguez** (Backend) - API design, carrier integrations, database
-- **Thomas Anderson** (Frontend) - Next.js architecture, React components, state management
-- **Michael Brown** (Mobile) - React Native app, offline support, push notifications
-- **Benjamin Lee** (Database) - Database schema, optimization, migrations
-
-### Specialized Team
-- **Emily Chen** (API Design) - RESTful API design, carrier API integrations
-- **Ryan Kim** (Security) - Authentication, PCI compliance for payment data
-- **James Martinez** (Performance) - Real-time updates, caching strategy
-- **Daisy Thompson** (UI/UX) - User interface design, user flows
-- **Allison Foster** (Accessibility) - WCAG compliance, screen reader support
-- **David Cooper** (DevOps) - Docker deployment, CI/CD, infrastructure
-- **Kevin Martinez** (Observability) - Monitoring, logging, error tracking
-- **Olivia Martinez** (Copywriter) - App naming, messaging, content
-
 ## Related Documentation
 
 - [Projects List Entry](../../reference/PROJECTS_LIST.md#track-deliveries) - Project entry in main projects list
@@ -195,6 +119,7 @@ See [General Features Index](../general/INDEX.md) for more information.
 - **Privacy First**: User tracking data is private and never shared
 - **Carrier Agnostic**: Support for multiple carriers (USPS, UPS, FedEx, DHL, etc.)
 - **International Support**: Support for international carriers (AliExpress, Shein, etc.)
+- **Legacy**: The original `PRD.md` is kept for historical reference; use `PRD_OVERVIEW.md` for current planning
 
 ---
 

@@ -2,7 +2,7 @@
 
 This document lists all projects found in `~/Documents/` directory, categorized and analyzed from an academic and educational perspective.
 
-**Last Updated**: 2026-01-23
+**Last Updated**: 2026-01-25
 
 ## Code Projects
 
@@ -516,111 +516,7 @@ Project Health Dashboard is a centralized, customer-facing web-based dashboard a
 - **Security**: OAuth 2.0, JWT authentication, data encryption (at rest and in transit), RBAC
 - **Business Intelligence**: KPI definition, analytics architecture, ETL pipelines, data warehouse design, predictive analytics
 
-### 9. `api-gateway-platform/`
-
-**Status**: Planning (Comprehensive PRD Complete)  
-**Priority**: High  
-**Category**: Backend Platform / Infrastructure
-
-#### Overview
-
-The API Gateway Platform is an enterprise-grade, centralized API management solution designed to route, monitor, secure, and document APIs across microservices and distributed systems. It provides a unified entry point for all API traffic, handling cross-cutting concerns like authentication, authorization, rate limiting, request transformation, monitoring, and auto-generated documentation.
-
-**Target Audience**: Platform engineers, DevOps teams, backend developers, API consumers, technical leads  
-**Business Model**: Internal platform (MVP), potential enterprise SaaS offering (future)
-
-#### Key Features
-
-1. **API Routing Engine**: Dynamic routing rules, path/host/header-based routing, load balancing, health checks
-2. **Multi-Method Authentication**: JWT (RS256, HS256), API keys, OAuth2 (Phase 2), custom auth providers (Phase 4)
-3. **Flexible Authorization**: RBAC, policy-based authorization, attribute-based access control (Phase 4)
-4. **Advanced Rate Limiting**: Per-IP, per-user, per-API rate limiting with Redis-backed counters, burst limits
-5. **Comprehensive Monitoring**: Real-time metrics (Prometheus), request logging (ELK Stack), distributed tracing (Phase 3), Grafana dashboards
-
-#### Tech Stack
-
-- **Backend**: PHP (Slim framework) with Composer, gateway middleware
-- **Frontend**: Angular with TypeScript (admin dashboard)
-- **Database**: MySQL 8.0 (via Docker, for configuration, API keys)
-- **Monitoring**: Prometheus, Grafana, ELK Stack (Elasticsearch, Logstash, Kibana)
-- **Infrastructure**: Docker (containerization), Kubernetes (Phase 2), AWS (EC2, RDS, ElastiCache, CloudWatch), Nginx (reverse proxy)
-- **CI/CD**: GitHub Actions, automated testing, blue-green deployments (MVP), Kubernetes rolling updates (Phase 2)
-
-#### Documentation
-
-- [Documentation Index](projects/api-gateway-platform/INDEX.md) - Complete navigation guide
-- [PRD Overview](projects/api-gateway-platform/PRD_OVERVIEW.md) - Main requirements document (500 lines)
-- [Architecture](projects/api-gateway-platform/ARCHITECTURE.md) - Technical architecture (500 lines)
-- [Expert Contributions](projects/api-gateway-platform/EXPERTS.md) - 10 expert sign-offs (400 lines)
-
-#### Timeline
-
-- **Phase 1 (MVP)** (Weeks 1-12): Basic routing, JWT/API key authentication, rate limiting, request logging, basic monitoring dashboard
-- **Phase 2 (Months 3-6)**: OAuth2 authentication, request transformation, advanced rate limiting, OpenAPI documentation generation
-- **Phase 3 (Months 7-12)**: Distributed tracing, response caching, advanced analytics, alerting system, WebSocket support
-- **Phase 4 (Year 2)**: Multi-tenancy, plugin system, developer portal, SDK generation, advanced RBAC, audit logs
-
-**Target Launch**: June 2026 (MVP internal release to 5 pilot teams)
-
-#### Business Value
-
-- **Centralized Control**: Single entry point for all API traffic with unified security policies and observability
-- **Enhanced Security**: Multi-method authentication, authorization, rate limiting prevent API abuse and security breaches
-- **Complete Observability**: Real-time monitoring, logging, tracing enable proactive monitoring and fast debugging
-- **Developer Experience**: Auto-generated documentation, interactive API explorer, reduced development time for cross-cutting concerns
-- **Cost Savings**: 50% reduction in development time for auth, rate limiting, monitoring (no repetitive implementation)
-- **Performance**: <5ms gateway overhead latency at 99th percentile, support for 10,000 requests/second per gateway instance
-
-#### Expert Team (10 Experts - All Approved)
-
-- **Product**: Patricia Martinez (Product Manager) - MVP definition, prioritization, business decisions
-- **Architecture**: Marcus Johnson (Architecture) - System architecture, scalability planning
-- **Backend**: Samuel Rodriguez (Backend) - Gateway services, routing engine, authentication/authorization
-- **API Design**: Emily Chen (API Design) - RESTful API patterns, endpoint design, OpenAPI integration
-- **Database**: Benjamin Lee (Database) - PostgreSQL schema, query optimization, Redis data structures
-- **Security**: Ryan Kim (Security) - JWT/API key authentication, RBAC, encryption, OWASP compliance
-- **Performance**: James Martinez (Performance) - Gateway performance optimization, caching strategies, load balancing
-- **Observability**: Kevin Martinez (Observability) - Prometheus metrics, ELK Stack logging, Grafana dashboards, distributed tracing
-- **DevOps**: David Cooper (DevOps) - CI/CD pipeline, Kubernetes deployment, infrastructure automation, disaster recovery
-- **Documentation**: Dorothy Clark (Documentation) - Documentation structure, clarity, completeness
-
-**All experts approved and signed off on 2026-01-20**
-
-#### Academic Classification
-
-**Primary**: Computer Science - Distributed Systems, API Design, Infrastructure
-
-**Educational Value**:
-- Demonstrates API gateway architecture patterns (reverse proxy, request routing, load balancing, circuit breaker)
-- Illustrates distributed system design (stateless services, shared state management with Redis, horizontal scaling)
-- Shows enterprise security patterns (multi-method authentication, RBAC, rate limiting, encryption at rest/transit)
-- Exemplifies observability best practices (structured logging, metrics collection, distributed tracing, dashboards)
-- Demonstrates DevOps practices (CI/CD pipelines, blue-green deployments, infrastructure as code, disaster recovery)
-
-**Subject Matter Areas**:
-- **Computer Science**: API design, distributed systems, gateway architecture, authentication/authorization, rate limiting algorithms
-- **Software Engineering**: Microservices patterns, middleware architecture, request processing pipelines, configuration management, plugin systems
-- **Infrastructure**: Load balancing, caching strategies (Redis), database design (PostgreSQL), container orchestration (Kubernetes)
-- **Security**: OWASP Top 10 mitigations, JWT authentication, API key management, encryption, audit logging, penetration testing
-- **Observability**: Prometheus metrics, structured logging, distributed tracing (OpenTelemetry), Grafana dashboards, alerting
-
-#### Database Considerations
-
-- **Database Type**: PostgreSQL 16 (relational database for configuration, API keys, policies), Redis 7 (in-memory store for rate limiting, caching)
-- **Schema Design**: Routes table (routing rules), api_keys table (API key storage with SHA-256 hashing), policies table (authorization policies), configuration table (gateway configuration)
-- **Migration Strategy**: TypeORM migrations for PostgreSQL schema versioning, rollback support, seed data for development
-- **Data Persistence**: PostgreSQL RDS with automated backups, point-in-time recovery; Redis ElastiCache with persistence enabled
-- **Backup Strategy**: Automated daily backups for PostgreSQL, S3 backups for logs and configuration, RTO/RPO targets (1 hour RTO, 5 minutes RPO)
-- **Query Optimization**: Indexes on frequently queried columns (routes.path_pattern, api_keys.key_hash), connection pooling with pg-pool, query result caching in Redis
-- **Data Integrity**: Foreign key constraints, unique constraints, check constraints, transaction management for atomic operations
-- **Scalability**: Connection pooling for PostgreSQL, read replicas for read-heavy workloads (Phase 2), Redis cluster for distributed caching (Phase 3)
-- **Security**: Encryption at rest (AES-256), encryption in transit (TLS 1.2/1.3), AWS Secrets Manager for sensitive configuration, SHA-256 hashing for API keys
-
-**Type**: API Gateway Platform  
-**Technology**: Full-stack backend platform with admin dashboard  
-**Location**: `~/Documents/packages/docs/projects/api-gateway-platform/`
-
-### 10. `authentication-center/`
+### 9. `authentication-center/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Critical (Foundation for all apps)  
@@ -668,6 +564,7 @@ The Authentication Center is a production-ready, centralized authentication and 
 - [PRD Overview](projects/authentication-center/PRD_OVERVIEW.md) - Main requirements document with comprehensive MVP definition
 - [Architecture](projects/authentication-center/ARCHITECTURE.md) - Technical architecture and system design
 - [Expert Contributions](projects/authentication-center/EXPERTS.md) - 15 expert contributions
+- Additional docs: `features/`, `technical/`, `business/`, `compliance/`
 
 #### Timeline
 
@@ -822,7 +719,7 @@ This authentication center meets multiple **Architectural Override criteria**, m
 **Technology**: Backend service (Node.js + TypeScript + Express) with React admin panel  
 **Location**: `~/Documents/packages/docs/projects/authentication-center/`
 
-### 11. `habit-tracker/`
+### 10. `habit-tracker/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -931,35 +828,63 @@ Habit Tracker (HabitFlow) is a customer-facing full-stack web and mobile applica
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/habit-tracker/`
 
-### 12. `home-inventory-manager/`
-- **Type**: Home Inventory Application
-- **Technology**: 
-  - Backend: PHP (Slim framework), Composer
-  - Frontend: Angular
-  - Database: MySQL (via Docker)
-  - Mobile: Capacitor (iOS & Android)
-- **Location**: `~/Documents/home-inventory-manager/`
-- **Description**: Home inventory tracking with photos, warranties, and insurance reports
-- **Structure**:
-  - `backend/` - Inventory and reporting API
-  - `frontend/` - Web dashboard
-  - `mobile/` - Mobile app
-  - `docs/` - Project documentation
-- **Key Features**:
-  - Item tracking and categorization
-  - Warranty and receipt storage
-  - Insurance reports
-  - Barcode scanning
-- **Status**: Planned
-- **Academic Classification**: Computer Science - Web Development, Human-Computer Interaction
-- **Educational Value**:
-  - Demonstrates inventory management workflows
-  - Illustrates document storage and reporting
-- **Subject Matter Areas**:
-  - Computer Science: Data modeling, search/filtering, API design
-  - Software Engineering: UX for organization tools
+### 11. `home-inventory-manager/`
 
-### 13. `home-maintenance-tracker/`
+**Status**: Planning  
+**Priority**: Medium  
+**Category**: Full-Stack Web & Mobile Application
+
+#### Overview
+Home Inventory Manager helps homeowners and renters catalog belongings with photos, receipts, and room organization to support insurance claims and moving preparation.
+
+#### Key Features
+- Item capture with photos and barcode scanning
+- Room-based organization and search
+- Warranty and purchase tracking
+- Insurance-ready reports
+
+#### Tech Stack
+- **Frontend**: Next.js with TypeScript
+- **Backend**: Node.js (NestJS) REST API
+- **Database**: PostgreSQL
+- **Mobile**: React Native
+- **Infrastructure**: Docker, S3-compatible storage
+
+#### Documentation
+- [PRD Overview](../projects/home-inventory-manager/PRD_OVERVIEW.md) - Product requirements and MVP definition
+- [Architecture](../projects/home-inventory-manager/ARCHITECTURE.md) - System architecture and technical design
+- [Documentation Index](../projects/home-inventory-manager/INDEX.md) - Navigation to all project docs
+- [Expert Contributions](../projects/home-inventory-manager/EXPERTS.md) - Expert reviews and sign-offs
+
+#### Timeline
+- **MVP Development**: 10 weeks (estimated Q2 2026)
+- **MVP Testing**: 2 weeks
+- **Target Launch**: Q2 2026
+- **Current Phase**: Planning & Documentation
+
+#### Business Value
+- **Target Market**: Homeowners and renters with insurance needs
+- **Revenue Model**: Freemium with premium reporting and warranty features
+- **Success Metrics**: 200 users in 60 days, 5% conversion
+
+#### Expert Team
+- **Product**: Patricia Martinez
+- **Architecture**: Marcus Johnson
+- **Backend**: Samuel Rodriguez
+- **Frontend**: Thomas Anderson
+- **Mobile**: Michael Brown
+- **UI/UX**: Daisy Thompson
+- **Accessibility**: Allison Foster
+- **Database**: Benjamin Lee
+- **API Design**: Emily Chen
+- **Security**: Ryan Kim
+- **Compliance**: Constance White
+- **Performance**: James Martinez
+- **DevOps**: David Cooper
+- **Observability**: Kevin Martinez
+- **Copywriting**: Olivia Martinez
+
+### 12. `home-maintenance-tracker/`
 
 **Status**: Planning  
 **Priority**: Medium  
@@ -1035,7 +960,7 @@ Home Maintenance Tracker helps homeowners and renters proactively manage propert
 - **Software Engineering**: UX for maintenance workflows, cross-platform development, CI/CD pipelines
 - **Business**: Freemium business models, user retention strategies, SaaS pricing
 
-### 14. `medical-records-manager/`
+### 13. `medical-records-manager/`
 
 **Status**: Planning  
 **Priority**: High  
@@ -1185,35 +1110,44 @@ Home Maintenance Tracker helps homeowners and renters proactively manage propert
   - Computer Science: Access control, data security, API design
   - Software Engineering: UX for sensitive data
 
-### 15. `family-care-coordinator/`
-- **Type**: Family Care Coordination Application
-- **Technology**: 
-  - Backend: PHP (Slim framework), Composer
-  - Frontend: Angular
-  - Database: MySQL (via Docker)
-  - Mobile: Capacitor (iOS & Android)
-- **Location**: `~/Documents/family-care-coordinator/`
-- **Description**: Shared care schedules, tasks, and reminders for families and caregivers
-- **Structure**:
-  - `backend/` - Care coordination and task API
-  - `frontend/` - Shared calendar and tasks
-  - `mobile/` - Mobile reminders and updates
-  - `docs/` - Project documentation
-- **Key Features**:
-  - Shared care calendar
-  - Task assignments and checklists
-  - Medication and routine tracking
-  - Role-based access
-- **Status**: Planned
-- **Academic Classification**: Computer Science - Web Development, Human-Computer Interaction
-- **Educational Value**:
-  - Demonstrates collaborative scheduling workflows
-  - Illustrates role-based permissions
-- **Subject Matter Areas**:
-  - Computer Science: Collaboration systems, access control
-  - Software Engineering: UX for coordination tools
+### 14. `family-care-coordinator/`
 
-### 16. `travel-itinerary-wallet/`
+**Status**: Planning  
+**Priority**: Medium  
+**Category**: Full-Stack Web + Mobile Application (Customer-Facing)
+
+#### Overview
+Family Care Coordinator is a customer-facing app that helps families coordinate care responsibilities, schedules, and critical information across parents, caregivers, and relatives. It provides shared calendars, task assignments, medication routines, and secure document access with role-based permissions.
+
+**Target Audience**: Families coordinating childcare or elder care, caregivers managing schedules, extended family supporters  
+**Business Model**: Freemium (Free: 1 dependent, limited storage; Premium: multiple profiles, advanced reminders, unlimited storage)
+
+#### Key Features
+1. **Shared Care Calendar**: Appointments, routines, and coverage schedules
+2. **Task Assignments**: Checklists with ownership and completion tracking
+3. **Medication & Routine Tracking**: Reminders and adherence logs
+4. **Profiles & Permissions**: Role-based access and emergency contacts
+5. **Document Vault**: Secure storage for care plans and IDs
+6. **Notifications**: Task reminders and schedule change alerts
+
+#### Tech Stack
+- **Frontend**: Angular with TypeScript
+- **Backend**: PHP (Slim framework) REST API
+- **Database**: MySQL (via Docker)
+- **Mobile**: Capacitor (iOS & Android)
+- **Storage**: S3-compatible object storage
+
+#### Documentation
+- [Documentation Index](projects/family-care-coordinator/INDEX.md)
+- [PRD Overview](projects/family-care-coordinator/PRD_OVERVIEW.md)
+- [Architecture](projects/family-care-coordinator/ARCHITECTURE.md)
+- [Expert Contributions](projects/family-care-coordinator/EXPERTS.md)
+
+#### Academic Classification
+- Computer Science: Web Development, Human-Computer Interaction
+- Software Engineering: Collaboration tools, access control
+
+### 15. `travel-itinerary-wallet/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -1323,6 +1257,120 @@ Travel Itinerary & Document Wallet (TripVault) is a customer-facing full-stack w
 **Type**: Travel Planning Application  
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/travel-itinerary-wallet/`
+
+### 16. `smart-travel-planner/`
+
+**Status**: Planning (Comprehensive PRD Complete)  
+**Priority**: High  
+**Category**: Full-Stack Web + Mobile Application (Customer-Facing)
+
+#### Overview
+
+Smart Travel Planner is a customer-facing full-stack web and mobile application that helps families and individuals plan, organize, and manage trips with AI-powered itinerary generation, budget tracking, collaborative packing lists, and real-time travel alerts. The platform consolidates all travel planning into one intelligent system, saving users time and money.
+
+**Target Audience**: Families planning vacations (2-6 people, 3-14 day trips), solo travelers and couples (weekend to multi-week trips), group travel organizers  
+**Business Model**: Freemium (Free: 3 active trips, basic features; Premium: $9.99/month unlimited trips; Premium+: $19.99/month with AI assistant)
+
+#### Key Features
+
+1. **AI Itinerary Generation**: Personalized day-by-day itineraries based on preferences, budget, travel style
+2. **Budget Dashboard**: Expense tracking, category budgets, currency conversion, spending visualization
+3. **Smart Packing Lists**: Auto-generated based on destination, weather, activities, duration
+4. **Travel Alerts**: Real-time notifications for flights, weather, passport expiration, visa requirements
+5. **Collaborative Planning**: Real-time editing with companions, voting system, shared expense splitting
+6. **Trip Memory Bank**: Photo uploads, notes, shareable trip summaries
+
+#### Tech Stack
+
+- **Frontend**: React 18 with TypeScript, Material-UI or Chakra UI, Redux Toolkit or Zustand, React Router, TanStack Query
+- **Backend**: Node.js with Express or NestJS, TypeScript, JWT authentication, OAuth 2.0
+- **Database**: PostgreSQL 14+ with Prisma or TypeORM
+- **AI/ML**: OpenAI GPT-4 or Anthropic Claude (itinerary generation), Tesseract.js or AWS Textract (OCR)
+- **Mobile**: React Native with Expo (managed workflow), Redux Persist, Expo Notifications
+- **External APIs**: AviationStack (flights), OpenWeatherMap (weather), Google Maps/Mapbox, Fixer.io (currency)
+- **Infrastructure**: Frontend (Vercel/Netlify), Backend (AWS/Railway), Database (AWS RDS/Supabase), Storage (AWS S3/Cloudflare R2)
+
+#### Documentation
+
+- [PRD](../projects/smart-travel-planner/PRD.md) - Complete product requirements document with comprehensive features, architecture, business model
+
+#### Timeline
+
+- **Phase 1 (MVP)** (10-12 weeks): User management, trip creation, AI itinerary generation, budget tracking, packing lists, trip dashboard
+- **Phase 2 (Collaboration & Intelligence)** (8-10 weeks): Collaborative planning, smart booking aggregation, travel alerts, recommendations engine
+- **Phase 3 (Mobile & Offline)** (10-12 weeks): Mobile apps (iOS/Android), offline mode, trip memories with photos
+- **Phase 4 (Advanced Features)** (8-10 weeks): Advanced budget features, social features, integrations, premium features
+
+**Total Development Time**: ~40 weeks (10 months) from MVP to Phase 4  
+**Target Launch**: Q4 2026
+
+#### Business Value
+
+- **Market Opportunity**: Large addressable market (travelers worldwide), solves fragmented planning pain point
+- **User Value**: High - Saves significant time planning trips, saves money through budget tracking, reduces stress
+- **Revenue Model**: Freemium SaaS targeting $6,000 MRR in Year 1, $500,000/year in Year 2
+- **Time Savings**: Plans perfect trip in minutes vs hours, consolidates 5-10 different apps/sites into one platform
+- **Success Metrics**: 10,000 MAU (Year 1), 5% free-to-premium conversion, 60% user retention within 30 days, 3 trips/user per year
+
+#### Differentiators
+
+- **AI-Powered**: Generates personalized itineraries, not just organization (vs TripIt)
+- **All-in-One**: Single platform for planning, budget, packing, memories (vs multiple tools)
+- **Collaborative**: Real-time collaboration with travel companions and expense splitting
+- **Proactive**: Alerts for important deadlines and travel changes
+- **Privacy-Focused**: Travel data stays private, not sold to third parties
+
+#### Competitive Analysis
+
+- **TripIt**: Email scanning and itinerary organization, but no AI generation or budget tracking
+- **Wanderlog**: Collaborative planning and packing lists, but limited AI and basic budget
+- **Roadtrippers**: Route planning for road trips only, US-focused, no international
+- **Google Trips**: Discontinued in 2019 - market gap opportunity
+
+**Advantage**: All-in-one platform beats stitching together 5+ tools (Notion, Splitwise, PackPoint, Google Sheets)
+
+#### Academic Classification
+
+**Primary**: Computer Science - Web Development, Mobile Development, Artificial Intelligence, Human-Computer Interaction
+
+**Educational Value**:
+- Demonstrates full-stack architecture (React, Node.js, React Native, PostgreSQL)
+- Illustrates AI integration for itinerary generation using OpenAI/Anthropic APIs
+- Shows collaborative real-time editing with multiple users
+- Exemplifies freemium SaaS business model with tiered pricing
+- Demonstrates offline-first mobile architecture with sync
+- Illustrates external API integration (flights, weather, maps, currency)
+
+**Subject Matter Areas**:
+- **Computer Science**: Full-stack development, AI integration, real-time collaboration, offline sync, push notifications, API integrations
+- **Artificial Intelligence**: Prompt engineering, AI-powered content generation, recommendation systems
+- **Software Engineering**: RESTful API design, microservices architecture, state management, collaborative editing
+- **Database Systems**: PostgreSQL schema design, query optimization, data integrity, scalability
+- **Security**: JWT authentication, OAuth 2.0, data encryption at rest and in transit, GDPR/CCPA compliance
+- **Business**: Freemium SaaS model, subscription management, revenue projections, go-to-market strategy
+
+#### Database Considerations
+
+- **Database Type**: PostgreSQL 14+ (relational database for users, trips, itineraries, expenses, packing lists)
+- **Schema Design**: users, trips, trip_collaborators, itinerary_days, itinerary_activities, expenses, expense_splits, packing_lists, packing_items, trip_photos, notifications
+- **Migration Strategy**: Prisma or TypeORM migrations for schema versioning and evolution
+- **Data Persistence**: AWS RDS or Supabase with automated backups
+- **Backup Strategy**: Daily automated backups with point-in-time recovery
+- **Query Optimization**: Indexed user_id, trip_id, day_id, expense_id; compound indexes for trip_collaborators (trip_id, user_id)
+- **Data Integrity**: Foreign key constraints with CASCADE DELETE, transaction management for expense splitting, validation at application level
+- **Scalability**: Stateless API with JWT (horizontal scaling), read replicas for reporting, Redis caching for frequent queries
+- **Security**: TLS 1.3 in transit, database encryption at rest (AWS RDS encryption), bcrypt password hashing, parameterized queries (ORM)
+
+#### Research Opportunities
+
+- **Artificial Intelligence Research**: AI itinerary generation quality, prompt engineering for travel planning, recommendation system effectiveness
+- **Human-Computer Interaction**: Collaborative travel planning UX, budget visualization effectiveness, packing list usability
+- **Travel Technology Research**: Itinerary optimization algorithms, budget forecasting accuracy, group coordination patterns
+- **Mobile Development Research**: Offline-first architecture for travel apps, sync conflict resolution, mobile expense tracking UX
+
+**Type**: Travel Planning Application (AI-Powered)  
+**Technology**: Full-stack web + mobile with AI integration  
+**Location**: `~/Documents/packages/docs/projects/smart-travel-planner/`
 
 ### 17. `energy-usage-tracker/`
 
@@ -1845,7 +1893,7 @@ The **Mobile Learning Companion** is an offline-first educational mobile applica
 
 **Post-MVP Features**:
 - **Phase 2**: Spaced repetition system, advanced analytics, content creation tools
-- **Phase 3**: Gamification (points, badges, levels), social features (leaderboards, groups)
+- **Phase 3**: Gamification (points, badges, levels), social features (rankings, groups)
 - **Phase 4**: AI-powered adaptive learning, multimedia content, internationalization (i18n)
 
 #### Architecture Highlights
@@ -1880,7 +1928,7 @@ The **Mobile Learning Companion** is an offline-first educational mobile applica
   - Month 2-3: Practice questions, offline sync, progress dashboard, content library, notifications
   - Month 3: Beta testing (50 users), bug fixes, app store submission, public launch
 - **Phase 2 (Enhanced Learning)** (Q3 2026 - 12 weeks): Spaced repetition, advanced analytics, content creation, premium launch
-- **Phase 3 (Social & Gamification)** (Q4 2026 - 12 weeks): Gamification, leaderboards, study groups, referral program
+- **Phase 3 (Social & Gamification)** (Q4 2026 - 12 weeks): Gamification, rankings, study groups, referral program
 - **Phase 4 (Advanced Features)** (Q1 2027 - 12 weeks): Adaptive learning, multimedia, i18n, institution partnerships
 
 **Target**: 1,000 users (MVP launch), 5,000 users (Q3 2026), 25,000 users (Q1 2027)
@@ -2265,123 +2313,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/financial-goal-saver/`
 
-### 26. `price-drop-tracker/`
-
-**Status**: Planning (Comprehensive PRD Complete)  
-**Priority**: Medium  
-**Category**: Full-Stack Web + Mobile Application (Customer-Facing)
-
-#### Overview
-
-**Price Drop Tracker** (working names: DealWatch, PriceWatch, SaveSmart) is a customer-facing full-stack web and mobile application that helps online shoppers save money by automatically tracking product prices across multiple retailers (Amazon, AliExpress, Shein, eBay, Walmart), sending intelligent alerts when prices drop below target thresholds, and providing actionable price history insights to inform purchasing decisions.
-
-**Target Audience**: Online shoppers (ages 25-45), price-conscious consumers, deal hunters, families managing shopping budgets (230M US online shoppers)  
-**Business Model**: Freemium (Free: 10 items, basic alerts; Premium: $9.99/month for unlimited items + advanced features)
-
-#### Key Features
-
-1. **Item Tracking**: Add items via URL, barcode scan (mobile), or search with automatic data extraction
-2. **Automated Price Monitoring**: Scheduled background jobs check prices daily (hourly for premium), store price history
-3. **Smart Alerts**: Email/push/SMS notifications for price drops (>10% threshold), target price hits, deal expirations
-4. **Price History & Insights**: Interactive charts, volatility analysis, best time to buy indicators, savings analytics
-5. **Multi-Retailer Support**: Amazon, AliExpress, Shein (MVP), eBay, Walmart, Target (Phase 3)
-6. **Mobile App**: React Native with Expo, barcode scanning, push notifications, offline access
-7. **Watchlists**: Organize items by category, share with family, collaborative shopping lists
-8. **Savings Tracking**: Total savings dashboard, per-item savings, monthly reports
-
-#### Tech Stack
-
-- **Frontend**: Angular with TypeScript, Tailwind CSS, shadcn/ui, Recharts (price charts)
-- **Backend**: PHP (Slim framework) with Composer, RESTful API
-- **Database**: MySQL 8.0 (via Docker, for items, prices, users, alerts, watchlists)
-- **Background Jobs**: Cron jobs for scheduled price monitoring
-- **Web Scraping**: PHP libraries (Goutte, simple_html_dom) for HTML parsing
-- **Mobile**: Capacitor (iOS & Android), barcode scanner, push notifications
-- **Infrastructure**: Docker, DigitalOcean (MVP), AWS (post-MVP), GitHub Actions CI/CD
-- **Integrations**: SendGrid (email), push notifications, Twilio (SMS - Phase 3), Stripe (payments)
-
-#### Documentation
-
-- [Documentation Index](projects/price-drop-tracker/INDEX.md) - Complete navigation guide
-- [PRD Overview](projects/price-drop-tracker/PRD_OVERVIEW.md) - Main requirements document with MVP definition
-- [Architecture](projects/price-drop-tracker/ARCHITECTURE.md) - Technical architecture and system design
-- [Expert Contributions](projects/price-drop-tracker/EXPERTS.md) - 16 expert contributions (pending review)
-
-#### Timeline
-
-- **Phase 1 (MVP)** (Weeks 1-12): Item tracking (URL), daily price monitoring, email alerts, simple dashboard, JWT authentication
-- **Phase 2 (Months 4-6)**: Price history charts, target price alerts, React Native mobile app, barcode scanning, push notifications, watchlist organization
-- **Phase 3 (Months 7-12)**: Coupon detection, savings analytics, additional retailers (eBay, Walmart, Target), best time to buy indicators, family collaboration
-- **Phase 4 (Year 2+)**: Price prediction (ML), browser extension (Chrome/Firefox), deal sharing, social features
-
-**Target Launch**: April 15, 2026 (Week 13) - MVP Soft Launch (100 beta users)
-
-#### Business Value
-
-- **Market Opportunity**: 230M US online shoppers who track prices manually, multi-billion dollar e-commerce savings market
-- **User Value**: Save $300-500/year through automated tracking, 5-10 hours/month time savings, data-driven purchasing decisions
-- **Revenue Model**: Freemium SaaS targeting $10K MRR by Month 12 (1,000 premium users @ $9.99/month)
-- **Competitive Advantage**: Multi-retailer support (not Amazon-only), mobile barcode scanning, family collaboration, comprehensive analytics
-- **Success Metrics**: 100 users (Month 1), 1,000 (Month 6), 10,000 (Month 12), 60% weekly engagement, 10-12% free-to-premium conversion
-
-#### Expert Team (16 Experts - All Pending Review)
-
-- **Product**: Patricia Martinez (Product Manager) - MVP definition, business model, prioritization, go-to-market
-- **Documentation**: Dorothy Clark (Documentation) - PRD structure, completeness, clarity
-- **Backend**: Samuel Rodriguez (Backend) - Price monitoring jobs, API design, web scraping, scheduled tasks
-- **Frontend**: Thomas Anderson (Frontend) - Next.js dashboard, price charts, state management
-- **Mobile**: Michael Brown (Mobile) - React Native, barcode scanning, push notifications, offline support
-- **Database**: Benjamin Lee (Database) - PostgreSQL schema (5 tables), query optimization, indexing
-- **API Design**: Emily Chen (API Design) - RESTful patterns, retailer integrations, endpoint structure
-- **UI/UX**: Daisy Thompson (UI/UX) - Dashboard design, user flows, mobile UX
-- **Security**: Ryan Kim (Security) - JWT authentication, data encryption, payment security (Stripe)
-- **Business Intelligence**: Gary Wilson (BI) - Price analytics, savings reports, KPIs
-- **DevOps**: David Cooper (DevOps) - CI/CD (GitHub Actions), Docker, scheduled job infrastructure
-- **Performance**: James Martinez (Performance) - Job optimization, caching (Redis), query performance
-- **Observability**: Kevin Martinez (Observability) - Sentry (error tracking), Winston (logging), monitoring dashboards
-- **Accessibility**: Allison Foster (Accessibility) - WCAG compliance, keyboard navigation, screen readers
-- **Copywriter**: Olivia Martinez (Copywriter) - App naming (DealWatch/PriceWatch/SaveSmart), UI copy, email templates
-- **SEO**: Amanda Davis (SEO) - Product search optimization, keyword research, content strategy
-
-**All experts pending review as of 2026-01-22**
-
-#### Academic Classification
-
-**Primary**: Computer Science - Web Development, Mobile Development, E-Commerce Technology
-
-**Educational Value**:
-- Demonstrates full-stack architecture (Next.js, NestJS, React Native, PostgreSQL)
-- Illustrates scheduled background jobs (Bull + Redis) for automated price monitoring
-- Shows web scraping techniques (Cheerio, Puppeteer) for data extraction
-- Exemplifies freemium SaaS business model with conversion strategies
-- Demonstrates push notification systems (Firebase Cloud Messaging)
-- Illustrates data visualization (Recharts) for price history and trends
-- Shows mobile barcode scanning implementation (Expo Barcode Scanner)
-
-**Subject Matter Areas**:
-- **Computer Science**: Full-stack development, API design, mobile UX, web scraping, background job processing, data visualization
-- **Software Engineering**: Scheduled task architecture, NestJS module design, CI/CD pipelines, Docker containerization
-- **Database Systems**: PostgreSQL schema design (5 tables with complex relationships), query optimization, price history storage
-- **Security**: JWT authentication, data encryption (at rest/transit), payment processing (Stripe PCI compliance)
-- **Business**: Freemium SaaS model, subscription management, e-commerce savings market, competitive analysis
-
-#### Database Considerations
-
-- **Database Type**: PostgreSQL (relational database for structured price tracking data)
-- **Schema Design**: Users, Items, Prices (price history), Alerts, Watchlists, WatchlistItems (many-to-many)
-- **Migration Strategy**: Prisma migrations for schema versioning and evolution
-- **Data Persistence**: Persistent storage for items, price history (30-90 days), alerts, watchlists
-- **Backup Strategy**: Automated daily backups, point-in-time recovery, 7-day retention
-- **Query Optimization**: Indexes on user_id, item_id, timestamp; connection pooling; pagination for large datasets
-- **Data Integrity**: Foreign key constraints, unique constraints, cascade deletes, timestamps
-- **Scalability**: Read replicas for read-heavy workloads (Phase 2+), connection pooling (10-20 connections MVP)
-- **Security**: Encryption at rest (AES-256), encryption in transit (TLS 1.3), GDPR/CCPA compliance
-
-**Type**: Price Tracking and Deal Alert Application  
-**Technology**: Full-stack web + mobile  
-**Location**: `~/Documents/packages/docs/projects/price-drop-tracker/`
-
-### 27. `packages/`
+### 26. `packages/`
 - **Type**: Documentation/Knowledge Base (Current Workspace)
 - **Technology**: Markdown documentation
 - **Location**: `~/Documents/packages/`
@@ -2404,7 +2336,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
   - Computer Science: Project management, software documentation, design patterns
   - Education: Learning resource organization, curriculum design (if applicable)
 
-### 28. `workspace-documentation-hub/`
+### 27. `workspace-documentation-hub/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: High  
@@ -2419,7 +2351,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 
 #### Key Features
 
-1. **Package Catalog**: Comprehensive, searchable directory of all workspace packages (core, git-workflow, task-manager, template-project, etc.) with metadata, capabilities, usage examples
+1. **Package Catalog**: Comprehensive, searchable directory of all workspace packages (core, git-workflow, deck, embark, etc.) with metadata, capabilities, usage examples
 2. **CLI Command Reference**: Complete documentation for all CLI tools (cursor-init, task-master, etc.) with syntax, examples, and use cases
 3. **Cursor Command Browser**: Visual interface for discovering and using `/expert` and other Cursor commands from `.cursor/commands/`
 4. **Workflow Documentation**: Interactive guides and visual diagrams for workspace workflows (git workflow, task management, project setup)
@@ -2495,7 +2427,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Next.js + TypeScript + Automated Data Extraction  
 **Location**: `~/Documents/packages/docs/projects/workspace-documentation-hub/`
 
-### 29. `tai-chi-lessons/`
+### 28. `tai-chi-lessons/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -2637,7 +2569,7 @@ Tai Chi Lessons is an **AI-powered video generation engine** that creates beginn
 **Technology**: PHP backend + Angular frontend + AI providers + ffmpeg  
 **Location**: `~/Documents/packages/docs/projects/tai-chi-lessons/`
 
-### 30. `sports-results-tracker/`
+### 29. `sports-results-tracker/`
 
 **Status**: Planning (MVP Definition Complete)  
 **Priority**: Medium  
@@ -2765,7 +2697,7 @@ Sports Results Tracker is a fast, mobile-first platform for tracking soccer resu
 **Technology**: React 18 + TypeScript + Node.js + PostgreSQL + Redis  
 **Location**: `~/Documents/packages/docs/projects/sports-results-tracker/`
 
-### 31. `social-media-manager/`
+### 30. `social-media-manager/`
 
 **Status**: Planning (Initial Concept)  
 **Priority**: Medium  
@@ -2824,7 +2756,7 @@ Run comprehensive planning (`/local/plan-project social-media-manager`) to devel
 **Technology**: To be determined (likely full-stack with PHP/Node.js backend)  
 **Location**: `~/Documents/packages/docs/projects/social-media-manager/`
 
-### 32. `colis-company-showcase/`
+### 31. `colis-company-showcase/`
 
 **Status**: Planning  
 **Priority**: High  
@@ -3016,6 +2948,374 @@ Colis Company Showcase is a professional marketing and portfolio website designe
 **Technology**: Angular 18 + Slim PHP 4 + MySQL 8.0  
 **Location**: `~/Documents/packages/docs/projects/colis-company-showcase/`
 
+### 32. `ai-logo-generator/`
+
+**Status**: Planning  
+**Priority**: High  
+**Category**: Web Application + AI Service
+
+#### Overview
+
+An AI-powered logo generation platform that creates professional, ready-to-use logos based on client descriptions. Clients describe their business, industry, and brand vision, and receive high-quality logo designs instantly. Leverages advanced AI models (OpenAI DALL-E 3, Stability AI) to democratize professional logo design, making it accessible and affordable for small businesses, startups, and entrepreneurs.
+
+**Target Users**: Small business owners, startups, freelancers, entrepreneurs  
+**Business Model**: Freemium + Subscription (Pay-per-logo: $19-49, Subscriptions: $29-99/mo)
+
+#### Key Features
+
+1. **AI Logo Generation**: Generate professional logos from text descriptions in <30 seconds
+2. **Basic Customization**: Color picker, font selector, layout options with real-time preview
+3. **High-Resolution Export**: PNG downloads (multiple sizes: 512x512, 1024x1024, 2048x2048)
+4. **User Account & History**: Save generated logos, access generation history
+5. **Payment Processing**: Stripe integration for pay-per-logo purchases
+6. **Brand Profile Builder** (Post-MVP): Save brand preferences for consistent designs
+7. **Vector Export (SVG)** (Post-MVP): Scalable vector graphics for professional use
+8. **Brand Kit Creation** (Post-MVP): Color palettes, font pairings, brand guidelines
+9. **Team Collaboration** (Post-MVP): Shared workspaces, commenting, approval workflows
+10. **Multi-Language Support** (Post-MVP): i18n for global market expansion
+
+#### MVP Definition
+
+**Core Problem**: Small businesses need professional logos but can't afford designers ($500-5,000) or time-consuming design processes.
+
+**Core User**: Small business owners and entrepreneurs launching new businesses or rebranding.
+
+**Core Value**: Generate professional, unique logos instantly from simple text descriptions at a fraction of designer costs.
+
+**MVP Features** (5 essential features):
+1. Simple Logo Generation from Text Description
+2. Basic Customization Interface (colors, fonts, layouts)
+3. High-Resolution Download (PNG, transparent background)
+4. User Account & Generation History
+5. Pay-Per-Logo Payment Processing (Stripe)
+
+**MVP Timeline**: 10 weeks (8 weeks development + 2 weeks testing)
+
+**Success Metrics**:
+- 500 sign-ups in first month
+- 100 paid logo purchases in first month
+- 20% conversion rate (sign-up → paid)
+- 90%+ users successfully customize and download
+- <30 seconds logo generation time
+- 99% uptime
+
+#### Value Proposition
+
+- **Instant Professional Logos**: Generate high-quality logos in 20-30 seconds, not days
+- **Affordable**: Fraction of the cost of hiring a designer ($19-49 vs $500-5,000)
+- **No Design Skills Needed**: Simple text description creates professional results
+- **Customizable**: Adjust colors, fonts, layouts to match brand vision
+- **Immediate Download**: High-resolution files ready for use on websites, social media, marketing
+
+#### Tech Stack
+
+**Frontend**: Angular 18 (TypeScript), Angular Material, Tailwind CSS  
+**Backend**: Slim PHP 4 (RESTful API), JWT authentication  
+**Database**: MySQL 8 or PostgreSQL 15  
+**AI Integration**: OpenAI DALL-E 3 API (primary), Stability AI (fallback)  
+**Payment**: Stripe PHP SDK  
+**Hosting**: AWS EC2 or DigitalOcean  
+**File Storage**: AWS S3 (generated logo files)  
+**CDN**: CloudFlare (fast image delivery)
+
+#### Documentation
+
+- [Documentation Index](../projects/ai-logo-generator/INDEX.md) - Master overview and navigation
+- [PRD Overview](../projects/ai-logo-generator/PRD_OVERVIEW.md) - Complete product requirements with MVP definition
+- [Architecture](../projects/ai-logo-generator/ARCHITECTURE.md) - Technical architecture and system design
+- [MVP Features](../projects/ai-logo-generator/features/mvp-features.md) - MVP feature scope and implementation details
+- [Pricing and Revenue Model](../projects/ai-logo-generator/business/pricing-and-revenue.md) - Monetization and pricing strategy
+- [API Design](../projects/ai-logo-generator/technical/api-design.md) - REST API endpoint design
+- [Expert Contributions](../projects/ai-logo-generator/EXPERTS.md) - Expert reviews and sign-offs (12 experts)
+
+#### Timeline & Phases
+
+**Phase 1: MVP** (10 weeks) - Simple generation, basic customization, pay-per-logo  
+**Phase 2: Enhanced Customization** (Months 3-4) - Vector export, multiple AI models, advanced colors  
+**Phase 3: Brand Kit & Collaboration** (Months 5-7) - Brand kits, team workspaces, analytics  
+**Phase 4: Enterprise & Scale** (Months 8-12) - Mobile app, API access, white-label, i18n
+
+#### Expert Team (12 Experts)
+
+- **Product**: Patricia Martinez (Product Manager) - MVP prioritization, business strategy, revenue model
+- **Architecture**: Marcus Johnson (Architecture) - System scalability, microservices design
+- **Backend**: Samuel Rodriguez (Backend) - API design, AI integration, payment processing
+- **Frontend**: Thomas Anderson (Frontend) - Angular architecture, state management
+- **UI/UX**: Daisy Thompson (UI/UX) - User interface, logo customization interface
+- **Database**: Benjamin Lee (Database) - Schema design (users, logos, subscriptions)
+- **API Design**: Emily Chen (API Design) - RESTful API, AI service integration
+- **Security**: Ryan Kim (Security) - Payment security, API key management, user data protection
+- **Performance**: James Martinez (Performance) - Image processing optimization, fast generation
+- **Copywriting**: Olivia Martinez (Copywriter) - App naming, marketing copy, user messaging
+- **Market Research**: Laura Phillips (Market Research) - Market analysis, competitive positioning
+- **Accessibility**: Allison Foster (Accessibility) - UI accessibility for diverse users
+- **DevOps**: David Cooper (DevOps) - Deployment, CI/CD, infrastructure management
+- **Documentation**: Dorothy Clark (Documentation) - PRD structure, clarity
+
+#### User Personas
+
+**Primary: Sarah - Small Business Owner**
+- Age: 32, Founder of boutique skincare brand
+- Needs: Professional logo quickly, affordable solution, easy to use
+- Pain Points: Can't afford designer, Fiverr inconsistent quality, DIY tools frustrating
+- How We Help: Professional logos in seconds, affordable ($29 vs $500+), no design skills required
+
+**Secondary: Marcus - Freelance Consultant**
+- Age: 28, Marketing consultant, solo freelancer
+- Needs: Personal brand logo, quick turnaround, professional appearance, low cost
+- Pain Points: Busy with client work, limited budget, wants to look professional
+- How We Help: Instant generation, extremely affordable, professional quality without time investment
+
+#### AI Technology
+
+**Primary AI Model**: OpenAI DALL-E 3 API
+- Latest AI image generation technology
+- High-quality, professional logo outputs
+- Natural language understanding for descriptions
+- Prompt optimization for best results
+
+**Fallback Model**: Stability AI
+- Cost-effective alternative
+- Good quality for budget-conscious users
+- Reduces dependency on single provider
+
+**AI Cost Management**:
+- Negotiate volume pricing with OpenAI
+- Implement caching for similar prompts
+- Quality filtering (reject low-quality outputs)
+- Tiered pricing based on AI model used
+
+#### Revenue Model
+
+**Free Tier**:
+- 1 free logo generation (with watermark)
+- Basic customization
+- Low-resolution download (512x512 PNG)
+
+**Pay-Per-Logo** (MVP):
+- $19-49 per logo (price testing needed)
+- High-resolution download (2048x2048 PNG)
+- Full customization access
+- No watermark
+- Lifetime access to purchased logos
+
+**Subscription Plans** (Post-MVP):
+- Basic ($29/mo): 10 logos per month
+- Pro ($59/mo): 50 logos per month + vector export
+- Business ($99/mo): Unlimited logos + brand kit + priority support
+
+#### Performance Targets
+
+- **Logo Generation**: <30 seconds
+- **Page Load Time**: <2 seconds
+- **API Response Time**: <200ms (excluding AI generation)
+- **Image Delivery**: <1 second via CDN
+- **Uptime**: 99%+
+
+#### Business Value
+
+- **Revenue Potential**: High - Large market (millions of small businesses), recurring revenue model
+- **Market Size**: Multi-billion dollar logo design market
+- **Competitive Advantage**: Latest AI technology, ease of use, affordable pricing
+- **Growth Opportunity**: Subscription model enables predictable revenue growth
+- **Scalability**: Digital product with low marginal costs
+
+**Target Revenue**:
+- Month 1: $2,000
+- Month 3: $10,000 MRR
+- Month 6: $25,000 MRR
+
+**Expected Impact**: Democratize professional logo design, enable thousands of small businesses to access affordable branding
+
+**Type**: Web Application + AI Service (SaaS)  
+**Technology**: Angular 18 + Slim PHP 4 + MySQL/PostgreSQL + OpenAI DALL-E 3  
+**Location**: `~/Documents/packages/docs/projects/ai-logo-generator/`
+
+### Sports Results Tracker
+
+**Status**: Planning Complete - Ready for Development  
+**Priority**: Medium  
+**Category**: Web Application (Full-Stack SaaS)
+
+#### Overview
+
+A comprehensive sports results tracking platform for soccer fans, coaches, and analysts. Fast, clean, mobile-first interface for real-time score updates, league standings, match fixtures, and team following. Designed to solve the problem of slow, cluttered sports websites with delayed updates and poor mobile experience.
+
+**Target Users**: Soccer fans (18-45), fantasy soccer players, amateur coaches, casual viewers
+
+#### Key Features
+
+**MVP Features** (Phase 1):
+- Live Score Tracking (30-second updates via polling)
+- League Standings (Top 5 leagues: Premier League, La Liga, Serie A, Bundesliga, Ligue 1)
+- Team Following (follow up to 5 favorite teams, localStorage-based)
+- Match Fixtures (next 7 days, filtered by followed teams)
+- Mobile-Responsive Interface (mobile-first design, <2 second load times)
+
+**Phase 2 Features** (Weeks 11-14):
+- User Accounts & Authentication (JWT)
+- Push Notifications (goal alerts, match start reminders)
+- WebSocket Real-Time Updates (<1 second latency)
+- Player Statistics (goals, assists, cards per player)
+- Match History (historical results, head-to-head records)
+
+**Phase 3 Features** (Weeks 15-20):
+- Additional Sports (basketball, American football, tennis)
+- Custom Leagues (amateur and custom competitions)
+- Social Features (match predictions, commenting)
+- Developer API Access (premium tier)
+
+**Phase 4 Features** (Weeks 21-28):
+- Native Mobile Apps (iOS and Android)
+- Premium Subscriptions (ad-free, advanced stats, API access)
+- Fantasy League Integration
+- Video Highlights (licensing dependent)
+
+#### Tech Stack
+
+**Frontend**:
+- Framework: React 18 + TypeScript
+- Build Tool: Vite 5.0
+- Styling: Tailwind CSS 3.4
+- State Management: Zustand 4.5 (UI state), React Query 5.17 (server state)
+- Routing: React Router 6.21
+- PWA: Vite PWA Plugin + Workbox
+
+**Backend**:
+- Runtime: Node.js 20 LTS
+- Framework: Express 4.18
+- Database: PostgreSQL 16
+- Cache: Redis 7.2
+- ORM: Prisma 5.8 (Phase 2)
+- Auth: JWT + bcrypt (Phase 2)
+
+**Infrastructure**:
+- Frontend Hosting: Vercel (Free tier)
+- Backend Hosting: Railway ($10-15/month)
+- Data Source: API-Football (Free tier, 100 calls/day)
+- Monitoring: Sentry + UptimeRobot (Free tiers)
+- CI/CD: GitHub Actions
+
+**Total MVP Cost**: ~$10-15/month
+
+#### Documentation
+
+- [Documentation Index](../projects/sports-results-tracker/INDEX.md) - Master overview and navigation
+- [PRD Overview](../projects/sports-results-tracker/PRD_OVERVIEW.md) - Product requirements with comprehensive MVP definition
+- [Architecture Overview](../projects/sports-results-tracker/ARCHITECTURE.md) - System architecture and technology stack
+- [Frontend Architecture](../projects/sports-results-tracker/technical/frontend-architecture.md) - React architecture, state management, PWA
+- [Backend Architecture](../projects/sports-results-tracker/technical/backend-architecture.md) - API design, database schema, caching
+- [Infrastructure & Deployment](../projects/sports-results-tracker/technical/infrastructure-deployment.md) - Hosting, CI/CD, monitoring
+- [Expert Contributions](../projects/sports-results-tracker/EXPERTS.md) - 14 expert reviews and sign-offs
+
+#### Timeline
+
+- **Phase 1 (MVP)**: Weeks 1-10 (8 weeks development + 2 weeks testing)
+  - Target Launch: April 15, 2026
+  - Development: Data ingestion, Core UI, Live scores, Standings, Fixtures, Following
+  - Testing: Beta testing (50 users), Load testing, Cross-device testing
+  
+- **Phase 2 (Enhancement)**: Weeks 11-14 (4 weeks)
+  - Target: June 1, 2026
+  - Features: User accounts, Push notifications, WebSockets, Player stats, Match history
+  
+- **Phase 3 (Expansion)**: Weeks 15-20 (6 weeks)
+  - Target: August 1, 2026
+  - Features: Additional sports, Custom leagues, Social features, API access
+  
+- **Phase 4 (Mobile & Monetization)**: Weeks 21-28 (8 weeks)
+  - Target: November 1, 2026
+  - Features: Native mobile apps, Premium subscriptions, Fantasy integration, Video highlights
+
+**Total Timeline**: 28 weeks (MVP + 3 enhancement phases)
+
+#### Business Value
+
+**Revenue Model**:
+- **Phase 1 (MVP)**: Free with minimal ads (Google AdSense)
+- **Phase 2**: Freemium model
+  - Free Tier: Basic scores, standings, 3 followed teams, ads
+  - Premium Tier ($4.99/month): Unlimited teams, ad-free, push notifications, player stats
+- **Phase 3**: Premium+ Tier ($9.99/month): API access, advanced analytics, custom leagues
+
+**Market Opportunity**:
+- **Target Market**: Soccer fans worldwide (billions), growing fantasy soccer market
+- **Differentiation**: Speed (<2s load times, <1s updates in Phase 2), simplicity (clean interface), mobile-first (80% mobile users)
+- **Competitive Advantage**: Faster than ESPN/Fox Sports, cleaner than FlashScore, more comprehensive than official league apps
+
+**Revenue Targets**:
+- **Month 1**: 1,000 active users
+- **Month 3**: 5,000 monthly active users
+- **Month 6**: 10,000 monthly active users, $10,000 MRR (Phase 2)
+- **Year 1**: 50,000 monthly active users, $50,000+ MRR
+
+**Success Metrics**:
+- User Adoption: 1,000 active users in first month
+- User Engagement: 50% weekly return rate, 60% monthly retention
+- Technical Performance: <2s page loads, 99% uptime, 99.9% data accuracy
+- Business (Phase 2+): 5%+ free-to-premium conversion, <5% monthly churn
+
+#### Expert Team (14 Experts - All Approved ✅)
+
+**Core Team**:
+- Patricia Martinez (Product Manager) - MVP definition, roadmap, prioritization
+- Dorothy Clark (Documentation) - PRD structure, clarity, completeness
+
+**Technical Team**:
+- Marcus Johnson (Architecture) - System design, scalability
+- Samuel Rodriguez (Backend) - API, database, data ingestion
+- Thomas Anderson (Frontend) - React, state management, PWA
+- Benjamin Lee (Database) - PostgreSQL schema, optimization
+- Emily Chen (API Design) - RESTful endpoints, rate limiting
+- James Martinez (Performance) - Caching, optimization, CDN
+- David Cooper (DevOps) - CI/CD, deployment, monitoring
+
+**Specialized Team**:
+- Daisy Thompson (UI/UX) - Mobile-first design, user flows
+- Ryan Kim (Security) - JWT auth, rate limiting, HTTPS
+- Allison Foster (Accessibility) - WCAG 2.1 AA compliance
+- Michael Brown (Mobile) - PWA, offline capability, native apps (Phase 4)
+- Laura Phillips (Market Research) - Competitive analysis, user personas
+
+#### Academic Classification
+
+**Primary**: Computer Science - Full-Stack Web Development, Real-Time Systems, Mobile-First Design  
+**Secondary**: Software Engineering - RESTful API Design, Progressive Web Apps, Caching Strategies
+
+#### Educational Value
+
+- **Full-Stack Architecture**: Demonstrates React frontend, Node.js/Express backend, PostgreSQL database
+- **Real-Time Data**: Illustrates polling (MVP) and WebSocket (Phase 2) approaches for live updates
+- **Caching Strategies**: Shows multi-layer caching (Redis, React Query, CDN) for performance
+- **Mobile-First Design**: Exemplifies responsive design and Progressive Web App implementation
+- **API Integration**: Demonstrates external API consumption (API-Football) and rate limit management
+- **State Management**: Shows separation of UI state (Zustand) and server state (React Query)
+- **Performance Optimization**: Illustrates code splitting, lazy loading, bundle optimization
+- **DevOps Practices**: Shows CI/CD with GitHub Actions, monitoring with Sentry, auto-scaling
+
+#### Subject Matter Areas
+
+- **Computer Science**: Real-time systems, caching algorithms, API design, database optimization
+- **Software Engineering**: Full-stack development, PWA implementation, state management patterns
+- **Data Management**: Time-series data, caching strategies, data ingestion pipelines
+- **User Experience**: Mobile-first design, accessibility (WCAG), performance optimization
+- **DevOps**: Containerization, CI/CD, monitoring, auto-scaling
+
+#### Database Considerations
+
+- **Database Type**: PostgreSQL 16 (relational, excellent time-series support)
+- **Schema Design**: Leagues, teams, matches, standings, fixtures with proper relationships
+- **Indexing Strategy**: Indexes on match_date, league_id, team_id, status for query performance
+- **Data Retention**: 2-season hot data (PostgreSQL + Redis), historical data archive (Phase 3)
+- **Caching**: Redis for live scores (30-second TTL), React Query for client-side caching
+- **Performance**: Connection pooling, query optimization, UUID primary keys for distributed scalability
+- **Backup Strategy**: Railway-managed database backups, point-in-time recovery
+- **Migration Strategy**: Version-controlled migrations with Prisma (Phase 2)
+
+**Type**: Web Application (Full-Stack SaaS)  
+**Technology**: React 18 + TypeScript + Node.js + Express + PostgreSQL + Redis  
+**Location**: `~/Documents/packages/docs/projects/sports-results-tracker/`
+
 ## Non-Code Directories
 
 The following directories exist in `~/Documents/` but are not code projects:
@@ -3035,13 +3335,14 @@ The following directories exist in `~/Documents/` but are not code projects:
 
 ### By Academic Discipline
 
-**Computer Science Projects** (27 projects):
-- Software Engineering: All 27 projects
-- Database Systems: `ulvonix/`, `learning-games/`, `spoon-me/`, `personal-budget-manager/`, `subscription-bill-manager/`, `home-inventory-manager/`, `home-maintenance-tracker/`, `travel-itinerary-wallet/`, `energy-usage-tracker/`, `appointment-queue-manager/`, `vehicle-maintenance-tracker/`, `medical-records-manager/`, `family-care-coordinator/`, `meal-planner-grocery/`, `recipes/`, `chore-allowance-manager/`, `pet-care-manager/`, `tai-chi-lessons/`
-- Web Development: `learning-games/`, `spoon-me/`, `sandbox/keel/`, `track-deliveries/`, `personal-budget-manager/`, `project-health-dashboard/`, `api-gateway-platform/`, `habit-tracker/`, `home-inventory-manager/`, `home-maintenance-tracker/`, `travel-itinerary-wallet/`, `energy-usage-tracker/`, `appointment-queue-manager/`, `vehicle-maintenance-tracker/`, `medical-records-manager/`, `family-care-coordinator/`, `meal-planner-grocery/`, `recipes/`, `chore-allowance-manager/`, `subscription-bill-manager/`, `pet-care-manager/`, `tai-chi-lessons/`
-- Mobile Development: `track-deliveries/`, `personal-budget-manager/`, `habit-tracker/`, `home-inventory-manager/`, `home-maintenance-tracker/`, `travel-itinerary-wallet/`, `energy-usage-tracker/`, `appointment-queue-manager/`, `vehicle-maintenance-tracker/`, `medical-records-manager/`, `family-care-coordinator/`, `meal-planner-grocery/`, `recipes/`, `chore-allowance-manager/`, `subscription-bill-manager/`, `mobile-learning-companion/`, `pet-care-manager/`, `tai-chi-lessons/`
-- Distributed Systems: `ulvonix/`, `api-gateway-platform/`
-- Human-Computer Interaction: `ulvonix/`, `learning-games/`, `spoon-me/`, `personal-budget-manager/`, `project-health-dashboard/`, `habit-tracker/`, `home-inventory-manager/`, `home-maintenance-tracker/`, `travel-itinerary-wallet/`, `energy-usage-tracker/`, `appointment-queue-manager/`, `vehicle-maintenance-tracker/`, `medical-records-manager/`, `family-care-coordinator/`, `meal-planner-grocery/`, `recipes/`, `chore-allowance-manager/`, `subscription-bill-manager/`, `track-deliveries/`, `pet-care-manager/`, `tai-chi-lessons/`
+**Computer Science Projects** (28 projects):
+- Software Engineering: All 26 projects
+- Database Systems: `ulvonix/`, `learning-games/`, `spoon-me/`, `personal-budget-manager/`, `subscription-bill-manager/`, `home-inventory-manager/`, `home-maintenance-tracker/`, `travel-itinerary-wallet/`, `energy-usage-tracker/`, `appointment-queue-manager/`, `vehicle-maintenance-tracker/`, `medical-records-manager/`, `family-care-coordinator/`, `meal-planner-grocery/`, `recipes/`, `chore-allowance-manager/`, `pet-care-manager/`, `tai-chi-lessons/`, `ai-logo-generator/`
+- Web Development: `learning-games/`, `spoon-me/`, `sandbox/keel/`, `track-deliveries/`, `personal-budget-manager/`, `project-health-dashboard/`, `habit-tracker/`, `home-inventory-manager/`, `home-maintenance-tracker/`, `travel-itinerary-wallet/`, `smart-travel-planner/`, `energy-usage-tracker/`, `appointment-queue-manager/`, `vehicle-maintenance-tracker/`, `medical-records-manager/`, `family-care-coordinator/`, `meal-planner-grocery/`, `recipes/`, `chore-allowance-manager/`, `subscription-bill-manager/`, `pet-care-manager/`, `tai-chi-lessons/`, `ai-logo-generator/`, `colis-company-showcase/`, `sports-results-tracker/`, `social-media-manager/`
+- Mobile Development: `track-deliveries/`, `personal-budget-manager/`, `habit-tracker/`, `home-inventory-manager/`, `home-maintenance-tracker/`, `travel-itinerary-wallet/`, `smart-travel-planner/`, `energy-usage-tracker/`, `appointment-queue-manager/`, `vehicle-maintenance-tracker/`, `medical-records-manager/`, `family-care-coordinator/`, `meal-planner-grocery/`, `recipes/`, `chore-allowance-manager/`, `subscription-bill-manager/`, `mobile-learning-companion/`, `pet-care-manager/`, `tai-chi-lessons/`
+- Distributed Systems: `ulvonix/`
+- Human-Computer Interaction: `ulvonix/`, `learning-games/`, `spoon-me/`, `personal-budget-manager/`, `project-health-dashboard/`, `habit-tracker/`, `home-inventory-manager/`, `home-maintenance-tracker/`, `travel-itinerary-wallet/`, `smart-travel-planner/`, `energy-usage-tracker/`, `appointment-queue-manager/`, `vehicle-maintenance-tracker/`, `medical-records-manager/`, `family-care-coordinator/`, `meal-planner-grocery/`, `recipes/`, `chore-allowance-manager/`, `subscription-bill-manager/`, `track-deliveries/`, `pet-care-manager/`, `tai-chi-lessons/`, `ai-logo-generator/`
+- Artificial Intelligence & Machine Learning: `smart-travel-planner/` - AI-powered itinerary generation, `ai-logo-generator/` - AI-powered logo generation using OpenAI DALL-E 3 and Stability AI
 - Video Streaming Technology: `tai-chi-lessons/`
 - Health & Wellness Technology: `tai-chi-lessons/`, `habit-tracker/`, `pet-care-manager/`, `medical-records-manager/`
 
@@ -3067,7 +3368,7 @@ The following directories exist in `~/Documents/` but are not code projects:
 - `subscription-bill-manager/` - Recurring cost tracking
 - `home-inventory-manager/` - Inventory management workflows
 - `home-maintenance-tracker/` - Maintenance scheduling and reminders
-- `travel-itinerary-wallet/` - Travel planning and document management
+- `smart-travel-planner/` - AI-powered travel planning with itinerary generation, budget tracking, collaborative features
 - `energy-usage-tracker/` - Utility usage and cost tracking
 - `appointment-queue-manager/` - Scheduling and queue workflows
 - `vehicle-maintenance-tracker/` - Vehicle maintenance and expense tracking
@@ -3079,11 +3380,11 @@ The following directories exist in `~/Documents/` but are not code projects:
 - `habit-tracker/` - Behavior tracking and engagement
 - `pet-care-manager/` - Pet health tracking, medication reminders, notification systems
 - `tai-chi-lessons/` - Video streaming, content management, wellness technology
+- `ai-logo-generator/` - AI/ML integration, image generation, payment processing, SaaS business model
 
 **Supporting/Infrastructure**:
 - `find-hidden-files/` - Plugin development patterns
 - `project-health-dashboard/` - Portfolio monitoring and reporting
-- `api-gateway-platform/` - API management infrastructure
 
 ### Research and Learning Opportunities
 
@@ -3098,7 +3399,7 @@ The following directories exist in `~/Documents/` but are not code projects:
    - Monorepo management strategies
    - API design principles
 
-3. **Database Systems Research** (`ulvonix/`, `learning-games/`, `spoon-me/`, `track-deliveries/`, `personal-budget-manager/`, `subscription-bill-manager/`, `home-inventory-manager/`, `home-maintenance-tracker/`, `travel-itinerary-wallet/`, `energy-usage-tracker/`, `appointment-queue-manager/`, `vehicle-maintenance-tracker/`, `medical-records-manager/`, `family-care-coordinator/`, `meal-planner-grocery/`, `recipes/`, `chore-allowance-manager/`):
+3. **Database Systems Research** (`ulvonix/`, `learning-games/`, `spoon-me/`, `track-deliveries/`, `personal-budget-manager/`, `subscription-bill-manager/`, `home-inventory-manager/`, `home-maintenance-tracker/`, `travel-itinerary-wallet/`, `smart-travel-planner/`, `energy-usage-tracker/`, `appointment-queue-manager/`, `vehicle-maintenance-tracker/`, `medical-records-manager/`, `family-care-coordinator/`, `meal-planner-grocery/`, `recipes/`, `chore-allowance-manager/`):
    - Migration strategies and schema evolution
    - Distributed data management
    - Multi-bot coordination
@@ -3128,6 +3429,16 @@ The following directories exist in `~/Documents/` but are not code projects:
    - Online learning effectiveness for physical practices
    - Community engagement in wellness platforms
 
+7. **Artificial Intelligence & Machine Learning Research** (`smart-travel-planner/`, `ai-logo-generator/`):
+   - AI-powered itinerary generation (OpenAI GPT-4, Anthropic Claude)
+   - Prompt engineering for travel planning and recommendations
+   - AI-powered image generation (OpenAI DALL-E 3, Stability AI)
+   - Prompt engineering and optimization for AI models
+   - AI API integration and cost management
+   - AI quality filtering and output validation
+   - Multi-model AI systems and fallback strategies
+   - SaaS business models for AI-powered applications
+
 ## Summary
 
 **Total Code Projects**: 29 active projects
@@ -3140,13 +3451,13 @@ The following directories exist in `~/Documents/` but are not code projects:
 6. `track-deliveries/` - Delivery Tracking App (CS: Web development, integrations)
 7. `personal-budget-manager/` - Personal Budget Manager (CS: finance analytics)
 8. `project-health-dashboard/` - Project Health Dashboard (CS: analytics, visualization)
-9. `api-gateway-platform/` - API Gateway Platform (CS: distributed systems, security)
-10. `habit-tracker/` - Habit Tracking App (CS: engagement, analytics)
-11. `home-inventory-manager/` - Home Inventory App (CS: organization, reporting)
-12. `home-maintenance-tracker/` - Home Maintenance Tracker (CS: scheduling, reminders)
-13. `medical-records-manager/` - Medical Records Manager (CS: security, scheduling)
-14. `family-care-coordinator/` - Family Care Coordinator (CS: collaboration, access)
-15. `travel-itinerary-wallet/` - Travel Itinerary & Document Wallet (CS: planning, alerts)
+9. `habit-tracker/` - Habit Tracking App (CS: engagement, analytics)
+10. `home-inventory-manager/` - Home Inventory App (CS: organization, reporting)
+11. `home-maintenance-tracker/` - Home Maintenance Tracker (CS: scheduling, reminders)
+12. `medical-records-manager/` - Medical Records Manager (CS: security, scheduling)
+13. `family-care-coordinator/` - Family Care Coordinator (CS: collaboration, access)
+14. `travel-itinerary-wallet/` - Travel Itinerary & Document Wallet (CS: planning, alerts)
+15. `smart-travel-planner/` - AI-Powered Travel Planner (CS: AI integration, travel planning)
 16. `energy-usage-tracker/` - Energy Usage & Utility Optimizer (CS: analytics, alerts)
 17. `vehicle-maintenance-tracker/` - Vehicle Maintenance Tracker (CS: scheduling, expenses)
 18. `meal-planner-grocery/` - Meal Planner & Grocery (CS: planning, UX)
@@ -3156,16 +3467,16 @@ The following directories exist in `~/Documents/` but are not code projects:
 22. `subscription-bill-manager/` - Subscriptions & Bills Manager (CS: finance analytics)
 23. `pet-care-manager/` - Pet Care Manager (CS: health information systems, mobile, reminders)
 24. `financial-goal-saver/` - Financial Goal Tracker & Automated Savings (CS: FinTech, automated savings)
-25. `price-drop-tracker/` - Price Drop & Deal Tracker (CS: web scraping, scheduled jobs, e-commerce)
-26. `packages/` - Knowledge Base (Information Science: Knowledge management)
-27. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
-28. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
-29. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
-30. `social-media-manager/` - Social Media Management Platform (CS: social technology, automation)
-31. `colis-company-showcase/` - Company Portfolio & Marketing Website (CS: full-stack web, CMS, marketing technology)
+25. `packages/` - Knowledge Base (Information Science: Knowledge management)
+26. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
+27. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
+28. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
+29. `social-media-manager/` - Social Media Management Platform (CS: social technology, automation)
+30. `colis-company-showcase/` - Company Portfolio & Marketing Website (CS: full-stack web, CMS, marketing technology)
+31. `ai-logo-generator/` - AI-Powered Logo Generation Platform (CS: AI/ML, web development, SaaS, image generation)
 
 **Academic Focus Areas**:
-- **Primary**: Educational Technology (`learning-games/`)
+- **Primary**: Educational Technology (`learning-games/`), Artificial Intelligence & Machine Learning (`ai-logo-generator/`)
 - **Secondary**: Software Engineering, Database Systems, Web Development
 - **Supporting**: Information Science, Knowledge Management
 

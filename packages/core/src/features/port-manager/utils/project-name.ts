@@ -22,30 +22,41 @@ export function generateProjectName(
 ): string {
   const resolvedPath = path.resolve(projectPath);
   const homeDir = os.homedir();
-  
+
   // Determine root path
   let rootPath = config?.rootPath || path.join(homeDir, 'Documents');
   if (config?.projectsSubdir) {
     rootPath = path.join(rootPath, config.projectsSubdir);
   }
-  
+
   const resolvedRoot = path.resolve(rootPath);
-  
+
   // Check if path is under the root
   if (!resolvedPath.startsWith(resolvedRoot + path.sep) && resolvedPath !== resolvedRoot) {
     // Path is not under Documents, use full path relative to home
     const relativeToHome = path.relative(homeDir, resolvedPath);
     return normalizePathToName(relativeToHome);
   }
-  
+
   // Get path relative to root
   const relativePath = path.relative(resolvedRoot, resolvedPath);
-  
+
   // If it's the root itself, use "root" or the last directory name
   if (!relativePath || relativePath === '.' || relativePath === '') {
     return path.basename(resolvedPath);
   }
-  
+
+  // Check if path is directly under Documents/Projects/
+  // If so, use just the project name without "Projects-" prefix
+  const documentsProjectsPath = path.join(homeDir, 'Documents', 'Projects');
+  if (resolvedPath.startsWith(documentsProjectsPath + path.sep)) {
+    const relativeToProjects = path.relative(documentsProjectsPath, resolvedPath);
+    // If it's a direct child (no more subdirs), use just the name
+    if (!relativeToProjects.includes(path.sep)) {
+      return relativeToProjects;
+    }
+  }
+
   return normalizePathToName(relativePath);
 }
 
@@ -56,13 +67,13 @@ export function generateProjectName(
 function normalizePathToName(pathStr: string): string {
   // Replace path separators with dashes
   let name = pathStr.replace(/[/\\]/g, '-');
-  
+
   // Remove leading/trailing dashes and dots
   name = name.replace(/^[-.]+|[-.]+$/g, '');
-  
+
   // Remove multiple consecutive dashes
   name = name.replace(/-+/g, '-');
-  
+
   return name || 'root';
 }
 
@@ -77,17 +88,17 @@ export function generateServiceProjectName(
   config?: ProjectNameConfig
 ): string {
   const baseName = generateProjectName(projectPath, config);
-  
+
   // If service name is already in the path, don't duplicate it
   if (baseName.includes(serviceName)) {
     return baseName;
   }
-  
+
   // Append service name and optionally app type
   if (appType && appType !== 'node') {
     return `${baseName}-${serviceName}-${appType}`;
   }
-  
+
   return `${baseName}-${serviceName}`;
 }
 
@@ -103,7 +114,7 @@ export function findProjectNameMatch(
   if (existingNames.includes(searchName)) {
     return searchName;
   }
-  
+
   // Try matching by basename (for backward compatibility)
   const searchBasename = path.basename(searchName);
   for (const existing of existingNames) {
@@ -111,7 +122,7 @@ export function findProjectNameMatch(
       return existing;
     }
   }
-  
+
   return null;
 }
 

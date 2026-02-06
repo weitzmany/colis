@@ -131,7 +131,7 @@ npx port-manager get <project-name>
 
 ### Template Projects and Port Manager
 
-**Template projects** (like `template-project` package) should:
+**Template projects** (like `embark` package) should:
 
 1. **NOT include hardcoded ports** in templates
 2. **Include port-manager integration** in generated projects
@@ -142,7 +142,7 @@ npx port-manager get <project-name>
 
 - Port Manager package: `packages/port-manager/`
 - Port Manager documentation: Check package README
-- Project initialization guide: `docs/features/project-initialization/PRD.md`
+- Project initialization guide: `docs/features/commissioning/PRD.md`
 - Template project guide: `docs/features/project-template/PRD.md`
 
 ### Verification Checklist

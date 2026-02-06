@@ -116,7 +116,7 @@ npm publish --registry=http://your-verdaccio-server:4873/
 #### Publish embark (third)
 
 ```bash
-cd ~/Documents/packages/packages/template-project
+cd ~/Documents/packages/packages/embark
 npm run clean
 npm run build
 npm test
@@ -236,7 +236,7 @@ cd ../..
 
 # Publish embark
 echo "📦 Publishing @colis/embark..."
-cd packages/template-project
+cd packages/embark
 npm run clean && npm run build && npm test
 npm publish --registry=$REGISTRY
 cd ../..
@@ -321,7 +321,7 @@ jobs:
         run: |
           cd packages/git-workflow && npm run build && cd ../..
           cd packages/core && npm run build && cd ../..
-          cd packages/template-project && npm run build && cd ../..
+          cd packages/embark && npm run build && cd ../..
       
       - name: Publish packages
         run: ./publish-all.sh

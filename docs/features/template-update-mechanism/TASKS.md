@@ -1,7 +1,7 @@
 # Template Update Mechanism - Implementation Tasks
 
 **Feature**: Template Update Mechanism  
-**Package**: `@your-org/template-project`  
+**Package**: `@your-org/embark`  
 **Status**: Planned  
 **Priority**: P1  
 **Estimated Timeline**: 3 weeks development + 1 week testing
@@ -558,7 +558,7 @@ Task 4.1 (Unit Tests) → Task 4.2 (Integration) → Task 4.3 (Beta Testing)
 ### Code Organization
 
 ```
-packages/template-project/src/features/template-update/
+packages/embark/src/features/template-update/
   ├── version-manager.ts         # Version tracking and comparison
   ├── update-detector.ts         # Update detection and changelog
   ├── change-detector.ts         # File change detection

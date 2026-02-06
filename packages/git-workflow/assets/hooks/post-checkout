@@ -6,7 +6,7 @@
 # Get current branch name
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-# Check if IDE colors script exists (from project-initialization)
+# Check if IDE colors script exists (from commissioning)
 IDE_COLORS_SCRIPT=".vscode/update-colors.sh"
 
 if [ -f "$IDE_COLORS_SCRIPT" ]; then

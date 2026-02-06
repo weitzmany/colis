@@ -32,12 +32,13 @@
 - Organized content into logical sections
 - Ensured documentation completeness
 - Cross-referenced related documents
+- Split PRD and architecture into feature, business, technical, compliance, and user subdocuments
 
 **Key Decisions**:
 - Use organized directory structure (INDEX, PRD_OVERVIEW, ARCHITECTURE, EXPERTS)
 - Maximum 500 lines per file for maintainability
 - Clear navigation with cross-references
-- Separate business, technical, and feature documentation
+- Separate business, technical, feature, compliance, and user documentation
 
 **Sign-off**: ✅ Approved (2026-01-25)
 

@@ -294,7 +294,7 @@ module/
 
 **Gamification**:
 - `GET /gamification/stats` - Get user stats (streaks, badges)
-- `GET /gamification/leaderboard` - Get family leaderboard
+- `GET /gamification/ranking` - Get family ranking
 - `POST /gamification/badges/:id/claim` - Claim earned badge
 
 → [Detailed API Documentation](technical/api-design.md)

@@ -38,6 +38,9 @@ This authentication center meets multiple **Architectural Override criteria**, m
 - **[Architecture](ARCHITECTURE.md)** - Technical architecture and design
 - **[Expert Contributions](EXPERTS.md)** - Expert reviews and sign-offs
 
+### General Feature Alignment
+- **[Authentication System (General Feature)](../general/authentication/PRD.md)** - This project is the reference implementation
+
 ### Technical Documentation
 - **[API Design](technical/api-design.md)** - Authentication API endpoints
 - **[Database Schema](technical/database-schema.md)** - User, session, permission models

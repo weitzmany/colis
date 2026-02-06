@@ -363,7 +363,7 @@ A **mobile-first**, **offline-capable** learning companion app that provides:
    - Why post-MVP: Adds complexity; MVP focuses on basic practice consistency
    - Complexity: Requires algorithm development and user data collection for optimization
 
-3. **Social Features (Leaderboards, Sharing)**
+3. **Social Features (Rankings, Sharing)**
    - Why post-MVP: Not essential for core value; adds scope
    - Complexity: Requires social graph, privacy considerations, moderation
 
@@ -428,11 +428,11 @@ A **mobile-first**, **offline-capable** learning companion app that provides:
 - User story: *"As a learner, I want to earn rewards for consistent practice so that learning feels more engaging and fun"*
 
 **Social Features**:
-- Leaderboards (friends, global)
+- Rankings (friends, global)
 - Study groups and collaborative practice
 - Share progress and achievements
 - Friend challenges and competitions
-- User story: *"As a learner, I want to compete with friends on leaderboards so that we motivate each other to practice consistently"*
+- User story: *"As a learner, I want to compete with friends on rankings so that we motivate each other to practice consistently"*
 
 **Peer Learning**:
 - Community-created content library
@@ -624,7 +624,7 @@ See **[ARCHITECTURE.md](ARCHITECTURE.md)** for detailed technical specifications
 
 **Features**:
 - Gamification system
-- Social features (leaderboards, groups)
+- Social features (rankings, groups)
 - Peer learning community
 - Referral program
 

@@ -382,7 +382,7 @@
 - **Advanced Analytics**: Concept mastery heatmaps, learning curves
   - Why post-MVP: Need usage data to build meaningful analytics
   
-- **Gamification Features**: Points, badges, leaderboards
+- **Gamification Features**: Points, badges, rankings
   - Why post-MVP: Core learning experience more important initially
   
 - **Social Features**: Study groups, peer comparison
@@ -464,7 +464,7 @@
 
 2. **Social Features** [Priority: Medium]
    - Study groups (invite friends)
-   - Peer comparison (anonymous leaderboards)
+   - Peer comparison (anonymous rankings)
    - Progress sharing
    - Challenge friends
 
@@ -670,7 +670,7 @@
 **Milestone**: Launch mobile app, add social features
 - **Week 27-33**: React Native mobile app development
 - **Week 34-36**: Offline mode and push notifications
-- **Week 37-40**: Social features (study groups, leaderboards)
+- **Week 37-40**: Social features (study groups, rankings)
 
 **Deliverables**:
 - iOS and Android mobile apps

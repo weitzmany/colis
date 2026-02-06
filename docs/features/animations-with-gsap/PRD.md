@@ -31,7 +31,7 @@ Tool Package or Rules & Consistency Package (TBD)
 
 - npm package
 - Install as dependency: `npm install @your-org/tool-gsap-animations`
-- Or: Rules/commands package similar to cursor-standards
+- Or: Rules/commands package similar to compass
 - Include GSAP as peer dependency or bundled dependency
 
 ## Notes

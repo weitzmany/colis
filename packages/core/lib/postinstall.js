@@ -42,7 +42,7 @@ async function runPostinstall() {
     // Import and run initialization
     try {
       // Convert path to file:// URL for ES module import
-      const modulePath = path.join(nodeModulesPath, 'dist', 'features', 'project-initialization', 'project-initializer.js');
+      const modulePath = path.join(nodeModulesPath, 'dist', 'features', 'commissioning', 'project-initializer.js');
       const moduleUrl = pathToFileURL(modulePath).href;
       const { initializeProject } = await import(moduleUrl);
       

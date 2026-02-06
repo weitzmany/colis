@@ -2,13 +2,13 @@
 
 ## Overview
 
-The Project Initialization feature has been fully implemented in `@your-org/core` package and is integrated with `template-project`. This feature ensures that all new projects created via `template-project` automatically receive the correct Cursor rules, commands, Port Manager configuration, and IDE colors.
+The Project Initialization feature has been fully implemented in `@your-org/core` package and is integrated with `embark`. This feature ensures that all new projects created via `embark` automatically receive the correct Cursor rules, commands, Port Manager configuration, and IDE colors.
 
 ## What Was Implemented
 
 ### 1. Rules Copying (`.cursor/rules/`)
 
-**Implementation**: `packages/core/src/features/project-initialization/rules-copier.ts`
+**Implementation**: `packages/core/src/features/commissioning/rules-copier.ts`
 
 **What Gets Copied**:
 - ✅ `rules/experts/` → `.cursor/rules/experts/` (26 expert persona files)
@@ -25,7 +25,7 @@ The Project Initialization feature has been fully implemented in `@your-org/core
 
 ### 2. Commands Copying (`.cursor/commands/`)
 
-**Implementation**: `packages/core/src/features/project-initialization/commands-copier.ts`
+**Implementation**: `packages/core/src/features/commissioning/commands-copier.ts`
 
 **What Gets Copied**:
 - ✅ `commands/general/` → `.cursor/commands/general/` (General commands for all projects)
@@ -46,9 +46,9 @@ The Project Initialization feature has been fully implemented in `@your-org/core
 
 **Rule**: `port-manager` package is the single source of truth for all port allocation decisions. All projects must use `.port-manager.json` for port configuration and avoid hardcoded ports.
 
-### 4. Integration with template-project
+### 4. Integration with embark
 
-**Implementation**: `packages/template-project/src/cli/commands/create.ts` (line 726)
+**Implementation**: `packages/embark/src/cli/commands/create.ts` (line 726)
 
 The create command:
 1. Creates project structure from templates
@@ -74,7 +74,7 @@ const initResult = await initializeProject({
 
 ```
 packages/core/
-├── src/features/project-initialization/
+├── src/features/commissioning/
 │   ├── project-initializer.ts        # Main initialization orchestrator
 │   ├── rules-copier.ts                # ✅ Updated - Copies experts/ and projects/
 │   ├── commands-copier.ts             # Copies general/ commands, excludes local/
@@ -101,7 +101,7 @@ packages/core/
 │       └── security_and_secrets.mdc
 └── dist/                               # ✅ Built - TypeScript compiled
 
-packages/template-project/
+packages/embark/
 └── src/cli/commands/
     └── create.ts                       # Calls initializeProject() at line 726
 ```
@@ -111,7 +111,7 @@ packages/template-project/
 ### When Creating a New Project
 
 1. **User runs**: `npm run create` or `npx create my-app`
-2. **template-project**:
+2. **embark**:
    - Collects project configuration (name, type, stack, etc.)
    - Generates project structure from templates
    - Creates `package.json` and project files
@@ -145,9 +145,9 @@ packages/template-project/
    npm link
    ```
 
-2. Ensure `template-project` is built:
+2. Ensure `embark` is built:
    ```bash
-   cd packages/template-project
+   cd packages/embark
    npm run build
    ```
 
@@ -155,10 +155,10 @@ packages/template-project/
 
 ```bash
 cd /path/to/test/location
-npx @your-org/template-project create test-angular-app
+npx @your-org/embark create test-angular-app
 
 # Or if not published:
-cd packages/template-project
+cd packages/embark
 npm run create -- test-angular-app
 ```
 
@@ -197,7 +197,7 @@ cd test-angular-app
 ### Test 4: Create Full-Stack Project
 
 ```bash
-npx @your-org/template-project create test-fullstack-app
+npx @your-org/embark create test-fullstack-app
 # Select: Angular + Slim (PHP)
 ```
 
@@ -264,10 +264,10 @@ After creating a new project, verify:
 
 ## Related Files
 
-- **Implementation**: `packages/core/src/features/project-initialization/`
+- **Implementation**: `packages/core/src/features/commissioning/`
 - **Commands**: `packages/core/commands/general/`
 - **Rules**: `packages/core/rules/`
-- **Integration**: `packages/template-project/src/cli/commands/create.ts`
+- **Integration**: `packages/embark/src/cli/commands/create.ts`
 - **Documentation**: 
   - `.cursor/commands/general/implement.md` - Implement command definition
   - `.cursor/rules/user/port_management.mdc` - Port management rule
@@ -276,7 +276,7 @@ After creating a new project, verify:
 
 ✅ **Project Initialization is COMPLETE and WORKING!**
 
-All new projects created via `template-project` will automatically receive:
+All new projects created via `embark` will automatically receive:
 - Expert personas for specialized AI guidance
 - General commands including `/general/implement`
 - Port Manager configuration

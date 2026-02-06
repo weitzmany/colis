@@ -193,11 +193,11 @@ Before marking a package/feature as complete, verify:
 
 ### Example Test Documentation Structure
 
-Reference the `template-project` package for a complete example:
-- `packages/template-project/TEST_PLAN.md` - Comprehensive test plan
-- `packages/template-project/QUICK_TEST_CHECKLIST.md` - Quick checklist
-- `packages/template-project/TEST_WORKFLOW.md` - Workflow guide
-- `packages/template-project/TEST_CHEATSHEET.md` - Quick reference
+Reference the `embark` package for a complete example:
+- `packages/embark/TEST_PLAN.md` - Comprehensive test plan
+- `packages/embark/QUICK_TEST_CHECKLIST.md` - Quick checklist
+- `packages/embark/TEST_WORKFLOW.md` - Workflow guide
+- `packages/embark/TEST_CHEATSHEET.md` - Quick reference
 
 ### Integration with Development Workflow
 

@@ -234,7 +234,7 @@ Ensures a color is unique by checking against existing project colors.
 ## See Also
 
 - [IDE Colors Usage Guide](../guides/IDE_COLORS_USAGE.md) - Complete user guide for IDE colors
-- [Project Initialization PRD](../features/project-initialization/PRD.md) - Feature documentation including color manager
+- [Project Initialization PRD](../features/commissioning/PRD.md) - Feature documentation including color manager
 
 ---
 

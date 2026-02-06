@@ -395,7 +395,7 @@ Energy Usage Tracker is a mobile-first web and mobile application that provides:
    - Anonymous usage comparison (neighborhood average)
    - Community saving tips
    - Achievement badges and challenges
-   - Leaderboards (opt-in)
+   - Rankings (opt-in)
 
 3. **Advanced Reporting** [Low Priority]
    - Custom report builder

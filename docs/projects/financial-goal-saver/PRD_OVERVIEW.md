@@ -274,7 +274,7 @@ Financial Goal Saver automates the entire savings journey by:
 - **Bill Negotiation**: Automated bill negotiation service - too complex for MVP
 
 #### Post-MVP Phase 3 (Months 7-12)
-- **Gamification**: Badges, streaks, leaderboards - nice-to-have, not essential for core value
+- **Gamification**: Badges, streaks, rankings - nice-to-have, not essential for core value
 - **Social Features**: Share progress, compare with friends - adds privacy concerns, not core
 - **Custom Rules**: Advanced automation rules (save extra on payday, round-up purchases) - over-engineering
 - **Debt Payoff**: Debt tracking and payoff strategies - different problem domain
@@ -315,7 +315,7 @@ Financial Goal Saver automates the entire savings journey by:
 1. **Gamification System**
    - Badges (First Goal, Saver Streak, Budget Master)
    - Levels (Bronze, Silver, Gold saver)
-   - Leaderboards (anonymous, opt-in)
+   - Rankings (anonymous, opt-in)
 
 2. **Custom Automation Rules**
    - Save extra on payday

@@ -10,7 +10,7 @@ This guide explains how to package Cursor rules, commands, and expert personas a
 ## Overview
 
 Packaging Cursor rules and commands as an npm package provides:
-- ✅ **Easy Installation**: `npm install @your-org/cursor-standards`
+- ✅ **Easy Installation**: `npm install @your-org/compass`
 - ✅ **Version Management**: Track versions and updates
 - ✅ **Automatic Updates**: Update all projects with `npm update`
 - ✅ **Dependency Management**: Standard npm workflow
@@ -22,7 +22,7 @@ Packaging Cursor rules and commands as an npm package provides:
 ### Recommended Package Structure
 
 ```
-cursor-standards/
+compass/
 ├── package.json                 # Package configuration
 ├── README.md                    # Package documentation
 ├── LICENSE                      # License file
@@ -57,7 +57,7 @@ cursor-standards/
 
 ```json
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "version": "1.0.0",
   "description": "Cursor IDE rules, commands, and expert personas for consistent development standards",
   "keywords": [
@@ -72,7 +72,7 @@ cursor-standards/
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/cursor-standards.git"
+    "url": "https://github.com/your-org/compass.git"
   },
   "files": [
     "templates/",
@@ -100,7 +100,7 @@ cursor-standards/
 
 ```json
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "version": "1.0.0",
   "description": "Cursor IDE rules, commands, and expert personas for consistent development standards",
   "keywords": [
@@ -116,7 +116,7 @@ cursor-standards/
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/cursor-standards.git"
+    "url": "https://github.com/your-org/compass.git"
   },
   "files": [
     "templates/",
@@ -339,19 +339,19 @@ echo "✅ Installation complete!"
 #### Install from npm registry:
 
 ```bash
-npm install --save-dev @your-org/cursor-standards
+npm install --save-dev @your-org/compass
 ```
 
 #### Install from local path:
 
 ```bash
-npm install --save-dev file:../cursor-standards
+npm install --save-dev file:../compass
 ```
 
 #### Install from git repository:
 
 ```bash
-npm install --save-dev git+https://github.com/your-org/cursor-standards.git
+npm install --save-dev git+https://github.com/your-org/compass.git
 ```
 
 ### Post-Installation
@@ -383,7 +383,7 @@ npm run validate
 
 ```bash
 # Update package
-npm update @your-org/cursor-standards
+npm update @your-org/compass
 
 # Reinstall rules (after update)
 npx install-cursor-rules --force
@@ -487,7 +487,7 @@ Add to your project's `package.json`:
 ```json
 {
   "devDependencies": {
-    "@your-org/cursor-standards": "^1.0.0"
+    "@your-org/compass": "^1.0.0"
   },
   "scripts": {
     "validate-docs": "validate-documentation",
@@ -502,7 +502,7 @@ Add to GitHub Actions:
 
 ```yaml
 - name: Install Cursor Standards
-  run: npm install --save-dev @your-org/cursor-standards
+  run: npm install --save-dev @your-org/compass
 
 - name: Validate Documentation
   run: npm run validate-docs
@@ -628,7 +628,7 @@ fi
 ### Directory Structure
 
 ```
-cursor-standards/
+compass/
 ├── package.json
 ├── README.md
 ├── LICENSE
@@ -651,8 +651,8 @@ cursor-standards/
 
 ### Installation Flow
 
-1. User runs `npm install @your-org/cursor-standards`
-2. Package installs to `node_modules/@your-org/cursor-standards`
+1. User runs `npm install @your-org/compass`
+2. Package installs to `node_modules/@your-org/compass`
 3. `postinstall` script runs `node lib/install.js`
 4. Script copies files from `templates/` to project root `.cursor/`
 5. User can now use Cursor rules and commands
@@ -661,7 +661,7 @@ cursor-standards/
 
 ```bash
 # Install
-npm install --save-dev @your-org/cursor-standards
+npm install --save-dev @your-org/compass
 
 # Rules are automatically installed to .cursor/rules/
 # Commands are automatically installed to .cursor/commands/
@@ -670,7 +670,7 @@ npm install --save-dev @your-org/cursor-standards
 npm run validate-docs
 
 # Update rules
-npm update @your-org/cursor-standards
+npm update @your-org/compass
 npx install-cursor-rules --force
 ```
 

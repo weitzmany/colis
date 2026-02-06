@@ -186,7 +186,7 @@ These features are too specific to their projects but may contain useful pattern
 - **Adaptive Difficulty**: Personalized learning paths
 - **Daily Challenges**: Streak tracking
 - **Concept Mastery**: Progress visualization
-- **Leaderboards**: Social competition
+- **Rankings**: Social competition
 - **Reason to Skip**: ⚠️ Specific to educational gaming platform
 - **Notes**: Concepts may inspire but are domain-specific
 

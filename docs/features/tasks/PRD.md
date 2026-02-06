@@ -27,7 +27,7 @@ Tool Package or Rules & Consistency Package (TBD)
 
 - npm package
 - Install as dependency: `npm install @your-org/tool-tasks`
-- Or: Rules/commands package similar to cursor-standards
+- Or: Rules/commands package similar to compass
 
 ## Notes
 

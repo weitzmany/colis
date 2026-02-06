@@ -5,6 +5,7 @@
  */
 
 import * as fs from 'fs-extra';
+import { writeFile, readFile } from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
 import { exec } from 'child_process';
@@ -51,7 +52,7 @@ export class CaddyManager implements ICaddyManager {
   async readCaddyfile(): Promise<string> {
     try {
       if (await fs.pathExists(this.caddyfilePath)) {
-        return await fs.readFile(this.caddyfilePath, 'utf-8');
+        return await readFile(this.caddyfilePath, 'utf-8');
       }
       return '';
     } catch (error) {
@@ -127,7 +128,7 @@ export class CaddyManager implements ICaddyManager {
 
     // Write to file
     try {
-      await fs.writeFile(this.caddyfilePath, content, 'utf-8');
+      await writeFile(this.caddyfilePath, content, 'utf-8');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       throw new CaddyfileError(
@@ -164,10 +165,10 @@ export class CaddyManager implements ICaddyManager {
     }
 
     const newContent = this.removeDomainFromContent(content, domain);
-    
+
     if (newContent !== content) {
       try {
-        await fs.writeFile(this.caddyfilePath, newContent, 'utf-8');
+        await writeFile(this.caddyfilePath, newContent, 'utf-8');
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         throw new CaddyfileError(
@@ -249,25 +250,36 @@ export class CaddyManager implements ICaddyManager {
 
       // Parse domain block content
       if (inDomainBlock && currentDomain) {
-        // Check for reverse_proxy
-        const proxyMatch = line.match(/reverse_proxy\s+localhost:(\d+)/);
-        if (proxyMatch) {
-          const port = parseInt(proxyMatch[1]);
-          // If it's the first proxy, it's the main port
-          if (!currentConfig.port && !currentConfig.frontendPort) {
-            currentConfig.port = port;
-          }
-        }
-
-        // Check for handle /api/* block
+        // Check for handle /api/* block first to detect multi-service
         if (line.includes('handle /api/*')) {
           currentConfig.isMultiService = true;
-          // Next line should have reverse_proxy
+          // Next line should have reverse_proxy for backend
           if (i + 1 < lines.length) {
             const nextLine = lines[i + 1];
             const apiProxyMatch = nextLine.match(/reverse_proxy\s+localhost:(\d+)/);
             if (apiProxyMatch) {
               currentConfig.backendPort = parseInt(apiProxyMatch[1]);
+            }
+          }
+          // If we already have a port set, it's the frontend port
+          if (currentConfig.port) {
+            currentConfig.frontendPort = currentConfig.port;
+            delete currentConfig.port;
+          }
+        }
+
+        // Check for reverse_proxy
+        const proxyMatch = line.match(/reverse_proxy\s+localhost:(\d+)/);
+        if (proxyMatch) {
+          const port = parseInt(proxyMatch[1]);
+          // If it's the first proxy and not inside a handle block, it's the main port
+          if (!currentConfig.port && !currentConfig.frontendPort && !currentConfig.backendPort) {
+            currentConfig.port = port;
+          } else if (currentConfig.isMultiService && !currentConfig.frontendPort && !line.includes('handle')) {
+            // In multi-service, the first proxy outside handle is frontend
+            currentConfig.frontendPort = port;
+            if (currentConfig.port && !currentConfig.backendPort) {
+              delete currentConfig.port;
             }
           }
         }

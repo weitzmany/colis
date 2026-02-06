@@ -52,21 +52,22 @@ All feature documentation is located in the `features/` directory.
 
 ### Feature PRDs
 
-**Core Features** (part of `@your-org/core` package):
-- [Project Initialization](./features/project-initialization/PRD.md) - Automated project setup with lifecycle management (verify, repair, update)
+**Core Features** (part of `@colis/rig` package):
+- [Project Initialization](./features/commissioning/PRD.md) - Automated project setup with lifecycle management (verify, repair, refit)
 - [Port Manager](./features/port-manager/PRD.md) - Automated port management with central registry (MySQL/SQLite)
+- [Domain Manager](./features/domain-manager/PRD.md) - Local domain management with Caddy reverse proxy and automatic service detection
 
 **Asset & Workflow Packages** (consumed by core):
 - [Git Workflow](./features/git-workflow/PRD.md) - Standardized git hooks, templates, and lifecycle tools
-- [Cursor Standards](./features/cursor-standards/PRD.md) - Main package for all Cursor rules, commands, and experts
-- [Cursor Standards Rules](./features/cursor-standards-rules/PRD.md) - Rules-only package
-- [Cursor Standards Commands](./features/cursor-standards-commands/PRD.md) - Commands-only package
+- [Cursor Standards](./features/compass/PRD.md) - Main package for all Cursor rules, commands, and experts
+- [Cursor Standards Rules](./features/compass-rules/PRD.md) - Rules-only package
+- [Cursor Standards Commands](./features/compass-commands/PRD.md) - Commands-only package
 - [Full Review](./features/full-review/PRD.md) - Comprehensive review routine command
 - [Experts](./features/experts/PRD.md) - Expert personas package
 
 **Tool Packages:**
 - [Tasks](./features/tasks/PRD.md) - Task management and tracking utilities
-- [Documentation Validation](./features/documentation-validation/PRD.md) - Documentation validation tools
+- [Certification](./features/certification/PRD.md) - Documentation validation tools (formerly: documentation-validation)
 - [Authentication Tool](./features/authentication-tool/PRD.md) - Reusable authentication system
 - [Database Migration Tool](./features/database-migration-tool/PRD.md) - Database migration utilities
 - [API Client Library](./features/api-client-library/PRD.md) - HTTP client library

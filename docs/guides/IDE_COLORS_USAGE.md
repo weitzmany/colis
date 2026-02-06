@@ -190,7 +190,7 @@ The KEY_COLOR is generated from your project name. To use a custom color:
 
 Colors are generated using the 70's inspired palette. To customize:
 
-1. Edit `packages/core/src/features/project-initialization/color-manager.ts`
+1. Edit `packages/core/src/features/commissioning/color-manager.ts`
 2. Modify the `SEVENTIES_PALETTE` or color generation logic
 3. Rebuild the package
 
@@ -244,5 +244,5 @@ git checkout -b feature/new-feature
 
 ## Related Documentation
 
-- [Project Initialization PRD](../features/project-initialization/PRD.md)
+- [Project Initialization PRD](../features/commissioning/PRD.md)
 - [Core Package README](../../packages/core/README.md)

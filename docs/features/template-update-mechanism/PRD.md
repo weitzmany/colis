@@ -2,7 +2,7 @@
 
 **Status**: Planned  
 **Priority**: P1 (High Business Value + High User Value)  
-**Package**: `@your-org/template-project`  
+**Package**: `@your-org/embark`  
 **Last Updated**: 2026-01-21
 
 ## Executive Summary
@@ -13,7 +13,7 @@ A system that enables users to update existing projects when template versions c
 
 ### Current Pain Point
 
-Users who generate projects using `@your-org/template-project` face a critical limitation: once a project is generated, it becomes disconnected from the template. When templates improve with:
+Users who generate projects using `@your-org/embark` face a critical limitation: once a project is generated, it becomes disconnected from the template. When templates improve with:
 - Security patches
 - Configuration updates
 - New best practices
@@ -42,22 +42,22 @@ Users must either:
 
 ### Core Concept
 
-A `template-project update` command that intelligently merges template improvements into existing projects while preserving user customizations.
+A `embark update` command that intelligently merges template improvements into existing projects while preserving user customizations.
 
 ### How It Works
 
 ```bash
 # Check for template updates
-npx @your-org/template-project update --check
+npx @your-org/embark update --check
 
 # Show what would change (dry run)
-npx @your-org/template-project update --dry-run
+npx @your-org/embark update --dry-run
 
 # Apply updates interactively
-npx @your-org/template-project update
+npx @your-org/embark update
 
 # Apply updates automatically (non-interactive)
-npx @your-org/template-project update --yes
+npx @your-org/embark update --yes
 ```
 
 ### Key Capabilities
@@ -112,7 +112,7 @@ Most scaffolding tools (Create React App, Angular CLI, Vue CLI) are "generate an
 ### Secondary: Senior Architect (Michael)
 
 - **Role**: Tech lead managing team of 10 developers
-- **Context**: Standardized team on template-project, now want to roll out improvements
+- **Context**: Standardized team on embark, now want to roll out improvements
 - **Pain**: Need to manually update 15+ projects when improving template
 - **Need**: Automated rollout of template improvements across all projects
 - **Willingness to Pay**: Very high (team efficiency multiplier)
@@ -430,7 +430,7 @@ project-root/
 
 ```bash
 # Check if updates are available
-$ npx @your-org/template-project update --check
+$ npx @your-org/embark update --check
 
 ✓ Updates available for angular template
   Current version: 1.0.0
@@ -441,12 +441,12 @@ $ npx @your-org/template-project update --check
   - Added GitHub Actions workflow improvements
   - Updated ESLint configuration
   
-  Run `npx @your-org/template-project update` to apply updates
+  Run `npx @your-org/embark update` to apply updates
 ```
 
 ```bash
 # Preview changes without applying (dry-run)
-$ npx @your-org/template-project update --dry-run
+$ npx @your-org/embark update --dry-run
 
 Checking for updates...
 ✓ Found updates: 1.0.0 → 1.2.0
@@ -470,7 +470,7 @@ Changes to be applied:
 
 ```bash
 # Apply updates
-$ npx @your-org/template-project update
+$ npx @your-org/embark update
 
 Checking for updates...
 ✓ Found updates: 1.0.0 → 1.2.0
@@ -627,7 +627,7 @@ Choice:
 
 1. **Update Adoption Rate**
    - Target: 40% of existing users run update within 30 days
-   - Measurement: Track `template-project update` command usage
+   - Measurement: Track `embark update` command usage
 
 2. **Update Success Rate**
    - Target: 80% of updates complete without manual intervention

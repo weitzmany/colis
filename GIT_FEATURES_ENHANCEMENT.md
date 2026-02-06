@@ -17,7 +17,7 @@ Automatically creates an initial git commit after a project is successfully crea
 
 ### Implementation
 
-**Location**: `packages/template-project/src/cli/commands/create.ts`
+**Location**: `packages/embark/src/cli/commands/create.ts`
 
 **Logic**:
 ```typescript
@@ -195,7 +195,7 @@ gh repo create <username>/<repo-name> --private
 ### Template-Project Package
 
 **Modified Files**:
-- `packages/template-project/src/cli/commands/create.ts`
+- `packages/embark/src/cli/commands/create.ts`
   - Added auto-commit logic after project creation
   - Added auto-commit logic after project update
 

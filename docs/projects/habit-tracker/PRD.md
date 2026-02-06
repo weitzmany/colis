@@ -100,7 +100,7 @@ A habit tracking application that helps users build and maintain positive habits
 ### 7. Social Features (Optional)
 - **Accountability Partners**: Share progress with accountability partners
 - **Friend Connections**: Connect with friends
-- **Leaderboards**: Compete with friends (optional)
+- **Rankings**: Compete with friends (optional)
 - **Progress Sharing**: Share achievements on social media
 - **Private Groups**: Join private habit groups
 - **Public Profiles**: Public profile with achievements (optional)
@@ -125,7 +125,7 @@ A habit tracking application that helps users build and maintain positive habits
 - **Points System**: Earn points for completions
 - **Levels**: Level up based on consistency
 - **Badges**: Unlock badges for achievements
-- **Streaks Leaderboard**: Compete on longest streaks
+- **Streaks Ranking**: Compete on longest streaks
 - **Achievement Unlocks**: Unlock new features with achievements
 - **Visual Progress**: Visual progress indicators
 

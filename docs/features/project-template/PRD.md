@@ -5,7 +5,7 @@
 
 ## Package Name
 
-`@your-org/template-project`
+`@your-org/embark`
 
 ## Main Idea
 

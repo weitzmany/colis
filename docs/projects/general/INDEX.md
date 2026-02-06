@@ -8,20 +8,18 @@ This directory contains planning for features shared across multiple projects. T
 
 ## Available General Features
 
-**Currently**: No general features have been extracted yet.
-
-**Note**: Features are only moved to this directory when they meet specific criteria (see "When to Create General Features" below).
+### Authentication System
+- **[PRD](authentication/PRD.md)**
+- **[Architecture](authentication/ARCHITECTURE.md)**
+- **Used by**: chore-allowance-manager, vehicle-maintenance-tracker, learning-games-platform, home-maintenance-tracker, financial-goal-saver, habit-tracker, energy-usage-tracker, meal-planner-grocery, ai-logo-generator
+- **Status**: Planning (reference implementation: Authentication Center)
 
 ## Potential Future General Features
 
 The following features have been identified in various projects as potential candidates for extraction to general features. They will be moved to `general/` when they meet the criteria (3+ projects using them OR architectural override criteria):
 
 ### Authentication System
-- **Currently**: Project-specific implementations in multiple projects
-- **Potential**: JWT authentication, user registration/login, password reset
-- **Projects Using**: personal-budget-manager, chore-allowance-manager, vehicle-maintenance-tracker, home-maintenance-tracker, energy-usage-tracker, meal-planner-grocery, financial-goal-saver (7 projects)
-- **Status**: ⚠️ Candidate for extraction (7 projects use it)
-- **Next Steps**: Evaluate if implementation is consistent enough (minimal configuration) to make general
+- **Status**: ✅ Extracted to general features (see above)
 
 ### Notification System
 - **Currently**: Project-specific implementations
@@ -203,6 +201,6 @@ general/
 
 ---
 
-**Last Updated**: 2026-01-22  
-**Status**: Foundation Created - No General Features Yet  
+**Last Updated**: 2026-01-25  
+**Status**: General Features Active - Authentication System Added  
 **Next Steps**: Monitor projects for features meeting extraction criteria (3+ projects OR Architectural Override)

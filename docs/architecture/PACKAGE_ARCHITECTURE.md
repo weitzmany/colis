@@ -10,7 +10,7 @@ This document defines the package architecture strategy for organizing all packa
 The package architecture follows a **core + feature packages** model where:
 
 1. **Core Package** (`@your-org/core`) - Contains foundational features, rules, experts, and commands
-2. **Feature Packages** - Specialized packages that depend on core (e.g., `@your-org/task-manager`)
+2. **Feature Packages** - Specialized packages that depend on core (e.g., `@colis/deck`)
 
 ## Repository Strategy Decision (Projects)
 
@@ -68,7 +68,7 @@ The core package (`@your-org/core`) is the foundation that contains:
 Feature packages depend on core and extend its functionality:
 
 ```
-@your-org/task-manager/
+@colis/deck/
 ├── src/
 │   ├── features/          # Task manager features
 │   └── ...
@@ -85,7 +85,7 @@ Feature packages depend on core and extend its functionality:
   ├── (no dependencies on other packages)
   └── Contains: features, rules, experts, commands
 
-@your-org/task-manager
+@colis/deck
   └── Depends on: @your-org/core
 
 @your-org/other-package
@@ -159,7 +159,7 @@ npm install @your-org/core
 ### Installing Feature Packages
 
 ```bash
-npm install @your-org/task-manager
+npm install @colis/deck
 ```
 
 **What You Get**:
@@ -177,7 +177,7 @@ import { AuthManager } from '@your-org/core/features/auth';
 
 **From Feature Packages**:
 ```typescript
-import { TaskManager } from '@your-org/task-manager';
+import { TaskManager } from '@colis/deck';
 // Core features still available via core dependency
 import { PortManager } from '@your-org/core/features/port-manager';
 ```
@@ -225,7 +225,7 @@ import { PortManager } from '@your-org/core/features/port-manager';
 ### Feature Package Structure
 
 ```
-@your-org/task-manager/
+@colis/deck/
 ├── package.json
 ├── README.md
 ├── src/
@@ -269,7 +269,7 @@ import { PortManager } from '@your-org/core/features/port-manager';
 
 ```json
 {
-  "name": "@your-org/task-manager",
+  "name": "@colis/deck",
   "version": "1.0.0",
   "description": "Task management package",
   "main": "dist/index.js",
@@ -292,7 +292,7 @@ import { PortManager } from '@your-org/core/features/port-manager';
 
 ### Creating a New Feature Package
 
-1. Create new package directory: `packages/task-manager/`
+1. Create new package directory: `packages/deck/`
 2. Set up package structure
 3. Add dependency on `@your-org/core`
 4. Implement feature package code
@@ -330,7 +330,7 @@ npm publish @your-org/core
 
 **Feature Packages**:
 ```bash
-npm publish @your-org/task-manager
+npm publish @colis/deck
 ```
 
 ### Installation
@@ -342,9 +342,9 @@ npm install @your-org/core
 
 **Core + Feature Package**:
 ```bash
-npm install @your-org/core @your-org/task-manager
+npm install @your-org/core @colis/deck
 # Or just:
-npm install @your-org/task-manager  # Core included as dependency
+npm install @colis/deck  # Core included as dependency
 ```
 
 ## Benefits of This Architecture
@@ -404,7 +404,7 @@ npm install @your-org/task-manager  # Core included as dependency
    - Update documentation
 
 3. **Create Feature Packages**
-   - Set up `@your-org/task-manager` package
+   - Set up `@colis/deck` package
    - Add dependency on core
    - Implement task manager features
 

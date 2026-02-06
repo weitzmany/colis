@@ -54,7 +54,7 @@ npx @your-org/core init
 - **Broken Hooks**: Git hooks break or become outdated without detection
 - **Poor Commit History**: Without commit templates, history is messy and inconsistent
 - **No Automation**: Health checks, repairs, and updates are manual processes
-- **Hooks Directory Conflict**: Different packages (git-workflow vs project-initialization) installing hooks to different locations
+- **Hooks Directory Conflict**: Different packages (git-workflow vs commissioning) installing hooks to different locations
 
 ## Solution
 
@@ -956,7 +956,7 @@ When documenting this package for web publication:
 ### Hooks Directory Standardization
 
 **Problem**: Initially, two packages were creating hooks in different locations:
-- `@your-org/core` (project-initialization): Created `.githooks/post-checkout` (for IDE colors) and set `git config core.hooksPath .githooks`
+- `@your-org/core` (commissioning): Created `.githooks/post-checkout` (for IDE colors) and set `git config core.hooksPath .githooks`
 - `@your-org/git-workflow`: Was installing hooks to `.git/hooks/` (pre-commit, commit-msg, pre-push, post-checkout)
 
 **Result**: Git-workflow hooks wouldn't run because git was configured to look in `.githooks/`!

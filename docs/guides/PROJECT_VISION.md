@@ -214,7 +214,7 @@ All packages use scoped naming:
 @your-org/tool-database
 @your-org/rule-cursor
 @your-org/command-git
-@your-org/template-project
+@your-org/embark
 @your-org/config-typescript
 @your-org/pattern-architecture
 @your-org/expert-api

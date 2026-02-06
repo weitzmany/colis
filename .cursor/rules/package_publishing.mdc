@@ -58,11 +58,11 @@ npm run release:patch
 
 ### New Feature (MINOR)
 ```markdown
-**You need to publish: `@colis/embark` (template-project)**
+**You need to publish: `@colis/embark` (embark)**
 **Release type: MINOR** (new feature - added Vue.js support)
 
 ```bash
-cd /Users/yoavweitzman/Documents/packages/packages/template-project
+cd /Users/yoavweitzman/Documents/packages/packages/embark
 npm run release:minor
 ```
 ```
@@ -133,11 +133,11 @@ cd /Users/yoavweitzman/Documents/packages/packages/core
 npm run release:patch
 ```
 
-**2. Then publish: `@colis/embark` (template-project)**  
+**2. Then publish: `@colis/embark` (embark)**  
 **Release type: PATCH**
 
 ```bash
-cd /Users/yoavweitzman/Documents/packages/packages/template-project
+cd /Users/yoavweitzman/Documents/packages/packages/embark
 npm run release:patch
 ```
 ```

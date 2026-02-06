@@ -172,10 +172,10 @@ Update the package name and repository URL in `package.json`:
 
 ```json
 {
-  "name": "@your-org/cursor-standards",
+  "name": "@your-org/compass",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/cursor-standards.git"
+    "url": "https://github.com/your-org/compass.git"
   }
 }
 ```
@@ -188,7 +188,7 @@ Update the package name and repository URL in `package.json`:
 # Create a .tgz package file
 npm pack
 
-# This creates: your-org-cursor-standards-1.0.0.tgz
+# This creates: your-org-compass-1.0.0.tgz
 ```
 
 ### Test Installation
@@ -198,7 +198,7 @@ npm pack
 cd /path/to/test-project
 
 # Install from local package
-npm install /path/to/packages/your-org-cursor-standards-1.0.0.tgz
+npm install /path/to/packages/your-org-compass-1.0.0.tgz
 
 # Verify installation
 ls -la .cursor/rules/
@@ -247,10 +247,10 @@ ls -la .cursor/commands/
 
 ```bash
 # Install from npm
-npm install --save-dev @your-org/cursor-standards
+npm install --save-dev @your-org/compass
 
 # Or install from git
-npm install --save-dev git+https://github.com/your-org/cursor-standards.git
+npm install --save-dev git+https://github.com/your-org/compass.git
 ```
 
 ### Automatic Installation

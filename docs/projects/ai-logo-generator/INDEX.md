@@ -15,31 +15,39 @@ An AI-powered logo generation platform that creates professional, ready-to-use l
 - [Architecture](ARCHITECTURE.md) - Technical architecture and system design
 - [Expert Contributions](EXPERTS.md) - Expert reviews and sign-offs
 
-### Global/Shared Features
-This project uses the following general features (documented in [../general/](../general/INDEX.md)):
-- [Authentication System](../general/authentication/PRD.md) - User authentication and authorization (when general feature exists)
-- [Translation System](../general/translations/PRD.md) - Multi-language support (when general feature exists)
-
-**Note**: General features will be referenced once they are created in the workspace.
-
 ### Project-Specific Features
-- Logo Generation Engine (AI-powered)
-- Brand Profile Builder
-- Logo Customization Interface
-- Export & Download System
-- Logo History & Management
+- [MVP Features](features/mvp-features.md)
+- [Post-MVP Roadmap](features/post-mvp-roadmap.md)
 
-### Technical Documentation
-- API Design (RESTful + potential GraphQL)
-- Database Schema (users, logos, generations, subscriptions)
-- AI Integration (OpenAI DALL-E, Stability AI, Midjourney API)
-- Security Architecture (payment processing, user data protection)
+### Users
+- [User Personas](users/personas.md)
 
-### Business Documentation
-- Revenue Model (freemium + subscription tiers)
-- Pricing Strategy (free trial, pay-per-logo, subscription plans)
-- Success Metrics (user acquisition, conversion rate, revenue)
-- Market Analysis (competitive landscape, target market size)
+### Business
+- [Pricing and Revenue Model](business/pricing-and-revenue.md)
+- [Go-to-Market Strategy](business/go-to-market.md)
+- [Market Analysis](business/market-analysis.md)
+- [Success Metrics](business/success-metrics.md)
+- [Risks and Mitigations](business/risks-and-mitigations.md)
+
+### Technical
+- [Technical Requirements](technical/requirements.md)
+- [API Design](technical/api-design.md)
+- [AI Integration](technical/ai-integration.md)
+- [Data Architecture](technical/data-architecture.md)
+- [Security Architecture](technical/security-architecture.md)
+- [Infrastructure](technical/infrastructure.md)
+- [Performance and Testing](technical/performance-testing.md)
+- [Frontend Architecture](technical/frontend-architecture.md)
+- [Backend Architecture](technical/backend-architecture.md)
+
+### Compliance
+- [IP and Licensing Compliance](compliance/ip-and-licensing.md)
+- [Privacy and Payments Compliance](compliance/privacy-and-payments.md)
+
+### Global/Shared Features
+This project uses the general [Authentication System](../general/authentication/PRD.md) and anticipates i18n post-MVP. See the [General Features Index](../general/INDEX.md) for shared feature status.
+
+---
 
 ## Quick Navigation
 
@@ -62,78 +70,19 @@ This project uses the following general features (documented in [../general/](..
 - Pricing: Free trial (1 logo), Pay-per-logo ($19-49), Subscription ($29-99/mo)
 - Revenue Potential: High - large market, recurring revenue
 
-## Project Status
+---
 
+## Project Status
 - **Current Phase**: Planning
 - **Last Updated**: 2026-01-25
 - **Priority**: High
 - **Expected MVP Launch**: TBD (8-10 weeks from development start)
 
-## Key Features
-
-### MVP Features (Phase 1)
-1. Simple logo generation from text description
-2. Basic customization (colors, fonts)
-3. High-resolution download (PNG)
-4. User account & generation history
-5. Pay-per-logo payment processing
-
-### Post-MVP Features (Phase 2+)
-- Advanced customization (vector editing)
-- Multiple logo variations per generation
-- Brand kit creation (colors, fonts, guidelines)
-- Team collaboration features
-- Logo usage analytics
-- Mobile app
-
-## Expert Team
-
-**Core Experts**:
-- **Patricia Martinez** (Product Manager) - Overall planning, prioritization, MVP definition
-- **Dorothy Clark** (Documentation) - PRD structure and clarity
-
-**Technical Experts**:
-- **Samuel Rodriguez** (Backend) - API design, payment integration, AI service integration
-- **Daisy Thompson** (UI/UX) - User interface design, logo customization interface
-- **Thomas Anderson** (Frontend) - Angular application architecture
-- **Ryan Kim** (Security) - Payment security, user data protection, API key management
-- **Benjamin Lee** (Database) - Schema design for users, logos, subscriptions
-
-**Specialized Experts**:
-- **James Martinez** (Performance) - Image processing optimization, fast generation
-- **Emily Chen** (API Design) - RESTful API architecture, AI service integration
-- **Marcus Johnson** (Architecture) - System scalability, microservices design
-- **Olivia Martinez** (Copywriter) - App naming, marketing copy, user messaging
-- **Laura Phillips** (Market Research) - Market analysis, competitive positioning
-- **Allison Foster** (Accessibility) - UI accessibility for diverse users
-- **David Cooper** (DevOps) - Deployment, CI/CD, infrastructure management
-
-## Success Metrics
-
-### User Metrics
-- User sign-ups per month
-- Logo generations per user
-- User retention rate (30-day, 90-day)
-- Customer satisfaction score
-
-### Business Metrics
-- Conversion rate (free → paid)
-- Revenue per user
-- Monthly recurring revenue (MRR)
-- Churn rate
-
-### Technical Metrics
-- Logo generation time (target: <30 seconds)
-- API uptime (target: 99.9%)
-- Error rate (target: <1%)
-- Image quality score
+---
 
 ## Related Documentation
-
 - [Projects List Entry](../../reference/PROJECTS_LIST.md#ai-logo-generator)
 - [General Features Index](../general/INDEX.md)
-- Market Research (to be created)
-- Competitive Analysis (to be created)
 
 ---
 

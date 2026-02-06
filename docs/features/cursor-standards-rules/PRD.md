@@ -5,7 +5,7 @@
 
 ## Package Name
 
-`@your-org/cursor-standards-rules`
+`@your-org/compass-rules`
 
 ## Main Idea
 
@@ -24,14 +24,14 @@ Rules & Consistency Package
 ## Distribution
 
 - Standalone npm package
-- Can be installed separately: `npm install @your-org/cursor-standards-rules`
-- Part of cursor-standards monorepo
+- Can be installed separately: `npm install @your-org/compass-rules`
+- Part of compass monorepo
 
 ## Notes
 
-- Sub-package of cursor-standards
+- Sub-package of compass
 - For projects that only need rules, not commands
-- May be included in main cursor-standards package
+- May be included in main compass package
 
 ## SEO Considerations for Package Documentation
 

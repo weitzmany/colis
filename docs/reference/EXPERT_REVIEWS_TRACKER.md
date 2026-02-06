@@ -2,11 +2,11 @@
 
 This document tracks all expert reviews and contributions across the project.
 
-**Last Updated**: 2026-01-20
-**Current reviewer**: None
-**Current mode**: Idle
-**Last reviewer**: Devin Patel
-**Last file**: docs/features/tech-detector-standards-warnings/PRD.md
+**Last Updated**: 2026-01-25
+**Current reviewer**: Andrew Lee
+**Current mode**: Review Complete
+**Last reviewer**: Andrew Lee
+**Last file**: docs/projects/home-maintenance-tracker/reviews/andrew-lee.md
 
 ## Expert Review Statistics
 
@@ -17,20 +17,21 @@ This document tracks all expert reviews and contributions across the project.
 | Dorothy Clark | Documentation (Code, API, User Documentation) | 25 | 25 | 2026-01-05 | 2 | 1.0 | 19 | 2 |
 | David Anderson | Database (Schema Design, Query Optimization, Migrations) | 19 | 22 | 2026-01-05 | 0 | 1.2 | 8 | 0 |
 | Nicole Chen | Observability (Monitoring, Logging, Tracing, Metrics) | 19 | 19 | 2026-01-05 | 0 | 1.0 | 18 | 0 |
-| Marcus Thompson | Market Research & Product Strategy | 16 | 16 | 2026-01-05 | 1 | 1.0 | 2 | 0 |
+| Marcus Thompson | Market Research & Product Strategy | 28 | 28 | 2026-01-25 | 2 | 1.0 | 2 | 0 |
 | Carol Williams | Educational Content (Learning Materials) | 15 | 16 | 2026-01-05 | 2 | 1.07 | 4 | 0 |
 | System Architect | Unknown | 14 | 14 | 2026-01-05 | 8 | 1.0 | 5 | 0 |
 | Allison Foster | Accessibility (a11y) | 11 | 11 | 2026-01-05 | 0 | 1.0 | 3 | 0 |
-| Lisa Garcia | Internationalization (i18n) and Localization | 9 | 9 | 2026-01-05 | 0 | 1.0 | 5 | 0 |
+| Lisa Garcia | Internationalization (i18n) and Localization | 21 | 21 | 2026-01-25 | 1 | 1.0 | 6 | 0 |
 | Arthur Davis | Architecture (System Design and Scalability) | 11 | 11 | 2026-01-05 | 1 | 1.0 | 6 | 0 |
-| Patricia Martinez | Product Management (Conflict Resolution, Business Decisions) | 8 | 8 | 2026-01-05 | 0 | 1.0 | 7 | 0 |
+| Marcus Johnson | Architecture (System Design and Scalability) | 1 | 1 | 2026-01-25 | 0 | 1.0 | 1 | 0 |
+| Patricia Martinez | Product Management (Conflict Resolution, Business Decisions) | 9 | 9 | 2026-01-25 | 0 | 1.0 | 8 | 0 |
 | Devin Patel | DevOps, CI/CD, and Deployment | 9 | 9 | 2026-01-20 | 0 | 1.0 | 7 | 0 |
 | James Wilson | Cloud Infrastructure (Cloud Platform Architecture, Deployment, Operations) | 8 | 8 | 2026-01-05 | 0 | 1.0 | 8 | 0 |
 | Constance White | Compliance (Educational/Legal) | 6 | 6 | 2026-01-05 | 0 | 1.0 | 0 | 0 |
 | Dr. Robert Chen | Subject Matter (Physics, Math, CS, Academic Fields) | 6 | 7 | 2026-01-05 | 0 | 1.2 | 5 | 0 |
 | General Review | Feature Implementation Review | 6 | 6 | 2026-01-05 | 1 | 1.0 | 3 | 0 |
 | Thomas Mitchell | Testing (TDD, Unit Tests, Integration Tests, E2E Tests) | 8 | 8 | 2026-01-05 | 0 | 1.0 | 3 | 0 |
-| Andrew Lee | RESTful API Design | 5 | 6 | 2026-01-05 | 0 | 1.2 | 5 | 0 |
+| Andrew Lee | RESTful API Design | 21 | 22 | 2026-01-25 | 1 | 1.05 | 5 | 0 |
 | Emma Rodriguez | Copywriting (App naming, section naming, website content) | 6 | 6 | 2026-01-05 | 1 | 1.0 | 4 | 0 |
 | Jennifer Park | Code Quality and Code Review | 8 | 8 | 2026-01-05 | 0 | 1.0 | 4 | 0 |
 | Steven Taylor | SEO (Search Engine Optimization) | 5 | 5 | 2026-01-05 | 0 | 1.0 | 5 | 0 |
@@ -40,7 +41,7 @@ This document tracks all expert reviews and contributions across the project.
 | Daisy Thompson | UI/UX Design | 5 | 5 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
 | Daniel Kim | Business Intelligence and Analytics | 5 | 5 | 2026-01-05 | 0 | 1.0 | 2 | 0 |
 | Documentation Expert | Unknown | 2 | 2 | 2026-01-05 | 0 | 1.0 | 1 | 0 |
-| Total: | | 287 | 293 | 2026-01-20 | 15 | 1.02 | 141 | 2 |
+| Total: | | 329 | 335 | 2026-01-25 | 18 | 1.02 | 143 | 2 |
 | Benford: | | ❌ 0.0408 | ❌ 0.0408 | | ❌ 0.0561 | | ❌ 0.0478 | ❌ 0.0229 |
 | Acceptance: | | ❌ 0.29% | ❌ 0.25% | | ✅ 57.95% | | ❌ 0.59% | ✅ 92.98% |
 
@@ -107,10 +108,10 @@ This document tracks all expert reviews and contributions across the project.
 | `.cursor/rules/user/security_and_secrets.mdc` | 2 |
 | `docs/features/accessibility-audit-tool/PRD.md` | 2 |
 | `docs/features/backend-api-testing-framework/PRD.md` | 2 |
-| `docs/features/cursor-standards/PRD.md` | 2 |
+| `docs/features/compass/PRD.md` | 2 |
 | `docs/features/gamification-engagement/PRD.md` | 2 |
 | `docs/features/observability-package/PRD.md` | 2 |
-| `docs/features/project-initialization/PRD.md` | 2 |
+| `docs/features/commissioning/PRD.md` | 2 |
 | `docs/features/question-bank-content-library/PRD.md` | 2 |
 | `docs/features/tasks/PRD.md` | 2 |
 | `docs/features/translation-management-system/PRD.md` | 2 |
@@ -143,7 +144,7 @@ This document tracks all expert reviews and contributions across the project.
 | `docs/features/animations-with-gsap/PRD.md` | 1 |
 | `docs/features/api-client-library/PRD.md` | 1 |
 | `docs/features/cicd-templates/PRD.md` | 1 |
-| `docs/features/cursor-standards-commands/PRD.md` | 1 |
+| `docs/features/compass-commands/PRD.md` | 1 |
 | `docs/features/documentation-site-generator/PRD.md` | 1 |
 | `docs/features/full-review/PRD.md` | 1 |
 | `docs/features/market-research-competitive-analysis-package/PRD.md` | 1 |
@@ -186,18 +187,18 @@ This document tracks all expert reviews and contributions across the project.
 | `packages/core/src/shared/database/mysql.ts` | 1 |
 | `packages/core/src/shared/database/postgresql.ts` | 1 |
 | `packages/core/src/shared/database/factory.ts` | 2 |
-| `packages/core/src/features/project-initialization/REVIEW.md` | 2 |
-| `packages/core/src/features/project-initialization/color-manager.ts` | 1 |
-| `packages/core/src/features/project-initialization/__tests__/color-manager.test.ts` | 1 |
-| `packages/core/src/features/project-initialization/cli/commands/init.ts` | 1 |
-| `packages/core/src/features/project-initialization/cli/commands/update.ts` | 1 |
-| `packages/core/src/features/project-initialization/cli/commands/colors.ts` | 1 |
-| `packages/core/src/features/project-initialization/project-initializer.ts` | 2 |
-| `packages/task-manager/REVIEW.md` | 3 |
-| `packages/task-manager/USER_GUIDE.md` | 1 |
-| `packages/task-manager/MIGRATION_GUIDE.md` | 1 |
-| `packages/task-manager/TROUBLESHOOTING.md` | 1 |
-| `packages/task-manager/src/types/task.ts` | 1 |
+| `packages/core/src/features/commissioning/REVIEW.md` | 2 |
+| `packages/core/src/features/commissioning/color-manager.ts` | 1 |
+| `packages/core/src/features/commissioning/__tests__/color-manager.test.ts` | 1 |
+| `packages/core/src/features/commissioning/cli/commands/init.ts` | 1 |
+| `packages/core/src/features/commissioning/cli/commands/refit.ts` | 1 |
+| `packages/core/src/features/commissioning/cli/commands/colors.ts` | 1 |
+| `packages/core/src/features/commissioning/project-initializer.ts` | 2 |
+| `packages/deck/REVIEW.md` | 3 |
+| `packages/deck/USER_GUIDE.md` | 1 |
+| `packages/deck/MIGRATION_GUIDE.md` | 1 |
+| `packages/deck/TROUBLESHOOTING.md` | 1 |
+| `packages/deck/src/types/task.ts` | 1 |
 | `.cursor/commands/scripts/calculate_statistics.py` | 0 |
 | `.cursor/commands/scripts/detect-files.sh` | 0 |
 | `.cursor/commands/scripts/scan-projects.sh` | 0 |
@@ -218,21 +219,47 @@ This document tracks all expert reviews and contributions across the project.
 | `.cursor/rules/user/review_implementation.mdc` | 0 |
 | `docs/architecture/PACKAGE_ARCHITECTURE.md` | 0 |
 | `docs/features/authentication-tool/PRD.md` | 0 |
-| `docs/features/cursor-standards-rules/PRD.md` | 0 |
-| `docs/features/documentation-validation/PRD.md` | 0 |
+| `docs/features/compass-rules/PRD.md` | 0 |
+| `docs/features/certification/PRD.md` | 0 |
 | `docs/features/error-handling-recovery/PRD.md` | 0 |
 | `docs/features/experts/PRD.md` | 0 |
 | `docs/features/git-workflow/PRD.md` | 0 |
 | `docs/features/port-manager/TASKS.md` | 0 |
-| `docs/features/task-manager/QUICK_START.md` | 0 |
-| `docs/features/task-manager/TASKS.md` | 0 |
-| `docs/features/task-manager/WORKFLOW.md` | 0 |
+| `docs/features/deck/QUICK_START.md` | 0 |
+| `docs/features/deck/TASKS.md` | 0 |
+| `docs/features/deck/WORKFLOW.md` | 0 |
 | `docs/features/testing-utilities/PRD.md` | 0 |
 | `docs/features/typescript-config/PRD.md` | 0 |
 | `docs/features/validation-tool/PRD.md` | 0 |
 | `docs/guides/IDE_COLORS_USAGE.md` | 0 |
 | `docs/projects/personal-budget-manager/PRD.md` | 0 |
 | `docs/projects/project-health-dashboard/PRD.md` | 0 |
+| `docs/projects/home-inventory-manager/PRD_OVERVIEW.md` | 1 |
+| `docs/projects/home-inventory-manager/ARCHITECTURE.md` | 1 |
+| `docs/projects/home-maintenance-tracker/INDEX.md` | 3 |
+| `docs/projects/home-maintenance-tracker/PRD_OVERVIEW.md` | 3 |
+| `docs/projects/home-maintenance-tracker/PRD.md` | 3 |
+| `docs/projects/home-maintenance-tracker/ARCHITECTURE.md` | 3 |
+| `docs/projects/home-maintenance-tracker/EXPERTS.md` | 3 |
+| `docs/projects/home-maintenance-tracker/features/maintenance-scheduler.md` | 3 |
+| `docs/projects/home-maintenance-tracker/reviews/andrew-lee.md` | 1 |
+| `docs/projects/home-maintenance-tracker/reviews/lisa-garcia.md` | 1 |
+| `docs/projects/home-maintenance-tracker/reviews/marcus-thompson.md` | 1 |
+| `Projects/home-maintenance-tracker/IMPLEMENTATION_STATUS.md` | 2 |
+| `Projects/home-maintenance-tracker/package.json` | 3 |
+| `Projects/home-maintenance-tracker/backend/README.md` | 2 |
+| `Projects/home-maintenance-tracker/backend/config/container.php` | 1 |
+| `Projects/home-maintenance-tracker/backend/database/schema.sql` | 1 |
+| `Projects/home-maintenance-tracker/backend/src/Database.php` | 1 |
+| `Projects/home-maintenance-tracker/backend/src/controllers/AuthController.php` | 1 |
+| `Projects/home-maintenance-tracker/backend/src/middleware/AuthMiddleware.php` | 1 |
+| `Projects/home-maintenance-tracker/backend/src/middleware/CorsMiddleware.php` | 1 |
+| `Projects/home-maintenance-tracker/backend/src/routes/routes.php` | 1 |
+| `Projects/home-maintenance-tracker/backend/src/services/AuthService.php` | 1 |
+| `Projects/home-maintenance-tracker/frontend/README.md` | 1 |
+| `Projects/home-maintenance-tracker/frontend/src/app/app.html` | 1 |
+| `Projects/home-maintenance-tracker/frontend/src/app/app.ts` | 1 |
+| `Projects/home-maintenance-tracker/frontend/src/app/app.routes.ts` | 1 |
 | `docs/reference/EXPERT_REVIEWS_TRACKER.md` | 0 |
 | `docs/reference/PROJECT_IDEAS_AVOID.md` | 0 |
 | `packages/core/README.md` | 3 |
@@ -263,20 +290,20 @@ This document tracks all expert reviews and contributions across the project.
 | `packages/core/rules/experts/subject_matter_expert.mdc` | 0 |
 | `packages/core/rules/user/package_development_workflow.mdc` | 0 |
 | `packages/core/src/features/tech-detector/REVIEW.md` | 0 |
-| `packages/task-manager/QUICK_TEST_CHECKLIST.md` | 0 |
-| `packages/task-manager/README.md` | 0 |
-| `packages/task-manager/TEST_CHEATSHEET.md` | 0 |
-| `packages/task-manager/TEST_PLAN.md` | 0 |
-| `packages/template-project/QUICK_TEST_CHECKLIST.md` | 0 |
-| `packages/template-project/README.md` | 0 |
-| `packages/template-project/SETUP.md` | 0 |
-| `packages/template-project/TEST_CHEATSHEET.md` | 0 |
-| `packages/template-project/TEST_PLAN.md` | 0 |
-| `packages/template-project/TEST_WORKFLOW.md` | 0 |
-| `packages/template-project/USAGE.md` | 0 |
+| `packages/deck/QUICK_TEST_CHECKLIST.md` | 0 |
+| `packages/deck/README.md` | 0 |
+| `packages/deck/TEST_CHEATSHEET.md` | 0 |
+| `packages/deck/TEST_PLAN.md` | 0 |
+| `packages/embark/QUICK_TEST_CHECKLIST.md` | 0 |
+| `packages/embark/README.md` | 0 |
+| `packages/embark/SETUP.md` | 0 |
+| `packages/embark/TEST_CHEATSHEET.md` | 0 |
+| `packages/embark/TEST_PLAN.md` | 0 |
+| `packages/embark/TEST_WORKFLOW.md` | 0 |
+| `packages/embark/USAGE.md` | 0 |
 | Benford: | ❌ 0.0581 |
 | Acceptance: | ✅ 22.64% |
-| **Total** | **281** |
+| **Total** | **297** |
 
 
 ## Expert Review Details
@@ -376,18 +403,18 @@ This document tracks all expert reviews and contributions across the project.
   - `.cursor/rules/experts/architecture_expert.mdc`
   - `.cursor/rules/experts/graphql_expert.mdc`
   - `.cursor/rules/user/documentation_structure.mdc`
-  - `docs/features/cursor-standards-commands/PRD.md`
+  - `docs/features/compass-commands/PRD.md`
   - `docs/features/database-migration-tool/PRD.md`
   - `docs/features/documentation-site-generator/PRD.md`
   - `docs/guides/DOCUMENTATION_STANDARDS_ENFORCEMENT.md`
   - `docs/guides/DOCUMENTATION_STRUCTURE.md`
   - `docs/guides/FILE_REORGANIZATION.md`
-  - `packages/task-manager/REVIEW.md`
-  - `packages/task-manager/USER_GUIDE.md`
-  - `packages/task-manager/MIGRATION_GUIDE.md`
-  - `packages/task-manager/TROUBLESHOOTING.md`
-  - `packages/task-manager/README.md`
-  - `packages/task-manager/src/types/task.ts`
+  - `packages/deck/REVIEW.md`
+  - `packages/deck/USER_GUIDE.md`
+  - `packages/deck/MIGRATION_GUIDE.md`
+  - `packages/deck/TROUBLESHOOTING.md`
+  - `packages/deck/README.md`
+  - `packages/deck/src/types/task.ts`
   - `docs/guides/OBSERVABILITY_IMPLEMENTATION_GUIDE.md`
   - `docs/guides/PLANNING_MODE_WORKFLOW.md`
   - `docs/reference/ADDITIONAL_RESOURCES_TO_REVIEW.md`
@@ -436,7 +463,7 @@ This document tracks all expert reviews and contributions across the project.
 **Files Reviewed:**
   - `.cursor/rules/experts/cloud_infrastructure_expert.mdc`
   - `.cursor/rules/experts/i18n_expert.mdc`
-  - `docs/features/cursor-standards/PRD.md`
+  - `docs/features/compass/PRD.md`
   - `docs/features/observability-package/PRD.md`
   - `docs/features/tasks/PRD.md`
   - `docs/guides/COMMAND_VS_SCRIPT.md`
@@ -456,17 +483,18 @@ This document tracks all expert reviews and contributions across the project.
 
 ### Marcus Thompson (Market Research & Product Strategy)
 
-- **Total Reviews**: 16
-- **Files Reviewed**: 16
-- **Files Created**: 1
+- **Total Reviews**: 28
+- **Files Reviewed**: 28
+- **Files Created**: 2
 
 **Files Created:**
   - `docs/guides/INTERNATIONALIZATION_GUIDE.md`
+  - `docs/projects/home-maintenance-tracker/reviews/marcus-thompson.md`
 
 **Files Reviewed:**
   - `docs/features/api-client-library/PRD.md`
   - `docs/features/backend-api-testing-framework/PRD.md`
-  - `docs/features/cursor-standards/PRD.md`
+  - `docs/features/compass/PRD.md`
   - `docs/features/database-migration-tool/PRD.md`
   - `docs/features/gamification-engagement/PRD.md`
   - `docs/features/market-research-competitive-analysis-package/PRD.md`
@@ -477,9 +505,21 @@ This document tracks all expert reviews and contributions across the project.
   - `docs/guides/INTERNATIONALIZATION_GUIDE.md`
   - `docs/guides/PRODUCT_PRIORITIZATION_GUIDE.md`
   - `docs/guides/PROJECT_VISION.md`
+  - `docs/projects/home-maintenance-tracker/INDEX.md`
+  - `docs/projects/home-maintenance-tracker/PRD_OVERVIEW.md`
+  - `docs/projects/home-maintenance-tracker/PRD.md`
+  - `docs/projects/home-maintenance-tracker/ARCHITECTURE.md`
+  - `docs/projects/home-maintenance-tracker/EXPERTS.md`
+  - `docs/projects/home-maintenance-tracker/features/maintenance-scheduler.md`
+  - `docs/projects/home-maintenance-tracker/reviews/marcus-thompson.md`
   - `docs/reference/DOCUMENTATION_PATTERNS_REVIEW.md`
   - `docs/reference/GENERIC_FEATURES_REVIEW.md`
   - `docs/reference/PROJECT_PURPOSE.md`
+  - `Projects/home-maintenance-tracker/IMPLEMENTATION_STATUS.md`
+  - `Projects/home-maintenance-tracker/package.json`
+  - `Projects/home-maintenance-tracker/backend/README.md`
+  - `Projects/home-maintenance-tracker/backend/database/schema.sql`
+  - `Projects/home-maintenance-tracker/frontend/README.md`
 
 ### Carol Williams (Educational Content (Learning Materials))
 
@@ -529,7 +569,7 @@ This document tracks all expert reviews and contributions across the project.
 **Files Reviewed:**
   - `.cursor/commands/local/full-review.md`
   - `.cursor/commands/local/update-tracker.md`
-  - `docs/features/project-initialization/PRD.md`
+  - `docs/features/commissioning/PRD.md`
   - `docs/features/tech-detector-standards-warnings/PRD.md`
   - `docs/guides/COMMAND_VS_SCRIPT.md`
   - `docs/guides/CURSOR_PACKAGE_NPM.md`
@@ -558,12 +598,16 @@ This document tracks all expert reviews and contributions across the project.
   - `.cursor/rules/user/planning_mode.mdc`
   - `docs/features/accessibility-audit-tool/PRD.md`
   - `docs/guides/CURSOR_DIRECTORY.md`
-  - `packages/task-manager/REVIEW.md`
+  - `packages/deck/REVIEW.md`
 
 ### Lisa Garcia (Internationalization (i18n) and Localization)
 
-- **Total Reviews**: 9
-- **Files Reviewed**: 9
+- **Total Reviews**: 21
+- **Files Reviewed**: 21
+- **Files Created**: 1
+
+**Files Created:**
+  - `docs/projects/home-maintenance-tracker/reviews/lisa-garcia.md`
 
 **Files Reviewed:**
   - `.cursor/rules/experts/content_expert.mdc`
@@ -575,6 +619,18 @@ This document tracks all expert reviews and contributions across the project.
   - `docs/guides/DOCUMENTATION_STRUCTURE.md`
   - `docs/reference/TESTING_STRUCTURE_REVIEW.md`
   - `packages/core/rules/experts/product_manager_expert.mdc`
+  - `docs/projects/home-maintenance-tracker/INDEX.md`
+  - `docs/projects/home-maintenance-tracker/PRD_OVERVIEW.md`
+  - `docs/projects/home-maintenance-tracker/PRD.md`
+  - `docs/projects/home-maintenance-tracker/ARCHITECTURE.md`
+  - `docs/projects/home-maintenance-tracker/EXPERTS.md`
+  - `docs/projects/home-maintenance-tracker/features/maintenance-scheduler.md`
+  - `docs/projects/home-maintenance-tracker/reviews/lisa-garcia.md`
+  - `Projects/home-maintenance-tracker/IMPLEMENTATION_STATUS.md`
+  - `Projects/home-maintenance-tracker/package.json`
+  - `Projects/home-maintenance-tracker/frontend/src/app/app.html`
+  - `Projects/home-maintenance-tracker/frontend/src/app/app.ts`
+  - `Projects/home-maintenance-tracker/frontend/src/app/app.routes.ts`
 
 ### Arthur Davis (Architecture (System Design and Scalability))
 
@@ -604,10 +660,18 @@ This document tracks all expert reviews and contributions across the project.
   - `docs/reference/SCRIPTS_REVIEW.md`
   - `packages/core/rules/experts/bi_expert.mdc`
 
+### Marcus Johnson (Architecture (System Design and Scalability))
+
+- **Total Reviews**: 1
+- **Files Reviewed**: 1
+
+**Files Reviewed:**
+  - `docs/projects/home-inventory-manager/ARCHITECTURE.md`
+
 ### Patricia Martinez (Product Management (Conflict Resolution, Business Decisions))
 
-- **Total Reviews**: 8
-- **Files Reviewed**: 8
+- **Total Reviews**: 9
+- **Files Reviewed**: 9
 
 **Files Reviewed:**
   - `.cursor/rules/experts/product_manager_expert.mdc`
@@ -615,6 +679,7 @@ This document tracks all expert reviews and contributions across the project.
   - `.cursor/rules/user/planning_mode.mdc`
   - `docs/features/port-manager/PRD.md`
   - `docs/guides/PRODUCT_PRIORITIZATION_GUIDE.md`
+  - `docs/projects/home-inventory-manager/PRD_OVERVIEW.md`
   - `packages/core/rules/experts/product_manager_expert.mdc`
   - `packages/core/rules/user/documentation_structure.mdc`
   - `packages/core/rules/user/planning_mode.mdc`
@@ -688,15 +753,15 @@ This document tracks all expert reviews and contributions across the project.
 - **Files Created**: 1
 
 **Files Created:**
-  - `packages/task-manager/REVIEW.md`
+  - `packages/deck/REVIEW.md`
 
 **Files Reviewed:**
   - `.cursor/commands/local/feature-review.md`
   - `.cursor/commands/local/package-review.md`
   - `packages/core/commands/local/feature-review.md`
   - `packages/core/src/features/port-manager/REVIEW.md`
-  - `packages/core/src/features/project-initialization/REVIEW.md`
-  - `packages/task-manager/REVIEW.md`
+  - `packages/core/src/features/commissioning/REVIEW.md`
+  - `packages/deck/REVIEW.md`
 
 ### Thomas Mitchell (Testing (TDD, Unit Tests, Integration Tests, E2E Tests))
 
@@ -711,12 +776,16 @@ This document tracks all expert reviews and contributions across the project.
   - `docs/reference/TESTING_STRUCTURE_REVIEW.md`
   - `packages/core/commands/local/file.md`
   - `packages/core/src/features/domain-manager/REVIEW.md`
-  - `packages/core/src/features/project-initialization/__tests__/color-manager.test.ts`
+  - `packages/core/src/features/commissioning/__tests__/color-manager.test.ts`
 
 ### Andrew Lee (RESTful API Design)
 
-- **Total Reviews**: 6
-- **Files Reviewed**: 5
+- **Total Reviews**: 7
+- **Files Reviewed**: 21
+- **Files Created**: 1
+
+**Files Created:**
+  - `docs/projects/home-maintenance-tracker/reviews/andrew-lee.md`
 
 **Files Reviewed:**
   - `docs/features/port-manager/PRD.md`
@@ -724,6 +793,22 @@ This document tracks all expert reviews and contributions across the project.
   - `docs/guides/EDUCATIONAL_CONTENT_CREATION.md`
   - `docs/reference/API_STRUCTURE_REVIEW.md`
   - `docs/reference/MCP_CONFIGURATIONS.md`
+  - `docs/projects/home-maintenance-tracker/INDEX.md`
+  - `docs/projects/home-maintenance-tracker/PRD_OVERVIEW.md`
+  - `docs/projects/home-maintenance-tracker/PRD.md`
+  - `docs/projects/home-maintenance-tracker/ARCHITECTURE.md`
+  - `docs/projects/home-maintenance-tracker/EXPERTS.md`
+  - `docs/projects/home-maintenance-tracker/features/maintenance-scheduler.md`
+  - `docs/projects/home-maintenance-tracker/reviews/andrew-lee.md`
+  - `Projects/home-maintenance-tracker/package.json`
+  - `Projects/home-maintenance-tracker/backend/README.md`
+  - `Projects/home-maintenance-tracker/backend/config/container.php`
+  - `Projects/home-maintenance-tracker/backend/src/routes/routes.php`
+  - `Projects/home-maintenance-tracker/backend/src/controllers/AuthController.php`
+  - `Projects/home-maintenance-tracker/backend/src/services/AuthService.php`
+  - `Projects/home-maintenance-tracker/backend/src/middleware/AuthMiddleware.php`
+  - `Projects/home-maintenance-tracker/backend/src/middleware/CorsMiddleware.php`
+  - `Projects/home-maintenance-tracker/backend/src/Database.php`
 
 ### Emma Rodriguez (Copywriting (App naming, section naming, website content))
 
@@ -758,7 +843,7 @@ This document tracks all expert reviews and contributions across the project.
   - `docs/reference/COMPONENT_STRUCTURE_REVIEW.md`
   - `docs/reference/DOCUMENTATION_PATTERNS_REVIEW.md`
   - `docs/reference/TESTING_STRUCTURE_REVIEW.md`
-  - `packages/core/src/features/project-initialization/color-manager.ts`
+  - `packages/core/src/features/commissioning/color-manager.ts`
   - `packages/core/src/features/domain-manager/REVIEW.md`
   - `packages/core/src/features/domain-manager/types.ts`
   - `packages/core/src/features/domain-manager/domain-manager.ts`
@@ -792,7 +877,7 @@ This document tracks all expert reviews and contributions across the project.
   - `docs/guides/FILE_REORGANIZATION.md`
   - `docs/reference/ENVIRONMENT_SETUP_REVIEW.md`
   - `packages/core/rules/experts/documentation_expert.mdc`
-  - `packages/core/src/features/project-initialization/color-manager.ts`
+  - `packages/core/src/features/commissioning/color-manager.ts`
 
 ### Rachel Kim (GraphQL API Design and Schema Development)
 
@@ -822,11 +907,11 @@ This document tracks all expert reviews and contributions across the project.
 - **Files Reviewed**: 5
 
 **Files Reviewed:**
-- `packages/core/src/features/project-initialization/cli/commands/init.ts`
-- `packages/core/src/features/project-initialization/cli/commands/update.ts`
-- `packages/core/src/features/project-initialization/cli/commands/colors.ts`
-- `packages/core/src/features/project-initialization/project-initializer.ts`
-- `packages/core/src/features/project-initialization/REVIEW.md`
+- `packages/core/src/features/commissioning/cli/commands/init.ts`
+- `packages/core/src/features/commissioning/cli/commands/refit.ts`
+- `packages/core/src/features/commissioning/cli/commands/colors.ts`
+- `packages/core/src/features/commissioning/project-initializer.ts`
+- `packages/core/src/features/commissioning/REVIEW.md`
 
 ### Daniel Kim (Business Intelligence and Analytics)
 
@@ -846,15 +931,15 @@ This document tracks all expert reviews and contributions across the project.
 - **Files Reviewed**: 2
 
 **Files Reviewed:**
-  - `docs/features/project-initialization/PRD.md`
+  - `docs/features/commissioning/PRD.md`
   - `docs/reference/IDE_COLORS_REFERENCE.md`
 
 ## Statistics Summary
 
-- **Total Experts**: 28
-- **Total Reviews**: 281
-- **Total Files Reviewed**: 128
-- **Total Files Created**: 15
+- **Total Experts**: 29
+- **Total Reviews**: 296
+- **Total Files Reviewed**: 146
+- **Total Files Created**: 17
 - **Experts with Reviews**: 28
 - **Experts without Reviews**: 0
 - **Most Active Expert**: Michael Brown (33 reviews)

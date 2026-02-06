@@ -16,7 +16,7 @@ Port Manager is a **core feature** within the `@your-org/core` package. The core
 - **Commands**: Cursor commands for common tasks
 - **Shared Utilities**: Database abstractions, configuration utilities
 
-Other packages (e.g., `@your-org/task-manager`) depend on `@your-org/core` and can use Port Manager along with other core features.
+Other packages (e.g., `@colis/deck`) depend on `@your-org/core` and can use Port Manager along with other core features.
 
 See [Package Architecture Strategy](../../architecture/PACKAGE_ARCHITECTURE.md) for details.
 
@@ -36,7 +36,7 @@ import { PortManager } from '@your-org/core/features/port-manager';
 **As Part of Feature Package**:
 ```bash
 # Install feature package (automatically includes core)
-npm install @your-org/task-manager
+npm install @colis/deck
 
 # Port Manager available via core dependency
 import { PortManager } from '@your-org/core/features/port-manager';
@@ -2306,14 +2306,14 @@ Port Manager is implemented as a feature module within `@your-org/core`. This ar
 1. **Shared Infrastructure**: Uses core's shared database abstractions and utilities
 2. **Consistent Patterns**: Follows core package patterns and conventions
 3. **Easy Integration**: Other core features can use Port Manager
-4. **Feature Packages**: Feature packages (e.g., `@your-org/task-manager`) can use Port Manager via core dependency
+4. **Feature Packages**: Feature packages (e.g., `@colis/deck`) can use Port Manager via core dependency
 
 ### Usage in Feature Packages
 
 Feature packages that depend on `@your-org/core` can use Port Manager:
 
 ```typescript
-// In @your-org/task-manager
+// In @colis/deck
 import { PortManager } from '@your-org/core/features/port-manager';
 
 // Use Port Manager for task manager's port needs

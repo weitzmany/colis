@@ -101,6 +101,41 @@ This document tracks project ideas that were removed from the main projects list
 
 ---
 
+### 4. API Gateway Platform
+
+**Removed Date**: 2026-01-25
+
+**Original Concept**:
+- Enterprise-grade API management solution
+- Centralized routing, authentication, authorization
+- Rate limiting, request transformation
+- Monitoring, logging, distributed tracing
+- Auto-generated API documentation
+
+**Why Removed**:
+- Not customer-facing (developer/DevOps tooling)
+- Violates "customer-facing" project principle
+- Better as integration/library than standalone project
+- High competition (Kong, AWS API Gateway, Nginx, Traefik)
+- Infrastructure complexity (creates single points of failure)
+- Low standalone differentiation
+
+**Integration Opportunities**:
+- **Backend microservices**: Add API gateway patterns as shared library/middleware
+- **Authentication Center**: Integrate routing and rate limiting features
+- **All full-stack projects**: Use API gateway as infrastructure layer, not standalone project
+- **Documentation Hub**: Reference API management best practices and patterns
+- **Backend packages**: Create reusable API gateway middleware/utilities
+
+**Value as Integration**:
+- API gateway patterns can be shared across projects as libraries
+- Authentication, rate limiting, monitoring should be infrastructure concerns
+- Better to implement as reusable middleware than standalone platform
+- Reduces coupling and single-point-of-failure risks
+- Enables each project to own its API management strategy
+
+---
+
 ## Integration Strategy
 
 When considering these ideas for integration:

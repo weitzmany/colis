@@ -5,6 +5,7 @@
  */
 
 import * as fs from 'fs-extra';
+import { writeFile, readFile } from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
 import { exec } from 'child_process';
@@ -45,7 +46,7 @@ export class HostsManager implements IHostsManager {
    */
   async hasEntry(domain: string): Promise<boolean> {
     try {
-      const content = await fs.readFile(this.hostsPath, 'utf-8');
+      const content = await readFile(this.hostsPath, 'utf-8');
       const lines = content.split('\n');
       return lines.some(line => {
         const trimmed = line.trim();
@@ -86,7 +87,7 @@ export class HostsManager implements IHostsManager {
     // Read current content
     let content = '';
     try {
-      content = await fs.readFile(this.hostsPath, 'utf-8');
+      content = await readFile(this.hostsPath, 'utf-8');
     } catch (error) {
       // File might not exist or be readable
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -109,7 +110,7 @@ export class HostsManager implements IHostsManager {
     if (process.platform === 'win32') {
       // Windows: try to write directly (may need admin)
       try {
-        await fs.writeFile(this.hostsPath, newContent, 'utf-8');
+        await writeFile(this.hostsPath, newContent, 'utf-8');
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         throw new HostsFileError(
@@ -123,7 +124,7 @@ export class HostsManager implements IHostsManager {
       try {
         // Write to temp file first
         const tempFile = path.join(os.tmpdir(), `hosts-${Date.now()}.tmp`);
-        await fs.writeFile(tempFile, newContent, 'utf-8');
+        await writeFile(tempFile, newContent, 'utf-8');
         
         // Copy to hosts file with sudo
         await execAsync(`sudo cp ${tempFile} ${this.hostsPath}`);
@@ -161,7 +162,7 @@ export class HostsManager implements IHostsManager {
     // Read current content
     let content: string;
     try {
-      content = await fs.readFile(this.hostsPath, 'utf-8');
+      content = await readFile(this.hostsPath, 'utf-8');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       throw new HostsFileError(
@@ -186,7 +187,7 @@ export class HostsManager implements IHostsManager {
     // Write back
     if (process.platform === 'win32') {
       try {
-        await fs.writeFile(this.hostsPath, newContent, 'utf-8');
+        await writeFile(this.hostsPath, newContent, 'utf-8');
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         throw new HostsFileError(
@@ -198,7 +199,7 @@ export class HostsManager implements IHostsManager {
     } else {
       try {
         const tempFile = path.join(os.tmpdir(), `hosts-${Date.now()}.tmp`);
-        await fs.writeFile(tempFile, newContent, 'utf-8');
+        await writeFile(tempFile, newContent, 'utf-8');
         await execAsync(`sudo cp ${tempFile} ${this.hostsPath}`);
         await fs.remove(tempFile);
       } catch (error) {
@@ -217,7 +218,7 @@ export class HostsManager implements IHostsManager {
    */
   async listEntries(): Promise<string[]> {
     try {
-      const content = await fs.readFile(this.hostsPath, 'utf-8');
+      const content = await readFile(this.hostsPath, 'utf-8');
       return this.parseLocalDomains(content);
     } catch (error) {
       return [];

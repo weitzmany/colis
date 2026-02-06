@@ -32,7 +32,7 @@ A visual, interactive documentation portal that serves as the central hub for na
 ### Current Pain Points
 
 1. **Package Discovery Challenge**
-   - Workspace has 20+ packages (core, git-workflow, task-manager, template-project, etc.)
+   - Workspace has 20+ packages (core, git-workflow, task-manager, embark, etc.)
    - No central catalog showing what packages exist, what they do, or how to use them
    - Developers waste time searching through folders to find the right package
 
@@ -410,7 +410,7 @@ Create a beautiful, intuitive documentation hub that makes the workspace transpa
 - **Core Package**: Foundation for workspace tooling
 - **Task Manager**: Project task management (task-master CLI)
 - **Git Workflow**: Git workflow automation (git-workflow CLI)
-- **Template Project**: Project scaffolding (template-project package)
+- **Template Project**: Project scaffolding (embark package)
 
 ### Technology References
 

@@ -32,7 +32,7 @@ Execute this command to review a specific feature:
 ### Parameters
 
 #### `feature` (mandatory)
-- Format: `<package>/<feature>` (e.g., `core/port-manager`, `core/project-initialization`)
+- Format: `<package>/<feature>` (e.g., `core/port-manager`, `core/commissioning`)
 - **Validation**:
   - If empty: Exit with error code 1 and message "Error: feature parameter is required"
   - If wrong format (doesn't match `<package>/<feature>` pattern): Exit with error code 1 and message "Error: feature parameter must be in format '<package>/<feature>'"
@@ -40,8 +40,8 @@ Execute this command to review a specific feature:
 - **Feature Location**: Features are located in `packages/<package>/src/features/<feature>/`
 - **Examples**:
   - `core/port-manager` → `packages/core/src/features/port-manager/`
-  - `core/project-initialization` → `packages/core/src/features/project-initialization/`
-  - `task-manager/task-management` → `packages/task-manager/src/features/task-management/`
+  - `core/commissioning` → `packages/core/src/features/commissioning/`
+  - `deck/task-management` → `packages/deck/src/features/task-management/`
 
 #### `expert` (optional)
 - If empty or expert not found: Review from your point of view (general review)
@@ -316,7 +316,7 @@ Execute this command to review a specific feature:
 
 **Expert Matching Examples**:
 - `core/port-manager` → Database Expert (David Anderson) or Architecture Expert (Arthur Davis)
-- `core/project-initialization` → Documentation Expert (Dorothy Clark) or Architecture Expert (Arthur Davis)
+- `core/commissioning` → Documentation Expert (Dorothy Clark) or Architecture Expert (Arthur Davis)
 - `core/auth` → Security Expert (Sarah Johnson)
 - `core/database-tools` → Database Expert (David Anderson)
 

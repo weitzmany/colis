@@ -1,15 +1,16 @@
-# Animations with GSAP Package - PRD
+# Tide Package - PRD
 
 **Status**: Placeholder / Early Idea  
-**Last Updated**: 2026-01-05
+**Last Updated**: 2026-01-05  
+**Formerly**: animations-with-gsap
 
 ## Package Name
 
-`@your-org/tool-gsap-animations` or `@your-org/rule-gsap-animations`
+`@colis/tide`
 
 ## Main Idea
 
-Package for GSAP (GreenSock Animation Platform) animations, providing reusable animation utilities, components, and patterns. Could be a tool package with animation helpers and components, or rules/commands for GSAP animation workflows and best practices.
+Package for animation and motion system, providing reusable animation utilities, components, and patterns. Could be a tool package with animation helpers and components, or rules/commands for animation workflows and best practices.
 
 ## Package Type
 
@@ -17,37 +18,37 @@ Tool Package or Rules & Consistency Package (TBD)
 
 ## Core Components
 
-- GSAP animation utilities and helpers
+- Tide animation utilities and helpers
 - Reusable animation components
 - Animation presets and patterns
 - Scroll-triggered animations
 - Timeline management utilities
 - Performance optimization helpers
 - Animation configuration and setup
-- Or: GSAP animation rules/commands for Cursor
-- Or: GSAP animation templates and best practices
+- Or: Tide animation rules/commands for Cursor
+- Or: Tide animation templates and best practices
 
 ## Distribution
 
 - npm package
-- Install as dependency: `npm install @your-org/tool-gsap-animations`
+- Install as dependency: `npm install @your-org/tool-tide`
 - Or: Rules/commands package similar to compass
-- Include GSAP as peer dependency or bundled dependency
+- Include Tide as peer dependency or bundled dependency
 
 ## Notes
 
-- Could be a tool package with reusable GSAP animation utilities
-- Could be rules/commands for GSAP animation workflows
+- Could be a tool package with reusable Tide animation utilities
+- Could be rules/commands for Tide animation workflows
 - May include animation presets for common use cases (fade in, slide, scale, etc.)
 - May provide ScrollTrigger utilities and patterns
-- May include performance optimization patterns for GSAP
+- May include performance optimization patterns for Tide
 - May support multiple frameworks (React, Vue, vanilla JS)
 - Need to clarify scope: tool vs rules/commands vs both
-- Consider GSAP licensing (GSAP Club membership may be required for some plugins)
+- Consider Tide licensing (Tide Club membership may be required for some plugins)
 
 ## Mobile Requirements
 
-When implemented, GSAP animations should:
+When implemented, Tide animations should:
 
 - **Mobile Performance**: Optimize animations for 60fps on mobile devices
 - **Battery Efficiency**: Minimize animation complexity to preserve battery life
@@ -64,7 +65,7 @@ When documenting this package for web publication:
 
 1. **Package Documentation SEO**
    - Use descriptive, keyword-rich titles and descriptions
-   - Include relevant keywords naturally (GSAP animations, web animations, scroll animations, animation library)
+   - Include relevant keywords naturally (Tide animations, web animations, scroll animations, animation library)
    - Structure documentation with proper heading hierarchy (H1-H6)
    - Include comprehensive animation examples and use cases for content depth
 
@@ -75,7 +76,7 @@ When documenting this package for web publication:
    - Add internal links to related animation and performance documentation
 
 3. **Content Quality for Search**
-   - Ensure documentation answers common GSAP animation queries
+   - Ensure documentation answers common Tide animation queries
    - Include troubleshooting sections for common animation issues
    - Provide comprehensive API reference documentation
    - Maintain documentation freshness with animation updates
@@ -90,7 +91,7 @@ When documenting this package for web publication:
 **Expert**: Samuel Rodriguez  
 **Expertise**: Backend Development  
 **Date**: 2026-01-05  
-**Changes**: This PRD outlines a GSAP (GreenSock Animation Platform) animations package, which focuses on frontend animation utilities, components, and patterns. While backend APIs might serve animation configuration or animation state data, the core functionality of this package (frontend animations, GSAP utilities, scroll-triggered animations) is distinct from backend development (API design, database operations, server-side logic). Therefore, I am marking this file as irrelevant for my review.
+**Changes**: This PRD outlines a Tide (Animation and Motion System) animations package, which focuses on frontend animation utilities, components, and patterns. While backend APIs might serve animation configuration or animation state data, the core functionality of this package (frontend animations, Tide utilities, scroll-triggered animations) is distinct from backend development (API design, database operations, server-side logic). Therefore, I am marking this file as irrelevant for my review.
 
 <!-- IRRELEVANT FOR ME -->
 

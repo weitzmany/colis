@@ -73,7 +73,7 @@ All feature documentation is located in the `features/` directory.
 - [API Client Library](./features/api-client-library/PRD.md) - HTTP client library
 - [Validation Tool](./features/validation-tool/PRD.md) - Input and schema validation
 - [Testing Utilities](./features/testing-utilities/PRD.md) - Testing helpers and utilities
-- [Animations with GSAP](./features/animations-with-gsap/PRD.md) - GSAP animation utilities, components, and patterns
+- [Tide](./features/tide/PRD.md) - Animation and motion system utilities, components, and patterns (formerly: animations-with-gsap)
 - [Error Handling & Recovery](./features/error-handling-recovery/PRD.md) - Standardized error handling, recovery strategies, and error monitoring
 
 **Template & Configuration Packages:**

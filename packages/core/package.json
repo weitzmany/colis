@@ -1,6 +1,6 @@
 {
   "name": "@colis/rig",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "description": "Foundational development toolkit with port management, tech detection, project initialization, and shared utilities for all projects",
   "type": "module",
   "main": "dist/index.js",

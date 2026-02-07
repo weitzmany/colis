@@ -35,6 +35,8 @@ export async function listCommand(options: {
 
     if (assignments.length === 0) {
       console.log(chalk.yellow('No port assignments found'));
+      await portManager.disconnect();
+      process.exit(0);
       return;
     }
 
@@ -50,6 +52,7 @@ export async function listCommand(options: {
     }
 
     await portManager.disconnect();
+    process.exit(0);
   } catch (error) {
     console.error(chalk.red(`Error: ${error}`));
     process.exit(1);

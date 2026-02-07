@@ -141,7 +141,7 @@ This document tracks all expert reviews and contributions across the project.
 | `.cursor/rules/experts/mobile_expert.mdc` | 1 |
 | `.cursor/rules/experts/testing_expert.mdc` | 1 |
 | `docs/README.md` | 1 |
-| `docs/features/animations-with-gsap/PRD.md` | 1 |
+| `docs/features/tide/PRD.md` | 1 |
 | `docs/features/api-client-library/PRD.md` | 1 |
 | `docs/features/cicd-templates/PRD.md` | 1 |
 | `docs/features/compass-commands/PRD.md` | 1 |
@@ -363,7 +363,7 @@ This document tracks all expert reviews and contributions across the project.
   - `.cursor/rules/experts/product_manager_expert.mdc`
   - `.cursor/rules/experts/subject_matter_expert.mdc`
   - `.cursor/rules/experts/testing_expert.mdc`
-  - `docs/features/animations-with-gsap/PRD.md`
+  - `docs/features/tide/PRD.md`
   - `docs/features/backend-api-testing-framework/PRD.md`
   - `docs/features/full-review/PRD.md`
   - `docs/features/tasks/PRD.md`

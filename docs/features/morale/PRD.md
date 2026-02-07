@@ -179,9 +179,9 @@ Beginner     → Developing   → Proficient   → Advanced     → Expert
     ⭐            ⭐⭐           ⭐⭐⭐          ⭐⭐⭐⭐        ⭐⭐⭐⭐⭐
 ```
 
-#### 4. Streak System
+#### 4. Watch System (Streaks and Consistency)
 
-**Description**: Encourage consistent daily learning through streak tracking.
+**Description**: Encourage consistent daily learning through watch tracking (formerly: streak tracking).
 
 **Requirements**:
 - [ ] Daily streak counter

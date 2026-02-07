@@ -6,7 +6,7 @@ You discovered a critical conflict: **Two packages were creating git hooks in di
 
 ### The Conflict
 
-1. **`@your-org/core`** (commissioning feature):
+1. **`@colis/rig`** (commissioning feature):
    - Creates: `.githooks/post-checkout` (for IDE colors)
    - Sets: `git config core.hooksPath .githooks`
    - Result: Git looks for hooks in `.githooks/`
@@ -30,19 +30,19 @@ const hooksDir = path.join(projectRoot, '.git', 'hooks');
 
 **After**:
 ```typescript
-// Use .githooks directory (matches @your-org/core's post-checkout hook location)
+// Use .githooks directory (matches @colis/rig's post-checkout hook location)
 const hooksDir = path.join(projectRoot, '.githooks');
 ```
 
 #### 2. **Skip Existing Hooks**
-Added logic to preserve hooks created by other packages (like @your-org/core's post-checkout):
+Added logic to preserve hooks created by other packages (like @colis/rig's post-checkout):
 
 ```typescript
 for (const hook of hooksToInstall) {
   const src = path.join(assetsDir, 'hooks', hook);
   const dest = path.join(hooksDir, hook);
 
-  // Check if hook already exists (e.g., from @your-org/core)
+  // Check if hook already exists (e.g., from @colis/rig)
   if (await fileExists(dest)) {
     result.skipped.push(`git hook: ${hook}`);
     console.log(chalk.gray(`  ✓ Hook already exists: ${hook} (preserving existing)`));
@@ -83,12 +83,12 @@ try {
 
 **After the fix**, hooks are installed in this order:
 
-1. **@your-org/core** (runs first during project init):
+1. **@colis/rig** (runs first during project init):
    - Creates `.githooks/post-checkout` for IDE colors
    - Sets `git config core.hooksPath .githooks`
 
 2. **@your-org/git-workflow** (runs after):
-   - Finds `.githooks/post-checkout` already exists → **SKIPS** (preserves @your-org/core's hook)
+   - Finds `.githooks/post-checkout` already exists → **SKIPS** (preserves @colis/rig's hook)
    - Installs: `pre-commit`, `commit-msg`, `pre-push`
    - Confirms `git config core.hooksPath .githooks` is set
 
@@ -98,7 +98,7 @@ try {
 
 ```
 .githooks/
-├── post-checkout     # From @your-org/core (IDE colors) ✅
+├── post-checkout     # From @colis/rig (IDE colors) ✅
 ├── pre-commit        # From git-workflow ✅
 ├── commit-msg        # From git-workflow ✅
 └── pre-push          # From git-workflow ✅
@@ -113,7 +113,7 @@ try {
 mkdir test-project && cd test-project
 
 # Initialize core (creates .githooks/post-checkout)
-npx @your-org/core init
+npx @colis/rig init
 
 # Initialize git-workflow (should NOT overwrite post-checkout)
 npx git-workflow init
@@ -122,7 +122,7 @@ npx git-workflow init
 ls -la .githooks/
 
 # Expected output:
-# -rwxr-xr-x  post-checkout  (from @your-org/core)
+# -rwxr-xr-x  post-checkout  (from @colis/rig)
 # -rwxr-xr-x  pre-commit     (from git-workflow)
 # -rwxr-xr-x  commit-msg     (from git-workflow)
 # -rwxr-xr-x  pre-push       (from git-workflow)
@@ -211,7 +211,7 @@ git push
 ✅ **No overwrites**: Existing hooks are preserved
 ✅ **Proper configuration**: Git config points to `.githooks/`
 ✅ **All hooks run**: No more "hooks not running" issues
-✅ **Clean separation**: @your-org/core handles IDE colors, git-workflow handles git practices
+✅ **Clean separation**: @colis/rig handles IDE colors, git-workflow handles git practices
 
 ---
 

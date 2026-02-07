@@ -349,7 +349,7 @@ await GitWorkflow.init({
 create-project my-app
 
 # 2. Project initialization runs:
-#    - @your-org/core init (rules, commands, Port Manager, IDE colors)
+#    - @colis/rig init (rules, commands, Port Manager, IDE colors)
 #    - Git initialization (if git-workflow is used)
 #    - npm install (if not skipped)
 

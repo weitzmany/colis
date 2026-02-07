@@ -1,7 +1,7 @@
 # Tech Detector Standards Warnings - PRD
 
 **Feature Name**: Tech Detector Standards Warnings  
-**Type**: Enhancement to Tech Detector Feature (part of `@your-org/core` package)  
+**Type**: Enhancement to Tech Detector Feature (part of `@colis/rig` package)  
 **Status**: Planning  
 **Priority**: P1 (High)  
 **Created**: 2026-01-05  
@@ -9,7 +9,7 @@
 
 ## Package Context
 
-Tech Detector Standards Warnings is an **enhancement** to the existing Tech Detector feature within the `@your-org/core` package. The tech detector currently detects technology stacks but doesn't validate against standards or recommend improvements.
+Tech Detector Standards Warnings is an **enhancement** to the existing Tech Detector feature within the `@colis/rig` package. The tech detector currently detects technology stacks but doesn't validate against standards or recommend improvements.
 
 This enhancement adds standards validation and interactive warnings with actionable options.
 
@@ -22,7 +22,7 @@ Tech Detector Standards Warnings enhances the tech detector to warn users when d
 **Usage**:
 ```bash
 # Detect tech stack with standards validation
-npx @your-org/core tech-detect detect
+npx @colis/rig tech-detect detect
 
 # Will automatically warn if:
 # - Non-recommended framework/language/tech is used
@@ -123,7 +123,7 @@ Tech Detector Standards Warnings solves these problems by:
 
 **Description**: Define recommended frameworks, languages, technologies, and minimum versions.
 
-**Configuration File**: `.core-tech-standards.json` (in core package or project)
+**Configuration File**: `.core-tech-standards.json` (in rig package or project)
 
 **Structure**:
 ```json
@@ -221,7 +221,7 @@ Tech Detector Standards Warnings solves these problems by:
 ```
 
 **Implementation**:
-- Default standards in core package
+- Default standards in rig package
 - Project-specific overrides in `.core-tech-standards.json`
 - Merge project overrides with defaults
 
@@ -391,10 +391,10 @@ What would you like to do?
 
 ### Standards Configuration
 
-**Default Standards** (in core package):
-- Location: `packages/core/src/features/tech-detector/standards/default-standards.json`
+**Default Standards** (in rig package):
+- Location: `packages/rig/src/features/tech-detector/standards/default-standards.json`
 - Defines recommended tech and minimum versions
-- Can be updated with core package updates
+- Can be updated with rig package updates
 
 **Project-Specific Standards** (optional):
 - Location: `.core-tech-standards.json` (project root)
@@ -448,7 +448,7 @@ What would you like to do?
 ### Basic Usage with Warnings
 
 ```bash
-npx @your-org/core tech-detect detect
+npx @colis/rig tech-detect detect
 
 # Output:
 🔍 Detecting technology stack...
@@ -470,7 +470,7 @@ What would you like to do?
 ### Version Warning
 
 ```bash
-npx @your-org/core tech-detect detect
+npx @colis/rig tech-detect detect
 
 # Output:
 🔍 Detecting technology stack...
@@ -493,10 +493,10 @@ Run this command? (Y/n)
 
 ```bash
 # Skip all warnings
-npx @your-org/core tech-detect detect --skip-warnings
+npx @colis/rig tech-detect detect --skip-warnings
 
 # Non-interactive mode (no prompts)
-npx @your-org/core tech-detect detect --no-interactive
+npx @colis/rig tech-detect detect --no-interactive
 ```
 
 ## Implementation Plan

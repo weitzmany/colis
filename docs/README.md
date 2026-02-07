@@ -35,7 +35,7 @@ See [Documentation Structure Guide](./guides/DOCUMENTATION_STRUCTURE.md) for com
 ## 🏗️ Architecture
 
 **Package Strategy**: Core + Asset Packages (Hybrid Placement)
-- **Core package** (`@your-org/core`): Orchestrates initialization and lifecycle management
+- **Core package** (`@colis/rig`): Orchestrates initialization and lifecycle management
 - **Asset packages**: Provide hooks, templates, rules, and tooling consumed by core
 - **Monorepo**: Single repository with clear package boundaries, optimized for shared tooling
 

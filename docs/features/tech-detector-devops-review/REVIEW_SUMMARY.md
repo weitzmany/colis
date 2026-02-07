@@ -81,33 +81,33 @@ Comprehensive DevOps review and enhancement of the tech-detector feature, transf
 ## Files Modified
 
 ### Modified Files
-1. `packages/core/src/features/tech-detector/cli/commands/detect.ts`
+1. `packages/rig/src/features/tech-detector/cli/commands/detect.ts`
    - Added CI/CD exit codes and `--fail-on-warning` flag
    - Implemented JSON report generation with `--report` flag
    - Added CI environment detection (12+ platforms)
    - Enhanced error handling and logging
 
 ### Created Files
-1. `packages/core/src/features/tech-detector/examples/github-actions-tech-check.yml`
+1. `packages/rig/src/features/tech-detector/examples/github-actions-tech-check.yml`
    - GitHub Actions workflow template
    - PR commenting automation
    - Branch-specific validation
 
-2. `packages/core/src/features/tech-detector/examples/Dockerfile`
+2. `packages/rig/src/features/tech-detector/examples/Dockerfile`
    - Production-ready Docker image
    - Alpine Linux base
    - Health check support
 
-3. `packages/core/src/features/tech-detector/examples/docker-compose.yml`
+3. `packages/rig/src/features/tech-detector/examples/docker-compose.yml`
    - Multi-scenario Docker Compose configuration
    - Local dev, CI/CD, multi-project support
 
-4. `packages/core/src/features/tech-detector/examples/README.md`
+4. `packages/rig/src/features/tech-detector/examples/README.md`
    - Comprehensive CI/CD documentation
    - Quick start guides
    - Best practices and troubleshooting
 
-5. `packages/core/src/features/tech-detector/DEVOPS_REVIEW.md`
+5. `packages/rig/src/features/tech-detector/DEVOPS_REVIEW.md`
    - Detailed DevOps review document
    - Architecture diagrams
    - Performance considerations

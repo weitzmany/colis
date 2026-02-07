@@ -2,13 +2,13 @@
 
 ## One-Time Setup: Link Core Package Globally
 
-Before creating projects, you need to link the `@your-org/core` package globally so that Project Initialization can run automatically.
+Before creating projects, you need to link the `@colis/rig` package globally so that Project Initialization can run automatically.
 
 ### Step 1: Link Core Package
 
 ```bash
-# Navigate to the core package directory
-cd /Users/yoavweitzman/Documents/packages/packages/core
+# Navigate to the rig package directory
+cd /Users/yoavweitzman/Documents/packages/packages/rig
 
 # Build the package (if not already built)
 npm run build
@@ -19,17 +19,17 @@ npm link
 
 **Expected Output:**
 ```
-/Users/yoavweitzman/.nvm/versions/node/v22.12.0/lib/node_modules/@your-org/core -> /Users/yoavweitzman/Documents/packages/packages/core
+/Users/yoavweitzman/.nvm/versions/node/v22.12.0/lib/node_modules/@colis/rig -> /Users/yoavweitzman/Documents/packages/packages/rig
 ```
 
 ### Step 2: Verify Link
 
 ```bash
 # Check if it's linked
-npm list -g --depth=0 | grep "@your-org/core"
+npm list -g --depth=0 | grep "@colis/rig"
 ```
 
-You should see `@your-org/core` in the output.
+You should see `@colis/rig` in the output.
 
 ### Step 3: Link Template Project (Optional but Recommended)
 
@@ -58,34 +58,34 @@ Once both packages are linked, you can create projects:
 create-project create my-awesome-app
 ```
 
-The Project Initialization will run automatically because `@your-org/core` is available globally.
+The Project Initialization will run automatically because `@colis/rig` is available globally.
 
 ## Troubleshooting
 
 ### If Project Initialization Still Fails
 
-If you get errors about `@your-org/core` not being found:
+If you get errors about `@colis/rig` not being found:
 
 1. **Check if core is linked:**
    ```bash
-   npm list -g --depth=0 | grep "@your-org/core"
+   npm list -g --depth=0 | grep "@colis/rig"
    ```
 
 2. **Re-link if needed:**
    ```bash
-   cd /Users/yoavweitzman/Documents/packages/packages/core
+   cd /Users/yoavweitzman/Documents/packages/packages/rig
    npm link
    ```
 
 3. **In your new project, link core locally:**
    ```bash
    cd ~/Documents/Projects/my-new-project
-   npm link @your-org/core
+   npm link @colis/rig
    ```
 
 4. **Then run init manually:**
    ```bash
-   npx @your-org/core init
+   npx @colis/rig init
    ```
 
 ### If Template Project Command Not Found
@@ -117,7 +117,7 @@ You can create a quick setup script to link everything:
 #!/bin/bash
 # setup-packages.sh
 
-cd /Users/yoavweitzman/Documents/packages/packages/core
+cd /Users/yoavweitzman/Documents/packages/packages/rig
 npm run build
 npm link
 
@@ -136,4 +136,4 @@ Save this as `setup-packages.sh`, make it executable (`chmod +x setup-packages.s
 - **npm link** creates a symlink, so changes to the source code are immediately available
 - You only need to run `npm link` once per package (unless you unlink them)
 - If you update the packages, you may need to rebuild (`npm run build`) but don't need to re-link
-- The links persist until you explicitly unlink them with `npm unlink -g @your-org/core`
+- The links persist until you explicitly unlink them with `npm unlink -g @colis/rig`

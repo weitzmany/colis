@@ -31,7 +31,7 @@ const backendPort = allocatedPortFromPM + 1;
 
 ### Current Implementation (Temporary)
 
-Since Port Manager is called through `@your-org/core` during Project Initialization (not directly in create.ts), the current fix uses default port ranges:
+Since Port Manager is called through `@colis/rig` during Project Initialization (not directly in create.ts), the current fix uses default port ranges:
 
 ```typescript
 // Track backend port for multi-service projects

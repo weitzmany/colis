@@ -1,7 +1,7 @@
 # Project Initialization - PRD
 
 **Feature Name**: Project Initialization  
-**Type**: Core Feature (part of `@your-org/core` package)  
+**Type**: Core Feature (part of `@colis/rig` package)  
 **Status**: Planning  
 **Priority**: P1 (High)  
 **Created**: 2026-01-05  
@@ -9,35 +9,35 @@
 
 ## Package Context
 
-Project Initialization is a **core feature** within the `@your-org/core` package. The core package contains:
+Project Initialization is a **core feature** within the `@colis/rig` package. The rig package contains:
 
 - **Features**: Port Manager, Domain Manager, Project Initialization, Authentication, Database Tools, and more
 - **Rules**: Cursor rules, expert personas, user rules
 - **Commands**: Cursor commands for common tasks
 - **Shared Utilities**: Database abstractions, configuration utilities
 
-This feature automates the setup of new projects by copying rules and commands from the core package, initializing Port Manager, and setting up local domains.
+This feature automates the setup of new projects by copying rules and commands from the rig package, initializing Port Manager, and setting up local domains.
 
 See [Package Architecture Strategy](../../architecture/PACKAGE_ARCHITECTURE.md) for details.
 
 ## Overview
 
-Project Initialization is a core feature in `@colis/rig` that automates the setup of new projects. It automatically copies Cursor rules and commands from the core package to the project's `.cursor/` directory, initializes Port Manager (mandatory), and sets up local domains with Caddy reverse proxy (automatic).
+Project Initialization is a core feature in `@colis/rig` that automates the setup of new projects. It automatically copies Cursor rules and commands from the rig package to the project's `.cursor/` directory, initializes Port Manager (mandatory), and sets up local domains with Caddy reverse proxy (automatic).
 
 **Installation**:
 ```bash
-# Install core package (includes Project Initialization and other features)
-npm install @your-org/core
+# Install rig package (includes Project Initialization and other features)
+npm install @colis/rig
 
 # Initialize project (one command does everything)
-npx @your-org/core init
+npx @colis/rig init
 ```
 
 ## Problem Statement
 
 ### Current Issues
 
-1. **Manual Setup Required**: Developers must manually copy rules and commands from the core package
+1. **Manual Setup Required**: Developers must manually copy rules and commands from the rig package
 2. **Error-Prone Process**: Manual copying can lead to missing files or incorrect paths
 3. **Inconsistent Setup**: Different developers may copy different files or versions
 4. **Port Manager Not Mandatory**: Port Manager initialization is optional, leading to port conflicts
@@ -164,30 +164,30 @@ Project Initialization solves these problems with a single command that:
 
 ### Feature 1: Automatic Rules Copying
 
-**Description**: Automatically copies all expert personas and user rules from the core package to the project's `.cursor/rules/` directory.
+**Description**: Automatically copies all expert personas and user rules from the rig package to the project's `.cursor/rules/` directory.
 
 **What Gets Copied**:
-- All expert personas from `packages/core/rules/experts/` → `.cursor/rules/experts/`
-- All user rules from `packages/core/rules/user/` → `.cursor/rules/user/`
+- All expert personas from `packages/rig/rules/experts/` → `.cursor/rules/experts/`
+- All user rules from `packages/rig/rules/user/` → `.cursor/rules/user/`
 
 **What Gets Excluded**:
 - Nothing (all rules are project-usable)
 
 **Implementation**:
-- Copy files from `node_modules/@your-org/core/rules/` to `.cursor/rules/`
+- Copy files from `node_modules/@colis/rig/rules/` to `.cursor/rules/`
 - Preserve directory structure
 - Verify all files were copied successfully
 - Handle file conflicts (ask user or overwrite)
 
 ### Feature 2: Automatic Commands Copying
 
-**Description**: Automatically copies general commands from the core package to the project's `.cursor/commands/` directory, excluding local commands meant only for the packages repo.
+**Description**: Automatically copies general commands from the rig package to the project's `.cursor/commands/` directory, excluding local commands meant only for the packages repo.
 
 **What Gets Copied**:
-- All general commands from `packages/core/commands/general/` → `.cursor/commands/general/`
+- All general commands from `packages/rig/commands/general/` → `.cursor/commands/general/`
 
 **What Gets Excluded**:
-- **Local commands** from `packages/core/commands/local/` (these are for the packages repo only)
+- **Local commands** from `packages/rig/commands/local/` (these are for the packages repo only)
   - `/local/review` - Expert review workflow for packages repo
   - `/local/update-tracker` - Expert reviews tracker for packages repo
   - `/local/expert` - Expert management for packages repo
@@ -197,8 +197,8 @@ Project Initialization solves these problems with a single command that:
   - `/local/statistics` - Tracker statistics for packages repo
 
 **Implementation**:
-- Copy files from `node_modules/@your-org/core/commands/general/` to `.cursor/commands/general/`
-- Skip `node_modules/@your-org/core/commands/local/` directory entirely
+- Copy files from `node_modules/@colis/rig/commands/general/` to `.cursor/commands/general/`
+- Skip `node_modules/@colis/rig/commands/local/` directory entirely
 - Preserve directory structure
 - Verify all files were copied successfully
 - Handle file conflicts (ask user or overwrite)
@@ -391,7 +391,7 @@ await GitWorkflow.init({
 
 **Strategies**:
 1. **Skip Existing**: Skip files that already exist (default)
-2. **Overwrite**: Overwrite existing files with core package versions
+2. **Overwrite**: Overwrite existing files with rig package versions
 3. **Interactive**: Ask user for each conflict
 
 **Options**:
@@ -433,7 +433,7 @@ async function verifyProject() {
 
 **Usage**:
 ```bash
-npx @your-org/core verify
+npx @colis/rig verify
 ```
 
 **Output Example**:
@@ -450,7 +450,7 @@ Issues Found:
 - Git Workflow: pre-commit hook is missing or not executable
 
 Recommendations:
-- Run 'npx @your-org/core repair' to fix issues automatically
+- Run 'npx @colis/rig repair' to fix issues automatically
 ```
 
 ### Feature 8: Automated Repairs (`repair`)
@@ -486,7 +486,7 @@ async function repairProject() {
 
 **Usage**:
 ```bash
-npx @your-org/core repair
+npx @colis/rig repair
 ```
 
 **Output Example**:
@@ -502,12 +502,12 @@ Repairs Completed:
 - IDE Colors: Updated settings.json to latest color scheme
 - Git Workflow: Restored pre-commit hook with correct permissions
 
-Run 'npx @your-org/core verify' to confirm all issues resolved.
+Run 'npx @colis/rig verify' to confirm all issues resolved.
 ```
 
 ### Feature 9: Configuration Updates (`update`)
 
-**Description**: Updates project configuration to the latest core package standards, including rules, commands, and git workflow.
+**Description**: Updates project configuration to the latest rig package standards, including rules, commands, and git workflow.
 
 **What It Updates**:
 - **Rules & Commands**: Update to latest versions from core
@@ -542,16 +542,16 @@ async function updateProject(options: UpdateOptions) {
 **Usage**:
 ```bash
 # Update all configurations
-npx @your-org/core update
+npx @colis/rig update
 
 # Dry run to see what would be updated
-npx @your-org/core update --dry-run
+npx @colis/rig update --dry-run
 
 # Force update with backups
-npx @your-org/core update --force --backup
+npx @colis/rig update --force --backup
 
 # Interactive mode
-npx @your-org/core update --interactive
+npx @colis/rig update --interactive
 ```
 
 **Output Example**:
@@ -571,7 +571,7 @@ Backups Created:
 - .cursor/rules/experts/.backup-2026-01-22/
 - .git/hooks/.backup-2026-01-22/
 
-Run 'npx @your-org/core verify' to confirm everything is working.
+Run 'npx @colis/rig verify' to confirm everything is working.
 ```
 
 ## Technical Architecture
@@ -580,16 +580,16 @@ Run 'npx @your-org/core verify' to confirm everything is working.
 
 ```bash
 # Initialize new project
-npx @your-org/core init [options]
+npx @colis/rig init [options]
 
 # Verify project health
-npx @your-org/core verify [options]
+npx @colis/rig verify [options]
 
 # Repair project issues
-npx @your-org/core repair [options]
+npx @colis/rig repair [options]
 
 # Update project configuration
-npx @your-org/core update [options]
+npx @colis/rig update [options]
 ```
 
 ### Options
@@ -626,7 +626,7 @@ npx @your-org/core update [options]
 ### Implementation Structure
 
 ```
-packages/core/src/features/commissioning/
+packages/rig/src/features/commissioning/
 ├── project-initializer.ts      # Main initialization logic
 ├── rules-copier.ts             # Rules copying logic
 ├── commands-copier.ts          # Commands copying logic
@@ -643,7 +643,7 @@ packages/core/src/features/commissioning/
 ### Data Flow
 
 ```
-User runs: npx @your-org/core init
+User runs: npx @colis/rig init
     ↓
 CLI Command (init.ts)
     ↓
@@ -663,11 +663,11 @@ Report Results
 ### Basic Usage
 
 ```bash
-# Install core package
-npm install @your-org/core
+# Install rig package
+npm install @colis/rig
 
 # Initialize project (one command does everything)
-npx @your-org/core init
+npx @colis/rig init
 ```
 
 **Output**:
@@ -700,16 +700,16 @@ npx @your-org/core init
 
 ```bash
 # Overwrite existing files
-npx @your-org/core init --overwrite
+npx @colis/rig init --overwrite
 
 # Skip Port Manager (not recommended)
-npx @your-org/core init --skip-port-manager
+npx @colis/rig init --skip-port-manager
 
 # Skip IDE colors
-npx @your-org/core init --skip-colors
+npx @colis/rig init --skip-colors
 
 # Dry run (see what would be done)
-npx @your-org/core init --dry-run
+npx @colis/rig init --dry-run
 ```
 
 ## Integration with Port Manager
@@ -750,7 +750,7 @@ Project Initialization integrates with Git Workflow Package (`@your-org/git-work
 4. **Lifecycle Integration**: Provides verify, repair, and refit capabilities via Git Workflow APIs
 5. **Health Monitoring**: Integrates git workflow health checks into unified project health reporting
 6. **Automated Repairs**: Uses Git Workflow repair capabilities for fixing git configuration issues
-7. **Version Management**: Coordinates git workflow updates with core package updates
+7. **Version Management**: Coordinates git workflow updates with rig package updates
 
 **Git Workflow Functions Used**:
 - `GitWorkflow.init(options)`: Initialize git workflow during project setup
@@ -765,7 +765,7 @@ Project Initialization integrates with Git Workflow Package (`@your-org/git-work
 
 ### File Copy Errors
 
-- **Missing Source Files**: Report error, suggest reinstalling core package
+- **Missing Source Files**: Report error, suggest reinstalling rig package
 - **Permission Errors**: Report error, suggest checking file permissions
 - **Disk Space Errors**: Report error, suggest freeing disk space
 
@@ -785,7 +785,7 @@ Project Initialization integrates with Git Workflow Package (`@your-org/git-work
 ### Validation Errors
 
 - **Missing Files**: Report which files are missing, suggest re-running init
-- **Incorrect Files**: Report which files are incorrect, suggest checking core package version
+- **Incorrect Files**: Report which files are incorrect, suggest checking rig package version
 
 ## Future Enhancements
 
@@ -914,7 +914,7 @@ Project Initialization integrates with Git Workflow Package (`@your-org/git-work
 
 **Expert**: System Architect  
 **Date**: 2026-01-05  
-**Changes**: Created comprehensive PRD for Project Initialization feature that automates project setup by copying rules and commands from core package and initializing Port Manager. This feature eliminates manual setup steps, ensures consistency across projects, and makes Port Manager initialization mandatory. The PRD includes detailed problem statement, solution design, technical architecture, usage examples, error handling, and success criteria. Key features: automatic rules copying (all expert personas and user rules), automatic commands copying (general commands only, excludes local commands for packages repo), mandatory Port Manager initialization, setup validation, and conflict resolution strategies.
+**Changes**: Created comprehensive PRD for Project Initialization feature that automates project setup by copying rules and commands from rig package and initializing Port Manager. This feature eliminates manual setup steps, ensures consistency across projects, and makes Port Manager initialization mandatory. The PRD includes detailed problem statement, solution design, technical architecture, usage examples, error handling, and success criteria. Key features: automatic rules copying (all expert personas and user rules), automatic commands copying (general commands only, excludes local commands for packages repo), mandatory Port Manager initialization, setup validation, and conflict resolution strategies.
 
 **Expert**: Documentation Expert  
 **Date**: 2026-01-05  

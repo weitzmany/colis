@@ -104,9 +104,9 @@ This document lists useful project structure patterns found in other projects th
   - Scripts for automation
   - Documentation included
 
-### ✅ Angular Library Package Structure (sandbox/keel/packages/core)
+### ✅ Angular Library Package Structure (sandbox/keel/packages/rig)
 
-- **Location**: `/Users/yoavweitzman/Documents/sandbox/keel/packages/core/src/`
+- **Location**: `/Users/yoavweitzman/Documents/sandbox/keel/packages/rig/src/`
 - **Structure**:
   ```
   core/src/

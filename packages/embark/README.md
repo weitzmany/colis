@@ -218,7 +218,7 @@ See [templates/README.md](templates/README.md) for detailed usage instructions.
 
 ## Integration with Project Initialization
 
-This package automatically integrates with `@your-org/core` Project Initialization feature. After generating the project structure, it will:
+This package automatically integrates with `@colis/rig` Project Initialization feature. After generating the project structure, it will:
 
 1. Copy Cursor rules and commands
 2. Initialize Port Manager

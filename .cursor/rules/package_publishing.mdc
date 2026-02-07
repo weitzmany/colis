@@ -47,7 +47,7 @@ npm run release:[patch/minor/major]
 
 ### Bug Fix (PATCH)
 ```markdown
-**You need to publish: `@colis/rig` (core package)**
+**You need to publish: `@colis/rig` (rig package)**
 **Release type: PATCH** (bug fix - fixing fs.readdir issue)
 
 ```bash
@@ -69,7 +69,7 @@ npm run release:minor
 
 ### Breaking Change (MAJOR)
 ```markdown
-**You need to publish: `@colis/rig` (core package)**
+**You need to publish: `@colis/rig` (rig package)**
 **Release type: MAJOR** (breaking change - changed API interface)
 
 ```bash
@@ -125,7 +125,7 @@ Example:
 ```markdown
 ## Ready to Publish (2 packages)
 
-**1. First publish: `@colis/rig` (core package)**
+**1. First publish: `@colis/rig` (rig package)**
 **Release type: PATCH**
 
 ```bash

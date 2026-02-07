@@ -166,7 +166,7 @@ Projects are categorized by academic discipline and educational value.
 - **Location**: `~/Documents/sandbox/keel/`
 - **Description**: Angular component library organized as a monorepo with multiple packages
 - **Structure**:
-  - `packages/core/` - Core package
+  - `packages/rig/` - Core package
   - `packages/layout/` - Layout package
   - `packages/overlays/` - Overlays package
   - `packages/primitives/` - Primitives package

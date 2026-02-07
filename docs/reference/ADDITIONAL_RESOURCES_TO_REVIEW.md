@@ -31,7 +31,7 @@ This document lists other useful resources and patterns found in other projects 
 - **Description**: How projects are organized (monorepo, packages, frontend/backend split)
 - **Usefulness**: ⭐⭐⭐⭐⭐ Very generic - structure patterns apply everywhere
 - **Examples Found**:
-  - **Monorepo pattern** (sandbox/keel): `packages/core/`, `packages/layout/`, etc.
+  - **Monorepo pattern** (sandbox/keel): `packages/rig/`, `packages/layout/`, etc.
   - **Full-stack split** (games): `backend/`, `frontend/`, `docs/`
   - **Next.js app structure** (spoon-me): `app/`, `components/`, `lib/`, `types/`
   - **Library structure** (sandbox/keel): Package-based organization

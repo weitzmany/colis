@@ -156,7 +156,7 @@ const result = await copyRules(corePackagePath, projectPath, {
 });
 // Copies: New files + files with different hash
 // Skips: Files with identical hash
-// Deletes: Files that don't exist in core package
+// Deletes: Files that don't exist in rig package
 ```
 
 ### Full Sync (Overwrite + Cleanup)
@@ -169,7 +169,7 @@ const result = await copyRules(corePackagePath, projectPath, {
 });
 // Copies: All files
 // Skips: None
-// Deletes: Files that don't exist in core package
+// Deletes: Files that don't exist in rig package
 ```
 
 ## Benefits
@@ -185,8 +185,8 @@ const result = await copyRules(corePackagePath, projectPath, {
 - **Reliable sync**: Works across different filesystems and platforms
 
 ### Maintenance
-- **Orphan cleanup**: Removes files that no longer exist in core package
-- **Clean state**: Keeps project in sync with core package
+- **Orphan cleanup**: Removes files that no longer exist in rig package
+- **Clean state**: Keeps project in sync with rig package
 - **No manual cleanup**: Automated removal of outdated files
 
 ### User Experience
@@ -342,22 +342,22 @@ interface CopyCommandsResult {
 Build and test:
 
 ```bash
-# Build core package
-cd packages/core
+# Build rig package
+cd packages/rig
 npm run build
 
 # Test in a project
 cd /path/to/test-project
-npm link @your-org/core
+npm link @colis/rig
 
 # Initialize with hash comparison
-npx @your-org/core init
+npx @colis/rig init
 
 # Update with hash comparison
-npx @your-org/core update
+npx @colis/rig update
 
 # Update with orphan cleanup
-npx @your-org/core update --delete-orphaned
+npx @colis/rig update --delete-orphaned
 ```
 
 ## Migration Notes

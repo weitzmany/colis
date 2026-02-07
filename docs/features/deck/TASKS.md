@@ -160,7 +160,7 @@
 
 ### Analytics Integration (via Analytics Dashboard Package)
 
-Task Manager integrates with the **Analytics Dashboard Package** (`@your-org/core/features/telemetry`) to provide comprehensive task analytics and insights.
+Task Manager integrates with the **Analytics Dashboard Package** (`@colis/rig/features/telemetry`) to provide comprehensive task analytics and insights.
 
 #### Integration Overview
 
@@ -170,7 +170,7 @@ Task Manager automatically tracks task-related events and sends them to the Anal
 
 **Task Lifecycle Events**:
 ```typescript
-import { EventTracker } from '@your-org/core/features/telemetry';
+import { EventTracker } from '@colis/rig/features/telemetry';
 
 const tracker = new EventTracker({ feature: 'task-manager' });
 
@@ -241,7 +241,7 @@ tracker.track('task_dependency_added', {
 Task Manager analytics are available through the Analytics Dashboard Package:
 
 ```typescript
-import { AnalyticsDashboard } from '@your-org/core/features/telemetry';
+import { AnalyticsDashboard } from '@colis/rig/features/telemetry';
 
 const dashboard = new AnalyticsDashboard();
 

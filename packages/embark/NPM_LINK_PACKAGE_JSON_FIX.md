@@ -2,7 +2,7 @@
 
 ## The REAL Problem
 
-For Angular CLI full-stack projects, `npm link @your-org/core` was running in the **root directory** which had **NO package.json or node_modules/**, so the link had nowhere to go!
+For Angular CLI full-stack projects, `npm link @colis/rig` was running in the **root directory** which had **NO package.json or node_modules/**, so the link had nowhere to go!
 
 ### Directory Structure
 
@@ -21,12 +21,12 @@ my-project/
 
 ```bash
 cd my-project                    # Change to root (no package.json)
-npm link @your-org/core          # Tries to link, but where?
-# → npm creates node_modules/@your-org/core symlink... but then deletes it
+npm link @colis/rig          # Tries to link, but where?
+# → npm creates node_modules/@colis/rig symlink... but then deletes it
 # → Because there's no package.json to track it!
 ```
 
-Result: `initializeProject()` runs but can't find `@your-org/core`, fails silently.
+Result: `initializeProject()` runs but can't find `@colis/rig`, fails silently.
 
 ## The Fix
 
@@ -45,7 +45,7 @@ if (shouldUseNgCli && useMultipleTemplates) {
 }
 
 // Now npm link will work
-execSync('npm link @your-org/core');
+execSync('npm link @colis/rig');
 ```
 
 ### Result Structure
@@ -65,8 +65,8 @@ my-project/
 ## Why This Was Hard to Debug
 
 1. **Silent Failure**: `npm link` returned success even though link was immediately removed
-2. **No Error**: `initializeProject()` couldn't import `@your-org/core` but caught the error silently
-3. **Misleading Output**: Showed "✓ Linked @your-org/core" even though it didn't actually work
+2. **No Error**: `initializeProject()` couldn't import `@colis/rig` but caught the error silently
+3. **Misleading Output**: Showed "✓ Linked @colis/rig" even though it didn't actually work
 4. **Timing**: Only affected Angular CLI full-stack (not single stack, not template-based)
 
 ## Complete Flow Now
@@ -76,7 +76,7 @@ my-project/
 2. Angular CLI creates frontend/
 3. Template creates backend/  
 4. Create root package.json    ← NEW STEP
-5. npm link @your-org/core     ← Now works!
+5. npm link @colis/rig     ← Now works!
 6. initializeProject() runs    ← Can find core!
    → .cursor/rules/
    → .cursor/commands/

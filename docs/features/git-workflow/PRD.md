@@ -1,7 +1,7 @@
 # Git Workflow Package - PRD
 
 **Feature Name**: Git Workflow  
-**Type**: Asset Package (consumed by `@your-org/core`)  
+**Type**: Asset Package (consumed by `@colis/rig`)  
 **Status**: Planning  
 **Priority**: P1 (High)  
 **Created**: 2026-01-05  
@@ -10,10 +10,10 @@
 
 ## Package Context
 
-Git Workflow is an **asset package** within the monorepo that provides git hooks, rules, templates, and configuration assets consumed by the `@your-org/core` package for full lifecycle git management in all new projects.
+Git Workflow is an **asset package** within the monorepo that provides git hooks, rules, templates, and configuration assets consumed by the `@colis/rig` package for full lifecycle git management in all new projects.
 
 **Architecture Pattern**: Hybrid placement
-- **Core package** (`@your-org/core`): Orchestrates initialization and ongoing lifecycle management
+- **Core package** (`@colis/rig`): Orchestrates initialization and ongoing lifecycle management
 - **Git workflow package** (`@your-org/git-workflow`): Provides assets, templates, hooks, and lifecycle tooling
 
 See [Package Architecture Strategy](../../architecture/PACKAGE_ARCHITECTURE.md) for details.
@@ -24,15 +24,15 @@ See [Package Architecture Strategy](../../architecture/PACKAGE_ARCHITECTURE.md) 
 
 ## Overview
 
-Git Workflow is an asset package that provides standardized git configuration, hooks, rules, templates, and lifecycle management tools for consistent git practices across all new projects. The package is consumed by `@your-org/core` during project initialization and provides ongoing lifecycle management capabilities (verify, repair, update).
+Git Workflow is an asset package that provides standardized git configuration, hooks, rules, templates, and lifecycle management tools for consistent git practices across all new projects. The package is consumed by `@colis/rig` during project initialization and provides ongoing lifecycle management capabilities (verify, repair, update).
 
 **Installation** (via core):
 ```bash
-# Install core package (includes git workflow integration)
-npm install @your-org/core
+# Install rig package (includes git workflow integration)
+npm install @colis/rig
 
 # Initialize project (automatically sets up git workflow)
-npx @your-org/core init
+npx @colis/rig init
 ```
 
 ## Problem Statement
@@ -62,7 +62,7 @@ Git Workflow solves these problems by providing:
 
 1. **Standardized Assets**: Git hooks, templates, rules, and configurations
 2. **Monorepo Enforcement**: Automatically removes nested `.git` directories to maintain clean monorepo structure
-3. **Hooks Directory Standardization**: Uses `.githooks/` directory (same as @your-org/core) to avoid conflicts
+3. **Hooks Directory Standardization**: Uses `.githooks/` directory (same as @colis/rig) to avoid conflicts
 4. **GitHub CLI Management**: Ensure `gh` is installed, configured, and ready to use
 5. **Issue Management Integration**: Standardized workflows for opening and tracking issues in the packages repo
 6. **Core Integration**: Consumed by core for automatic setup during project initialization
@@ -108,7 +108,7 @@ Git Workflow solves these problems by providing:
 This package provides:
 - **Assets**: Git hooks, templates, rules, configuration files
 - **Lifecycle Tools**: CLI tools and programmatic APIs for verify, repair, update operations
-- **Integration Points**: Consumed by core package for orchestration
+- **Integration Points**: Consumed by rig package for orchestration
 
 ## Core Components (Assets)
 
@@ -240,8 +240,8 @@ This package provides:
 
 **What it does**:
 - **Enforce monorepo structure**: Scan for and remove any nested `.git` directories (not in project root)
-- **Install git hooks to `.githooks/`**: Uses `.githooks/` directory (same as @your-org/core) to avoid conflicts
-  - Skips existing hooks (preserves @your-org/core's post-checkout hook)
+- **Install git hooks to `.githooks/`**: Uses `.githooks/` directory (same as @colis/rig) to avoid conflicts
+  - Skips existing hooks (preserves @colis/rig's post-checkout hook)
   - Installs: pre-commit, commit-msg, pre-push
 - **Configure git hooks path**: Sets `git config core.hooksPath .githooks`
 - Copy templates to `.github/`
@@ -412,7 +412,7 @@ const issue = await GitWorkflow.issues.view({
 
 ## Integration with Core
 
-Git Workflow is consumed by `@your-org/core` for:
+Git Workflow is consumed by `@colis/rig` for:
 
 1. **Project Initialization** (`core init`):
    - Core calls `GitWorkflow.init()` during project setup
@@ -431,7 +431,7 @@ Git Workflow is consumed by `@your-org/core` for:
 
 4. **Updates** (`core update`):
    - Core calls `GitWorkflow.update()` to update git workflow
-   - Coordinated with core package updates
+   - Coordinated with rig package updates
    - Version-aware updates (only update if new version available)
 
 5. **Issue Management** (`core issue`):
@@ -687,26 +687,26 @@ See [Monorepo Strategy](../../architecture/PACKAGE_ARCHITECTURE.md#monorepo-stra
 ### Basic Usage (via Core)
 
 ```bash
-# Install core package
-npm install @your-org/core
+# Install rig package
+npm install @colis/rig
 
 # Initialize project (git workflow automatically configured)
-npx @your-org/core init
+npx @colis/rig init
 
 # Verify project health (includes git workflow check)
-npx @your-org/core verify
+npx @colis/rig verify
 
 # Repair project issues (includes git workflow repairs)
-npx @your-org/core repair
+npx @colis/rig repair
 
 # Update project to latest standards (includes git workflow updates)
-npx @your-org/core update
+npx @colis/rig update
 
 # Open an issue in the packages repo
-npx @your-org/core issue open --title "Port conflict" --label "port-manager"
+npx @colis/rig issue open --title "Port conflict" --label "port-manager"
 
 # View maintainer responses
-npx @your-org/core issue view 123
+npx @colis/rig issue view 123
 ```
 
 ### Standalone Usage
@@ -839,7 +839,7 @@ await GitWorkflow.update({
 
 ## Dependencies
 
-- **Core package** (`@your-org/core`): For integration and orchestration
+- **Core package** (`@colis/rig`): For integration and orchestration
 - **Git**: Required system dependency
 - **GitHub CLI (`gh`)**: Required for PR/issue workflows and repo management
 - **Node.js**: For running lifecycle tools
@@ -869,7 +869,7 @@ await GitWorkflow.update({
 
 ### E2E Tests
 
-- Test via core package integration
+- Test via rig package integration
 - Test in real project scenarios
 - Test with different project types (nodejs, python, go)
 - Test error scenarios and recovery
@@ -956,18 +956,18 @@ When documenting this package for web publication:
 ### Hooks Directory Standardization
 
 **Problem**: Initially, two packages were creating hooks in different locations:
-- `@your-org/core` (commissioning): Created `.githooks/post-checkout` (for IDE colors) and set `git config core.hooksPath .githooks`
+- `@colis/rig` (commissioning): Created `.githooks/post-checkout` (for IDE colors) and set `git config core.hooksPath .githooks`
 - `@your-org/git-workflow`: Was installing hooks to `.git/hooks/` (pre-commit, commit-msg, pre-push, post-checkout)
 
 **Result**: Git-workflow hooks wouldn't run because git was configured to look in `.githooks/`!
 
 **Solution**:
-1. **Git-workflow now uses `.githooks/`**: Changed from `.git/hooks/` to `.githooks/` to match @your-org/core
+1. **Git-workflow now uses `.githooks/`**: Changed from `.git/hooks/` to `.githooks/` to match @colis/rig
 2. **Sets hooks path**: Git-workflow now sets `git config core.hooksPath .githooks` 
 3. **Preserves existing hooks**: Before installing a hook, checks if it already exists
-   - If hook exists (e.g., post-checkout from @your-org/core), skip installation
-   - This preserves @your-org/core's comprehensive post-checkout hook for IDE colors
-4. **Hook precedence**: @your-org/core's post-checkout hook takes precedence (installed first during `core init`)
+   - If hook exists (e.g., post-checkout from @colis/rig), skip installation
+   - This preserves @colis/rig's comprehensive post-checkout hook for IDE colors
+4. **Hook precedence**: @colis/rig's post-checkout hook takes precedence (installed first during `core init`)
 
 **Files Changed**:
 - `packages/git-workflow/src/lifecycle/init.ts`: 
@@ -977,11 +977,11 @@ When documenting this package for web publication:
 
 **Testing**: Verify that after running both:
 ```bash
-npx @your-org/core init
+npx @colis/rig init
 npx git-workflow init
 ```
 The `.githooks/` directory contains:
-- `post-checkout` (from @your-org/core - for IDE colors)
+- `post-checkout` (from @colis/rig - for IDE colors)
 - `pre-commit` (from git-workflow)
 - `commit-msg` (from git-workflow)
 - `pre-push` (from git-workflow)

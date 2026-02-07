@@ -8,8 +8,8 @@ This document lists useful testing structure patterns found in other projects.
 
 ### ✅ Co-located Tests (sandbox/keel)
 
-#### 1. **Angular Library Tests** (keel/packages/core/src/)
-- **Location**: `/Users/yoavweitzman/Documents/sandbox/keel/packages/core/src/`
+#### 1. **Angular Library Tests** (keel/packages/rig/src/)
+- **Location**: `/Users/yoavweitzman/Documents/sandbox/keel/packages/rig/src/`
 - **Pattern**: Tests co-located with source files (`*.spec.ts`)
 - **Structure**:
   ```

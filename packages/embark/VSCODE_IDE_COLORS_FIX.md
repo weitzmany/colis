@@ -115,8 +115,8 @@ File: `packages/template-project/src/cli/commands/create.ts`
 ✓ Created 15 backend files
 
 ⚙️  Running Project Initialization...
-  Linking @your-org/core...
-  ✓ Linked @your-org/core
+  Linking @colis/rig...
+  ✓ Linked @colis/rig
 
 📋 Copying rules...
   ✓ Copied 25 expert personas
@@ -168,14 +168,14 @@ my-project/
 
 ## What initializeProject() Does
 
-The `initializeProject()` function from `@your-org/core` handles:
+The `initializeProject()` function from `@colis/rig` handles:
 
 1. **Rules Copying** (`copyRules`)
-   - Copies expert personas from `@your-org/core/rules/experts/` → `.cursor/rules/experts/`
-   - Copies user rules from `@your-org/core/rules/user/` → `.cursor/rules/user/`
+   - Copies expert personas from `@colis/rig/rules/experts/` → `.cursor/rules/experts/`
+   - Copies user rules from `@colis/rig/rules/user/` → `.cursor/rules/user/`
 
 2. **Commands Copying** (`copyCommands`)
-   - Copies general commands from `@your-org/core/commands/general/` → `.cursor/commands/general/`
+   - Copies general commands from `@colis/rig/commands/general/` → `.cursor/commands/general/`
    - Excludes local commands (project-specific)
 
 3. **Port Manager Init** (`portManagerInit`)
@@ -205,4 +205,4 @@ The `initializeProject()` function from `@your-org/core` handles:
 - [RESPECT_USER_CHOICES.md](./RESPECT_USER_CHOICES.md) - How we respect stack choices
 - [ANGULAR_CLI_INTEGRATION.md](./ANGULAR_CLI_INTEGRATION.md) - Angular CLI details
 - [USAGE.md](./USAGE.md) - Usage examples
-- [@your-org/core docs](../core/README.md) - Project Initialization details
+- [@colis/rig docs](../core/README.md) - Project Initialization details

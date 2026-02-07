@@ -194,7 +194,7 @@ Both new modes are **100% safe**:
 - **Solution:** Update mode will initialize it automatically.
 
 **Problem:** "Rules not found"
-- **Solution:** Ensure `@your-org/core` is globally linked.
+- **Solution:** Ensure `@colis/rig` is globally linked.
 
 **Problem:** "Framework CLI failed"
 - **Solution:** Install the framework CLI globally (e.g., `npm i -g @angular/cli`).

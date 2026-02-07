@@ -26,12 +26,12 @@ Analytics Dashboard Package provides a unified analytics infrastructure for all 
 
 **Usage**:
 ```typescript
-// Install core package (includes Analytics Dashboard and other features)
-npm install @your-org/core
+// Install rig package (includes Analytics Dashboard and other features)
+npm install @colis/rig
 
 // Use Analytics Dashboard
-import { AnalyticsDashboard } from '@your-org/core/features/telemetry';
-import { EventTracker } from '@your-org/core/features/telemetry';
+import { AnalyticsDashboard } from '@colis/rig/features/telemetry';
+import { EventTracker } from '@colis/rig/features/telemetry';
 
 // Track events
 const tracker = new EventTracker();
@@ -133,7 +133,7 @@ Analytics Dashboard Package solves these problems by:
 **So that** I can track user behavior without implementing analytics from scratch
 
 **Acceptance Criteria**:
-- Import analytics SDK from core package
+- Import analytics SDK from rig package
 - Track events with simple API calls
 - Events automatically aggregated and processed
 - Dashboards automatically generated
@@ -401,7 +401,7 @@ Feature → EventTracker SDK → Event Queue → Data Processor → Analytics Da
 ### Port Manager Integration
 
 ```typescript
-import { EventTracker } from '@your-org/core/features/telemetry';
+import { EventTracker } from '@colis/rig/features/telemetry';
 
 const tracker = new EventTracker({ feature: 'port-manager' });
 
@@ -422,7 +422,7 @@ tracker.track('port_conflict', {
 ### Task Manager Integration
 
 ```typescript
-import { EventTracker } from '@your-org/core/features/telemetry';
+import { EventTracker } from '@colis/rig/features/telemetry';
 
 const tracker = new EventTracker({ feature: 'task-manager' });
 
@@ -444,7 +444,7 @@ tracker.track('task_completed', {
 ### Tech Detector Integration
 
 ```typescript
-import { EventTracker } from '@your-org/core/features/telemetry';
+import { EventTracker } from '@colis/rig/features/telemetry';
 
 const tracker = new EventTracker({ feature: 'tech-detector' });
 
@@ -468,7 +468,7 @@ tracker.track('standards_compliance', {
 ### Basic Event Tracking
 
 ```typescript
-import { EventTracker } from '@your-org/core/features/telemetry';
+import { EventTracker } from '@colis/rig/features/telemetry';
 
 const tracker = new EventTracker({
   apiKey: process.env.ANALYTICS_API_KEY,
@@ -487,7 +487,7 @@ tracker.track('user_action', {
 ### Dashboard Generation
 
 ```typescript
-import { AnalyticsDashboard } from '@your-org/core/features/telemetry';
+import { AnalyticsDashboard } from '@colis/rig/features/telemetry';
 
 const dashboard = new AnalyticsDashboard({
   apiKey: process.env.ANALYTICS_API_KEY

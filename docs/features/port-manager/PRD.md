@@ -1,7 +1,7 @@
 # Port Manager - PRD
 
 **Feature Name**: Port Manager  
-**Type**: Core Feature (part of `@your-org/core` package)  
+**Type**: Core Feature (part of `@colis/rig` package)  
 **Status**: Planning  
 **Priority**: P1 (High)  
 **Created**: 2026-01-05
@@ -9,28 +9,28 @@
 
 ## Package Context
 
-Port Manager is a **core feature** within the `@your-org/core` package. The core package contains:
+Port Manager is a **core feature** within the `@colis/rig` package. The rig package contains:
 
 - **Features**: Port Manager, Authentication, Database Tools, and more
 - **Rules**: Cursor rules, expert personas, user rules
 - **Commands**: Cursor commands for common tasks
 - **Shared Utilities**: Database abstractions, configuration utilities
 
-Other packages (e.g., `@colis/deck`) depend on `@your-org/core` and can use Port Manager along with other core features.
+Other packages (e.g., `@colis/deck`) depend on `@colis/rig` and can use Port Manager along with other core features.
 
 See [Package Architecture Strategy](../../architecture/PACKAGE_ARCHITECTURE.md) for details.
 
 ## Overview
 
-Port Manager is a core feature in `@your-org/core` that eliminates port conflicts and simplifies development workflow. It automatically manages port assignments across all your projects through a centralized registry, ensuring consistent configuration and preventing conflicts before they happen.
+Port Manager is a core feature in `@colis/rig` that eliminates port conflicts and simplifies development workflow. It automatically manages port assignments across all your projects through a centralized registry, ensuring consistent configuration and preventing conflicts before they happen.
 
 **Installation**:
 ```bash
-# Install core package (includes Port Manager and other features)
-npm install @your-org/core
+# Install rig package (includes Port Manager and other features)
+npm install @colis/rig
 
 # Use Port Manager
-import { PortManager } from '@your-org/core/features/port-manager';
+import { PortManager } from '@colis/rig/features/port-manager';
 ```
 
 **As Part of Feature Package**:
@@ -39,7 +39,7 @@ import { PortManager } from '@your-org/core/features/port-manager';
 npm install @colis/deck
 
 # Port Manager available via core dependency
-import { PortManager } from '@your-org/core/features/port-manager';
+import { PortManager } from '@colis/rig/features/port-manager';
 ```
 
 ## Problem Statement
@@ -628,10 +628,10 @@ Port Manager follows a **layered architecture pattern** with clear separation of
 
 ### Package Structure (Within Core)
 
-Port Manager is structured as a feature module within the core package:
+Port Manager is structured as a feature module within the rig package:
 
 ```
-@your-org/core/
+@colis/rig/
 ├── src/
 │   ├── features/
 │   │   └── port-manager/        # Port Manager feature module
@@ -1201,32 +1201,32 @@ File System Operations
 
 ### CLI API
 
-The CLI is available via the core package's binary:
+The CLI is available via the rig package's binary:
 
 ```bash
-# CLI available after installing @your-org/core
-npx @your-org/core port-manager init [--project-name <name>] [--app-type <type>] [--port <port>]
+# CLI available after installing @colis/rig
+npx @colis/rig port-manager init [--project-name <name>] [--app-type <type>] [--port <port>]
 
 # Or use the binary directly (if installed globally)
 port-manager init [--project-name <name>] [--app-type <type>] [--port <port>]
 
 # Check port status and conflicts
-npx @your-org/core port-manager check [--project-path <path>]
+npx @colis/rig port-manager check [--project-path <path>]
 
 # Allocate new port
-npx @your-org/core port-manager allocate --project-name <name> --app-type <type> [--port <port>]
+npx @colis/rig port-manager allocate --project-name <name> --app-type <type> [--port <port>]
 
 # List all port assignments
-npx @your-org/core port-manager list [--project <name>] [--type <type>] [--status <status>]
+npx @colis/rig port-manager list [--project <name>] [--type <type>] [--status <status>]
 
 # Release port assignment
-npx @your-org/core port-manager release --project-name <name> [--app-type <type>]
+npx @colis/rig port-manager release --project-name <name> [--app-type <type>]
 
 # Validate all projects
-npx @your-org/core port-manager validate [--project-path <path>]
+npx @colis/rig port-manager validate [--project-path <path>]
 
 # Migrate existing project
-npx @your-org/core port-manager migrate --project-path <path> [--port <port>]
+npx @colis/rig port-manager migrate --project-path <path> [--port <port>]
 ```
 
 ### Programmatic API
@@ -1235,7 +1235,7 @@ The Port Manager provides a clean, RESTful-inspired programmatic API that follow
 
 **Import from Core Package**:
 ```typescript
-import { PortManager } from '@your-org/core/features/port-manager';
+import { PortManager } from '@colis/rig/features/port-manager';
 
 const manager = new PortManager({
   database: {
@@ -1478,7 +1478,7 @@ interface ConflictReport {
 
 ### Core Package Dependencies
 
-Port Manager, as part of `@your-org/core`, shares dependencies with the core package:
+Port Manager, as part of `@colis/rig`, shares dependencies with the rig package:
 
 **Core Package Dependencies**:
 - **TypeScript**: Type safety
@@ -1501,7 +1501,7 @@ Port Manager, as part of `@your-org/core`, shares dependencies with the core pac
 - **eslint**: Linting
 - **prettier**: Code formatting
 
-**Note**: Dependencies are managed at the core package level, not per-feature.
+**Note**: Dependencies are managed at the rig package level, not per-feature.
 
 ## Testing Strategy
 
@@ -1564,7 +1564,7 @@ Port Manager, as part of `@your-org/core`, shares dependencies with the core pac
 
 ## Analytics Integration
 
-Port Manager integrates with the **Analytics Dashboard Package** (`@your-org/core/features/telemetry`) to provide comprehensive port usage analytics and insights.
+Port Manager integrates with the **Analytics Dashboard Package** (`@colis/rig/features/telemetry`) to provide comprehensive port usage analytics and insights.
 
 ### Integration Overview
 
@@ -1574,7 +1574,7 @@ Port Manager automatically tracks port-related events and sends them to the Anal
 
 **Port Allocation Events**:
 ```typescript
-import { EventTracker } from '@your-org/core/features/telemetry';
+import { EventTracker } from '@colis/rig/features/telemetry';
 
 const tracker = new EventTracker({ feature: 'port-manager' });
 
@@ -1632,7 +1632,7 @@ tracker.track('port_released', {
 Port Manager analytics are available through the Analytics Dashboard Package:
 
 ```typescript
-import { AnalyticsDashboard } from '@your-org/core/features/telemetry';
+import { AnalyticsDashboard } from '@colis/rig/features/telemetry';
 
 const dashboard = new AnalyticsDashboard();
 
@@ -2301,20 +2301,20 @@ Port Manager should support developers working on mobile development projects an
 
 ### Core Package Integration
 
-Port Manager is implemented as a feature module within `@your-org/core`. This architecture provides:
+Port Manager is implemented as a feature module within `@colis/rig`. This architecture provides:
 
 1. **Shared Infrastructure**: Uses core's shared database abstractions and utilities
-2. **Consistent Patterns**: Follows core package patterns and conventions
+2. **Consistent Patterns**: Follows rig package patterns and conventions
 3. **Easy Integration**: Other core features can use Port Manager
 4. **Feature Packages**: Feature packages (e.g., `@colis/deck`) can use Port Manager via core dependency
 
 ### Usage in Feature Packages
 
-Feature packages that depend on `@your-org/core` can use Port Manager:
+Feature packages that depend on `@colis/rig` can use Port Manager:
 
 ```typescript
 // In @colis/deck
-import { PortManager } from '@your-org/core/features/port-manager';
+import { PortManager } from '@colis/rig/features/port-manager';
 
 // Use Port Manager for task manager's port needs
 const portManager = new PortManager({...});
@@ -2322,17 +2322,17 @@ const portManager = new PortManager({...});
 
 ### Export Strategy
 
-Port Manager is exported from core package as:
+Port Manager is exported from rig package as:
 
 ```typescript
-// @your-org/core/src/index.ts
+// @colis/rig/src/index.ts
 export { PortManager } from './features/port-manager';
 export * from './features/port-manager';
 
 // Usage
-import { PortManager } from '@your-org/core/features/port-manager';
+import { PortManager } from '@colis/rig/features/port-manager';
 // Or
-import { PortManager } from '@your-org/core';
+import { PortManager } from '@colis/rig';
 ```
 
 ## Related Documentation

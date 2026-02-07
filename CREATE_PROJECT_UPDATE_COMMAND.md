@@ -8,7 +8,7 @@ Added a new `update` subcommand to the `create-project` CLI that provides easy a
 
 ### New Command: `create-project update`
 
-A command that performs the same workflow as `npx @your-org/core update`, but accessible via the `create-project` CLI for convenience.
+A command that performs the same workflow as `npx @colis/rig update`, but accessible via the `create-project` CLI for convenience.
 
 ```bash
 # Update project with hash comparison (only copy changed files)
@@ -38,7 +38,7 @@ create-project update --skip-commands
      .command('update')
      .description('Update an existing project (sync rules, commands, and configurations)')
      .option('--overwrite', 'Force overwrite all files regardless of hash')
-     .option('--delete-orphaned', 'Delete files from project that no longer exist in core package')
+     .option('--delete-orphaned', 'Delete files from project that no longer exist in rig package')
      .option('--skip-rules', 'Skip synchronizing rules')
      .option('--skip-commands', 'Skip synchronizing commands')
      .option('--check-only', 'Check what would be updated without making changes')
@@ -55,14 +55,14 @@ create-project update --skip-commands
 
 2. **`src/cli/commands/update.ts`** - New update command implementation
    - Displays visually appealing header and status messages
-   - Executes `npx @your-org/core update` with appropriate flags
+   - Executes `npx @colis/rig update` with appropriate flags
    - Provides user-friendly success/error messages
    - Passes through all output from the core update command
 
 ### Command Options
 
 - `--overwrite` - Force overwrite all files regardless of hash comparison
-- `--delete-orphaned` - Delete files from project that no longer exist in core package
+- `--delete-orphaned` - Delete files from project that no longer exist in rig package
 - `--skip-rules` - Skip synchronizing rules
 - `--skip-commands` - Skip synchronizing commands
 - `--check-only` - Check what would be updated without making changes (dry-run mode)
@@ -80,7 +80,7 @@ create-project update
 ║  🔄 Project Update                                        ║
 ╚═══════════════════════════════════════════════════════════╝
 
-  Synchronizing project with latest core package...
+  Synchronizing project with latest rig package...
 
 📋 Synchronizing rules...
   ✓ Copied 3 files (modified or new)
@@ -113,13 +113,13 @@ Forces overwrite of all files and deletes orphaned files.
 
 1. **User runs command**: `create-project update [options]`
 2. **Header displayed**: Shows visual header with update message
-3. **Executes core update**: Calls `npx @your-org/core update` with appropriate flags
+3. **Executes core update**: Calls `npx @colis/rig update` with appropriate flags
 4. **Output passed through**: All output from core command shown to user
 5. **Success message**: Displays success message after completion
 
 ## Integration with Core Package
 
-The `update` command delegates to the core package's update functionality:
+The `update` command delegates to the rig package's update functionality:
 
 ```typescript
 // Build CLI args
@@ -128,15 +128,15 @@ if (options.overwrite) args.push('--overwrite');
 if (options.deleteOrphaned) args.push('--delete-orphaned');
 // ... more options
 
-// Execute core package update
-execSync(`npx @your-org/core ${args.join(' ')}`, {
+// Execute rig package update
+execSync(`npx @colis/rig ${args.join(' ')}`, {
   cwd: process.cwd(),
   stdio: 'inherit', // Pass through stdout/stderr
 });
 ```
 
 This approach:
-- ✅ Uses the latest core package functionality
+- ✅ Uses the latest rig package functionality
 - ✅ Requires minimal maintenance
 - ✅ Passes through all output and messages
 - ✅ Provides consistent behavior
@@ -152,10 +152,10 @@ This approach:
 
 ### For Developers
 
-- **Simplicity**: Delegates to core package, minimal code duplication
+- **Simplicity**: Delegates to rig package, minimal code duplication
 - **Maintainability**: Core package updates automatically reflected
 - **DRY Principle**: No duplication of update logic
-- **Single Source of Truth**: Update logic lives in core package
+- **Single Source of Truth**: Update logic lives in rig package
 
 ## Command Comparison
 
@@ -163,9 +163,9 @@ This approach:
 |---------|---------|-------------|
 | `create-project create` | Create new project | Starting new project |
 | `create-project update` | Update existing project | Synchronizing with latest core |
-| `npx @your-org/core update` | Update via core package | Alternative update method |
+| `npx @colis/rig update` | Update via rig package | Alternative update method |
 
-**Note**: Both `create-project update` and `npx @your-org/core update` do the same thing - `create-project update` is just a convenience wrapper.
+**Note**: Both `create-project update` and `npx @colis/rig update` do the same thing - `create-project update` is just a convenience wrapper.
 
 ## Example Workflows
 
@@ -174,7 +174,7 @@ This approach:
 # Create a new project
 create-project my-app
 
-# ... time passes, core package is updated ...
+# ... time passes, rig package is updated ...
 
 # Update the project
 cd my-app
@@ -216,6 +216,6 @@ Potential improvements:
 
 **Status**: ✅ Complete and tested
 **Build**: ✅ Passing
-**Integration**: ✅ Works with core package
+**Integration**: ✅ Works with rig package
 
 The `create-project update` command is now available and ready to use!

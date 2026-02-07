@@ -9,7 +9,7 @@ Before testing, ensure:
 - [ ] npm/yarn/pnpm is available
 - [ ] Git is installed
 - [ ] You're in a clean directory (or use a test directory)
-- [ ] `@your-org/core` package is built and linked
+- [ ] `@colis/rig` package is built and linked
 
 ## Test Setup
 
@@ -20,8 +20,8 @@ Before testing, ensure:
 mkdir -p ~/test-projects
 cd ~/test-projects
 
-# Ensure core package is linked
-cd ~/Documents/packages/packages/core
+# Ensure rig package is linked
+cd ~/Documents/packages/packages/rig
 npm link
 
 # Link template-project package
@@ -430,7 +430,7 @@ npx @your-org/template-project create test-skip-init --skip-init
 - [ ] `.cursor/` directory does NOT exist
 - [ ] Port Manager is NOT initialized
 - [ ] IDE colors are NOT set up
-- [ ] User can manually run `npx @your-org/core init` later
+- [ ] User can manually run `npx @colis/rig init` later
 
 ### Test 4.4: Overwrite Existing Files
 

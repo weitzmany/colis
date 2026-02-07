@@ -22,7 +22,7 @@ npm install @colis/deck
 
 1. **Package Installation**: The package and its dependencies are installed:
    - `@colis/deck`
-   - `@your-org/core` (dependency)
+   - `@colis/rig` (dependency)
    - `taskmaster-ai` (dependency)
 
 2. **Postinstall Script**: The `postinstall` script automatically runs:

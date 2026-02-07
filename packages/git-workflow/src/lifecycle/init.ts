@@ -88,7 +88,7 @@ export async function init(options: InitOptions): Promise<InitResult> {
     // Step 3: Install git hooks
     const hooksToInstall = opts.hooksEnabled || ['pre-commit', 'commit-msg', 'pre-push', 'post-checkout'];
     const assetsDir = getAssetsDir();
-    // Use .githooks directory (matches @your-org/core's post-checkout hook location)
+    // Use .githooks directory (matches @colis/rig's post-checkout hook location)
     const hooksDir = path.join(projectRoot, '.githooks');
 
     await fs.ensureDir(hooksDir);
@@ -97,7 +97,7 @@ export async function init(options: InitOptions): Promise<InitResult> {
       const src = path.join(assetsDir, 'hooks', hook);
       const dest = path.join(hooksDir, hook);
 
-      // Check if hook already exists (e.g., from @your-org/core)
+      // Check if hook already exists (e.g., from @colis/rig)
       if (await fileExists(dest)) {
         result.skipped.push(`git hook: ${hook}`);
         console.log(chalk.gray(`  ✓ Hook already exists: ${hook} (preserving existing)`));

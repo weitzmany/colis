@@ -42,10 +42,10 @@ When creating a new project in `/Users/yoavweitzman/Documents/Projects/`:
    npm init -y
    ```
 
-3. **Install and initialize core package**:
+3. **Install and initialize rig package**:
    ```bash
-   npm install @your-org/core
-   npx @your-org/core init
+   npm install @colis/rig
+   npx @colis/rig init
    ```
 
 4. **Project is ready** with:

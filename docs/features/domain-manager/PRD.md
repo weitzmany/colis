@@ -3,7 +3,7 @@
 ## Overview
 
 **Feature Name**: Domain Manager  
-**Package**: `@colis/rig` (core package)  
+**Package**: `@colis/rig` (rig package)  
 **Version**: 1.0.9  
 **Status**: Implemented  
 **Last Updated**: 2026-01-25
@@ -1024,10 +1024,10 @@ const running = await manager.checkCaddyRunning();
 
 ### Related Documentation
 
-- **[Domain Manager Architecture](../../packages/core/src/features/domain-manager/ARCHITECTURE.md)**: Detailed architecture documentation
+- **[Domain Manager Architecture](../../packages/rig/src/features/domain-manager/ARCHITECTURE.md)**: Detailed architecture documentation
 - **[Port Manager PRD](./port-manager/PRD.md)**: Related feature documentation
 - **[Project Initialization PRD](./commissioning/PRD.md)**: Integration documentation
-- **[@colis/rig Package README](../../packages/core/README.md)**: Package overview
+- **[@colis/rig Package README](../../packages/rig/README.md)**: Package overview
 
 ---
 

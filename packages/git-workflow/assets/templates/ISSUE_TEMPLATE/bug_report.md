@@ -28,7 +28,7 @@ assignees: ''
 
 - OS: <!-- e.g., macOS 14.0, Ubuntu 22.04, Windows 11 -->
 - Node Version: <!-- e.g., v20.11.0 -->
-- Package Version: <!-- e.g., @your-org/core@1.0.0 -->
+- Package Version: <!-- e.g., @colis/rig@1.0.0 -->
 
 ## Additional Context
 

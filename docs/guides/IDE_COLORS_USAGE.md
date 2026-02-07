@@ -4,18 +4,18 @@ This guide explains how to use the automatic IDE color feature in new projects.
 
 ## Quick Start
 
-When you initialize a new project with `@your-org/core`, IDE colors are automatically configured:
+When you initialize a new project with `@colis/rig`, IDE colors are automatically configured:
 
 ```bash
 # Step 1: Create and navigate to your project
 cd ~/Documents/Projects/my-new-project
 npm init -y
 
-# Step 2: Install core package
-npm link @your-org/core
+# Step 2: Install rig package
+npm link @colis/rig
 
 # Step 3: Initialize (includes IDE colors)
-npx @your-org/core init
+npx @colis/rig init
 ```
 
 That's it! Your IDE colors are now configured.
@@ -72,7 +72,7 @@ All UI colors are derived from KEY_COLOR:
 ### During Initialization
 
 ```bash
-npx @your-org/core init
+npx @colis/rig init
 ```
 
 The init process:
@@ -97,7 +97,7 @@ The post-checkout hook runs automatically and updates colors.
 
 ### Regenerate Colors
 
-If you need to regenerate colors (e.g., after updating the core package):
+If you need to regenerate colors (e.g., after updating the rig package):
 
 ```bash
 # Run the hook manually
@@ -109,7 +109,7 @@ bash .githooks/post-checkout
 If you don't want IDE colors:
 
 ```bash
-npx @your-org/core init --skip-colors
+npx @colis/rig init --skip-colors
 ```
 
 ### Update Colors for Existing Project
@@ -118,7 +118,7 @@ If you want to add colors to an existing project:
 
 ```bash
 # Just run init again (it will update the hook)
-npx @your-org/core init
+npx @colis/rig init
 ```
 
 ## File Structure
@@ -190,7 +190,7 @@ The KEY_COLOR is generated from your project name. To use a custom color:
 
 Colors are generated using the 70's inspired palette. To customize:
 
-1. Edit `packages/core/src/features/commissioning/color-manager.ts`
+1. Edit `packages/rig/src/features/commissioning/color-manager.ts`
 2. Modify the `SEVENTIES_PALETTE` or color generation logic
 3. Rebuild the package
 
@@ -204,11 +204,11 @@ mkdir ~/Documents/Projects/my-app
 cd ~/Documents/Projects/my-app
 npm init -y
 
-# Install core package
-npm link @your-org/core
+# Install rig package
+npm link @colis/rig
 
 # Initialize (includes colors)
-npx @your-org/core init
+npx @colis/rig init
 
 # Output:
 # 🎨 Setting up IDE colors...
@@ -245,4 +245,4 @@ git checkout -b feature/new-feature
 ## Related Documentation
 
 - [Project Initialization PRD](../features/commissioning/PRD.md)
-- [Core Package README](../../packages/core/README.md)
+- [Core Package README](../../packages/rig/README.md)

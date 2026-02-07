@@ -327,13 +327,13 @@ create-project my-new-app
 **Problem:** "Rules not found"
 ```bash
 # Solution: Update will automatically copy rules
-# Ensure @your-org/core is globally linked
+# Ensure @colis/rig is globally linked
 ```
 
 **Problem:** "Commands not found"
 ```bash
 # Solution: Update will automatically copy commands
-# Ensure @your-org/core is globally linked
+# Ensure @colis/rig is globally linked
 ```
 
 ### Add Framework Issues

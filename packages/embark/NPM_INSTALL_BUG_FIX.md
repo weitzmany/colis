@@ -1,4 +1,4 @@
-# Critical Bug Fix: npm install Removes @your-org/core Symlink
+# Critical Bug Fix: npm install Removes @colis/rig Symlink
 
 ## The Problem
 
@@ -7,8 +7,8 @@
 ### What Was Happening
 
 1. Angular CLI creates project → runs `npm install` → creates `node_modules/`
-2. We run `npm link @your-org/core` → creates symlink in `node_modules/@your-org/`
-3. **Project Initialization runs** → Uses `@your-org/core` → **SUCCESS**
+2. We run `npm link @colis/rig` → creates symlink in `node_modules/@your-org/`
+3. **Project Initialization runs** → Uses `@colis/rig` → **SUCCESS**
 4. **"Installing dependencies" step runs** → `npm install` → **REMOVES THE SYMLINK!**
 5. Project Initialization appears to succeed, but nothing was created:
    - ❌ No `.cursor/` directory
@@ -28,7 +28,7 @@ if (!config.skipDeps) {
 
 But Angular CLI **already installed dependencies** (`✔ Packages installed successfully`), so running `npm install` again was:
 1. **Redundant** - deps already installed
-2. **Destructive** - removed the `@your-org/core` symlink
+2. **Destructive** - removed the `@colis/rig` symlink
 3. **Wasteful** - added ~7 seconds for no reason
 
 ## The Fix
@@ -50,8 +50,8 @@ This prevents running `npm install` when Angular CLI already installed dependenc
 If we do run `npm install`, re-link core afterwards:
 ```typescript
 npm install
-// Re-link @your-org/core after npm install (which removes symlinks)
-npm link @your-org/core
+// Re-link @colis/rig after npm install (which removes symlinks)
+npm link @colis/rig
 ```
 
 ## Result
@@ -60,7 +60,7 @@ npm link @your-org/core
 ```
 ✓ Angular frontend created
 ⚙️ Running Project Initialization...
-✓ Linked @your-org/core
+✓ Linked @colis/rig
 ✓ Project Initialization completed  ← LIE! Nothing happened
 
 📦 Installing dependencies...  ← This removed the symlink!
@@ -73,7 +73,7 @@ Result: Empty project, no .cursor/, no .githooks/, no ports configured
 ```
 ✓ Angular frontend created
 ⚙️ Running Project Initialization...
-✓ Linked @your-org/core
+✓ Linked @colis/rig
 📋 Copying rules...  ← Actually works now!
   ✓ Copied 25 expert personas
 ⚡ Copying commands...
@@ -114,6 +114,6 @@ cat frontend/package.json | grep "start"  # Should show port
 
 ## See Also
 
-- [SETUP_REQUIRED.md](./SETUP_REQUIRED.md) - How to set up @your-org/core
+- [SETUP_REQUIRED.md](./SETUP_REQUIRED.md) - How to set up @colis/rig
 - [PORT_MANAGER_INTEGRATION.md](./PORT_MANAGER_INTEGRATION.md) - Port configuration
 - [COMPLETE_FIX_SUMMARY.md](./COMPLETE_FIX_SUMMARY.md) - All fixes

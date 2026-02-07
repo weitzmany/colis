@@ -309,7 +309,7 @@ compass/
 #### Core Package
 
 ```json
-// packages/core/package.json
+// packages/rig/package.json
 {
   "name": "@your-org/compass",
   "version": "1.0.0",

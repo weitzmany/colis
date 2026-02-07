@@ -30,7 +30,7 @@ When creating a full-stack project, the system now:
 
 2. **Allocates Backend Port** (NEW behavior)
    - After frontend port allocation
-   - Via Port Manager CLI: `npx @your-org/core port-manager allocate -p <project-name>-backend -t php`
+   - Via Port Manager CLI: `npx @colis/rig port-manager allocate -p <project-name>-backend -t php`
    - Stored in `backend/.port-manager.json`
    - Updates `backend/composer.json` with allocated port
    - Creates `backend/.env` with allocated port
@@ -56,7 +56,7 @@ When creating a full-stack project, the system now:
    const backendProjectName = `${config.projectName}-backend`;
    const backendPath = path.join(outputPath, 'backend');
    
-   const allocateCmd = `npx @your-org/core port-manager allocate -p "${backendProjectName}" -t "${backendAppType}"`;
+   const allocateCmd = `npx @colis/rig port-manager allocate -p "${backendProjectName}" -t "${backendAppType}"`;
    execSync(allocateCmd, { cwd: backendPath, stdio: 'inherit' });
    
    // Read allocated port

@@ -106,7 +106,7 @@ npm publish --registry=http://your-verdaccio-server:4873/
 #### Publish rig (second)
 
 ```bash
-cd ~/Documents/packages/packages/core
+cd ~/Documents/packages/packages/rig
 npm run clean
 npm run build
 npm test
@@ -169,7 +169,7 @@ Continue using `npm link` for local development:
 
 ```bash
 # In package directory
-cd ~/Documents/packages/packages/core
+cd ~/Documents/packages/packages/rig
 npm link
 
 # In project directory
@@ -229,7 +229,7 @@ cd ../..
 
 # Publish rig
 echo "📦 Publishing @colis/rig..."
-cd packages/core
+cd packages/rig
 npm run clean && npm run build && npm test
 npm publish --registry=$REGISTRY
 cd ../..
@@ -320,7 +320,7 @@ jobs:
       - name: Build packages
         run: |
           cd packages/git-workflow && npm run build && cd ../..
-          cd packages/core && npm run build && cd ../..
+          cd packages/rig && npm run build && cd ../..
           cd packages/embark && npm run build && cd ../..
       
       - name: Publish packages

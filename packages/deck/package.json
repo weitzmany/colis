@@ -59,7 +59,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@your-org/core": "^1.0.0",
+    "@colis/rig": "^1.0.0",
     "taskmaster-ai": "^1.0.0"
   },
   "peerDependencies": {

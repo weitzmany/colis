@@ -2,13 +2,13 @@
 
 ## Overview
 
-The Project Initialization feature has been fully implemented in `@your-org/core` package and is integrated with `embark`. This feature ensures that all new projects created via `embark` automatically receive the correct Cursor rules, commands, Port Manager configuration, and IDE colors.
+The Project Initialization feature has been fully implemented in `@colis/rig` package and is integrated with `embark`. This feature ensures that all new projects created via `embark` automatically receive the correct Cursor rules, commands, Port Manager configuration, and IDE colors.
 
 ## What Was Implemented
 
 ### 1. Rules Copying (`.cursor/rules/`)
 
-**Implementation**: `packages/core/src/features/commissioning/rules-copier.ts`
+**Implementation**: `packages/rig/src/features/commissioning/rules-copier.ts`
 
 **What Gets Copied**:
 - ✅ `rules/experts/` → `.cursor/rules/experts/` (26 expert persona files)
@@ -25,7 +25,7 @@ The Project Initialization feature has been fully implemented in `@your-org/core
 
 ### 2. Commands Copying (`.cursor/commands/`)
 
-**Implementation**: `packages/core/src/features/commissioning/commands-copier.ts`
+**Implementation**: `packages/rig/src/features/commissioning/commands-copier.ts`
 
 **What Gets Copied**:
 - ✅ `commands/general/` → `.cursor/commands/general/` (General commands for all projects)
@@ -35,7 +35,7 @@ The Project Initialization feature has been fully implemented in `@your-org/core
 - ❌ `commands/local/` - Local commands (packages repo only, not copied)
 
 **Code Changes**:
-- Copied `implement.md` from workspace to core package: `.cursor/commands/general/implement.md` → `packages/core/commands/general/implement.md`
+- Copied `implement.md` from workspace to rig package: `.cursor/commands/general/implement.md` → `packages/rig/commands/general/implement.md`
 - Commands-copier already correctly excludes `local/` commands
 
 ### 3. Port Management Rule
@@ -52,7 +52,7 @@ The Project Initialization feature has been fully implemented in `@your-org/core
 
 The create command:
 1. Creates project structure from templates
-2. Links `@your-org/core` package
+2. Links `@colis/rig` package
 3. Calls `initializeProject()` with project configuration
 4. Configures ports via Port Manager
 5. Installs dependencies
@@ -73,7 +73,7 @@ const initResult = await initializeProject({
 ## File Structure
 
 ```
-packages/core/
+packages/rig/
 ├── src/features/commissioning/
 │   ├── project-initializer.ts        # Main initialization orchestrator
 │   ├── rules-copier.ts                # ✅ Updated - Copies experts/ and projects/
@@ -116,7 +116,7 @@ packages/embark/
    - Generates project structure from templates
    - Creates `package.json` and project files
 3. **Calls initializeProject()**:
-   - Links `@your-org/core` package via `npm link`
+   - Links `@colis/rig` package via `npm link`
    - Copies expert personas: `rules/experts/` → `.cursor/rules/experts/`
    - Copies project rules: `rules/projects/` → `.cursor/rules/projects/` (if exists)
    - Copies general commands: `commands/general/` → `.cursor/commands/general/`
@@ -138,9 +138,9 @@ packages/embark/
 
 ### Prerequisites
 
-1. Ensure `@your-org/core` is globally linked:
+1. Ensure `@colis/rig` is globally linked:
    ```bash
-   cd packages/core
+   cd packages/rig
    npm run build
    npm link
    ```
@@ -242,15 +242,15 @@ After creating a new project, verify:
 
 ## Known Issues & Limitations
 
-1. **`npm link` Required**: Projects use `npm link @your-org/core` to access initialization features. If core is not globally linked, initialization may fail.
+1. **`npm link` Required**: Projects use `npm link @colis/rig` to access initialization features. If core is not globally linked, initialization may fail.
 
 2. **Manual Fallback**: If initialization fails, users can run manually:
    ```bash
-   npm link @your-org/core
-   npx @your-org/core init
+   npm link @colis/rig
+   npx @colis/rig init
    ```
 
-3. **Projects Directory**: The `rules/projects/` directory doesn't exist yet in the core package. When it's created, it will automatically be copied to new projects.
+3. **Projects Directory**: The `rules/projects/` directory doesn't exist yet in the rig package. When it's created, it will automatically be copied to new projects.
 
 ## Future Enhancements
 
@@ -264,9 +264,9 @@ After creating a new project, verify:
 
 ## Related Files
 
-- **Implementation**: `packages/core/src/features/commissioning/`
-- **Commands**: `packages/core/commands/general/`
-- **Rules**: `packages/core/rules/`
+- **Implementation**: `packages/rig/src/features/commissioning/`
+- **Commands**: `packages/rig/commands/general/`
+- **Rules**: `packages/rig/rules/`
 - **Integration**: `packages/embark/src/cli/commands/create.ts`
 - **Documentation**: 
   - `.cursor/commands/general/implement.md` - Implement command definition

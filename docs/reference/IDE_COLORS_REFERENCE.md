@@ -10,13 +10,13 @@ Once the package is built, you can view colors:
 
 ```bash
 # View 70's palette + current project colors
-npx @your-org/core colors
+npx @colis/rig colors
 
 # View 70's palette + all projects' colors
-npx @your-org/core colors --all
+npx @colis/rig colors --all
 
 # View colors for specific project
-npx @your-org/core colors --project-name my-project --path /path/to/project
+npx @colis/rig colors --project-name my-project --path /path/to/project
 ```
 
 The command always shows:
@@ -63,7 +63,7 @@ Each project gets a unique KEY_COLOR generated from:
 - Base palette colors
 - Hue and saturation adjustments for uniqueness
 
-**Important**: Colors are only assigned when running `npx @your-org/core init`. Existing projects are not affected.
+**Important**: Colors are only assigned when running `npx @colis/rig init`. Existing projects are not affected.
 
 ### Generated Colors (Derived from KEY_COLOR)
 

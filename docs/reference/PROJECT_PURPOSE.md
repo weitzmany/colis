@@ -57,11 +57,11 @@ Packages that maintain consistency across projects:
 ### For Rules & Consistency:
 **Automated Setup (Recommended)**:
 ```bash
-# Install core package
-npm install @your-org/core
+# Install rig package
+npm install @colis/rig
 
 # Initialize project (automatically copies rules and commands)
-npx @your-org/core init
+npx @colis/rig init
 ```
 
 This automatically:

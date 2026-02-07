@@ -15,8 +15,8 @@ Standardized git workflow assets and lifecycle management tools for consistent g
 ## Installation
 
 ```bash
-# Via core package (recommended)
-npm install @your-org/core
+# Via rig package (recommended)
+npm install @colis/rig
 
 # Standalone
 npm install @your-org/git-workflow
@@ -28,16 +28,16 @@ npm install @your-org/git-workflow
 
 ```bash
 # Initialize project (git workflow automatically configured)
-npx @your-org/core init
+npx @colis/rig init
 
 # Verify git workflow health
-npx @your-org/core verify
+npx @colis/rig verify
 
 # Repair git workflow issues
-npx @your-org/core repair
+npx @colis/rig repair
 
 # Update git workflow to latest standards
-npx @your-org/core update
+npx @colis/rig update
 ```
 
 ### Standalone
@@ -136,7 +136,7 @@ await GitWorkflow.update({
 
 ## Architecture
 
-This package is consumed by `@your-org/core` for:
+This package is consumed by `@colis/rig` for:
 
 - Project initialization (automatic git workflow setup)
 - Health checks (verify git configuration)

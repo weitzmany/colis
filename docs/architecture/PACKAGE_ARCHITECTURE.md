@@ -9,7 +9,7 @@ This document defines the package architecture strategy for organizing all packa
 
 The package architecture follows a **core + feature packages** model where:
 
-1. **Core Package** (`@your-org/core`) - Contains foundational features, rules, experts, and commands
+1. **Core Package** (`@colis/rig`) - Contains foundational features, rules, experts, and commands
 2. **Feature Packages** - Specialized packages that depend on core (e.g., `@colis/deck`)
 
 ## Repository Strategy Decision (Projects)
@@ -39,10 +39,10 @@ The package architecture follows a **core + feature packages** model where:
 
 ### Core Package Structure
 
-The core package (`@your-org/core`) is the foundation that contains:
+The rig package (`@colis/rig`) is the foundation that contains:
 
 ```
-@your-org/core/
+@colis/rig/
 ├── features/              # Core features
 │   ├── port-manager/      # Port management feature
 │   ├── auth/              # Authentication feature (future)
@@ -72,7 +72,7 @@ Feature packages depend on core and extend its functionality:
 ├── src/
 │   ├── features/          # Task manager features
 │   └── ...
-├── package.json           # Depends on @your-org/core
+├── package.json           # Depends on @colis/rig
 └── README.md
 ```
 
@@ -81,15 +81,15 @@ Feature packages depend on core and extend its functionality:
 ### Dependency Graph
 
 ```
-@your-org/core
+@colis/rig
   ├── (no dependencies on other packages)
   └── Contains: features, rules, experts, commands
 
 @colis/deck
-  └── Depends on: @your-org/core
+  └── Depends on: @colis/rig
 
 @your-org/other-package
-  └── Depends on: @your-org/core
+  └── Depends on: @colis/rig
 ```
 
 ### Core Package Responsibilities
@@ -114,7 +114,7 @@ Feature packages depend on core and extend its functionality:
 3. **Domain Logic**: Business logic for specific domains
 
 **Feature Packages**:
-- **MUST** depend on `@your-org/core`
+- **MUST** depend on `@colis/rig`
 - **CAN** depend on other feature packages if needed
 - **SHOULD** use core's shared utilities and infrastructure
 
@@ -147,7 +147,7 @@ Feature packages depend on core and extend its functionality:
 ### Installing Core Package
 
 ```bash
-npm install @your-org/core
+npm install @colis/rig
 ```
 
 **What You Get**:
@@ -164,22 +164,22 @@ npm install @colis/deck
 
 **What You Get**:
 - Task manager functionality
-- Automatically includes `@your-org/core` as dependency
+- Automatically includes `@colis/rig` as dependency
 - Access to all core features, rules, commands
 
 ### Using Features
 
 **From Core Package**:
 ```typescript
-import { PortManager } from '@your-org/core/features/port-manager';
-import { AuthManager } from '@your-org/core/features/auth';
+import { PortManager } from '@colis/rig/features/port-manager';
+import { AuthManager } from '@colis/rig/features/auth';
 ```
 
 **From Feature Packages**:
 ```typescript
 import { TaskManager } from '@colis/deck';
 // Core features still available via core dependency
-import { PortManager } from '@your-org/core/features/port-manager';
+import { PortManager } from '@colis/rig/features/port-manager';
 ```
 
 ## Package Structure Details
@@ -187,7 +187,7 @@ import { PortManager } from '@your-org/core/features/port-manager';
 ### Core Package Structure
 
 ```
-@your-org/core/
+@colis/rig/
 ├── package.json
 ├── README.md
 ├── src/
@@ -244,7 +244,7 @@ import { PortManager } from '@your-org/core/features/port-manager';
 
 ```json
 {
-  "name": "@your-org/core",
+  "name": "@colis/rig",
   "version": "1.0.0",
   "description": "Core package with features, rules, experts, and commands",
   "main": "dist/index.js",
@@ -275,7 +275,7 @@ import { PortManager } from '@your-org/core/features/port-manager';
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@your-org/core": "^1.0.0"
+    "@colis/rig": "^1.0.0"
   }
 }
 ```
@@ -294,7 +294,7 @@ import { PortManager } from '@your-org/core/features/port-manager';
 
 1. Create new package directory: `packages/deck/`
 2. Set up package structure
-3. Add dependency on `@your-org/core`
+3. Add dependency on `@colis/rig`
 4. Implement feature package code
 5. Update monorepo configuration
 6. Version and publish
@@ -325,7 +325,7 @@ import { PortManager } from '@your-org/core/features/port-manager';
 
 **Core Package**:
 ```bash
-npm publish @your-org/core
+npm publish @colis/rig
 ```
 
 **Feature Packages**:
@@ -337,12 +337,12 @@ npm publish @colis/deck
 
 **Core Only**:
 ```bash
-npm install @your-org/core
+npm install @colis/rig
 ```
 
 **Core + Feature Package**:
 ```bash
-npm install @your-org/core @colis/deck
+npm install @colis/rig @colis/deck
 # Or just:
 npm install @colis/deck  # Core included as dependency
 ```
@@ -387,14 +387,14 @@ npm install @colis/deck  # Core included as dependency
 
 ### Target State
 
-- Port Manager becomes a feature in `@your-org/core`
-- Rules, experts, commands included in `@your-org/core`
+- Port Manager becomes a feature in `@colis/rig`
+- Rules, experts, commands included in `@colis/rig`
 - Feature packages depend on core
 
 ### Migration Steps
 
 1. **Create Core Package Structure**
-   - Set up `@your-org/core` package
+   - Set up `@colis/rig` package
    - Create `features/port-manager/` directory
    - Move rules, experts, commands to core
 
@@ -409,7 +409,7 @@ npm install @colis/deck  # Core included as dependency
    - Implement task manager features
 
 4. **Update Documentation**
-   - Update all PRDs to reflect core package structure
+   - Update all PRDs to reflect rig package structure
    - Update installation instructions
    - Update usage examples
 

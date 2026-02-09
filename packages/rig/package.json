@@ -1,6 +1,6 @@
 {
   "name": "@colis/rig",
-  "version": "1.7.7",
+  "version": "1.7.11",
   "description": "Foundational development toolkit with port management, tech detection, project initialization, and shared utilities for all projects",
   "type": "module",
   "main": "dist/index.js",
@@ -48,11 +48,11 @@
     "release:major": "npm version major && npm run clean && npm run build && npm publish"
   },
   "keywords": [
-    "core",
+    "rig",
     "port-manager",
     "development-tools",
     "cursor-rules",
-    "cursor-commands"
+    "signals"
   ],
   "author": "Colis",
   "license": "MIT",

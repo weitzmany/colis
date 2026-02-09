@@ -188,7 +188,7 @@ const handleFirstSearch = () => {
 import MiniSearch from 'minisearch';
 import packages from './packages.json';
 import commands from './commands.json';
-import cursorCommands from './cursor-commands.json';
+import cursorCommands from './signals.json';
 
 const documents = [
   ...packages.map(pkg => ({

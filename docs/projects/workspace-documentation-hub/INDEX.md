@@ -23,7 +23,7 @@ All features for this project are project-specific. No general features are used
 **Core Features**:
 - [Package Catalog](features/package-catalog.md) - Comprehensive package discovery and documentation
 - [CLI Command Reference](features/cli-reference.md) - Complete CLI tool documentation
-- [Cursor Command Browser](features/cursor-commands.md) - Visual Cursor command discovery
+- [Cursor Command Browser](features/signals.md) - Visual Cursor command discovery
 - [Workflow Documentation](features/workflow-guide.md) - Interactive workflow diagrams
 - [Unified Search](features/unified-search.md) - Fast search across all documentation
 

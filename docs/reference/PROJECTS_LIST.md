@@ -1855,136 +1855,7 @@ Chore & Allowance Manager (ChoreFlow) is a customer-facing full-stack web and mo
 - **Security**: JWT authentication, RBAC, COPPA compliance, data encryption (at rest and in transit)
 - **Business**: Freemium SaaS model, user retention strategies, family productivity market
 
-### 22. `mobile-learning-companion/`
-
-**Status**: Planning (Comprehensive PRD Complete)  
-**Priority**: Medium  
-**Category**: Mobile Learning Application (iOS & Android)
-
-#### Overview
-
-The **Mobile Learning Companion** is an offline-first educational mobile application that enables learners to practice skills, track progress, and maintain consistent learning habits through intelligent reminders. Built with Capacitor for cross-platform deployment, the app solves the connectivity barrier problem by allowing practice sessions entirely offline, with automatic background sync when connectivity returns.
-
-**Target Users**: Self-directed learners (ages 13+), students (K-12, university), professional learners  
-**Core Problem**: Learners struggle to practice consistently without internet access and lack progress visibility  
-**Core Solution**: Offline-capable practice with visual progress tracking and adaptive reminders
-
-#### Technology Stack
-
-- **Frontend/Mobile**: Angular 18, Capacitor 6, Ionic Framework 7
-- **Backend**: PHP 8.2, Slim Framework 4
-- **Database**: MySQL 8.0
-- **State Management**: RxJS + Angular Services
-- **Offline Storage**: Capacitor Storage Plugin (SQLite)
-- **Infrastructure**: DigitalOcean Droplet, GitHub Actions (CI/CD)
-- **Push Notifications**: APNS (iOS), FCM (Android)
-- **Location**: `~/Documents/mobile-learning-companion/`
-
-#### Key Features
-
-**MVP Features** (Phase 1 - 12 weeks):
-- Offline practice mode (download up to 50 questions)
-- 4 question types (multiple choice, true/false, fill-blank, short answer)
-- Progress dashboard (stats, streaks, recent activity)
-- Smart notifications (customizable daily reminders, streak protection)
-- Practice session flow with immediate feedback
-- User authentication (email/password, JWT-based)
-- Content library (browse, search, download practice sets)
-
-**Post-MVP Features**:
-- **Phase 2**: Spaced repetition system, advanced analytics, content creation tools
-- **Phase 3**: Gamification (points, badges, levels), social features (rankings, groups)
-- **Phase 4**: AI-powered adaptive learning, multimedia content, internationalization (i18n)
-
-#### Architecture Highlights
-
-- **Offline-First**: Core functionality works 100% offline with background sync
-- **Sync Strategy**: Last-Write-Wins (LWW) conflict resolution with timestamps
-- **Database Schema**: Normalized (3NF) with optimized indexes
-- **API Design**: RESTful with JWT authentication
-- **Performance Targets**: <3s app launch, <500ms API response, 60 FPS UI
-- **Security**: bcrypt password hashing, JWT tokens, HTTPS/TLS, secure storage (Keychain/EncryptedSharedPreferences)
-- **Scalability**: Single server (MVP) → Load balanced (Phase 3) → Microservices (Phase 4)
-
-#### Business Model
-
-- **Freemium Model**: 
-  - Free Tier: 50 offline questions, basic dashboard, standard question types, 1 device
-  - Premium Tier: $4.99/month or $39.99/year (unlimited offline, advanced analytics, spaced repetition, 3 devices, ad-free)
-- **Target Conversion**: 5-8% free-to-premium
-- **Revenue Target**: $2,500 MRR by Q3 2026, $15,000 MRR by Q1 2027
-
-#### Documentation
-
-- [PRD Overview](projects/mobile-learning-companion/PRD_OVERVIEW.md) - Comprehensive product requirements with MVP definition
-- [Architecture](projects/mobile-learning-companion/ARCHITECTURE.md) - Technical architecture and system design
-- [Expert Contributions](projects/mobile-learning-companion/EXPERTS.md) - Expert reviews and sign-offs
-- [Documentation Index](projects/mobile-learning-companion/INDEX.md) - Navigation guide
-
-#### Timeline
-
-- **Phase 1 (MVP)** (Q2 2026 - 12 weeks): Foundation, core features, polish & launch
-  - Month 1-2: Backend API, authentication, database, mobile scaffolding, offline storage
-  - Month 2-3: Practice questions, offline sync, progress dashboard, content library, notifications
-  - Month 3: Beta testing (50 users), bug fixes, app store submission, public launch
-- **Phase 2 (Enhanced Learning)** (Q3 2026 - 12 weeks): Spaced repetition, advanced analytics, content creation, premium launch
-- **Phase 3 (Social & Gamification)** (Q4 2026 - 12 weeks): Gamification, rankings, study groups, referral program
-- **Phase 4 (Advanced Features)** (Q1 2027 - 12 weeks): Adaptive learning, multimedia, i18n, institution partnerships
-
-**Target**: 1,000 users (MVP launch), 5,000 users (Q3 2026), 25,000 users (Q1 2027)
-
-#### Business Value
-
-- **Market Opportunity**: $80B mobile learning market, 10M+ active mobile learners addressable
-- **Competitive Advantage**: Offline-first + cross-subject + mobile-native + smart reminders (competitors lack one or more)
-- **Revenue Potential**: Freemium SaaS targeting 50M+ US students and 100M+ global self-learners
-- **User Value**: Enables learning in low-connectivity environments, increases practice consistency, provides progress visibility
-- **Success Metrics**: 60% WAU, 40% D30 retention, 5-8% premium conversion, 30% offline usage, NPS 50+
-
-#### Expert Team (17 Experts - All Approved)
-
-- **Product**: Patricia Martinez (Product Manager)
-- **Architecture**: Marcus Johnson (Architecture)
-- **Mobile**: Michael Brown (Mobile)
-- **Educational Content**: Carol Williams (Educational Content)
-- **Backend**: Samuel Rodriguez (Backend)
-- **Frontend**: Thomas Anderson (Frontend)
-- **Database**: Benjamin Lee (Database)
-- **UI/UX**: Daisy Thompson (UI/UX)
-- **Accessibility**: Allison Foster (Accessibility)
-- **Security**: Ryan Kim (Security)
-- **API Design**: Emily Chen (API Design)
-- **Performance**: James Martinez (Performance)
-- **Learning Analytics**: Andrew Mitchell (Learning Analytics)
-- **Compliance**: Constance White (Compliance)
-- **Testing**: Robert Brown (Testing)
-- **DevOps**: David Cooper (DevOps)
-- **Documentation**: Dorothy Clark (Documentation)
-
-**All experts approved and signed off on 2026-01-22**
-
-#### Academic Classification
-
-**Primary**: Computer Science - Mobile Development, Human-Computer Interaction, Educational Technology
-
-**Educational Value**:
-- Demonstrates offline-first mobile architecture with background sync
-- Illustrates cross-platform mobile development (Capacitor for iOS/Android)
-- Shows educational technology principles (spaced repetition, progress tracking, adaptive learning)
-- Exemplifies mobile-native UX patterns and performance optimization
-- Demonstrates freemium SaaS business model for educational apps
-- Shows JWT authentication and secure offline storage strategies
-
-**Subject Matter Areas**:
-- **Computer Science**: Mobile development, offline data sync, cross-platform development, background sync, push notifications
-- **Software Engineering**: RESTful API design, database schema design, scalability planning, CI/CD pipelines
-- **Database Systems**: MySQL schema design, query optimization, data normalization, indexing strategies
-- **Security**: JWT authentication, password hashing (bcrypt), secure storage (Keychain/EncryptedSharedPreferences), HTTPS/TLS
-- **Human-Computer Interaction**: Mobile UX patterns, progress visualization, notification design, accessibility (WCAG 2.1)
-- **Educational Technology**: Learning analytics, spaced repetition, adaptive learning, progress tracking, gamification
-- **Business**: Freemium pricing models, app store distribution, user acquisition strategies, mobile app monetization
-
-### 23. `subscription-bill-manager/`
+### 22. `subscription-bill-manager/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -2100,7 +1971,7 @@ Subscription & Bills Manager (working name: BillGuard) is a customer-facing full
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/subscription-bill-manager/`
 
-### 24. `pet-care-manager/`
+### 23. `pet-care-manager/`
 
 **Status**: Planning (PRD + Architecture Complete)  
 **Priority**: High  
@@ -2202,7 +2073,7 @@ Pet Care Manager is a comprehensive, customer-facing full-stack web and mobile a
 - **Scalability**: Read replicas for read-heavy workloads (Phase 2+), connection pooling for concurrent users
 - **Security**: Encryption at rest (AES-256), encryption in transit (TLS 1.2/1.3), GDPR/CCPA compliance for health data
 
-### 25. `financial-goal-saver/`
+### 24. `financial-goal-saver/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: High  
@@ -2313,7 +2184,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/financial-goal-saver/`
 
-### 26. `packages/`
+### 25. `packages/`
 - **Type**: Documentation/Knowledge Base (Current Workspace)
 - **Technology**: Markdown documentation
 - **Location**: `~/Documents/packages/`
@@ -2336,7 +2207,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
   - Computer Science: Project management, software documentation, design patterns
   - Education: Learning resource organization, curriculum design (if applicable)
 
-### 27. `workspace-documentation-hub/`
+### 26. `workspace-documentation-hub/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: High  
@@ -2427,7 +2298,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Next.js + TypeScript + Automated Data Extraction  
 **Location**: `~/Documents/packages/docs/projects/workspace-documentation-hub/`
 
-### 28. `tai-chi-lessons/`
+### 27. `tai-chi-lessons/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -2569,7 +2440,7 @@ Tai Chi Lessons is an **AI-powered video generation engine** that creates beginn
 **Technology**: PHP backend + Angular frontend + AI providers + ffmpeg  
 **Location**: `~/Documents/packages/docs/projects/tai-chi-lessons/`
 
-### 29. `sports-results-tracker/`
+### 28. `sports-results-tracker/`
 
 **Status**: Planning (MVP Definition Complete)  
 **Priority**: Medium  
@@ -2697,7 +2568,7 @@ Sports Results Tracker is a fast, mobile-first platform for tracking soccer resu
 **Technology**: React 18 + TypeScript + Node.js + PostgreSQL + Redis  
 **Location**: `~/Documents/packages/docs/projects/sports-results-tracker/`
 
-### 30. `social-media-manager/`
+### 29. `social-media-manager/`
 
 **Status**: Planning (Initial Concept)  
 **Priority**: Medium  
@@ -2756,7 +2627,7 @@ Run comprehensive planning (`/local/plan-project social-media-manager`) to devel
 **Technology**: To be determined (likely full-stack with PHP/Node.js backend)  
 **Location**: `~/Documents/packages/docs/projects/social-media-manager/`
 
-### 31. `colis-company-showcase/`
+### 30. `colis-company-showcase/`
 
 **Status**: Planning  
 **Priority**: High  
@@ -2948,7 +2819,7 @@ Colis Company Showcase is a professional marketing and portfolio website designe
 **Technology**: Angular 18 + Slim PHP 4 + MySQL 8.0  
 **Location**: `~/Documents/packages/docs/projects/colis-company-showcase/`
 
-### 32. `ai-logo-generator/`
+### 31. `ai-logo-generator/`
 
 **Status**: Planning  
 **Priority**: High  
@@ -3441,7 +3312,7 @@ The following directories exist in `~/Documents/` but are not code projects:
 
 ## Summary
 
-**Total Code Projects**: 29 active projects
+**Total Code Projects**: 30 active projects
 
 1. `ulvonix/` - Social Media Bots Platform (CS: distributed systems, automation)
 2. `find-hidden-files/` - Obsidian Plugin (CS: Plugin architecture, file systems)
@@ -3463,17 +3334,16 @@ The following directories exist in `~/Documents/` but are not code projects:
 18. `meal-planner-grocery/` - Meal Planner & Grocery (CS: planning, UX)
 19. `recipes/` - Recipes Platform (CS: content discovery, UX)
 20. `chore-allowance-manager/` - Chore & Allowance Manager (CS: routines, rewards)
-21. `mobile-learning-companion/` - Learning Companion Mobile App (CS: mobile UX)
-22. `subscription-bill-manager/` - Subscriptions & Bills Manager (CS: finance analytics)
-23. `pet-care-manager/` - Pet Care Manager (CS: health information systems, mobile, reminders)
-24. `financial-goal-saver/` - Financial Goal Tracker & Automated Savings (CS: FinTech, automated savings)
-25. `packages/` - Knowledge Base (Information Science: Knowledge management)
-26. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
-27. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
-28. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
-29. `social-media-manager/` - Social Media Management Platform (CS: social technology, automation)
-30. `colis-company-showcase/` - Company Portfolio & Marketing Website (CS: full-stack web, CMS, marketing technology)
-31. `ai-logo-generator/` - AI-Powered Logo Generation Platform (CS: AI/ML, web development, SaaS, image generation)
+21. `subscription-bill-manager/` - Subscriptions & Bills Manager (CS: finance analytics)
+22. `pet-care-manager/` - Pet Care Manager (CS: health information systems, mobile, reminders)
+23. `financial-goal-saver/` - Financial Goal Tracker & Automated Savings (CS: FinTech, automated savings)
+24. `packages/` - Knowledge Base (Information Science: Knowledge management)
+25. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
+26. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
+27. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
+28. `social-media-manager/` - Social Media Management Platform (CS: social technology, automation)
+29. `colis-company-showcase/` - Company Portfolio & Marketing Website (CS: full-stack web, CMS, marketing technology)
+30. `ai-logo-generator/` - AI-Powered Logo Generation Platform (CS: AI/ML, web development, SaaS, image generation)
 
 **Academic Focus Areas**:
 - **Primary**: Educational Technology (`learning-games/`), Artificial Intelligence & Machine Learning (`ai-logo-generator/`)

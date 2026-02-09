@@ -1,0 +1,106 @@
+#!/usr/bin/env node
+
+/**
+ * Core Package CLI Entry Point
+ * 
+ * Handles main package commands like `npx @your-org/core init`
+ */
+
+import { program } from 'commander';
+import { initCommand } from '../dist/features/commissioning/cli/commands/init.js';
+import { refitCommand } from '../dist/features/commissioning/cli/commands/refit.js';
+import { colorsCommand } from '../dist/features/commissioning/cli/commands/colors.js';
+import { setupCommand as domainSetupCommand } from '../dist/features/domain-manager/cli/commands/setup.js';
+import { listCommand as domainListCommand } from '../dist/features/domain-manager/cli/commands/list.js';
+import { removeCommand as domainRemoveCommand } from '../dist/features/domain-manager/cli/commands/remove.js';
+import { installCommand as domainInstallCommand } from '../dist/features/domain-manager/cli/commands/install.js';
+
+program
+  .name('@colis/rig')
+  .description('Foundational development toolkit: port management, tech detection, domain management, project setup, and shared utilities')
+  .version('1.0.0');
+
+program
+  .command('init')
+  .description('Set up your project with rules, commands, Port Manager, and IDE colors')
+  .option('-p, --project-name <name>', 'Project name (auto-detected if not provided)')
+  .option('-t, --app-type <type>', 'App type (auto-detected if not provided)')
+  .option('--overwrite', 'Overwrite existing files')
+  .option('--skip-existing', 'Skip existing files (default)')
+  .option('--skip-port-manager', 'Skip Port Manager initialization (not recommended)')
+  .option('--skip-domain', 'Skip automatic domain setup with Caddy')
+  .option('--skip-rules', 'Skip copying rules')
+  .option('--skip-commands', 'Skip copying commands')
+  .option('--skip-colors', 'Skip IDE color setup')
+  .option('--dry-run', 'Show what would be done without making changes')
+  .action(initCommand);
+
+program
+  .command('refit')
+  .description('Refit your project setup - adds missing files and updates existing ones')
+  .option('-p, --project-name <name>', 'Project name (auto-detected if not provided)')
+  .option('-t, --app-type <type>', 'App type (auto-detected if not provided)')
+  .option('--overwrite', 'Overwrite existing files (default: only add missing files)')
+  .option('--skip-port-manager', 'Skip Port Manager check/update')
+  .option('--skip-domain', 'Skip automatic domain setup with Caddy')
+  .option('--skip-rules', 'Skip updating rules')
+  .option('--skip-commands', 'Skip updating commands')
+  .option('--skip-colors', 'Skip IDE color check/update')
+  .option('--dry-run', 'Show what would be done without making changes')
+  .option('--check-only', 'Only check status, do not make any changes')
+  .action(refitCommand);
+
+program
+  .command('colors')
+  .description('Display IDE colors - shows 70\'s palette and project colors')
+  .option('-p, --project-name <name>', 'Project name (auto-detected if not provided)')
+  .option('--path <path>', 'Project path (default: current directory)')
+  .option('--all', 'Show colors for all projects')
+  .action(colorsCommand);
+
+// Domain Manager commands
+program
+  .command('domain-manager')
+  .description('Manage local domains with Caddy reverse proxy')
+  .action(() => {
+    console.log('Use: npx @colis/rig domain-manager <command>');
+    console.log('');
+    console.log('Commands:');
+    console.log('  setup     Set up domain for current project');
+    console.log('  list      List all configured domains');
+    console.log('  remove    Remove domain configuration');
+    console.log('  install   Check Caddy installation');
+  });
+
+program
+  .command('domain-manager:setup')
+  .alias('dm:setup')
+  .description('Set up domain for current project')
+  .option('-p, --project-name <name>', 'Project name (auto-generated if not provided)')
+  .option('--port <port>', 'Single port for single-service projects')
+  .option('--frontend-port <port>', 'Frontend port for multi-service projects')
+  .option('--backend-port <port>', 'Backend port for multi-service projects')
+  .option('-d, --domain <domain>', 'Custom domain name (auto-generated if not provided)')
+  .option('--skip-hosts', 'Skip hosts file update')
+  .option('--path <path>', 'Project path (default: current directory)')
+  .action(domainSetupCommand);
+
+program
+  .command('domain-manager:list')
+  .alias('dm:list')
+  .description('List all configured domains')
+  .action(domainListCommand);
+
+program
+  .command('domain-manager:remove <domain>')
+  .alias('dm:remove')
+  .description('Remove domain configuration')
+  .action(domainRemoveCommand);
+
+program
+  .command('domain-manager:install')
+  .alias('dm:install')
+  .description('Check Caddy installation and provide instructions')
+  .action(domainInstallCommand);
+
+program.parse();

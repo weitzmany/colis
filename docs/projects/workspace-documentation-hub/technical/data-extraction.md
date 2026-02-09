@@ -60,11 +60,11 @@ Workspace Files → Parsers → JSON Data → Next.js Build → Static Site
 
 ---
 
-### 3. Cursor Command Parser (`parse-cursor-commands.ts`)
+### 3. Cursor Command Parser (`parse-signals.ts`)
 
 **Source**: `.cursor/commands/**/*.md`
 
-**Output**: `src/data/cursor-commands.json`
+**Output**: `src/data/signals.json`
 
 **Process**:
 1. Recursively scan `.cursor/commands/`

@@ -2,7 +2,7 @@
 
 This document tracks project ideas that were removed from the main projects list but could be valuable as **features or integrations** in other projects.
 
-**Last Updated**: 2026-01-25
+**Last Updated**: 2026-02-09
 
 ---
 
@@ -133,6 +133,48 @@ This document tracks project ideas that were removed from the main projects list
 - Better to implement as reusable middleware than standalone platform
 - Reduces coupling and single-point-of-failure risks
 - Enables each project to own its API management strategy
+
+---
+
+### 5. Mobile Learning Companion
+
+**Removed Date**: 2026-02-09
+
+**Original Concept**:
+- Offline-first mobile learning application
+- Practice sessions with 4 question types (multiple choice, true/false, fill-blank, short answer)
+- Visual progress dashboard with streaks and analytics
+- Smart notifications and adaptive reminders
+- Cross-platform (iOS & Android) via Capacitor
+- Spaced repetition system and advanced analytics
+- Gamification (points, badges, levels)
+- Content creation tools and peer learning features
+
+**Why Removed**:
+- Redundant with `learning-games/` project (Phase 3 already includes React Native mobile app)
+- Both target the same users (students, learners)
+- Creates confusion having two separate learning apps
+- Better as integrated features in single unified platform
+- Violates portfolio principle: avoid duplicate projects
+
+**Integration Opportunities**:
+- **Learning Games (Primary)**: Integrate all features into Phase 3 mobile app
+  - Offline-first architecture with background sync
+  - Smart notifications and streak tracking
+  - Progress dashboard and analytics
+  - Content library and practice modes
+  - Spaced repetition system
+  - Social features and gamification
+- **Educational platforms**: Reference offline-first architecture patterns
+- **Mobile-first projects**: Apply offline sync and notification strategies
+
+**Value as Integration**:
+- Provides unified learning experience (web + mobile) in single platform
+- Reduces user confusion (one app for all learning needs)
+- Eliminates duplicate development/maintenance effort
+- Enhances `learning-games/` with proven offline-first architecture
+- Better user retention with consolidated platform
+- Enables cross-device learning (start on web, continue on mobile)
 
 ---
 

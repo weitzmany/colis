@@ -73,7 +73,7 @@ src/app/
 ├── cli/
 │   ├── page.tsx               # CLI command reference (list view)
 │   └── [tool]/page.tsx        # CLI tool detail page
-├── cursor-commands/
+├── signals/
 │   ├── page.tsx               # Cursor command browser
 │   └── [id]/page.tsx          # Command detail page
 └── search/
@@ -104,7 +104,7 @@ src/lib/
 src/data/                      # Generated data (build-time)
 ├── packages.json
 ├── commands.json
-├── cursor-commands.json
+├── signals.json
 └── search-index.json
 ```
 
@@ -124,8 +124,8 @@ src/data/                      # Generated data (build-time)
 /packages/[id]                 # Package detail
 /cli                           # CLI command reference
 /cli/[tool]                    # CLI tool detail
-/cursor-commands               # Cursor command browser
-/cursor-commands/[id]          # Command detail
+/signals               # Cursor command browser
+/signals/[id]          # Command detail
 /search?q=...                  # Search results
 ```
 
@@ -222,7 +222,7 @@ interface CursorCommand {
 **Build-Time Generated JSON Files**:
 - `src/data/packages.json` - All package data
 - `src/data/commands.json` - All CLI command data
-- `src/data/cursor-commands.json` - All Cursor command data
+- `src/data/signals.json` - All Cursor command data
 - `src/data/search-index.json` - MiniSearch index
 
 **Accessed at Runtime**:
@@ -287,7 +287,7 @@ interface CursorCommand {
 
 **Source**: `.cursor/commands/**/*.md`
 
-**Script**: `scripts/parse-cursor-commands.ts`
+**Script**: `scripts/parse-signals.ts`
 
 **Process**:
 1. Recursively scan `.cursor/commands/` directory
@@ -298,9 +298,9 @@ interface CursorCommand {
    - Description from frontmatter or content
    - Full content for preview
 4. Index commands for search
-5. Generate `cursor-commands.json`
+5. Generate `signals.json`
 
-**Output**: `src/data/cursor-commands.json`
+**Output**: `src/data/signals.json`
 
 ### Search Index Building
 
@@ -605,7 +605,7 @@ workspace-documentation-hub/
 │   │   ├── page.tsx
 │   │   ├── packages/
 │   │   ├── cli/
-│   │   ├── cursor-commands/
+│   │   ├── signals/
 │   │   └── search/
 │   ├── components/
 │   │   ├── ui/
@@ -620,7 +620,7 @@ workspace-documentation-hub/
 │   ├── data/
 │   │   ├── packages.json
 │   │   ├── commands.json
-│   │   ├── cursor-commands.json
+│   │   ├── signals.json
 │   │   └── search-index.json
 │   └── styles/
 │       └── globals.css
@@ -628,7 +628,7 @@ workspace-documentation-hub/
 │   ├── generate-data.ts
 │   ├── parse-packages.ts
 │   ├── parse-cli.ts
-│   ├── parse-cursor-commands.ts
+│   ├── parse-signals.ts
 │   └── build-search-index.ts
 ├── public/
 │   └── icons/

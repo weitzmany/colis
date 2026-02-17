@@ -1150,24 +1150,37 @@ Family Care Coordinator is a customer-facing app that helps families coordinate 
 ### 15. `travel-itinerary-wallet/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
-**Priority**: Medium  
+**Priority**: Medium-High  
 **Category**: Full-Stack Web + Mobile Application (Customer-Facing)
+
+**Note**: This project now incorporates AI-powered itinerary generation features from Smart Travel Planner (project merged 2026-02-09), creating a comprehensive all-in-one travel management platform.
 
 #### Overview
 
-Travel Itinerary & Document Wallet (TripVault) is a customer-facing full-stack web and mobile application that centralizes travel plans, reservations, and critical travel documents. Users can build comprehensive itineraries, store tickets and documents securely, receive automated alerts for schedule changes and expirations, and access everything offline while traveling.
+Travel Itinerary & Document Wallet (TripVault) is a customer-facing full-stack web and mobile application that centralizes travel plans, reservations, and critical travel documents with AI-powered planning assistance. Users can generate personalized itineraries with AI, store tickets and documents securely, receive automated alerts for schedule changes and expirations, and access everything offline while traveling.
 
 **Target Audience**: Frequent travelers, families, business travelers, international travelers (150M US travelers)  
-**Business Model**: Freemium (Free tier: 1 active trip; Premium: $9.99/month for unlimited trips and features)
+**Business Model**: Freemium (Free tier: 1 active trip; Premium: $9.99/month for unlimited trips and AI features)
 
 #### Key Features
 
+**MVP Features**:
 1. **Itinerary Builder**: Day-by-day trip planning with flights, hotels, activities
 2. **Reservation & Ticket Vault**: Store flight/hotel confirmations with QR code access
 3. **Document Wallet**: Secure storage for passports, visas, insurance with expiration tracking (AES-256 encryption)
 4. **Automated Alerts**: Push notifications and email for departures, check-ins, document expirations
 5. **Offline-First Mobile App**: React Native app with full offline access to itineraries and documents
 6. **User Authentication**: JWT-based secure authentication with bcrypt password hashing
+
+**Phase 2 Features** (Merged from Smart Travel Planner):
+- **AI-Powered Itinerary Generation**: Generate personalized day-by-day itineraries from simple inputs
+- Email parsing and auto-import of flight/hotel confirmations
+- Family collaboration with role-based access
+
+**Phase 3 Features**:
+- **Budget Management with AI**: Track expenses, AI-powered budget recommendations
+- **Smart Packing Lists**: Auto-generated based on destination, weather, activities
+- Multi-trip dashboard and calendar view
 
 #### Tech Stack
 
@@ -1258,121 +1271,7 @@ Travel Itinerary & Document Wallet (TripVault) is a customer-facing full-stack w
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/travel-itinerary-wallet/`
 
-### 16. `smart-travel-planner/`
-
-**Status**: Planning (Comprehensive PRD Complete)  
-**Priority**: High  
-**Category**: Full-Stack Web + Mobile Application (Customer-Facing)
-
-#### Overview
-
-Smart Travel Planner is a customer-facing full-stack web and mobile application that helps families and individuals plan, organize, and manage trips with AI-powered itinerary generation, budget tracking, collaborative packing lists, and real-time travel alerts. The platform consolidates all travel planning into one intelligent system, saving users time and money.
-
-**Target Audience**: Families planning vacations (2-6 people, 3-14 day trips), solo travelers and couples (weekend to multi-week trips), group travel organizers  
-**Business Model**: Freemium (Free: 3 active trips, basic features; Premium: $9.99/month unlimited trips; Premium+: $19.99/month with AI assistant)
-
-#### Key Features
-
-1. **AI Itinerary Generation**: Personalized day-by-day itineraries based on preferences, budget, travel style
-2. **Budget Dashboard**: Expense tracking, category budgets, currency conversion, spending visualization
-3. **Smart Packing Lists**: Auto-generated based on destination, weather, activities, duration
-4. **Travel Alerts**: Real-time notifications for flights, weather, passport expiration, visa requirements
-5. **Collaborative Planning**: Real-time editing with companions, voting system, shared expense splitting
-6. **Trip Memory Bank**: Photo uploads, notes, shareable trip summaries
-
-#### Tech Stack
-
-- **Frontend**: React 18 with TypeScript, Material-UI or Chakra UI, Redux Toolkit or Zustand, React Router, TanStack Query
-- **Backend**: Node.js with Express or NestJS, TypeScript, JWT authentication, OAuth 2.0
-- **Database**: PostgreSQL 14+ with Prisma or TypeORM
-- **AI/ML**: OpenAI GPT-4 or Anthropic Claude (itinerary generation), Tesseract.js or AWS Textract (OCR)
-- **Mobile**: React Native with Expo (managed workflow), Redux Persist, Expo Notifications
-- **External APIs**: AviationStack (flights), OpenWeatherMap (weather), Google Maps/Mapbox, Fixer.io (currency)
-- **Infrastructure**: Frontend (Vercel/Netlify), Backend (AWS/Railway), Database (AWS RDS/Supabase), Storage (AWS S3/Cloudflare R2)
-
-#### Documentation
-
-- [PRD](../projects/smart-travel-planner/PRD.md) - Complete product requirements document with comprehensive features, architecture, business model
-
-#### Timeline
-
-- **Phase 1 (MVP)** (10-12 weeks): User management, trip creation, AI itinerary generation, budget tracking, packing lists, trip dashboard
-- **Phase 2 (Collaboration & Intelligence)** (8-10 weeks): Collaborative planning, smart booking aggregation, travel alerts, recommendations engine
-- **Phase 3 (Mobile & Offline)** (10-12 weeks): Mobile apps (iOS/Android), offline mode, trip memories with photos
-- **Phase 4 (Advanced Features)** (8-10 weeks): Advanced budget features, social features, integrations, premium features
-
-**Total Development Time**: ~40 weeks (10 months) from MVP to Phase 4  
-**Target Launch**: Q4 2026
-
-#### Business Value
-
-- **Market Opportunity**: Large addressable market (travelers worldwide), solves fragmented planning pain point
-- **User Value**: High - Saves significant time planning trips, saves money through budget tracking, reduces stress
-- **Revenue Model**: Freemium SaaS targeting $6,000 MRR in Year 1, $500,000/year in Year 2
-- **Time Savings**: Plans perfect trip in minutes vs hours, consolidates 5-10 different apps/sites into one platform
-- **Success Metrics**: 10,000 MAU (Year 1), 5% free-to-premium conversion, 60% user retention within 30 days, 3 trips/user per year
-
-#### Differentiators
-
-- **AI-Powered**: Generates personalized itineraries, not just organization (vs TripIt)
-- **All-in-One**: Single platform for planning, budget, packing, memories (vs multiple tools)
-- **Collaborative**: Real-time collaboration with travel companions and expense splitting
-- **Proactive**: Alerts for important deadlines and travel changes
-- **Privacy-Focused**: Travel data stays private, not sold to third parties
-
-#### Competitive Analysis
-
-- **TripIt**: Email scanning and itinerary organization, but no AI generation or budget tracking
-- **Wanderlog**: Collaborative planning and packing lists, but limited AI and basic budget
-- **Roadtrippers**: Route planning for road trips only, US-focused, no international
-- **Google Trips**: Discontinued in 2019 - market gap opportunity
-
-**Advantage**: All-in-one platform beats stitching together 5+ tools (Notion, Splitwise, PackPoint, Google Sheets)
-
-#### Academic Classification
-
-**Primary**: Computer Science - Web Development, Mobile Development, Artificial Intelligence, Human-Computer Interaction
-
-**Educational Value**:
-- Demonstrates full-stack architecture (React, Node.js, React Native, PostgreSQL)
-- Illustrates AI integration for itinerary generation using OpenAI/Anthropic APIs
-- Shows collaborative real-time editing with multiple users
-- Exemplifies freemium SaaS business model with tiered pricing
-- Demonstrates offline-first mobile architecture with sync
-- Illustrates external API integration (flights, weather, maps, currency)
-
-**Subject Matter Areas**:
-- **Computer Science**: Full-stack development, AI integration, real-time collaboration, offline sync, push notifications, API integrations
-- **Artificial Intelligence**: Prompt engineering, AI-powered content generation, recommendation systems
-- **Software Engineering**: RESTful API design, microservices architecture, state management, collaborative editing
-- **Database Systems**: PostgreSQL schema design, query optimization, data integrity, scalability
-- **Security**: JWT authentication, OAuth 2.0, data encryption at rest and in transit, GDPR/CCPA compliance
-- **Business**: Freemium SaaS model, subscription management, revenue projections, go-to-market strategy
-
-#### Database Considerations
-
-- **Database Type**: PostgreSQL 14+ (relational database for users, trips, itineraries, expenses, packing lists)
-- **Schema Design**: users, trips, trip_collaborators, itinerary_days, itinerary_activities, expenses, expense_splits, packing_lists, packing_items, trip_photos, notifications
-- **Migration Strategy**: Prisma or TypeORM migrations for schema versioning and evolution
-- **Data Persistence**: AWS RDS or Supabase with automated backups
-- **Backup Strategy**: Daily automated backups with point-in-time recovery
-- **Query Optimization**: Indexed user_id, trip_id, day_id, expense_id; compound indexes for trip_collaborators (trip_id, user_id)
-- **Data Integrity**: Foreign key constraints with CASCADE DELETE, transaction management for expense splitting, validation at application level
-- **Scalability**: Stateless API with JWT (horizontal scaling), read replicas for reporting, Redis caching for frequent queries
-- **Security**: TLS 1.3 in transit, database encryption at rest (AWS RDS encryption), bcrypt password hashing, parameterized queries (ORM)
-
-#### Research Opportunities
-
-- **Artificial Intelligence Research**: AI itinerary generation quality, prompt engineering for travel planning, recommendation system effectiveness
-- **Human-Computer Interaction**: Collaborative travel planning UX, budget visualization effectiveness, packing list usability
-- **Travel Technology Research**: Itinerary optimization algorithms, budget forecasting accuracy, group coordination patterns
-- **Mobile Development Research**: Offline-first architecture for travel apps, sync conflict resolution, mobile expense tracking UX
-
-**Type**: Travel Planning Application (AI-Powered)  
-**Technology**: Full-stack web + mobile with AI integration  
-**Location**: `~/Documents/packages/docs/projects/smart-travel-planner/`
-
-### 17. `energy-usage-tracker/`
+### 16. `energy-usage-tracker/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -1481,7 +1380,7 @@ Energy Usage Tracker (EnergyWise) is a customer-facing full-stack web and mobile
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/energy-usage-tracker/`
 
-### 18. `vehicle-maintenance-tracker/`
+### 17. `vehicle-maintenance-tracker/`
 - **Type**: Vehicle Maintenance Application (AutoCare)
 - **Technology**: 
   - Backend: PHP (Slim framework), Composer
@@ -1525,7 +1424,7 @@ Energy Usage Tracker (EnergyWise) is a customer-facing full-stack web and mobile
   - Software Engineering: System architecture, CI/CD, deployment strategies
   - Business: Freemium model, pricing strategy, go-to-market planning
 
-### 19. `meal-planner-grocery/`
+### 18. `meal-planner-grocery/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -1635,7 +1534,7 @@ Meal Planner & Grocery List (MealFlow) is a comprehensive meal planning and groc
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/meal-planner-grocery/`
 
-### 20. `recipes/`
+### 19. `recipes/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -1764,98 +1663,7 @@ Recipes is a full-stack web and mobile application designed to help home cooks a
 **Technology**: Full-stack web + mobile (Next.js, NestJS, React Native, PostgreSQL)  
 **Location**: `~/Documents/packages/docs/projects/recipes/`
 
-### 21. `chore-allowance-manager/`
-
-**Status**: Planning (Comprehensive PRD Complete)  
-**Priority**: Medium  
-**Category**: Full-Stack Web + Mobile Application (Customer-Facing)
-
-#### Overview
-
-Chore & Allowance Manager (ChoreFlow) is a customer-facing full-stack web and mobile application that helps families manage household chores, rewards, and allowances. Parents can assign tasks, set rewards, and track completion. Kids can see their chores, earn points, and learn responsibility through clear, gamified progress.
-
-**Target Audience**: Families with kids (ages 6-18)  
-**Business Model**: Freemium (Free tier up to 2 family members, Premium $9.99/month for unlimited)
-
-#### Key Features
-
-1. **Chore Assignment & Management**: Create, assign, and track recurring and one-time chores with due dates
-2. **Rewards & Allowance Tracking**: Points, rewards, and automatic allowance calculation based on completed chores
-3. **Family Dashboard**: Household overview with progress tracking and completion summaries
-4. **Notifications & Reminders**: Automatic push notifications for chore reminders, completion, and missed chores
-5. **Gamification System**: Streaks, badges, levels, and progress charts to increase kid engagement
-
-#### Tech Stack
-
-- **Frontend**: Angular with TypeScript, Tailwind CSS, responsive/mobile-first design
-- **Backend**: PHP (Slim framework) with Composer, RESTful API
-- **Database**: MySQL 8.0 (via Docker)
-- **Mobile**: Capacitor (iOS & Android), push notifications, offline-first architecture
-- **Infrastructure**: Docker containerization, CI/CD (GitHub Actions), AWS (CloudFront, ECS, RDS)
-
-#### Documentation
-
-- [Documentation Index](projects/chore-allowance-manager/INDEX.md) - Complete navigation guide
-- [PRD Overview](projects/chore-allowance-manager/PRD_OVERVIEW.md) - Main requirements document (458 lines)
-- [Architecture](projects/chore-allowance-manager/ARCHITECTURE.md) - Technical architecture (488 lines)
-- [Expert Contributions](projects/chore-allowance-manager/EXPERTS.md) - 15 expert sign-offs (342 lines)
-- [Feature PRDs](projects/chore-allowance-manager/features/) - Detailed feature specifications
-
-#### Timeline
-
-- **Phase 1 (MVP)** (Months 1-3): Chore lists, assignments, reminders, basic rewards, web dashboard, basic mobile app
-- **Phase 2 (Core)** (Months 4-6): Family dashboard, allowance tracking, full mobile app, push notifications, analytics
-- **Phase 3 (Advanced)** (Months 7-12): Full gamification system, advanced analytics, multi-household support, custom rewards
-
-**Target**: 2,000 active families by end of year 1
-
-#### Business Value
-
-- **Revenue Potential**: Freemium SaaS model with $9.99/month Premium tier targeting 40M US families with kids
-- **Market Gap**: Family-specific chore management (vs generic to-do apps), allowance integration, COPPA-compliant gamification
-- **User Value**: Reduces household friction around chores, teaches responsibility and financial literacy
-- **Success Metrics**: 60% weekly active families, 40% 3-month retention, 8% free-to-premium conversion, 70% chore completion rate
-
-#### Expert Team (15 Experts - All Approved)
-
-- **Product**: Patricia Martinez (Product Manager)
-- **Architecture**: Marcus Johnson (Architecture)
-- **Backend**: Samuel Rodriguez (Backend)
-- **Frontend**: Thomas Anderson (Frontend)
-- **Mobile**: Michael Brown (Mobile)
-- **UI/UX**: Daisy Thompson (UI/UX)
-- **Database**: Benjamin Lee (Database)
-- **Security**: Ryan Kim (Security)
-- **Accessibility**: Allison Foster (Accessibility)
-- **Compliance**: Constance White (Compliance - COPPA)
-- **API Design**: Emily Chen (API Design)
-- **DevOps**: David Cooper (DevOps)
-- **Testing**: Robert Brown (Testing)
-- **Code Quality**: Jessica Taylor (Code Quality)
-- **Documentation**: Dorothy Clark (Documentation)
-
-**All experts approved and signed off on 2026-01-20**
-
-#### Academic Classification
-
-**Primary**: Computer Science - Web Development, Human-Computer Interaction, Family Coordination Systems
-
-**Educational Value**:
-- Demonstrates full-stack architecture (Next.js, NestJS, React Native, PostgreSQL)
-- Illustrates offline-first mobile architecture with background sync
-- Shows RBAC (Role-Based Access Control) for family applications
-- Exemplifies COPPA compliance for kids under 13
-- Demonstrates gamification mechanics for behavior change
-- Illustrates freemium SaaS business model
-
-**Subject Matter Areas**:
-- **Computer Science**: Full-stack development, mobile UX, offline data sync, real-time notifications, API design
-- **Software Engineering**: Microservices architecture (future), CI/CD pipelines, Docker containerization, scalability planning
-- **Database Systems**: PostgreSQL schema design, query optimization, data relationships (many-to-many user-family relationships)
-- **Security**: JWT authentication, RBAC, COPPA compliance, data encryption (at rest and in transit)
-- **Business**: Freemium SaaS model, user retention strategies, family productivity market
-
-### 22. `subscription-bill-manager/`
+### 20. `subscription-bill-manager/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -1971,7 +1779,7 @@ Subscription & Bills Manager (working name: BillGuard) is a customer-facing full
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/subscription-bill-manager/`
 
-### 23. `pet-care-manager/`
+### 21. `pet-care-manager/`
 
 **Status**: Planning (PRD + Architecture Complete)  
 **Priority**: High  
@@ -2073,7 +1881,7 @@ Pet Care Manager is a comprehensive, customer-facing full-stack web and mobile a
 - **Scalability**: Read replicas for read-heavy workloads (Phase 2+), connection pooling for concurrent users
 - **Security**: Encryption at rest (AES-256), encryption in transit (TLS 1.2/1.3), GDPR/CCPA compliance for health data
 
-### 24. `financial-goal-saver/`
+### 22. `financial-goal-saver/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: High  
@@ -2184,7 +1992,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/financial-goal-saver/`
 
-### 25. `packages/`
+### 23. `packages/`
 - **Type**: Documentation/Knowledge Base (Current Workspace)
 - **Technology**: Markdown documentation
 - **Location**: `~/Documents/packages/`
@@ -2207,7 +2015,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
   - Computer Science: Project management, software documentation, design patterns
   - Education: Learning resource organization, curriculum design (if applicable)
 
-### 26. `workspace-documentation-hub/`
+### 24. `workspace-documentation-hub/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: High  
@@ -2222,7 +2030,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 
 #### Key Features
 
-1. **Package Catalog**: Comprehensive, searchable directory of all workspace packages (core, git-workflow, deck, embark, etc.) with metadata, capabilities, usage examples
+1. **Package Catalog**: Comprehensive, searchable directory of all workspace packages (core, logbook, deck, embark, etc.) with metadata, capabilities, usage examples
 2. **CLI Command Reference**: Complete documentation for all CLI tools (cursor-init, task-master, etc.) with syntax, examples, and use cases
 3. **Cursor Command Browser**: Visual interface for discovering and using `/expert` and other Cursor commands from `.cursor/commands/`
 4. **Workflow Documentation**: Interactive guides and visual diagrams for workspace workflows (git workflow, task management, project setup)
@@ -2298,7 +2106,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Next.js + TypeScript + Automated Data Extraction  
 **Location**: `~/Documents/packages/docs/projects/workspace-documentation-hub/`
 
-### 27. `tai-chi-lessons/`
+### 25. `tai-chi-lessons/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -2440,7 +2248,7 @@ Tai Chi Lessons is an **AI-powered video generation engine** that creates beginn
 **Technology**: PHP backend + Angular frontend + AI providers + ffmpeg  
 **Location**: `~/Documents/packages/docs/projects/tai-chi-lessons/`
 
-### 28. `sports-results-tracker/`
+### 26. `sports-results-tracker/`
 
 **Status**: Planning (MVP Definition Complete)  
 **Priority**: Medium  
@@ -2568,7 +2376,7 @@ Sports Results Tracker is a fast, mobile-first platform for tracking soccer resu
 **Technology**: React 18 + TypeScript + Node.js + PostgreSQL + Redis  
 **Location**: `~/Documents/packages/docs/projects/sports-results-tracker/`
 
-### 29. `social-media-manager/`
+### 27. `social-media-manager/`
 
 **Status**: Planning (Initial Concept)  
 **Priority**: Medium  
@@ -2627,7 +2435,7 @@ Run comprehensive planning (`/local/plan-project social-media-manager`) to devel
 **Technology**: To be determined (likely full-stack with PHP/Node.js backend)  
 **Location**: `~/Documents/packages/docs/projects/social-media-manager/`
 
-### 30. `colis-company-showcase/`
+### 28. `colis-company-showcase/`
 
 **Status**: Planning  
 **Priority**: High  
@@ -2819,7 +2627,7 @@ Colis Company Showcase is a professional marketing and portfolio website designe
 **Technology**: Angular 18 + Slim PHP 4 + MySQL 8.0  
 **Location**: `~/Documents/packages/docs/projects/colis-company-showcase/`
 
-### 31. `ai-logo-generator/`
+### 29. `ai-logo-generator/`
 
 **Status**: Planning  
 **Priority**: High  
@@ -3300,8 +3108,8 @@ The following directories exist in `~/Documents/` but are not code projects:
    - Online learning effectiveness for physical practices
    - Community engagement in wellness platforms
 
-7. **Artificial Intelligence & Machine Learning Research** (`smart-travel-planner/`, `ai-logo-generator/`):
-   - AI-powered itinerary generation (OpenAI GPT-4, Anthropic Claude)
+7. **Artificial Intelligence & Machine Learning Research** (`travel-itinerary-wallet/`, `ai-logo-generator/`):
+   - AI-powered itinerary generation (OpenAI GPT-4, Anthropic Claude) - merged from Smart Travel Planner
    - Prompt engineering for travel planning and recommendations
    - AI-powered image generation (OpenAI DALL-E 3, Stability AI)
    - Prompt engineering and optimization for AI models
@@ -3312,7 +3120,7 @@ The following directories exist in `~/Documents/` but are not code projects:
 
 ## Summary
 
-**Total Code Projects**: 30 active projects
+**Total Code Projects**: 28 active projects
 
 1. `ulvonix/` - Social Media Bots Platform (CS: distributed systems, automation)
 2. `find-hidden-files/` - Obsidian Plugin (CS: Plugin architecture, file systems)
@@ -3327,23 +3135,21 @@ The following directories exist in `~/Documents/` but are not code projects:
 11. `home-maintenance-tracker/` - Home Maintenance Tracker (CS: scheduling, reminders)
 12. `medical-records-manager/` - Medical Records Manager (CS: security, scheduling)
 13. `family-care-coordinator/` - Family Care Coordinator (CS: collaboration, access)
-14. `travel-itinerary-wallet/` - Travel Itinerary & Document Wallet (CS: planning, alerts)
-15. `smart-travel-planner/` - AI-Powered Travel Planner (CS: AI integration, travel planning)
-16. `energy-usage-tracker/` - Energy Usage & Utility Optimizer (CS: analytics, alerts)
-17. `vehicle-maintenance-tracker/` - Vehicle Maintenance Tracker (CS: scheduling, expenses)
-18. `meal-planner-grocery/` - Meal Planner & Grocery (CS: planning, UX)
-19. `recipes/` - Recipes Platform (CS: content discovery, UX)
-20. `chore-allowance-manager/` - Chore & Allowance Manager (CS: routines, rewards)
-21. `subscription-bill-manager/` - Subscriptions & Bills Manager (CS: finance analytics)
-22. `pet-care-manager/` - Pet Care Manager (CS: health information systems, mobile, reminders)
-23. `financial-goal-saver/` - Financial Goal Tracker & Automated Savings (CS: FinTech, automated savings)
-24. `packages/` - Knowledge Base (Information Science: Knowledge management)
-25. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
-26. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
-27. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
-28. `social-media-manager/` - Social Media Management Platform (CS: social technology, automation)
-29. `colis-company-showcase/` - Company Portfolio & Marketing Website (CS: full-stack web, CMS, marketing technology)
-30. `ai-logo-generator/` - AI-Powered Logo Generation Platform (CS: AI/ML, web development, SaaS, image generation)
+14. `travel-itinerary-wallet/` - Travel Itinerary & Document Wallet with AI Planning (CS: planning, alerts, AI integration) ⭐ MERGED
+15. `energy-usage-tracker/` - Energy Usage & Utility Optimizer (CS: analytics, alerts)
+16. `vehicle-maintenance-tracker/` - Vehicle Maintenance Tracker (CS: scheduling, expenses)
+17. `meal-planner-grocery/` - Meal Planner & Grocery (CS: planning, UX)
+18. `recipes/` - Recipes Platform (CS: content discovery, UX)
+19. `subscription-bill-manager/` - Subscriptions & Bills Manager (CS: finance analytics)
+20. `pet-care-manager/` - Pet Care Manager (CS: health information systems, mobile, reminders)
+21. `financial-goal-saver/` - Financial Goal Tracker & Automated Savings (CS: FinTech, automated savings)
+22. `packages/` - Knowledge Base (Information Science: Knowledge management)
+23. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
+24. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
+25. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
+26. `social-media-manager/` - Social Media Management Platform (CS: social technology, automation)
+27. `colis-company-showcase/` - Company Portfolio & Marketing Website (CS: full-stack web, CMS, marketing technology)
+28. `ai-logo-generator/` - AI-Powered Logo Generation Platform (CS: AI/ML, web development, SaaS, image generation)
 
 **Academic Focus Areas**:
 - **Primary**: Educational Technology (`learning-games/`), Artificial Intelligence & Machine Learning (`ai-logo-generator/`)

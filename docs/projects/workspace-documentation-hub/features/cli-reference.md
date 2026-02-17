@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Description**: Complete, searchable documentation for all CLI tools in the workspace (task-master, cursor-init, git-workflow, etc.)
+**Description**: Complete, searchable documentation for all CLI tools in the workspace (task-master, cursor-init, logbook, etc.)
 
 **User Benefit**: Developers find CLI command syntax and examples quickly without digging through READMEs
 

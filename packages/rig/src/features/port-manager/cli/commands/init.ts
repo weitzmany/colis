@@ -6,6 +6,8 @@
 
 import { PortManager } from '../../port-manager.js';
 import { GlobalConfigManager } from '../../../../shared/config/global-config.js';
+import { ProjectConfigManager, type ProjectConfig } from '../../../../shared/config/project-config.js';
+import { ConfigurationManager } from '../../core/configurator.js';
 import { FrameworkDetector } from '../../utils/project-detector.js';
 import { generateProjectName } from '../../utils/project-name.js';
 import chalk from 'chalk';
@@ -80,6 +82,30 @@ async function setupMultiServiceDomain(
   console.log(chalk.green(`✓ Domain configured: ${domainResult.domain}`));
   console.log(chalk.gray(`  Frontend: localhost:${frontendAssignment.port}`));
   console.log(chalk.gray(`  Backend:  localhost:${backendAssignment.port} (via /api/*)`));
+
+  // Save domain to frontend .port-manager.json
+  const frontendConfigManager = new ProjectConfigManager(path.join(projectPath, frontendService.path || '.'));
+  const frontendConfig = await frontendConfigManager.load();
+  await frontendConfigManager.save({
+    ...(frontendConfig || {}),
+    domain: domainResult.domain
+  } as ProjectConfig);
+
+  // Reconfigure frontend Angular if needed
+  if (frontendService.appType === 'angular') {
+    console.log(chalk.dim('  ⏳ Updating Angular configuration with domain...'));
+    const configManager = new ConfigurationManager(path.join(projectPath, frontendService.path || '.'));
+    const result = await configManager.updateFrameworkConfigOnly(
+      frontendService.appType,
+      frontendAssignment.port
+    );
+    if (result.filesUpdated.length > 0) {
+      console.log(chalk.green(`  ✓ Updated: ${result.filesUpdated.join(', ')}`));
+    }
+    if (result.errors.length > 0) {
+      console.warn(chalk.yellow(`  ⚠ Warnings: ${result.errors.join(', ')}`));
+    }
+  }
 }
 
 export async function initCommand(options: {
@@ -299,8 +325,25 @@ export async function initCommand(options: {
           hostsUpdated: domainResult.hostsUpdated
         };
 
-        // Domain info is stored in Caddyfile and hosts file
-        // Port Manager metadata can optionally store domain reference for future use
+        // Save domain to .port-manager.json so Angular can configure allowedHosts
+        const projectConfigManager = new ProjectConfigManager(projectPath);
+        const currentConfig = await projectConfigManager.load();
+        await projectConfigManager.save({
+          ...(currentConfig || {}),
+          domain: domainResult.domain
+        } as ProjectConfig);
+
+        // Now reconfigure Angular with the domain
+        if (appType === 'angular') {
+          const configManager = new ConfigurationManager(projectPath);
+          const configResult = await configManager.updateFrameworkConfigOnly(
+            appType,
+            port
+          );
+          if (configResult.filesUpdated.length > 0) {
+            console.log(chalk.dim(`  ⓘ Updated Angular config with domain: ${configResult.filesUpdated.join(', ')}`));
+          }
+        }
       } catch (error: any) {
         console.warn(chalk.yellow(`\n⚠ Domain setup failed: ${error.message}`));
         console.warn(chalk.yellow('  Port Manager initialization completed successfully'));

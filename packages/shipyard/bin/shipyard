@@ -1,0 +1,113 @@
+#!/usr/bin/env node
+
+const { Shipyard } = require('../dist/index');
+const chalk = require('chalk');
+const path = require('path');
+
+function parseArgs(argv) {
+  const args = [...argv];
+  const command = args.shift() || 'help';
+  const options = {};
+
+  while (args.length > 0) {
+    const token = args.shift();
+    if (!token) break;
+
+    if (token === '--project-root') {
+      options.projectRoot = args.shift();
+    } else if (token === '--aws-region') {
+      options.awsRegion = args.shift();
+    } else if (token === '--ecs-cluster') {
+      options.ecsCluster = args.shift();
+    } else if (token === '--ecs-service') {
+      options.ecsService = args.shift();
+    } else if (token === '--s3-bucket') {
+      options.s3Bucket = args.shift();
+    } else if (token === '--cloudfront-distribution-id') {
+      options.cloudFrontDistributionId = args.shift();
+    } else if (token === '--force') {
+      options.force = true;
+    }
+  }
+
+  return { command, options };
+}
+
+function printHelp() {
+  console.log(`
+${chalk.bold('Shipyard CLI')}
+
+Usage:
+  shipyard <command> [options]
+
+Commands:
+  init                     Install dockside + passage + landfall defaults
+  dockside                 Install/update local validation defaults only
+  passage                  Install/update GitHub CI workflow only
+  landfall                 Install/update GitHub->AWS deploy workflow only
+
+Options:
+  --project-root <path>    Target project root (default: cwd)
+  --aws-region <region>    AWS region for deploy workflow (default: us-east-1)
+  --ecs-cluster <name>     ECS cluster placeholder value
+  --ecs-service <name>     ECS service placeholder value
+  --s3-bucket <name>       S3 bucket placeholder value
+  --cloudfront-distribution-id <id> CloudFront distribution placeholder
+  --force                  Overwrite existing files
+`);
+}
+
+async function main() {
+  try {
+    const { command, options } = parseArgs(process.argv.slice(2));
+    const projectRoot = path.resolve(options.projectRoot || process.cwd());
+
+    switch (command) {
+      case 'init':
+        await Shipyard.init({
+          projectRoot,
+          force: Boolean(options.force),
+          landfall: {
+            awsRegion: options.awsRegion || 'us-east-1',
+            ecsCluster: options.ecsCluster || 'your-ecs-cluster',
+            ecsService: options.ecsService || 'your-ecs-service',
+            s3Bucket: options.s3Bucket || 'your-frontend-bucket',
+            cloudFrontDistributionId:
+              options.cloudFrontDistributionId || 'YOUR_DISTRIBUTION_ID'
+          }
+        });
+        break;
+      case 'dockside':
+        await Shipyard.installDockside({
+          projectRoot,
+          force: Boolean(options.force)
+        });
+        break;
+      case 'passage':
+        await Shipyard.installPassage({
+          projectRoot,
+          force: Boolean(options.force)
+        });
+        break;
+      case 'landfall':
+        await Shipyard.installLandfall({
+          projectRoot,
+          force: Boolean(options.force),
+          awsRegion: options.awsRegion || 'us-east-1',
+          ecsCluster: options.ecsCluster || 'your-ecs-cluster',
+          ecsService: options.ecsService || 'your-ecs-service',
+          s3Bucket: options.s3Bucket || 'your-frontend-bucket',
+          cloudFrontDistributionId:
+            options.cloudFrontDistributionId || 'YOUR_DISTRIBUTION_ID'
+        });
+        break;
+      default:
+        printHelp();
+    }
+  } catch (error) {
+    console.error(chalk.red('Shipyard error:'), error.message);
+    process.exit(1);
+  }
+}
+
+main();

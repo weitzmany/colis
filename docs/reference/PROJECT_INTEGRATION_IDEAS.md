@@ -178,6 +178,51 @@ This document tracks project ideas that were removed from the main projects list
 
 ---
 
+### 6. Chore & Allowance Manager
+
+**Removed Date**: 2026-02-09
+
+**Original Concept**:
+- Family chore management with task assignment and tracking
+- Rewards and allowance system based on completed chores
+- Points, streaks, badges, and gamification for kid engagement
+- Family dashboard with progress tracking
+- Push notifications for chore reminders and completion
+- COPPA-compliant for kids under 13
+
+**Why Removed**:
+- Very narrow target audience (families with kids ages 6-18 doing chores)
+- High competition from simple solutions (whiteboards, Google Sheets) and free apps (OurHome, ChoreMonster)
+- Limited user lifespan (kids age out of chore systems quickly)
+- Better suited as feature in broader family management app
+- Low portfolio fit as standalone project
+
+**Integration Opportunities**:
+- **Family Care Coordinator (Primary)**: Add chore/task management module
+  - Task assignment and tracking for family members
+  - Rewards and point system for completed tasks
+  - Family dashboard with progress tracking
+  - Push notifications for task reminders
+  - Gamification elements (streaks, badges, points)
+- **Habit Tracker**: Add family habit tracking with rewards
+  - Shared family habits and routines
+  - Point system for consistency
+  - Family leaderboards and challenges
+- **Personal Budget Manager**: Add family allowance tracking
+  - Track children's allowances and earnings
+  - Budget education for kids
+  - Spending tracking for family members
+
+**Value as Integration**:
+- Better retention when part of broader family management system
+- Reduces standalone app complexity and development effort
+- Natural fit with family coordination workflows
+- Provides value beyond just chore tracking (full family management)
+- Enhances family-care-coordinator with task/chore capabilities
+- Allows families to manage chores alongside calendar, care plans, and coordination
+
+---
+
 ## Integration Strategy
 
 When considering these ideas for integration:

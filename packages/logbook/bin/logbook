@@ -1,0 +1,89 @@
+#!/usr/bin/env node
+
+/**
+ * Logbook CLI (formerly: git-workflow)
+ */
+
+const { GitWorkflow } = require('../dist/index');
+const chalk = require('chalk');
+
+const command = process.argv[2];
+const projectRoot = process.cwd();
+
+async function main() {
+  try {
+    switch (command) {
+      case 'init': {
+        const projectType = process.argv[3] || 'nodejs';
+        await GitWorkflow.init({
+          projectRoot,
+          projectType,
+          options: {
+            createRemoteRepo: !process.argv.includes('--skip-remote'),
+            commitTemplate: true,
+            prTemplate: true,
+            issueTemplates: true
+          }
+        });
+        break;
+      }
+
+      case 'verify': {
+        await GitWorkflow.verify({ projectRoot });
+        break;
+      }
+
+      case 'mend': {
+        const healthStatus = await GitWorkflow.verify({ projectRoot });
+        if (healthStatus.issues.length > 0) {
+          await GitWorkflow.mend({ projectRoot, issues: healthStatus.issues });
+        } else {
+          console.log(chalk.green('✅ No issues to mend!'));
+        }
+        break;
+      }
+
+      case 'update': {
+        await GitWorkflow.update({
+          projectRoot,
+          options: {
+            backup: !process.argv.includes('--no-backup'),
+            force: process.argv.includes('--force')
+          }
+        });
+        break;
+      }
+
+      default: {
+        console.log(`
+${chalk.bold('Logbook CLI')}
+
+Usage:
+  logbook <command> [options]
+
+Commands:
+  init [type]           Initialize logbook (type: nodejs, python, go, generic)
+  verify                Verify logbook health
+  mend                  Mend logbook issues
+  update                Update logbook to latest version
+
+Options:
+  --skip-remote         Skip remote repository creation (init only)
+  --no-backup           Skip backup creation (update only)
+  --force               Force update all files (update only)
+
+Examples:
+  logbook init nodejs
+  logbook verify
+  logbook mend
+  logbook update --backup
+        `);
+      }
+    }
+  } catch (error) {
+    console.error(chalk.red('Error:'), error.message);
+    process.exit(1);
+  }
+}
+
+main();

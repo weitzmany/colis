@@ -201,7 +201,7 @@ const result = await copyRules(corePackagePath, projectPath, {
 $ project-init
 
 📋 Copying rules...
-  ✓ Copied 26 files (26 expert personas, 0 user rules)
+  ✓ Copied 26 files (26 complement, 0 user rules)
   ⊙ Skipped 0 identical files (same hash)
 
 ⚡ Copying commands...

@@ -78,7 +78,7 @@ Intelligently updates an existing project:
   ✓ Port Manager initialized
 
 📋 Checking .cursor/rules...
-  ✓ Rules copied (12 expert personas)
+  ✓ Rules copied (12 complement)
 
 ⚙️  Checking .cursor/commands...
   ✓ Commands copied (15 commands)

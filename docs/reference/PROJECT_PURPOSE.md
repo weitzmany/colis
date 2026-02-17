@@ -65,7 +65,7 @@ npx @colis/rig init
 ```
 
 This automatically:
-- Copies all expert personas to `.cursor/rules/experts/`
+- Copies all complement to `.cursor/rules/experts/`
 - Copies all user rules to `.cursor/rules/user/`
 - Copies general commands to `.cursor/commands/general/`
 - Excludes local commands (for packages repo only)
@@ -90,7 +90,7 @@ This project will eventually contain **all packages** needed across all projects
 - **All Templates** - All project templates, boilerplate, and starters
 - **All Configurations** - All configuration templates and standards
 - **All Patterns** - All reusable patterns, structures, and architectures
-- **All Experts** - All expert personas and AI agent definitions
+- **All Experts** - All complement and AI agent definitions
 - **All Scripts** - All automation scripts and workflows
 - **All Documentation** - All documentation templates and guides
 

@@ -6,7 +6,7 @@
  * (Formerly: update command)
  */
 
-import { updateProject, UpdateOptions } from '../../project-updater.js';
+import { updateProject, UpdateOptions, UpdateResult } from '../../project-updater.js';
 import chalk from 'chalk';
 
 /**
@@ -21,7 +21,7 @@ function displayHeader(): void {
 /**
  * Display success message with summary
  */
-function displaySuccessMessage(result: any): void {
+function displaySuccessMessage(result: UpdateResult): void {
   const hasChanges = result.updated.length > 0 || result.added.length > 0;
 
   if (hasChanges) {
@@ -33,6 +33,29 @@ function displaySuccessMessage(result: any): void {
     console.log(chalk.bold.cyan('║') + chalk.bold.white('  ✓ Project Already Up to Date') + chalk.bold.cyan('                      ║'));
     console.log(chalk.bold.cyan('╚═══════════════════════════════════════════════════════════╝\n'));
   }
+}
+
+function displayShipyardSummary(result: UpdateResult, options: UpdateOptions): void {
+  if (options.skipShipyard || !result.shipyardUpdated) {
+    console.log(chalk.gray('  • Shipyard CI/CD: skipped'));
+    return;
+  }
+
+  console.log(chalk.gray('  • Shipyard CI/CD: updated'));
+}
+
+function displayGitHubSummary(result: UpdateResult, options: UpdateOptions): void {
+  if (options.skipGitHub) {
+    console.log(chalk.gray('  • GitHub repository: skipped'));
+    return;
+  }
+
+  if (result.githubResult?.repoUrl) {
+    console.log(chalk.gray(`  • GitHub repository: ready (${result.githubResult.repoUrl})`));
+    return;
+  }
+
+  console.log(chalk.gray('  • GitHub repository: skipped'));
 }
 
 /**
@@ -106,6 +129,10 @@ export async function refitCommand(options: UpdateOptions) {
         console.log(chalk.blue(`  + ${item}`));
       });
     }
+
+    console.log(chalk.bold('\n📋 Commissioning summary:'));
+    displayGitHubSummary(result, updateOptions);
+    displayShipyardSummary(result, updateOptions);
 
     displaySuccessMessage(result);
   } catch (error: unknown) {

@@ -22,7 +22,7 @@ Update mode automatically detects your existing tech stack and ensures all confi
 - ✅ **Enforces monorepo structure** (removes nested `.git` directories)
 - ✅ Detects existing frameworks (Angular, React, Vue, Slim, Node.js)
 - ✅ Verifies and initializes Port Manager configuration
-- ✅ Copies missing `.cursor/rules` (expert personas)
+- ✅ Copies missing `.cursor/rules` (complement)
 - ✅ Copies missing `.cursor/commands` (Cursor commands)
 - ✅ Configures IDE colors (`.vscode/settings.json`)
 - ✅ Sets up git hooks (`.githooks/`)
@@ -58,7 +58,7 @@ create-project my-existing-app
   ✓ Port Manager initialized (or already configured)
 
 📋 Checking .cursor/rules...
-  ✓ Rules copied (12 expert personas)
+  ✓ Rules copied (12 complement)
 
 ⚙️  Checking .cursor/commands...
   ✓ Commands copied (15 commands)
@@ -240,7 +240,7 @@ For update mode:
 
 1. **Detect tech stack** - Scans for framework markers
 2. **Check Port Manager** - Verifies/initializes port configuration
-3. **Check rules** - Copies missing expert personas
+3. **Check rules** - Copies missing complement
 4. **Check commands** - Copies missing Cursor commands
 5. **Check IDE colors** - Configures `.vscode/settings.json`
 6. **Verify setup** - Confirms all configurations are in place

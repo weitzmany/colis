@@ -154,7 +154,7 @@ async function checkMissingRules(projectPath: string, corePackagePath: string): 
     const sourceRulesPath = path.join(corePackagePath, 'rules');
     const targetRulesPath = path.join(projectPath, '.cursor', 'rules');
 
-    // Check expert personas
+    // Check complement
     const expertsSource = path.join(sourceRulesPath, 'experts');
     const expertsTarget = path.join(targetRulesPath, 'experts');
 
@@ -358,13 +358,13 @@ async function updateExistingProject(
           }
         } else {
           console.log(chalk.green('  ✓ All rules present'));
-          console.log(chalk.gray(`    ${expertCount} expert personas`));
+          console.log(chalk.gray(`    ${expertCount} complement`));
           console.log(chalk.gray(`    ${userCount} user rules`));
         }
       } else {
         // Can't verify - just show what we have
         console.log(chalk.green('  ✓ Rules directory exists'));
-        console.log(chalk.gray(`    ${expertCount} expert personas`));
+        console.log(chalk.gray(`    ${expertCount} complement`));
         console.log(chalk.gray(`    ${userCount} user rules`));
         console.log(chalk.gray('    (Unable to verify completeness - core package not found)'));
       }
@@ -487,7 +487,7 @@ async function updateExistingProject(
     console.log(chalk.green('\n✅ Project update complete!'));
     console.log(chalk.gray('\nUpdated:'));
     console.log(chalk.gray('  - Port Manager configuration'));
-    console.log(chalk.gray('  - .cursor/rules (expert personas)'));
+    console.log(chalk.gray('  - .cursor/rules (complement)'));
     console.log(chalk.gray('  - .cursor/commands (Cursor commands)'));
     console.log(chalk.gray('  - IDE colors (.vscode/settings.json)'));
     
@@ -736,8 +736,12 @@ export interface CreateOptions {
   packageManager?: 'npm' | 'yarn' | 'pnpm';
   /** Skip dependency installation */
   skipDeps?: boolean;
-  /** Skip git repository initialization */
+  /** DEPRECATED: Use skipGithub instead. Skip git repository initialization */
   skipGit?: boolean;
+  /** Skip GitHub repository creation */
+  skipGithub?: boolean;
+  /** GitHub repository visibility (public or private, default: private) */
+  githubVisibility?: 'public' | 'private';
   /** Skip Project Initialization (not recommended) */
   skipInit?: boolean;
   /** Skip Task Manager initialization */
@@ -793,7 +797,7 @@ export async function createCommand(options: CreateOptions = {}): Promise<void> 
       console.error(chalk.red('\n❌ @colis/rig is not globally linked!'));
       console.error(chalk.yellow('\nProject Initialization requires @colis/rig to be globally linked.'));
       console.error(chalk.yellow('Without it, your project will be missing:'));
-      console.error(chalk.gray('  - .cursor/rules/ (expert personas)'));
+      console.error(chalk.gray('  - .cursor/rules/ (complement)'));
       console.error(chalk.gray('  - .cursor/commands/ (Cursor commands)'));
       console.error(chalk.gray('  - .githooks/ (git hooks)'));
       console.error(chalk.gray('  - .vscode/settings.json (IDE colors)'));
@@ -1023,6 +1027,8 @@ export async function createCommand(options: CreateOptions = {}): Promise<void> 
       packageManager: options.packageManager,
       skipDeps: options.skipDeps,
       skipGit: options.skipGit,
+      skipGithub: options.skipGithub,
+      githubVisibility: options.githubVisibility,
       skipInit: options.skipInit,
       skipTaskManager: options.skipTaskManager,
       overwrite: options.overwrite,
@@ -1437,6 +1443,8 @@ See individual README files in \`frontend/\` and \`backend/\` directories for mo
           skipPortManager: false,
           skipDomain: false, // Automatically set up local domain
           skipColors: false,
+          skipGitHub: config.skipGithub,
+          githubVisibility: config.githubVisibility || 'private',
         });
 
         if (!initResult.success) {
@@ -1840,27 +1848,6 @@ FRONTEND_URL=http://localhost:${allocatedPortFromPM}
       }
     }
 
-    // Step 9: Initialize git (if not skipped)
-    if (!config.skipGit) {
-      console.log(chalk.blue('\n🔧 Initializing git repository...'));
-
-      const originalCwd = process.cwd();
-      process.chdir(outputPath);
-
-      try {
-        // Check if git is available
-        execSync('git --version', { stdio: 'ignore' });
-        
-        // Initialize git repo
-        execSync('git init', { stdio: 'inherit' });
-        console.log(chalk.green('✓ Git repository initialized'));
-      } catch (error) {
-        console.warn(chalk.yellow('⚠ Git initialization skipped (git not available or already initialized)'));
-      } finally {
-        process.chdir(originalCwd);
-      }
-    }
-
     // Success message
     console.log(chalk.green('\n✅ Project created successfully!'));
     
@@ -1877,7 +1864,7 @@ FRONTEND_URL=http://localhost:${allocatedPortFromPM}
         verificationResults.push({ 
           check: '.cursor/rules/', 
           passed: true, 
-          details: `${expertFiles.length} expert personas` 
+          details: `${expertFiles.length} complement` 
         });
       } else {
         verificationResults.push({ check: '.cursor/rules/', passed: false });
@@ -1933,6 +1920,27 @@ FRONTEND_URL=http://localhost:${allocatedPortFromPM}
         });
       } else {
         verificationResults.push({ check: '.vscode/settings.json', passed: false });
+      }
+      
+      // Check GitHub remote configured
+      try {
+        const remoteResult = execSync('git remote get-url origin', {
+          cwd: outputPath,
+          encoding: 'utf-8',
+          stdio: 'pipe',
+        }).trim();
+        
+        if (remoteResult) {
+          verificationResults.push({
+            check: 'GitHub remote',
+            passed: true,
+            details: remoteResult.includes('github.com') ? 'Configured' : 'Other remote',
+          });
+        } else {
+          verificationResults.push({ check: 'GitHub remote', passed: false });
+        }
+      } catch {
+        verificationResults.push({ check: 'GitHub remote', passed: false, details: 'Not configured' });
       }
       
       // Check framework CLI .vscode files (extensions, launch, tasks, mcp)

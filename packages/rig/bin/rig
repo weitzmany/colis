@@ -32,6 +32,7 @@ program
   .option('--skip-rules', 'Skip copying rules')
   .option('--skip-commands', 'Skip copying commands')
   .option('--skip-colors', 'Skip IDE color setup')
+  .option('--skip-shipyard', 'Skip Shipyard CI/CD setup')
   .option('--dry-run', 'Show what would be done without making changes')
   .action(initCommand);
 
@@ -46,6 +47,7 @@ program
   .option('--skip-rules', 'Skip updating rules')
   .option('--skip-commands', 'Skip updating commands')
   .option('--skip-colors', 'Skip IDE color check/update')
+  .option('--skip-shipyard', 'Skip Shipyard CI/CD check/update')
   .option('--dry-run', 'Show what would be done without making changes')
   .option('--check-only', 'Only check status, do not make any changes')
   .action(refitCommand);

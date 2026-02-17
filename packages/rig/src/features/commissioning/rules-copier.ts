@@ -1,7 +1,7 @@
 /**
  * Rules Copier with Hash Comparison
  * 
- * Synchronizes rules (expert personas and project rules) from core package to project
+ * Synchronizes rules (complement and project rules) from core package to project
  * using hash comparison to detect changes. Excludes workspace-specific rules.
  * Handles file conflicts and provides detailed results.
  */
@@ -36,7 +36,7 @@ export interface CopyRulesResult {
 /**
  * Synchronize rules from core package to project with hash comparison
  * 
- * Synchronizes expert personas and project rules from the core package's rules directory
+ * Synchronizes complement and project rules from the core package's rules directory
  * to the project's `.cursor/rules/` directory using MD5 hash comparison to detect changes.
  * 
  * **What Gets Synchronized:**
@@ -109,7 +109,7 @@ export async function copyRules(
       return result;
     }
 
-    // Sync expert personas
+    // Sync complement
     const expertsSource = path.join(sourceRulesPath, 'experts');
     const expertsTarget = path.join(targetRulesPath, 'experts');
 

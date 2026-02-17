@@ -42,11 +42,11 @@ for PROJECT in $PROJECTS; do
   
   # Check for Cursor rules
   if [ -d "$PROJECT/.cursor/rules" ]; then
-    # Check for expert personas
+    # Check for complement
     if [ -d "$PROJECT/.cursor/rules/experts" ]; then
       EXPERTS=$(find "$PROJECT/.cursor/rules/experts" -name "*.mdc" 2>/dev/null | wc -l | tr -d ' ')
       if [ "$EXPERTS" -gt 0 ]; then
-        FINDINGS+=("expert:$PROJECT_NAME:$EXPERTS expert personas found")
+        FINDINGS+=("expert:$PROJECT_NAME:$EXPERTS complement found")
       fi
     fi
     

@@ -96,7 +96,7 @@ Before publishing, verify the dependency references use registry versions:
 #### Publish logbook (first)
 
 ```bash
-cd ~/Documents/packages/packages/git-workflow
+cd ~/Documents/packages/packages/logbook
 npm run clean
 npm run build
 npm test
@@ -222,7 +222,7 @@ echo ""
 
 # Publish logbook
 echo "📦 Publishing @colis/logbook..."
-cd packages/git-workflow
+cd packages/logbook
 npm run clean && npm run build && npm test
 npm publish --registry=$REGISTRY
 cd ../..
@@ -319,7 +319,7 @@ jobs:
       
       - name: Build packages
         run: |
-          cd packages/git-workflow && npm run build && cd ../..
+          cd packages/logbook && npm run build && cd ../..
           cd packages/rig && npm run build && cd ../..
           cd packages/embark && npm run build && cd ../..
       

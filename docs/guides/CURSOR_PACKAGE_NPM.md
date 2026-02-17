@@ -1,8 +1,8 @@
 # Cursor Rules & Commands NPM Package Guide
 
-**⚠️ PLANNING MODE**: This guide describes the planned structure and implementation for packaging Cursor rules, commands, and expert personas as an npm package. This is documentation only - no actual implementation files have been created yet.
+**⚠️ PLANNING MODE**: This guide describes the planned structure and implementation for packaging Cursor rules, commands, and complement as an npm package. This is documentation only - no actual implementation files have been created yet.
 
-This guide explains how to package Cursor rules, commands, and expert personas as an npm package for easy distribution across all projects.
+This guide explains how to package Cursor rules, commands, and complement as an npm package for easy distribution across all projects.
 
 **Last Updated**: 2026-01-05  
 **Status**: Planning/Documentation Only
@@ -38,7 +38,7 @@ compass/
 │   │   │   │   ├── planning_mode.mdc
 │   │   │   │   └── security_and_secrets.mdc
 │   │   │   └── experts/
-│   │   │       └── [all expert personas]
+│   │   │       └── [all complement]
 │   │   └── commands/
 │   │       ├── general/
 │   │       └── local/
@@ -59,7 +59,7 @@ compass/
 {
   "name": "@your-org/compass",
   "version": "1.0.0",
-  "description": "Cursor IDE rules, commands, and expert personas for consistent development standards",
+  "description": "Cursor IDE rules, commands, and complement for consistent development standards",
   "keywords": [
     "cursor",
     "rules",
@@ -102,7 +102,7 @@ compass/
 {
   "name": "@your-org/compass",
   "version": "1.0.0",
-  "description": "Cursor IDE rules, commands, and expert personas for consistent development standards",
+  "description": "Cursor IDE rules, commands, and complement for consistent development standards",
   "keywords": [
     "cursor",
     "rules",
@@ -110,7 +110,7 @@ compass/
     "standards",
     "documentation",
     "ai-assistant",
-    "expert-personas"
+    "complement"
   ],
   "author": "Your Name",
   "license": "MIT",
@@ -224,7 +224,7 @@ function installCommands() {
 }
 
 function installExperts() {
-  console.log('👥 Installing expert personas...');
+  console.log('👥 Installing complement...');
   const src = path.join(PACKAGE_DIR, 'templates', '.cursor', 'rules', 'experts');
   const dest = path.join(TARGET_DIR, '.cursor', 'rules', 'experts');
   copyDirectory(src, dest, { force: OPTIONS.force });
@@ -313,7 +313,7 @@ fi
 
 # Install experts
 if [ -d "$PACKAGE_DIR/templates/.cursor/rules/experts" ]; then
-    echo "👥 Installing expert personas..."
+    echo "👥 Installing complement..."
     mkdir -p "$TARGET_DIR/.cursor/rules/experts"
     cp -r "$PACKAGE_DIR/templates/.cursor/rules/experts/"* "$TARGET_DIR/.cursor/rules/experts/"
     echo "✅ Expert personas installed"

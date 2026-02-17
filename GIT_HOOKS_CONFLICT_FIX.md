@@ -11,17 +11,17 @@ You discovered a critical conflict: **Two packages were creating git hooks in di
    - Sets: `git config core.hooksPath .githooks`
    - Result: Git looks for hooks in `.githooks/`
 
-2. **`@your-org/git-workflow`** (BEFORE the fix):
+2. **`@your-org/logbook`** (BEFORE the fix):
    - Created hooks in: `.git/hooks/`
    - Hooks: pre-commit, commit-msg, pre-push, post-checkout
    - Result: **These hooks NEVER RAN** because git was looking in `.githooks/`!
 
 ## The Fix
 
-### Changes Made to `@your-org/git-workflow`
+### Changes Made to `@your-org/logbook`
 
 #### 1. **Hooks Directory Changed**
-**File**: `packages/git-workflow/src/lifecycle/init.ts`
+**File**: `packages/logbook/src/lifecycle/init.ts`
 
 **Before**:
 ```typescript
@@ -87,7 +87,7 @@ try {
    - Creates `.githooks/post-checkout` for IDE colors
    - Sets `git config core.hooksPath .githooks`
 
-2. **@your-org/git-workflow** (runs after):
+2. **@your-org/logbook** (runs after):
    - Finds `.githooks/post-checkout` already exists → **SKIPS** (preserves @colis/rig's hook)
    - Installs: `pre-commit`, `commit-msg`, `pre-push`
    - Confirms `git config core.hooksPath .githooks` is set
@@ -99,9 +99,9 @@ try {
 ```
 .githooks/
 ├── post-checkout     # From @colis/rig (IDE colors) ✅
-├── pre-commit        # From git-workflow ✅
-├── commit-msg        # From git-workflow ✅
-└── pre-push          # From git-workflow ✅
+├── pre-commit        # From logbook ✅
+├── commit-msg        # From logbook ✅
+└── pre-push          # From logbook ✅
 ```
 
 ## Testing the Fix
@@ -115,17 +115,17 @@ mkdir test-project && cd test-project
 # Initialize core (creates .githooks/post-checkout)
 npx @colis/rig init
 
-# Initialize git-workflow (should NOT overwrite post-checkout)
-npx git-workflow init
+# Initialize logbook (should NOT overwrite post-checkout)
+npx logbook init
 
 # Verify hooks directory
 ls -la .githooks/
 
 # Expected output:
 # -rwxr-xr-x  post-checkout  (from @colis/rig)
-# -rwxr-xr-x  pre-commit     (from git-workflow)
-# -rwxr-xr-x  commit-msg     (from git-workflow)
-# -rwxr-xr-x  pre-push       (from git-workflow)
+# -rwxr-xr-x  pre-commit     (from logbook)
+# -rwxr-xr-x  commit-msg     (from logbook)
+# -rwxr-xr-x  pre-push       (from logbook)
 
 # Verify git config
 git config core.hooksPath
@@ -137,8 +137,8 @@ git config core.hooksPath
 ```bash
 cd /Users/yoavweitzman/Documents/Projects/chore-allowance-manager
 
-# Run git-workflow init (should use .githooks/)
-npx git-workflow init
+# Run logbook init (should use .githooks/)
+npx logbook init
 
 # Check hooks directory
 ls -la .githooks/
@@ -178,7 +178,7 @@ git push
 
 ### Updated Files
 
-1. **`docs/features/git-workflow/PRD.md`**:
+1. **`docs/features/logbook/PRD.md`**:
    - Added "Hooks Directory Conflict" to Pain Points
    - Added "Hooks Directory Standardization" to Solution
    - Updated Initialize (`init`) section to clarify `.githooks/` usage
@@ -187,23 +187,23 @@ git push
 ## Files Changed
 
 ### Production Code
-- `packages/git-workflow/src/lifecycle/init.ts` - Main fix
-- `packages/git-workflow/src/lifecycle/repair.ts` - Removed unused import
-- `packages/git-workflow/src/lifecycle/verify.ts` - Removed unused import
+- `packages/logbook/src/lifecycle/init.ts` - Main fix
+- `packages/logbook/src/lifecycle/repair.ts` - Removed unused import
+- `packages/logbook/src/lifecycle/verify.ts` - Removed unused import
 
 ### Documentation
-- `docs/features/git-workflow/PRD.md` - Added technical notes and updated descriptions
+- `docs/features/logbook/PRD.md` - Added technical notes and updated descriptions
 - `GIT_HOOKS_CONFLICT_FIX.md` - This summary document
 
 ### Build
-- Compiled git-workflow with `npm run build` ✅
+- Compiled logbook with `npm run build` ✅
 
 ## Next Steps
 
 1. **Test the fix**: Run the test scenarios above
 2. **Verify in chore-allowance-manager**: Ensure hooks are in `.githooks/` and all work
 3. **Test monorepo enforcement**: Verify nested `.git` removal still works
-4. **Update embark**: Ensure it works with the new git-workflow
+4. **Update embark**: Ensure it works with the new logbook
 
 ## Key Takeaways
 
@@ -211,7 +211,7 @@ git push
 ✅ **No overwrites**: Existing hooks are preserved
 ✅ **Proper configuration**: Git config points to `.githooks/`
 ✅ **All hooks run**: No more "hooks not running" issues
-✅ **Clean separation**: @colis/rig handles IDE colors, git-workflow handles git practices
+✅ **Clean separation**: @colis/rig handles IDE colors, logbook handles git practices
 
 ---
 

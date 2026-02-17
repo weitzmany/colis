@@ -302,6 +302,9 @@ Do NOT rename or reopen the decision unless explicitly asked.
 ├─ P clearance            (authentication)
 │
 ├─ P shipyard             (ci-cd-templates)
+│  ├─ F dockside          (local testing)
+│  ├─ F passage           (remote CI)
+│  └─ F landfall          (deployment)
 ├─ P drydock              (backend-api-testing)
 ├─ P trial basin          (testing-utilities)
 ├─ P assay                (tool-validation)

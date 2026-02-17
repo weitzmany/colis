@@ -20,7 +20,7 @@ npx @colis/rig init
 ```
 
 **Done!** Your project now includes:
-- ✅ All expert personas and user rules in `.cursor/rules/`
+- ✅ All complement and user rules in `.cursor/rules/`
 - ✅ General commands in `.cursor/commands/`
 - ✅ Port Manager initialized and configured
 - ✅ **Local domain configured** - Automatic `.local` domain with Caddy reverse proxy
@@ -96,7 +96,7 @@ npx @colis/rig init
 ```
 
 **What it does**:
-- ✅ Copies all rules (expert personas, user rules) to `.cursor/rules/`
+- ✅ Copies all rules (complement, user rules) to `.cursor/rules/`
 - ✅ Copies general commands to `.cursor/commands/` (excludes local commands)
 - ✅ Initializes Port Manager automatically (mandatory)
 - ✅ **Sets up local domain** - Automatic `.local` domain with Caddy (e.g., `my-project.local`)
@@ -265,7 +265,7 @@ npx @colis/rig port-manager list
 
 ### How Expert Personas Help
 
-Think of expert personas as **specialized AI assistants** that provide domain-specific guidance. After initialization, you can ask questions like:
+Think of complement as **specialized AI assistants** that provide domain-specific guidance. After initialization, you can ask questions like:
 - "How should I structure this API?" → Architecture Expert helps
 - "Is this code secure?" → Security Expert reviews
 - "What tests should I write?" → Testing Expert guides you

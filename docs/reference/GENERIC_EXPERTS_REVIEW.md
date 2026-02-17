@@ -1,6 +1,6 @@
 # Generic Experts Review
 
-This document lists generic/useful expert personas/agents found in other projects that could be helpful across multiple projects.
+This document lists generic/useful complement/agents found in other projects that could be helpful across multiple projects.
 
 **Last Updated**: 2026-01-05
 
@@ -8,7 +8,7 @@ This document lists generic/useful expert personas/agents found in other project
 
 ### ✅ Generic/Useful Experts (Recommended for Review)
 
-These expert personas are generic enough to be useful across multiple projects:
+These complement are generic enough to be useful across multiple projects:
 
 #### 1. **security_expert / security-specialist** (games, sandbox)
 - **Location**: 
@@ -167,7 +167,7 @@ These expert personas are generic enough to be useful across multiple projects:
 
 ### ⚠️ Project-Specific Experts (Skip or Adapt)
 
-These expert personas are too specific to their projects:
+These complement are too specific to their projects:
 
 #### 1. **angular_expert** (games)
 - **Location**: `/Users/yoavweitzman/Documents/games/.cursor/rules/experts/angular_expert.mdc`
@@ -263,7 +263,7 @@ Based on the review, here are the most generic and useful experts:
 
 ## Cloud Infrastructure Considerations for Expert Personas
 
-When reviewing and implementing expert personas, consider cloud infrastructure requirements and implications. Different expert types may have varying infrastructure needs, and cloud-native design can significantly improve scalability, reliability, and cost-effectiveness.
+When reviewing and implementing complement, consider cloud infrastructure requirements and implications. Different expert types may have varying infrastructure needs, and cloud-native design can significantly improve scalability, reliability, and cost-effectiveness.
 
 ### Infrastructure Requirements by Expert Type
 
@@ -302,7 +302,7 @@ When reviewing and implementing expert personas, consider cloud infrastructure r
 ### Cloud Deployment Patterns for Expert Systems
 
 #### Serverless Architecture Pattern
-- **Use Case**: Lightweight expert personas, event-driven workflows
+- **Use Case**: Lightweight complement, event-driven workflows
 - **Benefits**: Cost-effective, auto-scaling, no infrastructure management
 - **Implementation**:
   - AWS Lambda, Azure Functions, or Google Cloud Functions
@@ -311,7 +311,7 @@ When reviewing and implementing expert personas, consider cloud infrastructure r
   - Example: Documentation expert triggered on file changes
 
 #### Container-Based Architecture Pattern
-- **Use Case**: Complex expert personas with dependencies
+- **Use Case**: Complex complement with dependencies
 - **Benefits**: Isolation, portability, resource control
 - **Implementation**:
   - Docker containers for each expert type
@@ -320,7 +320,7 @@ When reviewing and implementing expert personas, consider cloud infrastructure r
   - Example: Database expert with database tools containerized
 
 #### Microservices Architecture Pattern
-- **Use Case**: Multiple expert personas, independent scaling
+- **Use Case**: Multiple complement, independent scaling
 - **Benefits**: Independent deployment, technology diversity, fault isolation
 - **Implementation**:
   - Separate services per expert type
@@ -431,7 +431,7 @@ When reviewing and implementing expert personas, consider cloud infrastructure r
 
 ### Cloud Infrastructure Checklist for Expert Personas
 
-When implementing expert personas in cloud infrastructure, ensure:
+When implementing complement in cloud infrastructure, ensure:
 
 - [ ] **Infrastructure Requirements**: Assessed compute, memory, network needs per expert
 - [ ] **Deployment Pattern**: Selected appropriate pattern (serverless, container, microservices, hybrid)
@@ -486,7 +486,7 @@ When implementing expert personas in cloud infrastructure, ensure:
 
 ---
 
-**Next Steps**: Review each recommended expert and decide which ones to adopt/adapt for this project, and which format (detailed personas vs concise agents) to use. Consider cloud infrastructure requirements when implementing expert personas to ensure scalability, reliability, and cost-effectiveness.
+**Next Steps**: Review each recommended expert and decide which ones to adopt/adapt for this project, and which format (detailed personas vs concise agents) to use. Consider cloud infrastructure requirements when implementing complement to ensure scalability, reliability, and cost-effectiveness.
 
 ---
 
@@ -495,7 +495,7 @@ When implementing expert personas in cloud infrastructure, ensure:
 **Expert**: James Wilson  
 **Expertise**: Cloud Infrastructure (Cloud Platform Architecture, Deployment, Operations)  
 **Date**: 2026-01-05  
-**Changes**: Added comprehensive "Cloud Infrastructure Considerations for Expert Personas" section covering infrastructure requirements by expert type (high-compute experts requiring auto-scaling compute instances and container orchestration, low-compute experts using serverless functions and standard compute, network-intensive experts requiring load balancers and API gateways), cloud deployment patterns for expert systems (serverless architecture pattern with AWS Lambda/Azure Functions/Google Cloud Functions for lightweight experts, container-based architecture pattern with Docker and Kubernetes for complex experts, microservices architecture pattern with independent services per expert type, hybrid architecture pattern optimizing for each expert's needs), cloud scalability considerations (horizontal scaling with auto-scaling configuration based on queue depth and request rate, vertical scaling with right-sized instances and burstable/spot instances, load distribution with health checks and geographic distribution), cloud cost optimization for expert systems (resource optimization with right-sizing and monitoring, cost management strategies with reserved/spot instances and serverless, cost allocation with tagging strategy per expert type), cloud security for expert personas (access control with IAM roles per expert and least privilege, network security with VPCs and security groups, data security with encryption at rest and in transit), cloud monitoring and observability for expert systems (expert performance monitoring with execution time and success rates, expert health monitoring with availability and error rate tracking, expert cost monitoring with cost per execution and trends), cloud infrastructure checklist for expert personas covering infrastructure requirements, deployment patterns, auto-scaling, load balancing, cost optimization, security, monitoring, disaster recovery, compliance, and documentation, cloud infrastructure best practices for expert systems (start with serverless, implement auto-scaling, use managed services, monitor everything, optimize costs continuously, secure by default, design for failure, version control infrastructure, test infrastructure changes, document architecture), and cloud infrastructure recommendations by expert type with specific patterns for serverless, containers, microservices, and hybrid architectures. Also fixed the date from 2025-01-05 to 2026-01-05. This addition ensures that expert personas are designed with cloud infrastructure considerations from the start, enabling scalable, reliable, and cost-effective expert systems that can grow with project needs.
+**Changes**: Added comprehensive "Cloud Infrastructure Considerations for Expert Personas" section covering infrastructure requirements by expert type (high-compute experts requiring auto-scaling compute instances and container orchestration, low-compute experts using serverless functions and standard compute, network-intensive experts requiring load balancers and API gateways), cloud deployment patterns for expert systems (serverless architecture pattern with AWS Lambda/Azure Functions/Google Cloud Functions for lightweight experts, container-based architecture pattern with Docker and Kubernetes for complex experts, microservices architecture pattern with independent services per expert type, hybrid architecture pattern optimizing for each expert's needs), cloud scalability considerations (horizontal scaling with auto-scaling configuration based on queue depth and request rate, vertical scaling with right-sized instances and burstable/spot instances, load distribution with health checks and geographic distribution), cloud cost optimization for expert systems (resource optimization with right-sizing and monitoring, cost management strategies with reserved/spot instances and serverless, cost allocation with tagging strategy per expert type), cloud security for complement (access control with IAM roles per expert and least privilege, network security with VPCs and security groups, data security with encryption at rest and in transit), cloud monitoring and observability for expert systems (expert performance monitoring with execution time and success rates, expert health monitoring with availability and error rate tracking, expert cost monitoring with cost per execution and trends), cloud infrastructure checklist for complement covering infrastructure requirements, deployment patterns, auto-scaling, load balancing, cost optimization, security, monitoring, disaster recovery, compliance, and documentation, cloud infrastructure best practices for expert systems (start with serverless, implement auto-scaling, use managed services, monitor everything, optimize costs continuously, secure by default, design for failure, version control infrastructure, test infrastructure changes, document architecture), and cloud infrastructure recommendations by expert type with specific patterns for serverless, containers, microservices, and hybrid architectures. Also fixed the date from 2025-01-05 to 2026-01-05. This addition ensures that complement are designed with cloud infrastructure considerations from the start, enabling scalable, reliable, and cost-effective expert systems that can grow with project needs.
 
 ## Documentation Standards for Expert Persona Files
 
@@ -585,7 +585,7 @@ When creating or reviewing an expert persona file, ensure:
    - Link to related discussions or decisions
 
 3. **Cross-References**
-   - Link to related expert personas
+   - Link to related complement
    - Reference relevant documentation
    - Link to external resources when helpful
    - Maintain consistent linking structure
@@ -608,7 +608,7 @@ When creating or reviewing an expert persona file, ensure:
 **Expert**: Dorothy Clark  
 **Expertise**: Documentation (Code, API, User Documentation)  
 **Date**: 2026-01-05  
-**Changes**: Added comprehensive "Documentation Standards for Expert Persona Files" section covering file structure standards (frontmatter section with required metadata, expert definition section with clear structure, content organization with consistent heading hierarchy, code examples with appropriate language tags), documentation quality standards (clarity with clear concise language, completeness with all responsibilities documented, consistency with consistent terminology and structure, accuracy with correct technical information), expert persona documentation checklist (14 items covering frontmatter, expert definition, responsibilities, knowledge areas, code examples, project context, best practices, review section, formatting, links, code correctness, spelling/grammar), documentation maintenance (regular reviews with periodic updates, version control with change tracking, cross-references with linking structure), and documentation best practices for expert personas (10 best practices covering purpose, specificity, examples, updates, scannability, context, decisions, resources, consistency, reviews). This addition ensures that expert persona files follow consistent documentation standards, making them easier to understand, maintain, and use effectively across projects.
+**Changes**: Added comprehensive "Documentation Standards for Expert Persona Files" section covering file structure standards (frontmatter section with required metadata, expert definition section with clear structure, content organization with consistent heading hierarchy, code examples with appropriate language tags), documentation quality standards (clarity with clear concise language, completeness with all responsibilities documented, consistency with consistent terminology and structure, accuracy with correct technical information), expert persona documentation checklist (14 items covering frontmatter, expert definition, responsibilities, knowledge areas, code examples, project context, best practices, review section, formatting, links, code correctness, spelling/grammar), documentation maintenance (regular reviews with periodic updates, version control with change tracking, cross-references with linking structure), and documentation best practices for complement (10 best practices covering purpose, specificity, examples, updates, scannability, context, decisions, resources, consistency, reviews). This addition ensures that expert persona files follow consistent documentation standards, making them easier to understand, maintain, and use effectively across projects.
 
 **Expert**: David Anderson  
 **Expertise**: Database (Schema Design, Query Optimization, Migrations)  

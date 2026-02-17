@@ -24,13 +24,13 @@ These rules are generic enough to be useful across multiple projects:
 
 #### 3. **always_use_personas.mdc** (games)
 - **Location**: `/Users/yoavweitzman/Documents/games/.cursor/rules/user/always_use_personas.mdc`
-- **Description**: Rule to always use expert personas when providing assistance
-- **Usefulness**: ⭐⭐⭐⭐ Generic if using expert personas system
+- **Description**: Rule to always use complement when providing assistance
+- **Usefulness**: ⭐⭐⭐⭐ Generic if using complement system
 - **Notes**: Requires expert persona system to be useful
 
 #### 4. **conflict_resolution.mdc** (games)
 - **Location**: `/Users/yoavweitzman/Documents/games/.cursor/rules/user/conflict_resolution.mdc`
-- **Description**: Product Manager resolves conflicts between expert personas
+- **Description**: Product Manager resolves conflicts between complement
 - **Usefulness**: ⭐⭐⭐⭐ Generic conflict resolution framework
 - **Notes**: Useful decision-making framework even without personas
 
@@ -85,8 +85,8 @@ These rules are too specific to their projects:
 - **Description**: Very specific git workflow (feature/task/bug branches, development/main branches, TaskMaster integration)
 - **Reason to Skip**: ⚠️ Very specific to games project workflow
 
-#### 2. **git-workflow.mdc** (discord-story-bot)
-- **Location**: `/Users/yoavweitzman/Documents/discord-story-bot/.cursor/rules/git-workflow.mdc`
+#### 2. **logbook.mdc** (discord-story-bot)
+- **Location**: `/Users/yoavweitzman/Documents/discord-story-bot/.cursor/rules/logbook.mdc`
 - **Description**: Version-based git workflow (release/1.0.0, release/1.1.0 branches)
 - **Reason to Skip**: ⚠️ Specific to discord-story-bot's version-based workflow
 
@@ -126,7 +126,7 @@ Based on the review, here are the most generic and useful rules:
 7. ✅ **naming-conventions.mdc** - Naming conventions (framework-specific but principles are universal)
 
 ### Lower Priority (Useful if using similar systems):
-8. ✅ **always_use_personas.mdc** - If using expert personas system
+8. ✅ **always_use_personas.mdc** - If using complement system
 9. ✅ **conflict_resolution.mdc** - Useful decision-making framework
 10. ✅ **documentation-structure.mdc** - If using similar documentation structure
 11. ✅ **pre_push_investigation.mdc** - Generic CI/CD investigation process (needs cleanup)

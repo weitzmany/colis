@@ -48,7 +48,7 @@ ui_ux_expert.mdc|Daisy Thompson
 #    - ✅ COMPLIANT: Follows data minimization best practices
 #
 # 3. PURPOSE LIMITATION
-#    - This file serves a specific technical purpose: mapping expert personas
+#    - This file serves a specific technical purpose: mapping complement
 #      to their names for command execution
 #    - The data should not be used for any other purpose without consent
 #    - ✅ COMPLIANT: Single, well-defined purpose
@@ -115,7 +115,7 @@ ui_ux_expert.mdc|Daisy Thompson
 # ----------------------------------------------------------------------------
 #
 # 1. RETENTION POLICY
-#    - This file should be retained as long as the expert personas are active
+#    - This file should be retained as long as the complement are active
 #    - When an expert persona is removed, the corresponding mapping should
 #      be removed from this file
 #    - Consider: Automated cleanup when expert files are deleted
@@ -155,14 +155,14 @@ ui_ux_expert.mdc|Daisy Thompson
 #
 # 3. REGULAR REVIEWS
 #    - Periodically review this file for accuracy
-#    - Remove mappings for deleted expert personas
+#    - Remove mappings for deleted complement
 #    - Verify that all listed experts are still active
 #    - Review and update compliance measures as regulations change
 #
 # 4. ALTERNATIVE APPROACHES
 #    - Consider: Using expert IDs instead of names (more privacy-friendly)
 #    - Consider: Storing mappings in a database with proper access controls
-#    - Consider: Using pseudonyms consistently across all expert personas
+#    - Consider: Using pseudonyms consistently across all complement
 #    - Consider: Encrypting the file if it contains sensitive information
 #
 # ----------------------------------------------------------------------------

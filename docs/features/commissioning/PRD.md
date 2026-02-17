@@ -299,7 +299,7 @@ Each project gets a complete color palette derived from KEY_COLOR:
 
 ### Feature 5: Git Workflow Initialization
 
-**Description**: Automatically initializes git workflow using the `@your-org/git-workflow` package (mandatory).
+**Description**: Automatically initializes git workflow using the `@your-org/logbook` package (mandatory).
 
 **What Gets Configured**:
 - **Git Repository**: Initializes git repository if not already initialized
@@ -316,7 +316,7 @@ Each project gets a complete color palette derived from KEY_COLOR:
 - **Contributor Attribution**: Registers expert mailbox and configures git user.name/user.email
 
 **Integration with Git Workflow Package**:
-Core consumes the `@your-org/git-workflow` package for:
+Core consumes the `@your-org/logbook` package for:
 - Asset copying (hooks, templates, configs)
 - Git initialization and configuration
 - Project type detection for appropriate `.gitignore`
@@ -327,7 +327,7 @@ Core consumes the `@your-org/git-workflow` package for:
 
 **Implementation**:
 ```typescript
-import { GitWorkflow } from '@your-org/git-workflow';
+import { GitWorkflow } from '@your-org/logbook';
 
 // During project initialization
 await GitWorkflow.init({
@@ -350,7 +350,7 @@ await GitWorkflow.init({
 - Default: Git workflow is always initialized
 
 **See Also**:
-- [Git Workflow Package PRD](../git-workflow/PRD.md) - Complete git workflow specification
+- [Git Workflow Package PRD](../logbook/PRD.md) - Complete git workflow specification
 
 ### Feature 6: Setup Validation
 
@@ -742,7 +742,7 @@ Project Initialization integrates with IDE Color Manager by:
 
 ## Integration with Git Workflow Package
 
-Project Initialization integrates with Git Workflow Package (`@your-org/git-workflow`) by:
+Project Initialization integrates with Git Workflow Package (`@your-org/logbook`) by:
 
 1. **Automatic Initialization**: Calls `GitWorkflow.init()` during project setup
 2. **Mandatory Requirement**: Git workflow initialization is mandatory (unless `--skip-git` is used)
@@ -759,7 +759,7 @@ Project Initialization integrates with Git Workflow Package (`@your-org/git-work
 - `GitWorkflow.update(options)`: Update git workflow to latest standards
 
 **See Also**:
-- [Git Workflow Package PRD](../git-workflow/PRD.md) - Complete git workflow specification
+- [Git Workflow Package PRD](../logbook/PRD.md) - Complete git workflow specification
 
 ## Error Handling
 
@@ -810,7 +810,7 @@ Project Initialization integrates with Git Workflow Package (`@your-org/git-work
 ## Dependencies
 
 - **Port Manager**: Required (mandatory initialization)
-- **Git Workflow Package** (`@your-org/git-workflow`): Required (mandatory initialization)
+- **Git Workflow Package** (`@your-org/logbook`): Required (mandatory initialization)
 - **GitHub CLI (`gh`)**: Required for PR/issue workflows and repo management
 - **Color Manager**: Built-in color generation and palette management
 - **fs-extra**: For file operations
@@ -922,7 +922,7 @@ Project Initialization integrates with Git Workflow Package (`@your-org/git-work
 
 **Expert**: System Architect  
 **Date**: 2026-01-22  
-**Changes**: Extended Project Initialization PRD to include Git Workflow integration and full lifecycle management capabilities. Added Feature 5: Git Workflow Initialization (mandatory git setup via @your-org/git-workflow package), updated Feature 6: Setup Validation to include git checks, and added comprehensive Lifecycle Management section with Feature 7: Project Health Check (verify command), Feature 8: Automated Repairs (repair command), and Feature 9: Configuration Updates (update command). Updated command structure to include verify/repair/update commands, expanded options for all commands, added git workflow integration documentation, updated dependencies to include git-workflow package, and revised success criteria to include lifecycle management must-haves. This extends Project Initialization from one-time setup to ongoing project configuration management, providing health monitoring, automated repairs, and configuration updates for rules, commands, Port Manager, IDE colors, and Git Workflow.
+**Changes**: Extended Project Initialization PRD to include Git Workflow integration and full lifecycle management capabilities. Added Feature 5: Git Workflow Initialization (mandatory git setup via @your-org/logbook package), updated Feature 6: Setup Validation to include git checks, and added comprehensive Lifecycle Management section with Feature 7: Project Health Check (verify command), Feature 8: Automated Repairs (repair command), and Feature 9: Configuration Updates (update command). Updated command structure to include verify/repair/update commands, expanded options for all commands, added git workflow integration documentation, updated dependencies to include logbook package, and revised success criteria to include lifecycle management must-haves. This extends Project Initialization from one-time setup to ongoing project configuration management, providing health monitoring, automated repairs, and configuration updates for rules, commands, Port Manager, IDE colors, and Git Workflow.
 
 **Expert**: System Architect  
 **Date**: 2026-01-22  

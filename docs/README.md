@@ -40,7 +40,7 @@ See [Documentation Structure Guide](./guides/DOCUMENTATION_STRUCTURE.md) for com
 - **Monorepo**: Single repository with clear package boundaries, optimized for shared tooling
 
 **Key Decisions**:
-- Git workflow uses hybrid placement: core orchestrates, git-workflow package provides assets
+- Git workflow uses hybrid placement: core orchestrates, logbook package provides assets
 - Monorepo for all packages with extraction path if needed
 - Lifecycle management: init, verify, repair, update commands
 
@@ -58,7 +58,7 @@ All feature documentation is located in the `features/` directory.
 - [Domain Manager](./features/domain-manager/PRD.md) - Local domain management with Caddy reverse proxy and automatic service detection
 
 **Asset & Workflow Packages** (consumed by core):
-- [Git Workflow](./features/git-workflow/PRD.md) - Standardized git hooks, templates, and lifecycle tools
+- [Git Workflow](./features/logbook/PRD.md) - Standardized git hooks, templates, and lifecycle tools
 - [Cursor Standards](./features/compass/PRD.md) - Main package for all Cursor rules, commands, and experts
 - [Cursor Standards Rules](./features/compass-rules/PRD.md) - Rules-only package
 - [Cursor Standards Commands](./features/compass-commands/PRD.md) - Commands-only package
@@ -79,7 +79,7 @@ All feature documentation is located in the `features/` directory.
 **Template & Configuration Packages:**
 - [Project Template](./features/project-template/PRD.md) - Project starter templates
 - [TypeScript Config](./features/typescript-config/PRD.md) - Standardized TypeScript configuration
-- [CI/CD Templates](./features/cicd-templates/PRD.md) - CI/CD workflow templates
+- [Shipyard](./features/shipyard/PRD.md) - CI/CD workflow templates (formerly: cicd-templates)
 
 _Note: These are placeholder PRDs with basic ideas. More details will be added as ideas develop._
 
@@ -108,7 +108,7 @@ _Note: These are placeholder PRDs with basic ideas. More details will be added a
 - [MCP Configurations](./reference/MCP_CONFIGURATIONS.md) - MCP configurations from other projects
 - [Generic Rules Review](./reference/GENERIC_RULES_REVIEW.md) - Generic/useful rules from other projects for review
 - [Generic Commands Review](./reference/GENERIC_COMMANDS_REVIEW.md) - Generic/useful commands from other projects for review
-- [Generic Experts Review](./reference/GENERIC_EXPERTS_REVIEW.md) - Generic/useful expert personas from other projects for review
+- [Generic Experts Review](./reference/GENERIC_EXPERTS_REVIEW.md) - Generic/useful complement from other projects for review
 - [Generic Features Review](./reference/GENERIC_FEATURES_REVIEW.md) - Generic/reusable features from other projects for review
 - [Additional Resources Review](./reference/ADDITIONAL_RESOURCES_TO_REVIEW.md) - Other useful resources and patterns to review
 - [Scripts Review](./reference/SCRIPTS_REVIEW.md) - Generic/useful scripts from other projects

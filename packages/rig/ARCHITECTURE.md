@@ -13,7 +13,7 @@ The `@colis/rig` package is a foundational infrastructure package that provides 
 ### 1. Separation of Concerns
 - **Features**: Self-contained, reusable feature modules
 - **Shared**: Common utilities used across features
-- **Rules**: Cursor IDE rules and expert personas
+- **Rules**: Cursor IDE rules and complement
 - **Commands**: CLI commands for common tasks
 
 ### 2. Modularity

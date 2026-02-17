@@ -3,7 +3,7 @@
 ## What Was Fixed
 
 ### ✅ 1. Cursor Rules & Commands
-- `.cursor/rules/` with expert personas now copied
+- `.cursor/rules/` with complement now copied
 - `.cursor/commands/` with Cursor commands now available
 
 ### ✅ 2. Git Hooks
@@ -34,7 +34,7 @@
 1. **Angular CLI creates project** → `frontend/` with default `ng serve`
 2. **Backend generated** (if full-stack) → `backend/`
 3. **Project Initialization runs** → Creates:
-   - `.cursor/rules/` (25 expert personas, 8 user rules)
+   - `.cursor/rules/` (25 complement, 8 user rules)
    - `.cursor/commands/` (12 general commands)
    - `.githooks/post-checkout` (branch colors)
    - `.vscode/settings.json` (IDE colors)

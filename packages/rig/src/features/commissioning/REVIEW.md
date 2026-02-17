@@ -62,7 +62,7 @@ Comprehensive review and improvement of the commissioning feature. The feature i
 
 - Shows project path and rig package path
 - Lists all operations that would be performed:
-  - Number of expert personas and user rules to copy
+  - Number of complement and user rules to copy
   - Number of general commands to copy
   - Port Manager initialization details
   - IDE color configuration with KEY_COLOR preview

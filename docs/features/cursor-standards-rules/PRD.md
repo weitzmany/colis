@@ -9,7 +9,7 @@
 
 ## Main Idea
 
-npm package that distributes only Cursor IDE rules (user rules and expert personas) to projects.
+npm package that distributes only Cursor IDE rules (user rules and complement) to projects.
 
 ## Package Type
 
@@ -39,7 +39,7 @@ When documenting this package for web publication:
 
 1. **Package Documentation SEO**
    - Use descriptive, keyword-rich titles and descriptions
-   - Include relevant keywords naturally (Cursor rules, development standards, code review rules, expert personas)
+   - Include relevant keywords naturally (Cursor rules, development standards, code review rules, complement)
    - Structure documentation with proper heading hierarchy (H1-H6)
    - Include comprehensive rule reference and usage examples for content depth
 

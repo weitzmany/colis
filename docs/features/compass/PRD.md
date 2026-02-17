@@ -10,7 +10,7 @@
 
 ## Main Idea
 
-Comprehensive npm package that distributes all Cursor IDE rules, commands, and expert personas to projects. This is the main package that includes all Cursor-related standards.
+Comprehensive npm package that distributes all Cursor IDE rules, commands, and complement to projects. This is the main package that includes all Cursor-related standards.
 
 ## Package Type
 
@@ -42,7 +42,7 @@ When documenting this package for web publication:
 
 1. **Package Documentation SEO**
    - Use descriptive, keyword-rich titles and descriptions
-   - Include relevant keywords naturally (Cursor IDE, development standards, code review, expert personas)
+   - Include relevant keywords naturally (Cursor IDE, development standards, code review, complement)
    - Structure documentation with proper heading hierarchy (H1-H6)
    - Include comprehensive setup guides and usage examples for content depth
 

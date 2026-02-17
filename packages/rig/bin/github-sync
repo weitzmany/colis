@@ -1,0 +1,99 @@
+#!/usr/bin/env node
+
+/**
+ * GitHub Sync CLI Entry Point
+ * 
+ * Standalone command to ensure GitHub repository is set up for the current project.
+ * Useful for retrying GitHub setup if it was skipped or failed during initialization.
+ */
+
+import { program } from 'commander';
+import chalk from 'chalk';
+import path from 'path';
+import { ensureGitHubRepo } from '../dist/features/commissioning/github-repo-manager.js';
+import { generateProjectName } from '../dist/features/port-manager/utils/project-name.js';
+
+async function githubSyncCommand(options: {
+  projectName?: string;
+  visibility?: 'public' | 'private';
+  dryRun?: boolean;
+  noPush?: boolean;
+}) {
+  try {
+    console.log(chalk.bold.cyan('\n╔═══════════════════════════════════════════════════════════╗'));
+    console.log(chalk.bold.cyan('║') + chalk.bold.white('  🐙 GitHub Repository Sync') + chalk.bold.cyan('                            ║'));
+    console.log(chalk.bold.cyan('╚═══════════════════════════════════════════════════════════╝\n'));
+
+    const projectPath = process.cwd();
+    const projectName = options.projectName || generateProjectName(projectPath);
+
+    console.log(chalk.blue(`📁 Project: ${projectName}`));
+    console.log(chalk.blue(`📂 Path: ${projectPath}\n`));
+
+    const result = await ensureGitHubRepo(projectPath, projectName, {
+      visibility: options.visibility || 'private',
+      skipIfNoGh: false, // Don't skip - this is an explicit sync command
+      pushInitial: !options.noPush,
+      interactive: !options.dryRun && process.stdout.isTTY,
+      dryRun: options.dryRun,
+    });
+
+    console.log();
+
+    // Display results
+    if (result.repoUrl) {
+      console.log(chalk.green('✅ GitHub repository synchronized!'));
+      console.log(chalk.gray(`   Repository: ${result.repoUrl}`));
+      
+      if (result.repoCreated) {
+        console.log(chalk.gray('   ✓ Repository created'));
+      }
+      if (result.remoteAdded) {
+        console.log(chalk.gray('   ✓ Remote origin added'));
+      }
+      if (result.pushed) {
+        console.log(chalk.gray('   ✓ Initial commit pushed'));
+      }
+    } else if (result.skippedReason) {
+      console.log(chalk.yellow(`⊘ GitHub sync skipped: ${result.skippedReason}`));
+    } else {
+      console.log(chalk.yellow('⚠️  GitHub sync incomplete'));
+    }
+
+    // Display warnings
+    if (result.warnings.length > 0) {
+      console.log(chalk.yellow('\n⚠️  Warnings:'));
+      result.warnings.forEach((warning) => {
+        console.log(chalk.yellow(`   - ${warning}`));
+      });
+    }
+
+    // Next steps
+    if (result.repoUrl && !result.pushed && !options.noPush) {
+      console.log(chalk.cyan('\n💡 Next steps:'));
+      console.log(chalk.cyan('   git push -u origin main'));
+    }
+
+    console.log();
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.log(chalk.bold.red('\n╔═══════════════════════════════════════════════════════════╗'));
+    console.log(chalk.bold.red('║') + chalk.bold.white('  💥 Fatal Error') + chalk.bold.red('                                    ║'));
+    console.log(chalk.bold.red('╚═══════════════════════════════════════════════════════════╝\n'));
+    console.error(chalk.red(`  ${errorMessage}`));
+    console.log(chalk.dim('\n  Please check the error above and try again.\n'));
+    process.exit(1);
+  }
+}
+
+program
+  .name('github-sync')
+  .description('Synchronize GitHub repository for the current project')
+  .version('1.0.0')
+  .option('-p, --project-name <name>', 'Project name (auto-detected if not provided)')
+  .option('-v, --visibility <type>', 'Repository visibility (public or private)', 'private')
+  .option('--no-push', 'Skip initial push to remote')
+  .option('--dry-run', 'Show what would be done without making changes')
+  .action(githubSyncCommand);
+
+program.parse();

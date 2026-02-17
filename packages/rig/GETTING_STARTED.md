@@ -6,7 +6,7 @@
 
 Think of `@colis/rig` as your **development foundation** — a toolkit that provides:
 - **Features**: Reusable tools like Port Manager, Tech Detector, and Project Initialization
-- **Rules**: Cursor IDE rules and expert personas for enhanced development
+- **Rules**: Cursor IDE rules and complement for enhanced development
 - **Commands**: CLI commands for common development tasks
 - **Shared Utilities**: Database abstractions and configuration management
 
@@ -54,7 +54,7 @@ npx @colis/rig init
 ```
 
 **That's it!** Your project is now configured with:
-- ✅ All expert personas and user rules
+- ✅ All complement and user rules
 - ✅ General commands for common tasks
 - ✅ Port Manager initialized and configured
 - ✅ Technology stack detected and saved
@@ -201,7 +201,7 @@ npx @colis/rig init --skip-commands
 1. **This guide** — You're reading it! Follow the steps above
 2. **README.md** — Overview of all features and capabilities
 3. **Try the examples** — Each feature section has working examples
-4. **Explore `.cursor/rules/`** — See what expert personas were installed
+4. **Explore `.cursor/rules/`** — See what complement were installed
 
 ### 🚀 For Advanced Users
 

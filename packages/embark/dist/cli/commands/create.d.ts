@@ -40,8 +40,12 @@ export interface CreateOptions {
     packageManager?: 'npm' | 'yarn' | 'pnpm';
     /** Skip dependency installation */
     skipDeps?: boolean;
-    /** Skip git repository initialization */
+    /** DEPRECATED: Use skipGithub instead. Skip git repository initialization */
     skipGit?: boolean;
+    /** Skip GitHub repository creation */
+    skipGithub?: boolean;
+    /** GitHub repository visibility (public or private, default: private) */
+    githubVisibility?: 'public' | 'private';
     /** Skip Project Initialization (not recommended) */
     skipInit?: boolean;
     /** Skip Task Manager initialization */

@@ -86,7 +86,7 @@ Intelligently manages GitHub repositories by:
 
 ### Implementation
 
-**Location**: `packages/git-workflow/src/utils/gh-utils.ts`
+**Location**: `packages/logbook/src/utils/gh-utils.ts`
 
 **Changes Made**:
 
@@ -186,7 +186,7 @@ gh repo create <username>/<repo-name> --private
 ### Git-Workflow Package
 
 **Modified Files**:
-- `packages/git-workflow/src/utils/gh-utils.ts`
+- `packages/logbook/src/utils/gh-utils.ts`
   - Added `setRepoVisibility()` function
   - Enhanced `createGhRepo()` to ensure private visibility
 
@@ -323,7 +323,7 @@ create-project my-private-repo
 
 ### GitHub Repo Management
 
-**Existing Configuration** (in `git-workflow init`):
+**Existing Configuration** (in `logbook init`):
 - `createRemoteRepo`: Enable/disable repo creation (default: true)
 - `remoteRepoName`: Custom repo name (default: project name)
 - `remoteVisibility`: Custom visibility (default: 'private')
@@ -350,14 +350,14 @@ create-project my-app
 
 # 2. Project initialization runs:
 #    - @colis/rig init (rules, commands, Port Manager, IDE colors)
-#    - Git initialization (if git-workflow is used)
+#    - Git initialization (if logbook is used)
 #    - npm install (if not skipped)
 
 # 3. NEW: Auto-commit runs
 #    - git add .
 #    - git commit -m "feat: initial project setup"
 
-# 4. NEW: Smart repo management (if git-workflow init runs)
+# 4. NEW: Smart repo management (if logbook init runs)
 #    - Check if repo exists
 #    - Create or connect to repo
 #    - Ensure repo is private
@@ -369,7 +369,7 @@ create-project my-app
 
 ### Git-Workflow Integration
 
-The git-workflow already had most of the pieces in place:
+The logbook already had most of the pieces in place:
 - ✅ `checkRepoExists()` - existed
 - ✅ `createGhRepo()` - existed, but didn't ensure private for existing repos
 - ✅ `hasRemote()` - existed

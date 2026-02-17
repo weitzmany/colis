@@ -1,9 +1,11 @@
 # Travel Itinerary & Document Wallet - Product Requirements Document
 
 **Status**: Planning  
-**Priority**: Medium  
+**Priority**: Medium-High  
 **Category**: Full-Stack Web + Mobile Application (Customer-Facing)  
-**Last Updated**: 2026-01-21
+**Last Updated**: 2026-02-09
+
+**Note**: This project now incorporates AI-powered itinerary generation features from the Smart Travel Planner project, creating a comprehensive all-in-one travel management platform.
 
 ---
 
@@ -11,7 +13,7 @@
 
 ### Project Vision
 
-Travel Itinerary & Document Wallet (TripVault) transforms the stressful experience of managing travel plans and documents into an organized, centralized system. Travelers can build comprehensive itineraries, store all travel documents securely, receive automated alerts for schedule changes and expirations, and access everything offline while on the go.
+Travel Itinerary & Document Wallet (TripVault) transforms the stressful experience of managing travel plans and documents into an organized, centralized system with AI-powered planning assistance. Travelers can generate personalized itineraries with AI, store all travel documents securely, receive automated alerts for schedule changes and expirations, and access everything offline while on the go.
 
 ### Target Users
 
@@ -22,11 +24,12 @@ Travel Itinerary & Document Wallet (TripVault) transforms the stressful experien
 
 ### Key Value Propositions
 
-1. **Centralized Organization**: All travel information in one place - no more searching through emails
-2. **Offline Access**: Access itineraries and documents without internet connection while traveling
-3. **Automated Alerts**: Never miss a flight, check-in window, or document expiration
-4. **Secure Document Storage**: Encrypted storage for sensitive travel documents (passports, visas, insurance)
-5. **Peace of Mind**: Stress-free travel with everything organized and accessible
+1. **AI-Powered Planning**: Generate personalized itineraries in minutes, not hours ⭐ NEW
+2. **Centralized Organization**: All travel information in one place - no more searching through emails
+3. **Offline Access**: Access itineraries and documents without internet connection while traveling
+4. **Automated Alerts**: Never miss a flight, check-in window, or document expiration
+5. **Secure Document Storage**: Encrypted storage for sensitive travel documents (passports, visas, insurance)
+6. **Peace of Mind**: Stress-free travel with everything organized and accessible
 
 ### Success Metrics
 
@@ -106,15 +109,17 @@ Travel Itinerary & Document Wallet (TripVault) transforms the stressful experien
 
 TripVault provides a **comprehensive, mobile-first travel management platform** that combines:
 
-1. **Visual Itinerary Builder**: Day-by-day, hour-by-hour trip planning with drag-and-drop interface
-2. **Reservation Vault**: Centralized storage for flight/hotel/activity confirmations with QR code access
-3. **Document Wallet**: Secure, encrypted storage for passports, visas, insurance, and emergency documents
-4. **Smart Alerts**: Automated notifications for departures, check-ins, schedule changes, document expirations
-5. **Offline-First Mobile App**: Full access to itineraries and documents without internet connection
-6. **Family Collaboration**: Share trips with travel companions with role-based access
+1. **AI-Powered Itinerary Generation**: Get personalized day-by-day itineraries from simple inputs ⭐ NEW
+2. **Visual Itinerary Builder**: Day-by-day, hour-by-hour trip planning with drag-and-drop interface
+3. **Reservation Vault**: Centralized storage for flight/hotel/activity confirmations with QR code access
+4. **Document Wallet**: Secure, encrypted storage for passports, visas, insurance, and emergency documents
+5. **Smart Alerts**: Automated notifications for departures, check-ins, schedule changes, document expirations
+6. **Offline-First Mobile App**: Full access to itineraries and documents without internet connection
+7. **Family Collaboration**: Share trips with travel companions with role-based access
 
 ### How It Addresses the Problem
 
+**Time-Consuming Planning** → AI generates personalized itineraries in minutes ⭐ NEW  
 **Centralized Organization** → All trip information in one dashboard  
 **Automated Email Parsing** → Automatically extract bookings from confirmation emails  
 **Offline Access** → React Native app with AsyncStorage for offline itinerary/document access  
@@ -124,11 +129,12 @@ TripVault provides a **comprehensive, mobile-first travel management platform** 
 
 ### Key Differentiators
 
-1. **Comprehensive Document Management**: Not just itineraries - full document wallet with expiration tracking
-2. **Offline-First Mobile Experience**: Full functionality without internet connection
-3. **Family-Focused Collaboration**: Built for families and groups, not just individuals
-4. **Privacy-First Security**: End-to-end encryption for sensitive documents
-5. **Modern UX**: Beautiful, intuitive interface designed for travelers
+1. **AI-Powered Planning**: Generates personalized itineraries from simple inputs - saves hours of research ⭐ NEW
+2. **Comprehensive Document Management**: Not just itineraries - full document wallet with expiration tracking
+3. **Offline-First Mobile Experience**: Full functionality without internet connection
+4. **Family-Focused Collaboration**: Built for families and groups, not just individuals
+5. **Privacy-First Security**: End-to-end encryption for sensitive documents
+6. **Modern UX**: Beautiful, intuitive interface designed for travelers
 
 ---
 
@@ -379,6 +385,15 @@ TripVault provides a **comprehensive, mobile-first travel management platform** 
 
 ### Phase 2: Core Features (Months 4-6)
 
+**AI-Powered Itinerary Generation** ⭐ NEW:
+- Generate personalized day-by-day itineraries from simple inputs
+- Input: destination, dates, travel style, interests, budget
+- Output: Detailed itinerary with activities, restaurants, transportation
+- Customization: Edit, reorder, add/remove AI-generated suggestions
+- Smart recommendations based on weather, local events, user preferences
+- **Priority**: High - Major time-saver, key differentiator
+- **Integration**: Merged from Smart Travel Planner project
+
 **Email Parsing & Auto-Import**:
 - Connect Gmail/Outlook inbox
 - Automatically parse flight and hotel confirmations
@@ -407,6 +422,25 @@ TripVault provides a **comprehensive, mobile-first travel management platform** 
 - **Priority**: Medium - Useful for travelers who want printouts
 
 ### Phase 3: Advanced Features (Months 7-12)
+
+**Budget Management with AI** ⭐ NEW:
+- Set trip budget (overall + category budgets: flights, hotels, food, activities)
+- Track expenses with category, amount, date, notes
+- Budget vs actual spending visualization
+- AI-powered budget recommendations based on destination and travel style
+- Expense splitting for group travel
+- Currency conversion support
+- **Priority**: Medium-High - Complements trip planning
+- **Integration**: Merged from Smart Travel Planner project
+
+**Smart Packing Lists** ⭐ NEW:
+- Auto-generated packing list based on destination, weather, activities
+- Weather forecast integration for destination
+- Customizable by travel style (backpacking, business, luxury)
+- Check off items as packed
+- Share packing lists with travel companions
+- **Priority**: Medium - Reduces pre-trip stress
+- **Integration**: Merged from Smart Travel Planner project
 
 **Multi-Trip Dashboard**:
 - View all upcoming trips in chronological order

@@ -27,6 +27,8 @@ import {
 import { PortManager } from '../port-manager/port-manager.js';
 import { GlobalConfigManager } from '../../shared/config/global-config.js';
 import { ProjectConfigManager } from '../../shared/config/project-config.js';
+import { ensureGitHubRepo, EnsureGitHubRepoResult } from './github-repo-manager.js';
+import { runShipyardInit } from './shipyard-manager.js';
 
 export interface UpdateOptions {
   projectName?: string;
@@ -39,6 +41,9 @@ export interface UpdateOptions {
   skipDefaults?: boolean;
   skipDomain?: boolean;
   skipColors?: boolean;
+  skipShipyard?: boolean; // Skip Shipyard CI/CD update
+  skipGitHub?: boolean; // Skip GitHub repository setup
+  githubVisibility?: 'public' | 'private'; // GitHub repository visibility
   dryRun?: boolean;
   checkOnly?: boolean; // Only check, don't update
 }
@@ -50,6 +55,8 @@ export interface UpdateResult {
   validationResult?: InitValidationResult;
   portManagerUpdated: boolean;
   colorsUpdated: boolean;
+  shipyardUpdated: boolean;
+  githubResult?: EnsureGitHubRepoResult;
   updated: string[];
   added: string[];
   errors: string[];
@@ -61,6 +68,7 @@ export async function updateProject(options: UpdateOptions = {}): Promise<Update
     success: true,
     portManagerUpdated: false,
     colorsUpdated: false,
+    shipyardUpdated: false,
     updated: [],
     added: [],
     errors: [],
@@ -488,6 +496,25 @@ export async function updateProject(options: UpdateOptions = {}): Promise<Update
       }
     }
 
+    // Update Shipyard CI/CD configuration
+    if (!options.skipShipyard) {
+      console.log(chalk.blue('⚓ Checking Shipyard CI/CD...'));
+      const shipyardResult = runShipyardInit({
+        projectPath,
+        force: Boolean(options.overwrite),
+        dryRun: options.dryRun
+      });
+
+      if (shipyardResult.success) {
+        result.shipyardUpdated = true;
+        result.updated.push('Shipyard CI/CD configuration');
+        console.log(chalk.green('  ✓ Shipyard CI/CD checked/updated'));
+      } else {
+        result.warnings.push(...shipyardResult.warnings);
+        console.log(chalk.yellow('  ⚠ Shipyard CI/CD check skipped (non-blocking)'));
+      }
+    }
+
     // Validate setup
     if (result.success) {
       console.log(chalk.blue('✓ Validating setup...'));
@@ -511,6 +538,34 @@ export async function updateProject(options: UpdateOptions = {}): Promise<Update
       } else {
         result.warnings.push(...result.validationResult.errors);
         result.warnings.push(...result.validationResult.warnings);
+      }
+    }
+
+    // GitHub repository setup
+    if (!options.skipGitHub && !options.dryRun) {
+      console.log(chalk.bold.blue('🐙 Setting up GitHub repository...'));
+      
+      result.githubResult = await ensureGitHubRepo(projectPath, projectName, {
+        visibility: options.githubVisibility || 'private',
+        skipIfNoGh: true, // Non-blocking
+        pushInitial: true,
+        interactive: process.stdout.isTTY && !process.env.CI,
+        dryRun: false,
+      });
+
+      // Accumulate warnings from GitHub setup
+      if (result.githubResult.warnings.length > 0) {
+        result.warnings.push(...result.githubResult.warnings);
+      }
+
+      // Display GitHub result summary
+      if (result.githubResult.repoUrl) {
+        console.log(chalk.green(`  ✓ GitHub repository: ${result.githubResult.repoUrl}`));
+        if (result.githubResult.pushed) {
+          console.log(chalk.green('  ✓ Initial commit pushed to origin'));
+        }
+      } else if (result.githubResult.skippedReason) {
+        console.log(chalk.dim(`  ⊘ ${result.githubResult.skippedReason}`));
       }
     }
 
@@ -619,7 +674,7 @@ async function findMissingRules(
     const sourceRulesPath = path.join(corePackagePath, 'rules');
     const targetRulesPath = path.join(projectPath, '.cursor', 'rules');
 
-    // Check expert personas
+    // Check complement
     const expertsSource = path.join(sourceRulesPath, 'experts');
     const expertsTarget = path.join(targetRulesPath, 'experts');
 

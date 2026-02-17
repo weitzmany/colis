@@ -1,6 +1,6 @@
 # Random Expert Selector
 
-Choose a random expert from the available expert personas and output only their name.
+Choose a random expert from the available complement and output only their name.
 
 ## Usage
 

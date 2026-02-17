@@ -96,7 +96,7 @@ Feature packages depend on core and extend its functionality:
 
 **Core Package Provides**:
 1. **Features**: Reusable features like port manager, authentication, database tools
-2. **Rules**: Cursor rules, expert personas, user rules
+2. **Rules**: Cursor rules, complement, user rules
 3. **Commands**: Cursor commands for common tasks
 4. **Shared Utilities**: Database abstractions, configuration utilities, common helpers
 5. **Infrastructure**: Common infrastructure code used by all packages

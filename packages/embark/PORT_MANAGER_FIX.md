@@ -18,7 +18,7 @@ The verification showed:
 
 But other aspects worked:
 ```
-✓ PASS .cursor/rules/ - 26 expert personas
+✓ PASS .cursor/rules/ - 26 complement
 ✓ PASS .cursor/commands/ - 0 commands  
 ✓ PASS .githooks/ - Branch-based colors enabled
 ✓ PASS .vscode/settings.json - IDE colors configured

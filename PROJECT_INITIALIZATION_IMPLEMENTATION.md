@@ -117,7 +117,7 @@ packages/embark/
    - Creates `package.json` and project files
 3. **Calls initializeProject()**:
    - Links `@colis/rig` package via `npm link`
-   - Copies expert personas: `rules/experts/` → `.cursor/rules/experts/`
+   - Copies complement: `rules/experts/` → `.cursor/rules/experts/`
    - Copies project rules: `rules/projects/` → `.cursor/rules/projects/` (if exists)
    - Copies general commands: `commands/general/` → `.cursor/commands/general/`
    - Initializes Port Manager (creates `.port-manager.json`, allocates port)
@@ -125,7 +125,7 @@ packages/embark/
    - Generates git hooks (`.githooks/post-checkout`)
    - Validates setup
 4. **Result**: New project has:
-   - ✅ All expert personas in `.cursor/rules/experts/`
+   - ✅ All complement in `.cursor/rules/experts/`
    - ✅ Project rules in `.cursor/rules/projects/` (if applicable)
    - ✅ `/general/implement` command in `.cursor/commands/general/`
    - ✅ Port Manager configuration in `.port-manager.json`

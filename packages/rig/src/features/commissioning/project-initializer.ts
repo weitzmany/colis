@@ -18,6 +18,7 @@ import { validateSetup, InitValidationResult } from './setup-validator.js';
 import { initCommand as portManagerInit } from '../port-manager/cli/commands/init.js';
 import { DefaultsInstaller } from '../tech-detector/standards/defaults-installer.js';
 import { generateProjectName } from '../port-manager/utils/project-name.js';
+import { ensureGitHubRepo, EnsureGitHubRepoResult } from './github-repo-manager.js';
 import { generateColorPalette } from './color-manager.js';
 import {
   generatePostCheckoutHook,
@@ -25,6 +26,7 @@ import {
   ensureSettingsIgnored,
   initializeSettingsJson,
 } from './hook-generator.js';
+import { runShipyardInit } from './shipyard-manager.js';
 
 /**
  * Options for project initialization
@@ -50,6 +52,12 @@ export interface InitOptions {
   skipDomain?: boolean;
   /** Skip IDE color setup. Default: false */
   skipColors?: boolean;
+  /** Skip GitHub repository creation. Default: false */
+  skipGitHub?: boolean;
+  /** Skip Shipyard CI/CD setup. Default: false */
+  skipShipyard?: boolean;
+  /** GitHub repository visibility. Default: 'private' */
+  githubVisibility?: 'public' | 'private';
   /** Show what would be done without making changes. Default: false */
   dryRun?: boolean;
 }
@@ -70,6 +78,10 @@ export interface InitResult {
   portManagerInitialized: boolean;
   /** Domain setup result (if domain was configured) */
   domainSetup?: { domain: string; caddyfileUpdated: boolean; hostsUpdated: boolean };
+  /** GitHub repository result (if GitHub was configured) */
+  githubResult?: EnsureGitHubRepoResult;
+  /** Whether Shipyard CI/CD setup completed */
+  shipyardInitialized?: boolean;
   /** List of errors encountered during initialization */
   errors: string[];
   /** List of warnings encountered during initialization */
@@ -80,7 +92,7 @@ export interface InitResult {
  * Initialize a project with rules, commands, Port Manager, and IDE colors
  * 
  * This is the main entry point for project initialization. It orchestrates:
- * - Copying expert personas and user rules to `.cursor/rules/`
+ * - Copying complement and user rules to `.cursor/rules/`
  * - Copying general commands to `.cursor/commands/general/` (excludes local commands)
  * - Initializing Port Manager (mandatory unless skipped)
  * - Configuring IDE colors with unique KEY_COLOR and branch-based themes
@@ -103,6 +115,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
   const result: InitResult = {
     success: true,
     portManagerInitialized: false,
+    shipyardInitialized: false,
     errors: [],
     warnings: [],
   };
@@ -159,7 +172,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
           userCount = userFiles.length;
         }
         
-        console.log(chalk.cyan(`  📋 Copy ${chalk.bold(expertCount.toString())} expert personas and ${chalk.bold(userCount.toString())} user rules`));
+        console.log(chalk.cyan(`  📋 Copy ${chalk.bold(expertCount.toString())} complement and ${chalk.bold(userCount.toString())} user rules`));
         console.log(chalk.dim(`     → .cursor/rules/`));
       }
       
@@ -186,6 +199,11 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         console.log(chalk.dim(`     → KEY_COLOR: ${chalk.bold(palette.keyColor)}`));
         console.log(chalk.dim(`     → Creates .githooks/post-checkout`));
         console.log(chalk.dim(`     → Creates .vscode/settings.json`));
+      }
+
+      if (!options.skipShipyard) {
+        console.log(chalk.cyan(`  ⚓ Initialize Shipyard CI/CD`));
+        console.log(chalk.dim(`     → Runs: npx shipyard init${options.overwrite ? ' --force' : ''}`));
       }
       
       console.log(chalk.cyan(`  ✓ Validate setup`));
@@ -215,7 +233,7 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         if (stats.copied > 0) {
           const expertCount = result.rulesResult.copied.filter(f => f.startsWith('experts/')).length;
           const userCount = result.rulesResult.copied.filter(f => f.startsWith('user/')).length;
-          console.log(chalk.green(`  ✓ Copied ${chalk.bold(stats.copied.toString())} files (${expertCount} expert personas, ${userCount} user rules)`));
+          console.log(chalk.green(`  ✓ Copied ${chalk.bold(stats.copied.toString())} files (${expertCount} complement, ${userCount} user rules)`));
         }
         
         if (stats.skipped > 0) {
@@ -436,6 +454,26 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
       }
     }
 
+    // Initialize Shipyard CI/CD (unless skipped)
+    if (!options.skipShipyard) {
+      console.log(chalk.bold.blue('⚓ Initializing Shipyard CI/CD...'));
+      process.stdout.write(chalk.dim('  ⏳ Running shipyard init...'));
+      const shipyardResult = runShipyardInit({
+        projectPath,
+        force: Boolean(options.overwrite),
+        dryRun: options.dryRun
+      });
+      process.stdout.write('\r' + ' '.repeat(40) + '\r');
+
+      if (shipyardResult.success) {
+        result.shipyardInitialized = true;
+        console.log(chalk.green('  ✓ Shipyard CI/CD initialized'));
+      } else {
+        result.warnings.push(...shipyardResult.warnings);
+        console.log(chalk.yellow('  ⚠ Shipyard CI/CD initialization skipped (non-blocking)'));
+      }
+    }
+
     // Validate setup
     if (result.success) {
       console.log(chalk.bold.blue('\n✓ Validating setup...'));
@@ -466,6 +504,36 @@ export async function initializeProject(options: InitOptions = {}): Promise<Init
         result.warnings.push(...result.validationResult.warnings);
         if (result.validationResult.errors.length > 0) {
           console.log(chalk.yellow('  ⚠ Some validation issues found (see warnings)'));
+        }
+      }
+    }
+
+    // GitHub repository setup
+    if (!options.skipGitHub) {
+      console.log(chalk.bold.blue('🐙 Setting up GitHub repository...'));
+      
+      result.githubResult = await ensureGitHubRepo(projectPath, projectName, {
+        visibility: options.githubVisibility || 'private',
+        skipIfNoGh: true, // Non-blocking
+        pushInitial: true,
+        interactive: !options.dryRun && process.stdout.isTTY && !process.env.CI,
+        dryRun: options.dryRun,
+      });
+
+      // Accumulate warnings from GitHub setup
+      if (result.githubResult.warnings.length > 0) {
+        result.warnings.push(...result.githubResult.warnings);
+      }
+
+      // Display GitHub result summary
+      if (!options.dryRun) {
+        if (result.githubResult.repoUrl) {
+          console.log(chalk.green(`  ✓ GitHub repository: ${result.githubResult.repoUrl}`));
+          if (result.githubResult.pushed) {
+            console.log(chalk.green('  ✓ Initial commit pushed to origin'));
+          }
+        } else if (result.githubResult.skippedReason) {
+          console.log(chalk.dim(`  ⊘ ${result.githubResult.skippedReason}`));
         }
       }
     }

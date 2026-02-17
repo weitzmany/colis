@@ -5,7 +5,7 @@
  * Provides user-friendly interface with clear feedback and helpful guidance.
  */
 
-import { initializeProject, InitOptions } from '../../project-initializer.js';
+import { initializeProject, InitOptions, InitResult } from '../../project-initializer.js';
 import chalk from 'chalk';
 
 /**
@@ -20,7 +20,7 @@ function displayHeader(): void {
 /**
  * Display success message with helpful next steps
  */
-function displaySuccessMessage(result: any): void {
+function displaySuccessMessage(result: InitResult): void {
   console.log(chalk.bold.green('\n╔═══════════════════════════════════════════════════════════╗'));
   console.log(chalk.bold.green('║') + chalk.bold.white('  ✅ Project Initialized Successfully!') + chalk.bold.green('                  ║'));
   console.log(chalk.bold.green('╚═══════════════════════════════════════════════════════════╝\n'));
@@ -37,14 +37,30 @@ function displaySuccessMessage(result: any): void {
   if (result.validationResult?.colorsValid) {
     console.log(chalk.gray('  • IDE color scheme (unique per project)'));
   }
+  if (result.githubResult?.repoUrl) {
+    console.log(chalk.gray(`  • GitHub repository: ${result.githubResult.repoUrl}`));
+  }
+  if (result.shipyardInitialized) {
+    console.log(chalk.gray('  • Shipyard CI/CD workflows and scripts'));
+  }
   
   console.log(chalk.bold('\n💡 Next steps:'));
   console.log(chalk.cyan('  1. Start coding! Your project is ready to go.'));
+  
+  // Add GitHub-specific next steps
+  if (result.githubResult?.repoUrl && !result.githubResult.pushed) {
+    console.log(chalk.cyan('  2. Push your changes: git push -u origin main'));
+  } else if (result.githubResult?.repoUrl && result.githubResult.pushed) {
+    console.log(chalk.cyan(`  2. View your repository at: ${result.githubResult.repoUrl}`));
+  }
+  
   if (result.domainSetup?.domain) {
-    console.log(chalk.cyan(`  2. Access your project at: http://${result.domainSetup.domain}`));
-    console.log(chalk.cyan('  3. Switch branches to see IDE colors change automatically.'));
+    const step = result.githubResult?.repoUrl ? '  3.' : '  2.';
+    console.log(chalk.cyan(`${step} Access your project at: http://${result.domainSetup.domain}`));
+    console.log(chalk.cyan(`  ${parseInt(step.trim()) + 1}. Switch branches to see IDE colors change automatically.`));
   } else {
-    console.log(chalk.cyan('  2. Switch branches to see IDE colors change automatically.'));
+    const step = result.githubResult?.repoUrl ? '  3.' : '  2.';
+    console.log(chalk.cyan(`${step} Switch branches to see IDE colors change automatically.`));
   }
   console.log(chalk.dim('\n  Happy coding! 🎉\n'));
 }

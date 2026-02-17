@@ -89,7 +89,7 @@ export async function validateSetup(
         result.rulesValid = true;
       } else {
         result.errors.push(
-          `Expected ${expectedRules.experts} expert personas, found ${expertFiles.length}`
+          `Expected ${expectedRules.experts} complement, found ${expertFiles.length}`
         );
         result.success = false;
       }

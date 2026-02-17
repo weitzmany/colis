@@ -124,7 +124,7 @@ All reusable patterns:
 
 ### Expert Personas
 
-All expert personas:
+All complement:
 
 - **Domain experts** - Subject matter experts
 - **Technical experts** - Architecture, security, performance
@@ -307,7 +307,7 @@ npm update @your-org/tool-*
 
 - ⏳ Create Cursor rules package
 - ⏳ Create commands package
-- ⏳ Create expert personas package
+- ⏳ Create complement package
 - ⏳ Create documentation templates package
 - ⏳ Create configuration templates package
 
@@ -394,7 +394,7 @@ When this guide is published for web access:
 
 **Expert**: System Architect  
 **Date**: 2026-01-05  
-**Changes**: Created comprehensive project vision document describing this project as the central repository for all tools and helpers. This document covers vision statement (single source of truth for all reusable assets), core principles (comprehensive coverage, single source of truth, easy distribution, monorepo organization), package categories (tools & utilities, rules & standards, commands, templates & starters, configurations, patterns & architectures, expert personas, scripts & automation, documentation), package organization structure (monorepo structure, package naming convention), usage across projects (installation, updates), development workflow (adding new packages, maintaining packages), benefits of this vision (for individual projects, for all projects, for future projects), implementation roadmap (Phase 1: Foundation, Phase 2: Core Packages, Phase 3: Tools & Utilities, Phase 4: Expansion, Phase 5: Optimization), success metrics (adoption, quality, efficiency), and long-term goals. This document provides a clear vision for how this project will serve as the central repository for all reusable tools and helpers across all projects.
+**Changes**: Created comprehensive project vision document describing this project as the central repository for all tools and helpers. This document covers vision statement (single source of truth for all reusable assets), core principles (comprehensive coverage, single source of truth, easy distribution, monorepo organization), package categories (tools & utilities, rules & standards, commands, templates & starters, configurations, patterns & architectures, complement, scripts & automation, documentation), package organization structure (monorepo structure, package naming convention), usage across projects (installation, updates), development workflow (adding new packages, maintaining packages), benefits of this vision (for individual projects, for all projects, for future projects), implementation roadmap (Phase 1: Foundation, Phase 2: Core Packages, Phase 3: Tools & Utilities, Phase 4: Expansion, Phase 5: Optimization), success metrics (adoption, quality, efficiency), and long-term goals. This document provides a clear vision for how this project will serve as the central repository for all reusable tools and helpers across all projects.
 
 **Expert**: Samuel Rodriguez  
 **Expertise**: Backend Development  

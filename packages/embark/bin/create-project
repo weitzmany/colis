@@ -7,6 +7,7 @@
  */
 
 import { program } from 'commander';
+import chalk from 'chalk';
 import { createCommand } from '../dist/cli/commands/create.js';
 import { refitCommand } from '../dist/cli/commands/refit.js';
 
@@ -23,7 +24,9 @@ program
   .option('-t, --template <type>', 'Template type (angular, slim, full-stack, frontend, backend, api)')
   .option('-p, --package-manager <manager>', 'Package manager (npm, yarn, pnpm)', 'npm')
   .option('--skip-deps', 'Skip dependency installation')
-  .option('--skip-git', 'Skip git initialization')
+  .option('--skip-git', 'DEPRECATED: Use --skip-github instead. Skip git initialization')
+  .option('--skip-github', 'Skip GitHub repository creation')
+  .option('--github-visibility <type>', 'GitHub repository visibility (public or private, default: private)')
   .option('--skip-init', 'Skip Project Initialization (not recommended)')
   .option('--skip-task-manager', 'Skip Task Manager initialization')
   .option('--overwrite', 'Overwrite existing files')
@@ -35,6 +38,13 @@ program
   .option('--use-ng-cli', 'Use Angular CLI (ng new) to generate Angular project (default for Angular)')
   .option('--no-use-ng-cli', 'Use templates instead of Angular CLI for Angular projects')
   .action(async (projectName, options) => {
+    // Handle deprecated --skip-git flag
+    if (options.skipGit) {
+      console.warn(chalk.yellow('\n⚠️  --skip-git flag is deprecated. Use --skip-github instead.'));
+      console.warn(chalk.yellow('   This flag will be removed in a future major version.\n'));
+      options.skipGithub = true; // Map to new flag
+    }
+    
     // Ensure projectName is a string, not an object
     const name = typeof projectName === 'string' ? projectName : (projectName ? String(projectName) : undefined);
     await createCommand({
@@ -42,7 +52,9 @@ program
       template: options.template,
       packageManager: options.packageManager,
       skipDeps: options.skipDeps,
-      skipGit: options.skipGit,
+      skipGit: options.skipGit || options.skipGithub, // Keep for compatibility
+      skipGithub: options.skipGithub || options.skipGit, // New flag
+      githubVisibility: options.githubVisibility,
       skipInit: options.skipInit,
       skipTaskManager: options.skipTaskManager,
       overwrite: options.overwrite,

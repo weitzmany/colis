@@ -18,7 +18,10 @@ program
   .option('--skip-port-manager', 'Skip Port Manager initialization (not recommended)')
   .option('--skip-rules', 'Skip copying rules')
   .option('--skip-commands', 'Skip copying commands')
+  .option('--skip-shipyard', 'Skip Shipyard CI/CD setup')
   .option('--skip-defaults', 'Skip prompting to install default frameworks')
+  .option('--skip-github', 'Skip GitHub repository creation')
+  .option('--github-visibility <type>', 'GitHub repository visibility (public or private, default: private)')
   .option('--dry-run', 'Show what would be done without making changes')
   .action(initCommand);
 

@@ -173,7 +173,7 @@ Execute this command to run the expert review workflow:
      - ✅ Any file in `docs/` directory (documentation)
      - ✅ Command file (in `.cursor/commands/general/` - for use outside this scope)
      - ✅ Rule file (in `.cursor/rules/experts/` - note: `.cursor/rules/user/` is for user's own rules, other directories may be created by outside packages)
-     - ❌ **CANNOT** be an expert persona file (`.cursor/rules/experts/` contains expert personas, not general rules)
+     - ❌ **CANNOT** be an expert persona file (`.cursor/rules/experts/` contains complement, not general rules)
    - File should not already exist in the workspace
    - **Path Decision**: Based on content, decide appropriate path and create new directories as needed in allowed top-level directories:
      - `docs/` - Can create new subdirectories (e.g., `docs/guides/new-topic/`, `docs/reference/new-section/`)
@@ -519,7 +519,7 @@ Execute this command to run the expert review workflow:
 ### File Creation
 - **File Type Restrictions**:
   - ✅ Can create: Documentation files in `docs/`, command files in `.cursor/commands/general/`, rule files in `.cursor/rules/experts/`
-  - ❌ Cannot create: Expert persona files (expert personas are created separately in Step 1a, not through file creation)
+  - ❌ Cannot create: Expert persona files (complement are created separately in Step 1a, not through file creation)
 - Check existing files to ensure new file doesn't exist (when `file="new"`)
 - **File Naming and Path Validation**:
   - Use descriptive, kebab-case filenames (e.g., `expert-review-workflow.md`)

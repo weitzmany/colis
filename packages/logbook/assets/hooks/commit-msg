@@ -1,0 +1,55 @@
+#!/bin/sh
+# Commit-msg hook - Validate commit messages follow conventional commits format
+# Part of @colis/logbook package
+# Version: 1.0.0
+
+set -e
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Skip merge commits
+if echo "$COMMIT_MSG" | grep -q "^Merge"; then
+  exit 0
+fi
+
+# Skip revert commits
+if echo "$COMMIT_MSG" | grep -q "^Revert"; then
+  exit 0
+fi
+
+# Conventional commits pattern: type(scope): subject
+# Types: feat, fix, docs, style, refactor, perf, test, chore, ci, build
+PATTERN="^(feat|fix|docs|style|refactor|perf|test|chore|ci|build)(\([a-z0-9_-]+\))?!?: .{1,72}"
+
+if ! echo "$COMMIT_MSG" | head -n 1 | grep -Eq "$PATTERN"; then
+  echo "❌ Invalid commit message format!"
+  echo ""
+  echo "Commit messages must follow conventional commits format:"
+  echo "  type(scope): subject"
+  echo ""
+  echo "Valid types: feat, fix, docs, style, refactor, perf, test, chore, ci, build"
+  echo ""
+  echo "Examples:"
+  echo "  feat(auth): add oauth callback handler"
+  echo "  fix(ui): resolve button alignment issue"
+  echo "  docs: update installation guide"
+  echo ""
+  echo "Your commit message:"
+  echo "  $(head -n 1 "$COMMIT_MSG_FILE")"
+  echo ""
+  exit 1
+fi
+
+# Check subject line length (max 72 chars)
+SUBJECT=$(echo "$COMMIT_MSG" | head -n 1)
+SUBJECT_LENGTH=${#SUBJECT}
+
+if [ $SUBJECT_LENGTH -gt 72 ]; then
+  echo "⚠️  Warning: Subject line is $SUBJECT_LENGTH characters (recommended: ≤72)"
+  echo "  Consider shortening the subject line for better readability."
+  echo ""
+fi
+
+echo "✅ Commit message format is valid!"
+exit 0

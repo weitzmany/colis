@@ -28,6 +28,8 @@ export interface ProjectConfig {
   port: number;
   /** Whether to automatically configure project files with port */
   autoConfigure?: boolean;
+  /** Local domain name for this project (e.g., 'my-project.local') */
+  domain?: string;
   /** Configuration files that have been updated with port */
   configFiles?: {
     /** Environment file path (e.g., .env) */

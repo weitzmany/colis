@@ -63,7 +63,7 @@ compass/
 │   │   │   │   ├── planning_mode.mdc
 │   │   │   │   └── security_and_secrets.mdc
 │   │   │   └── experts/
-│   │   │       └── [all expert personas]
+│   │   │       └── [all complement]
 │   │   └── commands/
 │   │       ├── general/
 │   │       └── local/
@@ -93,7 +93,7 @@ compass/
 {
   "name": "@your-org/compass",
   "version": "1.0.0",
-  "description": "Cursor IDE rules, commands, and expert personas",
+  "description": "Cursor IDE rules, commands, and complement",
   
   "files": [
     "templates/",

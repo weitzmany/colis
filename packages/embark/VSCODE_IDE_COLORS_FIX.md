@@ -7,7 +7,7 @@ When Angular CLI creates a project (e.g., `frontend/`), it creates `.vscode/` in
 
 ### Problem 2: Missing Project Initialization
 Projects created with Angular CLI weren't getting the full Project Initialization setup:
-- ❌ Missing `.cursor/rules/` (expert personas)
+- ❌ Missing `.cursor/rules/` (complement)
 - ❌ Missing `.cursor/commands/` (Cursor commands)
 - ❌ Missing `.githooks/` (Git hooks for branch colors)
 - ❌ Missing IDE colors in `.vscode/settings.json`
@@ -65,7 +65,7 @@ File: `packages/template-project/src/cli/commands/create.ts`
    await initializeProject({
      projectName: config.projectName,
      appType: resolvedTemplateType,
-     skipRules: false,      // Copy expert personas
+     skipRules: false,      // Copy complement
      skipCommands: false,   // Copy Cursor commands
      skipPortManager: false, // Init Port Manager
      skipColors: false,     // Setup IDE colors + git hooks
@@ -73,7 +73,7 @@ File: `packages/template-project/src/cli/commands/create.ts`
    ```
    
    This creates:
-   - `.cursor/rules/` with all expert personas
+   - `.cursor/rules/` with all complement
    - `.cursor/commands/` with Cursor commands
    - `.githooks/post-checkout` for branch colors
    - `.vscode/settings.json` with IDE colors
@@ -119,7 +119,7 @@ File: `packages/template-project/src/cli/commands/create.ts`
   ✓ Linked @colis/rig
 
 📋 Copying rules...
-  ✓ Copied 25 expert personas
+  ✓ Copied 25 complement
   ✓ Copied 8 user rules
 
 ⚡ Copying commands...
@@ -171,7 +171,7 @@ my-project/
 The `initializeProject()` function from `@colis/rig` handles:
 
 1. **Rules Copying** (`copyRules`)
-   - Copies expert personas from `@colis/rig/rules/experts/` → `.cursor/rules/experts/`
+   - Copies complement from `@colis/rig/rules/experts/` → `.cursor/rules/experts/`
    - Copies user rules from `@colis/rig/rules/user/` → `.cursor/rules/user/`
 
 2. **Commands Copying** (`copyCommands`)

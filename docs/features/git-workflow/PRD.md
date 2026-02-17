@@ -14,13 +14,13 @@ Git Workflow is an **asset package** within the monorepo that provides git hooks
 
 **Architecture Pattern**: Hybrid placement
 - **Core package** (`@colis/rig`): Orchestrates initialization and ongoing lifecycle management
-- **Git workflow package** (`@your-org/git-workflow`): Provides assets, templates, hooks, and lifecycle tooling
+- **Git workflow package** (`@your-org/logbook`): Provides assets, templates, hooks, and lifecycle tooling
 
 See [Package Architecture Strategy](../../architecture/PACKAGE_ARCHITECTURE.md) for details.
 
 ## Package Name
 
-`@your-org/git-workflow`
+`@your-org/logbook`
 
 ## Overview
 
@@ -54,7 +54,7 @@ npx @colis/rig init
 - **Broken Hooks**: Git hooks break or become outdated without detection
 - **Poor Commit History**: Without commit templates, history is messy and inconsistent
 - **No Automation**: Health checks, repairs, and updates are manual processes
-- **Hooks Directory Conflict**: Different packages (git-workflow vs commissioning) installing hooks to different locations
+- **Hooks Directory Conflict**: Different packages (logbook vs commissioning) installing hooks to different locations
 
 ## Solution
 
@@ -258,7 +258,7 @@ This package provides:
 
 **Usage** (via core):
 ```typescript
-import { GitWorkflow } from '@your-org/git-workflow';
+import { GitWorkflow } from '@your-org/logbook';
 
 await GitWorkflow.init({
   projectRoot: '/path/to/project',
@@ -386,7 +386,7 @@ console.log(result);
 
 **Usage** (via core or standalone):
 ```typescript
-import { GitWorkflow } from '@your-org/git-workflow';
+import { GitWorkflow } from '@your-org/logbook';
 
 // Open a new issue in the packages repo
 await GitWorkflow.issues.open({
@@ -444,7 +444,7 @@ Git Workflow is consumed by `@colis/rig` for:
 ### Package Structure
 
 ```
-@your-org/git-workflow/
+@your-org/logbook/
 ├── assets/
 │   ├── hooks/
 │   │   ├── pre-commit
@@ -635,16 +635,16 @@ While primarily consumed by core, the package can also provide standalone CLI co
 
 ```bash
 # Initialize git workflow
-npx @your-org/git-workflow init
+npx @your-org/logbook init
 
 # Verify git workflow health
-npx @your-org/git-workflow verify
+npx @your-org/logbook verify
 
 # Repair git workflow issues
-npx @your-org/git-workflow repair
+npx @your-org/logbook repair
 
 # Update git workflow to latest version
-npx @your-org/git-workflow update
+npx @your-org/logbook update
 ```
 
 ## Distribution Strategy
@@ -652,8 +652,8 @@ npx @your-org/git-workflow update
 ### As npm Package
 
 ```bash
-# Core depends on git-workflow
-npm install @your-org/git-workflow
+# Core depends on logbook
+npm install @your-org/logbook
 ```
 
 **What's Published**:
@@ -666,9 +666,9 @@ npm install @your-org/git-workflow
 ```
 packages/
 ├── core/
-│   ├── package.json  # Depends on @your-org/git-workflow
+│   ├── package.json  # Depends on @your-org/logbook
 │   └── ...
-└── git-workflow/
+└── logbook/
     ├── package.json
     └── ...
 ```
@@ -677,7 +677,7 @@ packages/
 - Shared tooling and standards across packages
 - Consistent version management
 - Easy cross-package refactoring
-- Clear extraction path if needed (e.g., if git-workflow grows large)
+- Clear extraction path if needed (e.g., if logbook grows large)
 - Optimizes for current team size (1-3 devs) and mixed infrastructure needs
 
 See [Monorepo Strategy](../../architecture/PACKAGE_ARCHITECTURE.md#monorepo-strategy-decision) for details.
@@ -712,32 +712,32 @@ npx @colis/rig issue view 123
 ### Standalone Usage
 
 ```bash
-# Install git-workflow package directly
-npm install @your-org/git-workflow
+# Install logbook package directly
+npm install @your-org/logbook
 
 # Initialize git workflow only
-npx @your-org/git-workflow init
+npx @your-org/logbook init
 
 # Check git workflow health
-npx @your-org/git-workflow verify
+npx @your-org/logbook verify
 
 # Repair git workflow issues
-npx @your-org/git-workflow repair
+npx @your-org/logbook repair
 
 # Update git workflow
-npx @your-org/git-workflow update
+npx @your-org/logbook update
 
 # Open an issue in the packages repo
-npx @your-org/git-workflow issue open --title "Port conflict" --label "port-manager"
+npx @your-org/logbook issue open --title "Port conflict" --label "port-manager"
 
 # View maintainer responses
-npx @your-org/git-workflow issue view 123
+npx @your-org/logbook issue view 123
 ```
 
 ### Programmatic Usage
 
 ```typescript
-import { GitWorkflow } from '@your-org/git-workflow';
+import { GitWorkflow } from '@your-org/logbook';
 
 // Initialize
 await GitWorkflow.init({
@@ -957,7 +957,7 @@ When documenting this package for web publication:
 
 **Problem**: Initially, two packages were creating hooks in different locations:
 - `@colis/rig` (commissioning): Created `.githooks/post-checkout` (for IDE colors) and set `git config core.hooksPath .githooks`
-- `@your-org/git-workflow`: Was installing hooks to `.git/hooks/` (pre-commit, commit-msg, pre-push, post-checkout)
+- `@your-org/logbook`: Was installing hooks to `.git/hooks/` (pre-commit, commit-msg, pre-push, post-checkout)
 
 **Result**: Git-workflow hooks wouldn't run because git was configured to look in `.githooks/`!
 
@@ -970,7 +970,7 @@ When documenting this package for web publication:
 4. **Hook precedence**: @colis/rig's post-checkout hook takes precedence (installed first during `core init`)
 
 **Files Changed**:
-- `packages/git-workflow/src/lifecycle/init.ts`: 
+- `packages/logbook/src/lifecycle/init.ts`: 
   - Changed hooks directory to `.githooks/`
   - Added check to skip existing hooks
   - Added git config for `core.hooksPath`
@@ -978,13 +978,13 @@ When documenting this package for web publication:
 **Testing**: Verify that after running both:
 ```bash
 npx @colis/rig init
-npx git-workflow init
+npx logbook init
 ```
 The `.githooks/` directory contains:
 - `post-checkout` (from @colis/rig - for IDE colors)
-- `pre-commit` (from git-workflow)
-- `commit-msg` (from git-workflow)
-- `pre-push` (from git-workflow)
+- `pre-commit` (from logbook)
+- `commit-msg` (from logbook)
+- `pre-push` (from logbook)
 
 And `git config core.hooksPath` returns `.githooks`.
 
@@ -994,7 +994,7 @@ And `git config core.hooksPath` returns `.githooks`.
 
 **Expert**: System Architect  
 **Date**: 2026-01-22  
-**Changes**: Transformed placeholder PRD into comprehensive specification for Git Workflow asset package. Defined package as asset provider with lifecycle tools consumed by core for git initialization and ongoing management. Added complete problem statement (inconsistent git setup, no lifecycle management, manual configuration), solution design (standardized assets, core integration, full lifecycle management), comprehensive asset catalog (hooks, templates, configs, rules, docs), lifecycle management tools (init, verify, repair, update) with programmatic APIs, core integration points, technical architecture, CLI commands, usage examples, error handling, future enhancements, testing strategy, and success criteria. Specified hybrid placement where core orchestrates lifecycle operations while git-workflow package provides assets and tooling. Included monorepo strategy decision context.
+**Changes**: Transformed placeholder PRD into comprehensive specification for Git Workflow asset package. Defined package as asset provider with lifecycle tools consumed by core for git initialization and ongoing management. Added complete problem statement (inconsistent git setup, no lifecycle management, manual configuration), solution design (standardized assets, core integration, full lifecycle management), comprehensive asset catalog (hooks, templates, configs, rules, docs), lifecycle management tools (init, verify, repair, update) with programmatic APIs, core integration points, technical architecture, CLI commands, usage examples, error handling, future enhancements, testing strategy, and success criteria. Specified hybrid placement where core orchestrates lifecycle operations while logbook package provides assets and tooling. Included monorepo strategy decision context.
 
 **Expert**: System Architect  
 **Date**: 2026-01-22  

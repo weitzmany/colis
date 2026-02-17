@@ -143,7 +143,7 @@ This document tracks all expert reviews and contributions across the project.
 | `docs/README.md` | 1 |
 | `docs/features/tide/PRD.md` | 1 |
 | `docs/features/api-client-library/PRD.md` | 1 |
-| `docs/features/cicd-templates/PRD.md` | 1 |
+| `docs/features/shipyard/PRD.md` | 1 |
 | `docs/features/compass-commands/PRD.md` | 1 |
 | `docs/features/documentation-site-generator/PRD.md` | 1 |
 | `docs/features/full-review/PRD.md` | 1 |
@@ -223,7 +223,7 @@ This document tracks all expert reviews and contributions across the project.
 | `docs/features/certification/PRD.md` | 0 |
 | `docs/features/error-handling-recovery/PRD.md` | 0 |
 | `docs/features/experts/PRD.md` | 0 |
-| `docs/features/git-workflow/PRD.md` | 0 |
+| `docs/features/logbook/PRD.md` | 0 |
 | `docs/features/port-manager/TASKS.md` | 0 |
 | `docs/features/deck/QUICK_START.md` | 0 |
 | `docs/features/deck/TASKS.md` | 0 |
@@ -706,7 +706,7 @@ This document tracks all expert reviews and contributions across the project.
 - **Files Reviewed**: 8
 
 **Files Reviewed:**
-  - `docs/features/cicd-templates/PRD.md`
+  - `docs/features/shipyard/PRD.md`
   - `docs/guides/CLOUD_INFRASTRUCTURE_DEPLOYMENT.md`
   - `docs/reference/API_STRUCTURE_REVIEW.md`
   - `docs/reference/BUILD_DEPLOYMENT_REVIEW.md`

@@ -34,7 +34,7 @@ templates/
 │   │       ├── accessibility_expert.mdc
 │   │       ├── api_design_expert.mdc
 │   │       ├── architecture_expert.mdc
-│   │       └── [all other expert personas]
+│   │       └── [all other complement]
 │   └── commands/
 │       ├── general/
 │       │   └── [general commands]
@@ -61,7 +61,7 @@ mkdir -p templates/.cursor/rules/experts
 # Copy user rules
 cp .cursor/rules/user/*.mdc templates/.cursor/rules/user/
 
-# Copy expert personas
+# Copy complement
 cp .cursor/rules/experts/*.mdc templates/.cursor/rules/experts/
 ```
 
@@ -118,13 +118,13 @@ else
     echo "⚠️  No user rules found"
 fi
 
-# Copy expert personas
-echo "👥 Copying expert personas..."
+# Copy complement
+echo "👥 Copying complement..."
 if [ -d ".cursor/rules/experts" ]; then
     cp .cursor/rules/experts/*.mdc templates/.cursor/rules/experts/ 2>/dev/null || true
     echo "✅ Expert personas copied"
 else
-    echo "⚠️  No expert personas found"
+    echo "⚠️  No complement found"
 fi
 
 # Copy local commands

@@ -1,0 +1,18 @@
+{
+  "name": "@colis/workspace",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Colis monorepo workspace — scripts for running and publishing all @colis packages",
+  "scripts": {
+    "dev": "concurrently --names \"storybook,chartroom\" --prefix-colors \"magenta,cyan\" \"npm run storybook --prefix packages/keel-storybook\" \"npm run dev --prefix packages/chartroom\"",
+    "publish:patch": "bash scripts/publish-all.sh patch",
+    "publish:minor": "bash scripts/publish-all.sh minor",
+    "publish:major": "bash scripts/publish-all.sh major"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "@colis/keel",
+  "version": "0.1.1",
+  "description": "Angular component library for the Colis ecosystem — standalone, themeable UI primitives",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run clean && npm run build",
+    "release:patch": "npm version patch && npm run clean && npm run build && npm publish",
+    "release:minor": "npm version minor && npm run clean && npm run build && npm publish",
+    "release:major": "npm version major && npm run clean && npm run build && npm publish"
+  },
+  "keywords": [
+    "keel",
+    "angular",
+    "components",
+    "ui",
+    "design-system",
+    "colis"
+  ],
+  "author": "Colis",
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": ">=17.0.0",
+    "@angular/core": ">=17.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "prettier": "^3.1.1",
+    "rimraf": "^6.1.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

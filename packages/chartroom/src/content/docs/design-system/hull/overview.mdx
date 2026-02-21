@@ -1,0 +1,51 @@
+---
+title: Hull — Overview
+description: "@colis/hull design system and theming overview."
+---
+
+import { Badge, Aside } from '@astrojs/starlight/components';
+
+# @colis/hull <Badge text="v0.1.0" variant="note" />
+
+`@colis/hull` is the design system and theming package for `@colis/keel`. It provides a three-layer CSS token architecture that assigns concrete visual values to the `--keel-*` CSS custom properties that keel components consume.
+
+<Aside type="caution" title="Phase 1 — Foundation MVP">
+  Phase 1 ships the installable package with the three-layer directory structure scaffolded. Actual token values (Layer 1 and Layer 2 themes) ship in Phase 2.
+</Aside>
+
+## Key Features
+
+- **Three-layer architecture** — clean separation between base values, themes, and project overrides
+- **Tailwind-first base layer** — battle-tested Tailwind token scale used as value source (Tailwind not required)
+- **Built-in light/dark themes** — class-based or media-query dark mode
+- **Project override mechanism** — apply your brand on top of hull without forking
+- **Peer dependency on keel** — hull exists to theme keel, not standalone
+
+## Dependency Rule
+
+> **Keel works without hull. Hull requires keel.**
+
+```bash
+# keel only — works with built-in defaults
+npm install @colis/keel
+
+# keel + hull — full design system
+npm install @colis/keel @colis/hull
+```
+
+## Three Layers at a Glance
+
+| Layer | Location | Purpose |
+|-------|----------|---------|
+| Layer 1 — Base | `src/base/` | Tailwind-sourced values assigned to `--keel-*` tokens |
+| Layer 2 — Themes | `src/themes/` | Light/dark and semantic variants |
+| Layer 3 — Project | `src/project/` | Project brand override convention |
+
+→ [Full Architecture Guide](/design-system/hull/architecture/)
+
+## Related
+
+- [Installation with Hull](/design-system/getting-started/with-hull/)
+- [Dark Mode Guide](/design-system/hull/dark-mode/)
+- [Project Theming](/design-system/hull/project-theming/)
+- [Storybook: Theme Matrix](http://localhost:6006/?path=/story/hull-themes--matrix)

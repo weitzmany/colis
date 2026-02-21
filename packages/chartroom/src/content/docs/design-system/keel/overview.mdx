@@ -1,0 +1,51 @@
+---
+title: Keel — Overview
+description: "@colis/keel Angular component library overview."
+---
+
+import { Badge, Aside } from '@astrojs/starlight/components';
+
+# @colis/keel <Badge text="v0.1.0" variant="note" />
+
+`@colis/keel` is the Angular component library for the Colis ecosystem. It provides standalone Angular components (buttons, inputs, modals, and more) that projects can install and use immediately.
+
+<Aside type="caution" title="Phase 1 — Foundation MVP">
+  Phase 1 ships the installable package foundation and CSS token contract. Components are planned for Phase 2.
+</Aside>
+
+## Key Features
+
+- **Standalone components** — Angular 17+ API, no NgModule needed
+- **CSS token-based theming** — all styling via `--keel-*` CSS custom properties
+- **Works without hull** — built-in fallback defaults for all tokens
+- **Hull-compatible** — install `@colis/hull` to get a full design system
+- **Zero runtime dependencies** on other `@colis` packages
+
+## Installation
+
+```bash
+npm install @colis/keel
+```
+
+→ [Installation Guide](/design-system/getting-started/installation/)
+
+## Component Status
+
+| Component | Selector | Status | Story |
+|-----------|----------|--------|-------|
+| Button | `<keel-button>` | Planned (Phase 2) | — |
+| Input | `<keel-input>` | Planned (Phase 2) | — |
+| Textarea | `<keel-textarea>` | Planned (Phase 2) | — |
+| Select | `<keel-select>` | Planned (Phase 2) | — |
+| Checkbox | `<keel-checkbox>` | Planned (Phase 2) | — |
+| Radio | `<keel-radio>` | Planned (Phase 2) | — |
+| Modal | `<keel-modal>` | Planned (Phase 2) | — |
+| Tooltip | `<keel-tooltip>` | Planned (Phase 3) | — |
+| Badge | `<keel-badge>` | Planned (Phase 3) | — |
+
+## Related
+
+- [Token Contract](/design-system/keel/token-contract/) — full `--keel-*` CSS variable reference
+- [Hull Overview](/design-system/hull/overview/) — add theming to keel
+- [Storybook](http://localhost:6006) — interactive component demos
+- [MCP Setup](/design-system/mcp/setup-cursor/) — AI assistant component knowledge

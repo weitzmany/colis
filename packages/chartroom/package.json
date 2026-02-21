@@ -1,0 +1,19 @@
+{
+  "name": "@colis/chartroom",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Colis ecosystem documentation portal — all @colis/* package guides, component docs, theming reference, and MCP setup",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev --port 4300",
+    "start": "astro dev --port 4300",
+    "build": "astro build",
+    "preview": "astro preview --port 4301",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.37.6",
+    "astro": "^5.6.1",
+    "sharp": "^0.34.2"
+  }
+}

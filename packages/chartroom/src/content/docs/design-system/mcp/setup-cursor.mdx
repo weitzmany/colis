@@ -1,0 +1,57 @@
+---
+title: Setup in Cursor
+description: Configure @colis/keel-mcp in Cursor IDE for AI component assistance.
+---
+
+# Setup in Cursor
+
+## Install
+
+In your Angular project that uses `@colis/keel`:
+
+```bash
+npm install --save-dev @colis/keel-mcp
+```
+
+## Configure `.cursor/mcp.json`
+
+Add the keel MCP server to your project's Cursor configuration:
+
+```json
+{
+  "mcpServers": {
+    "keel": {
+      "command": "node",
+      "args": ["node_modules/@colis/keel-mcp/dist/server.js"],
+      "description": "Keel component library and hull theming assistant"
+    }
+  }
+}
+```
+
+Create `.cursor/mcp.json` in your project root if it doesn't exist.
+
+## Verify the Connection
+
+After configuring, restart Cursor. You should see "keel" listed as an available MCP tool in the agent panel.
+
+Test with a query like:
+> "What keel components are available?"
+
+The agent should respond with the current component list from `list_components`.
+
+## What the Agent Can Now Do
+
+With keel-mcp connected, your Cursor agent can:
+
+- Autocomplete `<keel-*` selectors correctly
+- Generate correct Angular imports
+- Show all available props with types when you ask about a component
+- Generate theming CSS with correct token names
+- Link you to the right Storybook story
+
+## Troubleshooting
+
+**Agent doesn't see keel tools**: Check that `@colis/keel-mcp` is installed and `dist/server.js` exists after build.
+
+**Stale data**: MCP data files are updated when `@colis/keel-mcp` is updated. Run `npm update @colis/keel-mcp` to get the latest component and token data.

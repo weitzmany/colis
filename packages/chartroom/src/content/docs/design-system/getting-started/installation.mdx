@@ -1,0 +1,60 @@
+---
+title: Installation
+description: Install @colis/keel and optionally @colis/hull in your Angular project.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Installation
+
+## Requirements
+
+- Angular 17 or later (standalone component API)
+- Node.js 18 or later
+- `@colis` Verdaccio registry configured (see [Package Overview](/getting-started/packages/))
+
+## Install Keel
+
+```bash
+npm install @colis/keel
+```
+
+Keel works immediately with built-in CSS variable defaults — no additional setup required.
+
+## Add Default Styles
+
+Add keel's token defaults to your Angular project's global stylesheet:
+
+<Tabs>
+  <TabItem label="angular.json">
+    ```json
+    {
+      "projects": {
+        "my-app": {
+          "architect": {
+            "build": {
+              "options": {
+                "styles": [
+                  "node_modules/@colis/keel/src/tokens/defaults.css",
+                  "src/styles.css"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+    ```
+  </TabItem>
+  <TabItem label="styles.css">
+    ```css
+    @import '@colis/keel/src/tokens/defaults.css';
+    ```
+  </TabItem>
+</Tabs>
+
+## Next Steps
+
+- **Want light/dark theming and a complete design system?** → [Add Hull](/design-system/getting-started/with-hull/)
+- **Want to use components without any theming package?** → [Use without Hull](/design-system/getting-started/without-hull/)
+- **Want AI assistance with component usage?** → [Set up MCP](/design-system/mcp/setup-cursor/)

@@ -1,0 +1,92 @@
+---
+title: Using Keel With Hull
+description: Add @colis/hull for a complete design system with light/dark theming.
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+# Using Keel With Hull
+
+`@colis/hull` adds a complete three-layer design system on top of `@colis/keel`. It provides:
+- Tailwind-sourced default token values (Layer 1)
+- Built-in light and dark themes (Layer 2)
+- A supported project override mechanism (Layer 3)
+
+## Install
+
+```bash
+npm install @colis/keel @colis/hull
+```
+
+## Configure Angular
+
+Replace the keel defaults import with hull:
+
+```json
+// angular.json
+"styles": [
+  "node_modules/@colis/hull/src/styles.css",
+  "src/styles.css"
+]
+```
+
+<Aside type="note">
+  Hull's styles include keel's token contract — you don't need both. Replace `@colis/keel/src/tokens/defaults.css` with `@colis/hull/src/styles.css`.
+</Aside>
+
+## Enable Dark Mode
+
+Hull supports three dark mode activation strategies:
+
+<Tabs>
+  <TabItem label="CSS Class">
+    ```html
+    <!-- Add to <html> element -->
+    <html class="hull-dark">
+    ```
+    ```typescript
+    // Angular service example
+    document.documentElement.classList.toggle('hull-dark', isDark);
+    ```
+  </TabItem>
+  <TabItem label="Data Attribute">
+    ```html
+    <html data-hull-theme="dark">
+    ```
+  </TabItem>
+  <TabItem label="System Preference">
+    ```css
+    /* Hull respects prefers-color-scheme: dark automatically.
+       Add class="hull-light" to force light mode regardless. */
+    ```
+  </TabItem>
+</Tabs>
+
+## Add Project Brand Overrides (Layer 3)
+
+Create a project theme file to apply your brand:
+
+```css
+/* src/styles/hull.theme.css */
+:root {
+  --keel-color-primary:        #7c3aed;
+  --keel-color-primary-hover:  #6d28d9;
+  --keel-font-family:          'Geist', sans-serif;
+}
+```
+
+Import it after hull:
+
+```json
+"styles": [
+  "node_modules/@colis/hull/src/styles.css",
+  "src/styles/hull.theme.css",
+  "src/styles.css"
+]
+```
+
+## Next Steps
+
+- [Hull Architecture](/design-system/hull/architecture/) — understand the three-layer system
+- [Dark Mode Guide](/design-system/hull/dark-mode/) — full dark mode reference
+- [Project Theming](/design-system/hull/project-theming/) — advanced brand customization

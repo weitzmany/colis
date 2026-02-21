@@ -1,6 +1,6 @@
 {
   "name": "@colis/logbook",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "Standardized git workflow assets and lifecycle management tools",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

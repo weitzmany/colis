@@ -1162,6 +1162,7 @@ This matrix helps prioritize issues by combining severity with business impact.
 ## Related Commands
 
 - `/general/implement` - Implement features from documentation
+- `/general/implement-reviews` - Implement issues from existing review files and mark them done
 - `/local/feature-review` - Review specific feature implementation
 - `/local/expert` - Select random expert
 - `/local/file` - Select random file

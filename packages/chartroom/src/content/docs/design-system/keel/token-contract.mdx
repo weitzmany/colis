@@ -1,0 +1,89 @@
+---
+title: CSS Token Contract
+description: Complete reference for @colis/keel CSS custom properties.
+---
+
+# CSS Token Contract
+
+All `@colis/keel` components consume CSS custom properties (tokens) under the `--keel-{category}-{scale}` namespace. Every token has a built-in fallback so keel works without `@colis/hull`.
+
+When `@colis/hull` is installed, it assigns the same variables with Tailwind-sourced values and theme-aware overrides.
+
+:::note
+For the complete shared contract spec, see `docs/reference/KEEL_HULL_TOKEN_CONTRACT.md` in the repository.
+:::
+
+## Color Tokens
+
+### Primary
+
+| Token | Default | Description |
+|-------|---------|-------------|
+| `--keel-color-primary` | `#3b82f6` | Main brand/action color |
+| `--keel-color-primary-hover` | `#2563eb` | Hover state |
+| `--keel-color-primary-active` | `#1d4ed8` | Active/pressed state |
+| `--keel-color-primary-subtle` | `#eff6ff` | Light background for primary context |
+
+### Semantic States
+
+| Token | Default | Description |
+|-------|---------|-------------|
+| `--keel-color-danger` | `#ef4444` | Destructive/error actions |
+| `--keel-color-success` | `#22c55e` | Success/positive states |
+| `--keel-color-warning` | `#f59e0b` | Warning states |
+
+### Text & Background
+
+| Token | Default |
+|-------|---------|
+| `--keel-color-text-base` | `#111827` |
+| `--keel-color-text-muted` | `#6b7280` |
+| `--keel-color-bg-base` | `#ffffff` |
+| `--keel-color-bg-subtle` | `#f9fafb` |
+| `--keel-color-border` | `#e5e7eb` |
+
+## Spacing Tokens
+
+| Token | Default |
+|-------|---------|
+| `--keel-space-xs` | `4px` |
+| `--keel-space-sm` | `8px` |
+| `--keel-space-md` | `12px` |
+| `--keel-space-lg` | `16px` |
+| `--keel-space-xl` | `24px` |
+| `--keel-space-2xl` | `32px` |
+
+## Border Radius Tokens
+
+| Token | Default |
+|-------|---------|
+| `--keel-radius-sm` | `4px` |
+| `--keel-radius-md` | `6px` |
+| `--keel-radius-lg` | `8px` |
+| `--keel-radius-full` | `9999px` |
+
+## Typography Tokens
+
+| Token | Default |
+|-------|---------|
+| `--keel-font-family` | `ui-sans-serif, system-ui, sans-serif` |
+| `--keel-font-size-sm` | `0.875rem` |
+| `--keel-font-size-base` | `1rem` |
+| `--keel-font-size-lg` | `1.125rem` |
+| `--keel-font-weight-normal` | `400` |
+| `--keel-font-weight-medium` | `500` |
+| `--keel-font-weight-bold` | `700` |
+
+## Overriding Tokens
+
+You can override any token at `:root` level:
+
+```css
+:root {
+  --keel-color-primary: #7c3aed;       /* brand purple */
+  --keel-font-family: 'Geist', sans-serif;
+  --keel-radius-md: 8px;
+}
+```
+
+→ See [Project Theming](/design-system/hull/project-theming/) for the full Layer 3 pattern.

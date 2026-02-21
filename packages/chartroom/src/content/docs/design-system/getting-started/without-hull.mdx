@@ -1,0 +1,62 @@
+---
+title: Using Keel Without Hull
+description: Use @colis/keel standalone with built-in CSS variable defaults.
+---
+
+# Using Keel Without Hull
+
+`@colis/keel` is designed to work completely standalone. When `@colis/hull` is not installed, keel uses built-in CSS variable fallback values for all tokens.
+
+## Setup
+
+Install keel only:
+
+```bash
+npm install @colis/keel
+```
+
+Add token defaults to your `angular.json` styles:
+
+```json
+"styles": [
+  "node_modules/@colis/keel/src/tokens/defaults.css",
+  "src/styles.css"
+]
+```
+
+## Customize with CSS Variables
+
+Override any `--keel-*` token directly in your project:
+
+```css
+/* src/styles/brand.css */
+:root {
+  --keel-color-primary:        #7c3aed;   /* your brand color */
+  --keel-color-primary-hover:  #6d28d9;
+  --keel-font-family:          'Geist', sans-serif;
+  --keel-radius-md:            8px;
+}
+```
+
+Then import after keel defaults:
+
+```json
+"styles": [
+  "node_modules/@colis/keel/src/tokens/defaults.css",
+  "src/styles/brand.css",
+  "src/styles.css"
+]
+```
+
+## Token Reference
+
+See the [Token Contract](/design-system/keel/token-contract/) for a complete list of all `--keel-*` CSS variables and their default values.
+
+## When to Add Hull
+
+Add `@colis/hull` if you want:
+- Built-in light/dark mode support
+- A complete Tailwind-sourced design token set
+- Semantic theme variants (danger, success, warning contexts)
+
+→ [Add Hull](/design-system/getting-started/with-hull/)

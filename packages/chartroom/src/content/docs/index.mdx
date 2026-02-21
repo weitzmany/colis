@@ -1,0 +1,53 @@
+---
+title: Colis Docs
+description: Documentation for the @colis ecosystem — components, theming, tooling, and more.
+template: splash
+hero:
+  tagline: Everything you need to build with the @colis ecosystem.
+  actions:
+    - text: Get Started
+      link: /getting-started/introduction/
+      icon: right-arrow
+    - text: Design System
+      link: /design-system/getting-started/installation/
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Packages
+
+<CardGrid>
+  <Card title="@colis/keel" icon="puzzle">
+    Angular component library — standalone UI primitives with CSS token theming.
+    [View docs →](/design-system/keel/overview/)
+  </Card>
+  <Card title="@colis/hull" icon="seti:css">
+    Design system and theming — three-layer CSS token system with light/dark themes.
+    [View docs →](/design-system/hull/overview/)
+  </Card>
+  <Card title="@colis/keel-mcp" icon="laptop">
+    MCP server for AI assistants — gives LLMs authoritative keel/hull knowledge.
+    [View docs →](/design-system/mcp/overview/)
+  </Card>
+  <Card title="@colis/rig" icon="setting">
+    Foundational development toolkit — port management, tech detection, project initialization.
+    [View docs →](/packages/rig/)
+  </Card>
+  <Card title="@colis/embark" icon="rocket">
+    Project scaffolding tool — create new projects from templates.
+    [View docs →](/packages/embark/)
+  </Card>
+  <Card title="@colis/logbook" icon="document">
+    Git workflow assets and lifecycle management.
+    [View docs →](/packages/logbook/)
+  </Card>
+  <Card title="@colis/deck" icon="list-format">
+    Task management integration.
+    [View docs →](/packages/deck/)
+  </Card>
+  <Card title="@colis/shipyard" icon="open-book">
+    Deployment and build tooling.
+    [View docs →](/packages/shipyard/)
+  </Card>
+</CardGrid>

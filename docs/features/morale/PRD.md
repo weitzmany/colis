@@ -217,26 +217,26 @@ Beginner     → Developing   → Proficient   → Advanced     → Expert
 - Option to hide from rankings
 - Show "your best" alongside ranking
 
-#### 6. Challenges and Quests
+#### 6. Missions (Challenges and Quests)
 
-**Description**: Time-limited challenges that encourage specific learning behaviors.
+**Description**: Time-limited missions that encourage specific learning behaviors (formerly: challenges and quests).
 
 **Requirements**:
-- [ ] Daily challenges (e.g., "Complete 5 logic problems")
-- [ ] Weekly quests (e.g., "Master AND, OR, NOT operators")
-- [ ] Special event challenges
-- [ ] Team challenges (collaborative)
-- [ ] Challenge difficulty selection
-- [ ] Bonus rewards for challenge completion
+- [ ] Daily missions (e.g., "Complete 5 logic problems")
+- [ ] Weekly missions (e.g., "Master AND, OR, NOT operators")
+- [ ] Special event missions
+- [ ] Team missions (collaborative)
+- [ ] Mission difficulty selection
+- [ ] Bonus rewards for mission completion
 
 ```typescript
-interface Challenge {
+interface Mission {
   id: string;
   title: string;
   description: string;
   type: 'daily' | 'weekly' | 'special' | 'team';
-  objectives: ChallengeObjective[];
-  rewards: ChallengeReward[];
+  objectives: MissionObjective[];
+  rewards: MissionReward[];
   duration: Duration;
   difficulty: 'easy' | 'medium' | 'hard';
 }
@@ -272,11 +272,11 @@ interface Challenge {
 
 #### 9. Adaptive Morale
 
-- Personalized challenge difficulty
+- Personalized mission difficulty
 - Dynamic reward scheduling
 - Engagement pattern analysis
 - Burnout prevention
-- Optimal challenge timing
+- Optimal mission timing
 
 ---
 
@@ -376,8 +376,8 @@ GET    /api/v1/morale/profile       - Get user morale profile
 GET    /api/v1/morale/decorations  - Get decorations and progress
 GET    /api/v1/morale/ranking   - Get ranking data
 POST   /api/v1/morale/streak/freeze - Use streak freeze
-GET    /api/v1/morale/challenges    - Get available challenges
-POST   /api/v1/morale/challenges/{id}/join - Join a challenge
+GET    /api/v1/morale/missions    - Get available missions
+POST   /api/v1/morale/missions/{id}/join - Join a mission
 ```
 
 ### Event System
@@ -413,7 +413,7 @@ async function handleMoraleEvent(event: MoraleEvent): Promise<MoraleUpdate> {
 - Achievement unlocked: Immediate, celebratory
 - Streak at risk: 2 hours before deadline
 - Daily goal reminder: Customizable time
-- Challenge updates: At join and completion
+- Mission updates: At join and completion
 
 **Tone**:
 - Encouraging, not pressuring
@@ -444,7 +444,7 @@ async function handleMoraleEvent(event: MoraleEvent): Promise<MoraleUpdate> {
    - XP earned per session
    - Achievement unlock rate
    - Streak length distribution
-   - Challenge participation rate
+   - Mission participation rate
 
 2. **Learning Correlation**:
    - XP vs. mastery score correlation

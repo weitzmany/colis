@@ -1,0 +1,114 @@
+/**
+ * @colis/keel — Default Token Values
+ *
+ * These CSS custom properties are keel's built-in fallback values.
+ * They enable keel components to render correctly without @colis/hull.
+ *
+ * When @colis/hull is installed, hull's Layer 1 and Layer 2 will
+ * assign concrete values to these same variables, overriding these defaults.
+ *
+ * All tokens follow the naming convention: --keel-{category}-{scale}
+ *
+ * See docs/reference/KEEL_HULL_TOKEN_CONTRACT.md for the full contract.
+ */
+
+:root {
+  /* ── Color: Primary ─────────────────────────────── */
+  --keel-color-primary:         #3b82f6;           /* blue-500 */
+  --keel-color-primary-hover:   #2563eb;           /* blue-600 */
+  --keel-color-primary-active:  #1d4ed8;           /* blue-700 */
+  --keel-color-primary-subtle:  #eff6ff;           /* blue-50  */
+
+  /* ── Color: Secondary ───────────────────────────── */
+  --keel-color-secondary:         #6b7280;         /* gray-500 */
+  --keel-color-secondary-hover:   #4b5563;         /* gray-600 */
+  --keel-color-secondary-subtle:  #f9fafb;         /* gray-50  */
+
+  /* ── Color: Semantic States ─────────────────────── */
+  --keel-color-danger:          #ef4444;           /* red-500  */
+  --keel-color-danger-hover:    #dc2626;           /* red-600  */
+  --keel-color-danger-subtle:   #fef2f2;           /* red-50   */
+
+  --keel-color-success:         #22c55e;           /* green-500 */
+  --keel-color-success-hover:   #16a34a;           /* green-600 */
+  --keel-color-success-subtle:  #f0fdf4;           /* green-50  */
+
+  --keel-color-warning:         #f59e0b;           /* amber-500 */
+  --keel-color-warning-hover:   #d97706;           /* amber-600 */
+  --keel-color-warning-subtle:  #fffbeb;           /* amber-50  */
+
+  /* ── Color: Text ────────────────────────────────── */
+  --keel-color-text-base:       #111827;           /* gray-900 */
+  --keel-color-text-muted:      #6b7280;           /* gray-500 */
+  --keel-color-text-disabled:   #9ca3af;           /* gray-400 */
+  --keel-color-text-inverse:    #ffffff;
+
+  /* ── Color: Background ──────────────────────────── */
+  --keel-color-bg-base:         #ffffff;
+  --keel-color-bg-subtle:       #f9fafb;           /* gray-50  */
+  --keel-color-bg-overlay:      rgba(0, 0, 0, 0.5);
+
+  /* ── Color: Border ──────────────────────────────── */
+  --keel-color-border:          #e5e7eb;           /* gray-200 */
+  --keel-color-border-strong:   #d1d5db;           /* gray-300 */
+  --keel-color-border-focus:    #3b82f6;           /* blue-500 */
+
+  /* ── Spacing ────────────────────────────────────── */
+  --keel-space-xs:   4px;
+  --keel-space-sm:   8px;
+  --keel-space-md:   12px;
+  --keel-space-lg:   16px;
+  --keel-space-xl:   24px;
+  --keel-space-2xl:  32px;
+  --keel-space-3xl:  48px;
+
+  /* ── Border Radius ──────────────────────────────── */
+  --keel-radius-sm:    4px;
+  --keel-radius-md:    6px;
+  --keel-radius-lg:    8px;
+  --keel-radius-xl:    12px;
+  --keel-radius-full:  9999px;
+
+  /* ── Typography ─────────────────────────────────── */
+  --keel-font-family:      ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --keel-font-family-mono: ui-monospace, 'Cascadia Code', monospace;
+
+  --keel-font-size-xs:    0.75rem;    /* 12px */
+  --keel-font-size-sm:    0.875rem;   /* 14px */
+  --keel-font-size-base:  1rem;       /* 16px */
+  --keel-font-size-lg:    1.125rem;   /* 18px */
+  --keel-font-size-xl:    1.25rem;    /* 20px */
+
+  --keel-font-weight-normal:    400;
+  --keel-font-weight-medium:    500;
+  --keel-font-weight-semibold:  600;
+  --keel-font-weight-bold:      700;
+
+  --keel-line-height-tight:    1.25;
+  --keel-line-height-base:     1.5;
+  --keel-line-height-relaxed:  1.75;
+
+  /* ── Shadows ────────────────────────────────────── */
+  --keel-shadow-sm:   0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --keel-shadow-md:   0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --keel-shadow-lg:   0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --keel-shadow-none: none;
+
+  /* ── Transitions ────────────────────────────────── */
+  --keel-transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --keel-transition-base:   200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --keel-transition-slow:   300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Z-Index ────────────────────────────────────── */
+  --keel-z-sticky:        100;
+  --keel-z-dropdown:      200;
+  --keel-z-tooltip:       300;
+  --keel-z-overlay:       400;
+  --keel-z-modal:         500;
+  --keel-z-notification:  600;
+
+  /* ── Focus Ring ─────────────────────────────────── */
+  --keel-focus-ring-width:  2px;
+  --keel-focus-ring-offset: 2px;
+  --keel-focus-ring-color:  #3b82f6;
+}

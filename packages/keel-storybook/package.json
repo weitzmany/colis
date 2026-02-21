@@ -1,0 +1,46 @@
+{
+  "name": "@colis/keel-storybook",
+  "version": "0.1.0",
+  "description": "Storybook host for @colis/keel components and @colis/hull themes — interactive component explorer",
+  "private": true,
+  "scripts": {
+    "storybook": "ng run keel-storybook:storybook",
+    "build-storybook": "ng run keel-storybook:build-storybook",
+    "test-storybook": "test-storybook"
+  },
+  "peerDependencies": {
+    "@colis/hull": ">=0.1.0",
+    "@colis/keel": ">=0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@colis/keel": {
+      "optional": true
+    },
+    "@colis/hull": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@angular-devkit/architect": "^0.1700.0",
+    "@angular-devkit/build-angular": "^17.0.0",
+    "@angular-devkit/core": "^17.0.0",
+    "@angular/cli": "^17.3.17",
+    "@angular/common": "^17.0.0",
+    "@angular/compiler": "^17.0.0",
+    "@angular/compiler-cli": "^17.0.0",
+    "@angular/core": "^17.0.0",
+    "@angular/platform-browser": "^17.0.0",
+    "@storybook/addon-a11y": "^8.0.0",
+    "@storybook/addon-controls": "^8.0.0",
+    "@storybook/addon-essentials": "^8.0.0",
+    "@storybook/addon-viewport": "^8.0.0",
+    "@storybook/angular": "^8.0.0",
+    "@storybook/blocks": "^8.0.0",
+    "storybook": "^8.0.0",
+    "typescript": "~5.3.0",
+    "zone.js": "~0.14.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

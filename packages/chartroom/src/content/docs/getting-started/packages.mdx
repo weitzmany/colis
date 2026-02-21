@@ -1,0 +1,58 @@
+---
+title: Package Overview
+description: All @colis packages with installation commands and registry setup.
+---
+
+# Package Overview
+
+All packages are scoped under `@colis` and published to the private Verdaccio registry.
+
+## Registry Setup
+
+Before installing any `@colis` package, configure npm to use the Colis registry:
+
+```bash
+npm config set @colis:registry http://your-verdaccio-server:4873/
+```
+
+## Packages
+
+### Design System
+
+```bash
+# Component library (Angular 17+)
+npm install @colis/keel
+
+# Theming (optional, recommended)
+npm install @colis/hull
+
+# MCP server for AI assistants (devDependency)
+npm install --save-dev @colis/keel-mcp
+```
+
+### Developer Tooling
+
+```bash
+# Foundational toolkit
+npm install @colis/rig
+
+# Project scaffolding (global)
+npm install -g @colis/embark
+
+# Git workflow
+npm install @colis/logbook
+
+# Task management
+npm install @colis/deck
+```
+
+## Dependency Order
+
+When multiple packages are needed, install in this order:
+
+1. `@colis/logbook` — no @colis dependencies
+2. `@colis/rig` — depends on logbook
+3. `@colis/embark` — depends on rig
+4. `@colis/keel` — no @colis dependencies
+5. `@colis/hull` — peer dependency on keel (install keel first)
+6. `@colis/keel-mcp` — peer dependency on keel

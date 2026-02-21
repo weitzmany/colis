@@ -1,0 +1,78 @@
+<!-- Keel CSS token defaults — always loaded in Storybook -->
+<!-- Once @colis/hull is published, replace with hull/src/styles.css -->
+<style>
+  /* --keel-* token defaults (mirrors packages/keel/src/tokens/defaults.css) */
+  :root {
+    /* Colors — Primary */
+    --keel-color-primary:         #3b82f6;
+    --keel-color-primary-hover:   #2563eb;
+    --keel-color-primary-active:  #1d4ed8;
+    --keel-color-primary-subtle:  #eff6ff;
+
+    /* Colors — Semantic */
+    --keel-color-danger:   #ef4444;
+    --keel-color-success:  #22c55e;
+    --keel-color-warning:  #f59e0b;
+
+    /* Colors — Text & BG */
+    --keel-color-text-base:    #111827;
+    --keel-color-text-muted:   #6b7280;
+    --keel-color-text-inverse: #ffffff;
+    --keel-color-bg-base:      #ffffff;
+    --keel-color-bg-subtle:    #f9fafb;
+    --keel-color-border:       #e5e7eb;
+
+    /* Spacing */
+    --keel-space-xs:   4px;
+    --keel-space-sm:   8px;
+    --keel-space-md:   12px;
+    --keel-space-lg:   16px;
+    --keel-space-xl:   24px;
+    --keel-space-2xl:  32px;
+
+    /* Border Radius */
+    --keel-radius-sm:   4px;
+    --keel-radius-md:   6px;
+    --keel-radius-lg:   8px;
+    --keel-radius-full: 9999px;
+
+    /* Typography */
+    --keel-font-family:        ui-sans-serif, system-ui, sans-serif;
+    --keel-font-size-sm:       0.875rem;
+    --keel-font-size-base:     1rem;
+    --keel-font-size-lg:       1.125rem;
+    --keel-font-weight-normal: 400;
+    --keel-font-weight-medium: 500;
+    --keel-font-weight-bold:   700;
+    --keel-line-height-base:   1.5;
+
+    /* Shadows */
+    --keel-shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --keel-shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --keel-shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+    /* Transitions */
+    --keel-duration-fast:   100ms;
+    --keel-duration-base:   200ms;
+    --keel-easing-default:  cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Z-Index */
+    --keel-z-dropdown:  1000;
+    --keel-z-modal:     1300;
+    --keel-z-tooltip:   1400;
+
+    /* Focus Ring */
+    --keel-focus-ring-color:  #93c5fd;
+    --keel-focus-ring-width:  2px;
+  }
+
+  /* Hull Dark theme (preview only — Layer 2 will ship with @colis/hull) */
+  .hull-dark {
+    --keel-color-text-base:    #f9fafb;
+    --keel-color-text-muted:   #9ca3af;
+    --keel-color-text-inverse: #111827;
+    --keel-color-bg-base:      #111827;
+    --keel-color-bg-subtle:    #1f2937;
+    --keel-color-border:       #374151;
+  }
+</style>

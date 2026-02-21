@@ -184,6 +184,56 @@ Projects are categorized by academic discipline and educational value.
   - Software Engineering: Monorepo management, package design, API design, documentation
   - Mathematics: Graph theory (dependency graphs), set theory (package relationships)
 
+### 4a. `packages/keel` (`@colis/keel`)
+- **Type**: Angular Component Library Package
+- **Technology**: Angular (≥17), TypeScript, CSS Custom Properties
+- **Location**: `~/Documents/packages/packages/keel/`
+- **npm Package**: `@colis/keel`
+- **Description**: Official Angular component library for the `@colis` ecosystem. Provides standalone Angular components (buttons, inputs, modals, etc.) that consume CSS custom properties via the `--keel-*` token namespace. Works without `@colis/hull` using built-in CSS variable fallback defaults.
+- **Phase 1 Status**: Foundation MVP — empty installable package with CSS token contract. No components yet.
+- **Dependencies**: Peer deps on `@angular/core` and `@angular/common` (≥17). No dependency on `@colis/hull`.
+- **Key Files**:
+  - `package.json` — Package metadata and peer deps
+  - `src/index.ts` — Public API entry point
+  - `src/tokens/defaults.css` — CSS variable defaults (all `--keel-*` tokens with fallback values)
+  - `README.md` — Usage documentation
+- **Related Docs**:
+  - [`docs/features/keel/PRD.md`](../features/keel/PRD.md)
+  - [`docs/features/keel/TASKS.md`](../features/keel/TASKS.md)
+  - [`docs/reference/KEEL_HULL_TOKEN_CONTRACT.md`](./KEEL_HULL_TOKEN_CONTRACT.md)
+- **Academic Classification**: Computer Science - Software Architecture, Component Design, Design Systems
+- **Educational Value**:
+  - Demonstrates CSS custom property (token) system for design systems
+  - Illustrates standalone Angular component architecture
+  - Shows separation of concerns between component logic and styling
+
+### 4b. `packages/hull` (`@colis/hull`)
+- **Type**: Design System and Theming Package
+- **Technology**: CSS Custom Properties, TypeScript, Tailwind-sourced tokens
+- **Location**: `~/Documents/packages/packages/hull/`
+- **npm Package**: `@colis/hull`
+- **Description**: Official design system and theming package for `@colis/keel`. Implements a three-layer CSS token architecture: (1) Tailwind-first base token values, (2) built-in light/dark themes, (3) project override mechanism. Assigns concrete values to the `--keel-*` CSS custom properties that keel components consume.
+- **Phase 1 Status**: Foundation MVP — three-layer directory structure scaffolded. No theme values yet.
+- **Dependencies**: Peer dependency on `@colis/keel` (≥0.1.0). No Tailwind CSS runtime dependency.
+- **Key Files**:
+  - `package.json` — Package metadata and keel peer dep
+  - `src/index.ts` — Public JS API entry point
+  - `src/styles.css` — Main CSS entry (imports all layers; empty in Phase 1)
+  - `src/base/` — Layer 1: Tailwind-sourced token value mapping
+  - `src/themes/light/` — Layer 2: Light mode theme
+  - `src/themes/dark/` — Layer 2: Dark mode theme
+  - `src/project/` — Layer 3: Project override convention and helpers
+  - `README.md` — Architecture documentation
+- **Related Docs**:
+  - [`docs/features/hull/PRD.md`](../features/hull/PRD.md)
+  - [`docs/features/hull/TASKS.md`](../features/hull/TASKS.md)
+  - [`docs/reference/KEEL_HULL_TOKEN_CONTRACT.md`](./KEEL_HULL_TOKEN_CONTRACT.md)
+- **Academic Classification**: Computer Science - Design Systems, CSS Architecture, Software Layering
+- **Educational Value**:
+  - Demonstrates three-layer CSS architecture for scalable theming
+  - Illustrates how design tokens bridge design and engineering
+  - Shows CSS cascade as an architectural mechanism
+
 ### 5. `spoon-me/`
 - **Type**: E-commerce Web Application
 - **Technology**: 
@@ -1271,116 +1321,7 @@ Travel Itinerary & Document Wallet (TripVault) is a customer-facing full-stack w
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/travel-itinerary-wallet/`
 
-### 16. `energy-usage-tracker/`
-
-**Status**: Planning (Comprehensive PRD Complete)  
-**Priority**: Medium  
-**Category**: Full-Stack Web & Mobile Application (Customer-Facing)
-
-#### Overview
-
-Energy Usage Tracker (EnergyWise) is a customer-facing full-stack web and mobile application that helps households track utility usage (electricity, water, gas), monitor costs, and reduce bills through actionable insights. Users can log meter readings, import bills, receive high-usage alerts, and compare monthly trends to optimize their energy consumption and reduce expenses.
-
-**Target Audience**: Homeowners, renters, families managing utility bills (130M US households)  
-**Business Model**: Freemium SaaS (Free: 1 property, basic tracking; Premium: $9.99/month for multiple properties and advanced features)
-
-#### Key Features
-
-1. **Usage Tracking**: Manual meter readings, bill uploads, monthly usage summaries
-2. **Cost Monitoring**: Total monthly costs, per-utility breakdown, budget thresholds and alerts
-3. **Insights & Optimization**: Usage trend analysis, peak usage detection, saving recommendations
-4. **Alerts & Reminders**: High-usage alerts, bill due reminders, budget overage warnings
-5. **Multi-Property Support** (Premium): Track multiple homes, property-specific dashboards, exportable reports
-
-#### Tech Stack
-
-- **Frontend**: Angular with TypeScript, Tailwind CSS, shadcn/ui, Recharts
-- **Backend**: PHP (Slim framework) with Composer, RESTful API
-- **Database**: MySQL 8.0 (via Docker)
-- **Mobile** (Phase 2): Capacitor (iOS & Android), push notifications, offline-first architecture
-- **Infrastructure**: Docker containerization, GitHub Actions CI/CD, DigitalOcean (MVP), AWS (post-MVP)
-
-#### Documentation
-
-- [Documentation Index](projects/energy-usage-tracker/INDEX.md) - Complete navigation guide
-- [PRD Overview](projects/energy-usage-tracker/PRD_OVERVIEW.md) - Main requirements document with MVP definition
-- [Architecture](projects/energy-usage-tracker/ARCHITECTURE.md) - Technical architecture and system design
-- [Expert Contributions](projects/energy-usage-tracker/EXPERTS.md) - 16 expert sign-offs
-
-#### Timeline
-
-- **Phase 1 (MVP)** (Weeks 1-10): Manual meter readings, cost monitoring, basic insights, budget alerts, monthly reports
-- **Phase 2 (Months 4-6)**: Bill parsing/OCR, multi-property management, mobile app (React Native), advanced insights, CSV/PDF export
-- **Phase 3 (Months 7-12)**: Utility provider integrations, optimization recommendations engine, historical analysis, family collaboration
-- **Phase 4 (Year 2+)**: Smart home integrations, social features, advanced reporting
-
-**Target Launch**: Q2 2026 (April-June 2026)
-
-#### Business Value
-
-- **Market Opportunity**: 130M US households with average utility costs $300-500/month ($4,200-6,000/year)
-- **User Value**: Save 10-20% on utility bills ($400-800/year) through usage insights, budget alerts, optimization recommendations
-- **Revenue Model**: Freemium SaaS targeting $6K ARR Year 1, $24K ARR Year 2, $72K ARR Year 3
-- **Time Savings**: Reduce manual bill tracking from 30+ min/month to <5 min with quick meter logging
-- **Success Metrics**: 60% weekly engagement, 8-12% free-to-premium conversion, <5% monthly churn
-
-#### Expert Team (16 Experts - All Approved)
-
-- **Product**: Patricia Martinez (Product Manager) - MVP definition, business model, prioritization
-- **Architecture**: Marcus Johnson (Architecture) - System design, scalability planning, technology stack
-- **Backend**: Samuel Rodriguez (Backend) - NestJS architecture, API design, business logic, bill parsing
-- **Frontend**: Thomas Anderson (Frontend) - Next.js dashboard, state management, UI implementation
-- **Mobile**: Michael Brown (Mobile) - React Native app, push notifications, offline-first architecture
-- **UI/UX**: Daisy Thompson (UI/UX) - User personas, user flows, dashboard design, mobile-first UX
-- **Accessibility**: Allison Foster (Accessibility) - WCAG compliance, keyboard navigation, screen reader support
-- **Database**: Benjamin Lee (Database) - PostgreSQL schema, query optimization, indexing strategy
-- **API Design**: Emily Chen (API Design) - RESTful API patterns, endpoint structure, OpenAPI documentation
-- **Security**: Ryan Kim (Security) - JWT authentication, data encryption, GDPR/CCPA compliance
-- **Performance**: James Martinez (Performance) - Dashboard optimization, caching strategies, response time targets
-- **Business Intelligence**: Gary Wilson (BI) - Insights engine, analytics architecture, KPIs, optimization recommendations
-- **DevOps**: David Cooper (DevOps) - Docker, CI/CD pipeline, infrastructure setup, AWS migration planning
-- **Observability**: Kevin Martinez (Observability) - Logging (Winston), monitoring, error tracking (Sentry)
-- **Copywriter**: Olivia Martinez (Copywriter) - App naming (EnergyWise), value proposition, UI copy
-- **Documentation**: Dorothy Clark (Documentation) - PRD structure, documentation completeness
-
-**All experts approved and signed off on 2026-01-20**
-
-#### Academic Classification
-
-**Primary**: Computer Science - Web Development, Mobile Development, Human-Computer Interaction
-
-**Educational Value**:
-- Demonstrates full-stack architecture (Next.js, NestJS, React Native, PostgreSQL)
-- Illustrates usage monitoring and analytics systems
-- Shows budget alert systems and notification architecture
-- Exemplifies freemium SaaS business model
-- Demonstrates optimization recommendations engine
-- Illustrates mobile-first responsive design and React Native development
-
-**Subject Matter Areas**:
-- **Computer Science**: Full-stack development, API design, data visualization, mobile UX, push notifications, real-time alerts
-- **Software Engineering**: Modular architecture (NestJS modules), RESTful API design, data modeling, background jobs (Bull + Redis)
-- **Database Systems**: PostgreSQL schema design, query optimization, indexing strategies, connection pooling, read replicas
-- **Security**: JWT authentication, bcrypt password hashing, data encryption (at rest/in transit), GDPR/CCPA compliance
-- **Business**: Freemium SaaS model, subscription management, user acquisition, retention strategies, cost optimization
-
-#### Database Considerations
-
-- **Database Type**: PostgreSQL 16 (relational database for structured utility data)
-- **Schema Design**: Users, properties, utilities, meter readings, bills, budgets, alerts
-- **Migration Strategy**: Prisma migrations for schema versioning and evolution
-- **Data Persistence**: Persistent storage for readings, bills, budgets, alerts with automated daily backups
-- **Backup Strategy**: DigitalOcean managed database automated backups (7-day retention), RTO 4 hours, RPO 24 hours
-- **Query Optimization**: Indexes on user_id, property_id, date fields; selective fetching; pagination; caching (Phase 2+)
-- **Data Integrity**: Foreign key constraints, unique constraints, check constraints for data validation
-- **Scalability**: Read replicas for read-heavy workloads (Phase 2+), connection pooling (10 connections MVP, 20-30 production)
-- **Security**: Encryption at rest (managed database), encryption in transit (TLS 1.2/1.3), GDPR/CCPA compliance
-
-**Type**: Energy & Utilities Application  
-**Technology**: Full-stack web + mobile  
-**Location**: `~/Documents/packages/docs/projects/energy-usage-tracker/`
-
-### 17. `vehicle-maintenance-tracker/`
+### 16. `vehicle-maintenance-tracker/`
 - **Type**: Vehicle Maintenance Application (AutoCare)
 - **Technology**: 
   - Backend: PHP (Slim framework), Composer
@@ -1424,7 +1365,7 @@ Energy Usage Tracker (EnergyWise) is a customer-facing full-stack web and mobile
   - Software Engineering: System architecture, CI/CD, deployment strategies
   - Business: Freemium model, pricing strategy, go-to-market planning
 
-### 18. `meal-planner-grocery/`
+### 17. `meal-planner-grocery/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -1534,7 +1475,7 @@ Meal Planner & Grocery List (MealFlow) is a comprehensive meal planning and groc
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/meal-planner-grocery/`
 
-### 19. `recipes/`
+### 18. `recipes/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -1663,7 +1604,7 @@ Recipes is a full-stack web and mobile application designed to help home cooks a
 **Technology**: Full-stack web + mobile (Next.js, NestJS, React Native, PostgreSQL)  
 **Location**: `~/Documents/packages/docs/projects/recipes/`
 
-### 20. `subscription-bill-manager/`
+### 19. `subscription-bill-manager/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -1779,7 +1720,7 @@ Subscription & Bills Manager (working name: BillGuard) is a customer-facing full
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/subscription-bill-manager/`
 
-### 21. `pet-care-manager/`
+### 20. `pet-care-manager/`
 
 **Status**: Planning (PRD + Architecture Complete)  
 **Priority**: High  
@@ -1881,7 +1822,7 @@ Pet Care Manager is a comprehensive, customer-facing full-stack web and mobile a
 - **Scalability**: Read replicas for read-heavy workloads (Phase 2+), connection pooling for concurrent users
 - **Security**: Encryption at rest (AES-256), encryption in transit (TLS 1.2/1.3), GDPR/CCPA compliance for health data
 
-### 22. `financial-goal-saver/`
+### 21. `financial-goal-saver/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: High  
@@ -1992,7 +1933,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Full-stack web + mobile  
 **Location**: `~/Documents/packages/docs/projects/financial-goal-saver/`
 
-### 23. `packages/`
+### 22. `packages/`
 - **Type**: Documentation/Knowledge Base (Current Workspace)
 - **Technology**: Markdown documentation
 - **Location**: `~/Documents/packages/`
@@ -2015,7 +1956,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
   - Computer Science: Project management, software documentation, design patterns
   - Education: Learning resource organization, curriculum design (if applicable)
 
-### 24. `workspace-documentation-hub/`
+### 23. `workspace-documentation-hub/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: High  
@@ -2106,7 +2047,7 @@ Financial Goal Saver is a customer-facing full-stack web and mobile application 
 **Technology**: Next.js + TypeScript + Automated Data Extraction  
 **Location**: `~/Documents/packages/docs/projects/workspace-documentation-hub/`
 
-### 25. `tai-chi-lessons/`
+### 24. `tai-chi-lessons/`
 
 **Status**: Planning (Comprehensive PRD Complete)  
 **Priority**: Medium  
@@ -2248,7 +2189,7 @@ Tai Chi Lessons is an **AI-powered video generation engine** that creates beginn
 **Technology**: PHP backend + Angular frontend + AI providers + ffmpeg  
 **Location**: `~/Documents/packages/docs/projects/tai-chi-lessons/`
 
-### 26. `sports-results-tracker/`
+### 25. `sports-results-tracker/`
 
 **Status**: Planning (MVP Definition Complete)  
 **Priority**: Medium  
@@ -2376,7 +2317,7 @@ Sports Results Tracker is a fast, mobile-first platform for tracking soccer resu
 **Technology**: React 18 + TypeScript + Node.js + PostgreSQL + Redis  
 **Location**: `~/Documents/packages/docs/projects/sports-results-tracker/`
 
-### 27. `social-media-manager/`
+### 26. `social-media-manager/`
 
 **Status**: Planning (Initial Concept)  
 **Priority**: Medium  
@@ -2435,7 +2376,7 @@ Run comprehensive planning (`/local/plan-project social-media-manager`) to devel
 **Technology**: To be determined (likely full-stack with PHP/Node.js backend)  
 **Location**: `~/Documents/packages/docs/projects/social-media-manager/`
 
-### 28. `colis-company-showcase/`
+### 27. `colis-company-showcase/`
 
 **Status**: Planning  
 **Priority**: High  
@@ -2627,7 +2568,7 @@ Colis Company Showcase is a professional marketing and portfolio website designe
 **Technology**: Angular 18 + Slim PHP 4 + MySQL 8.0  
 **Location**: `~/Documents/packages/docs/projects/colis-company-showcase/`
 
-### 29. `ai-logo-generator/`
+### 28. `ai-logo-generator/`
 
 **Status**: Planning  
 **Priority**: High  
@@ -3120,7 +3061,7 @@ The following directories exist in `~/Documents/` but are not code projects:
 
 ## Summary
 
-**Total Code Projects**: 28 active projects
+**Total Code Projects**: 27 active projects
 
 1. `ulvonix/` - Social Media Bots Platform (CS: distributed systems, automation)
 2. `find-hidden-files/` - Obsidian Plugin (CS: Plugin architecture, file systems)
@@ -3136,20 +3077,19 @@ The following directories exist in `~/Documents/` but are not code projects:
 12. `medical-records-manager/` - Medical Records Manager (CS: security, scheduling)
 13. `family-care-coordinator/` - Family Care Coordinator (CS: collaboration, access)
 14. `travel-itinerary-wallet/` - Travel Itinerary & Document Wallet with AI Planning (CS: planning, alerts, AI integration) ⭐ MERGED
-15. `energy-usage-tracker/` - Energy Usage & Utility Optimizer (CS: analytics, alerts)
-16. `vehicle-maintenance-tracker/` - Vehicle Maintenance Tracker (CS: scheduling, expenses)
-17. `meal-planner-grocery/` - Meal Planner & Grocery (CS: planning, UX)
-18. `recipes/` - Recipes Platform (CS: content discovery, UX)
-19. `subscription-bill-manager/` - Subscriptions & Bills Manager (CS: finance analytics)
-20. `pet-care-manager/` - Pet Care Manager (CS: health information systems, mobile, reminders)
-21. `financial-goal-saver/` - Financial Goal Tracker & Automated Savings (CS: FinTech, automated savings)
-22. `packages/` - Knowledge Base (Information Science: Knowledge management)
-23. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
-24. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
-25. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
-26. `social-media-manager/` - Social Media Management Platform (CS: social technology, automation)
-27. `colis-company-showcase/` - Company Portfolio & Marketing Website (CS: full-stack web, CMS, marketing technology)
-28. `ai-logo-generator/` - AI-Powered Logo Generation Platform (CS: AI/ML, web development, SaaS, image generation)
+15. `vehicle-maintenance-tracker/` - Vehicle Maintenance Tracker (CS: scheduling, expenses)
+16. `meal-planner-grocery/` - Meal Planner & Grocery (CS: planning, UX)
+17. `recipes/` - Recipes Platform (CS: content discovery, UX)
+18. `subscription-bill-manager/` - Subscriptions & Bills Manager (CS: finance analytics)
+19. `pet-care-manager/` - Pet Care Manager (CS: health information systems, mobile, reminders)
+20. `financial-goal-saver/` - Financial Goal Tracker & Automated Savings (CS: FinTech, automated savings)
+21. `packages/` - Knowledge Base (Information Science: Knowledge management)
+22. `workspace-documentation-hub/` - Workspace Documentation Portal (CS: documentation systems, knowledge management)
+23. `tai-chi-lessons/` - Tai Chi Online Learning Platform (CS: video streaming, wellness technology)
+24. `sports-results-tracker/` - Real-Time Sports Tracker (CS: real-time systems, PWA, sports technology)
+25. `social-media-manager/` - Social Media Management Platform (CS: social technology, automation)
+26. `colis-company-showcase/` - Company Portfolio & Marketing Website (CS: full-stack web, CMS, marketing technology)
+27. `ai-logo-generator/` - AI-Powered Logo Generation Platform (CS: AI/ML, web development, SaaS, image generation)
 
 **Academic Focus Areas**:
 - **Primary**: Educational Technology (`learning-games/`), Artificial Intelligence & Machine Learning (`ai-logo-generator/`)

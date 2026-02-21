@@ -1,0 +1,136 @@
+---
+description: Enforce that every package change includes corresponding docs, Storybook, and MCP updates
+alwaysApply: true
+---
+
+# Package Docs + Storybook + MCP Sync Rule
+
+## ⚠️ NON-NEGOTIABLE RULE
+
+**Every package change MUST be accompanied by matching documentation, Storybook, and MCP updates.**
+
+No task, subtask, PR, or feature can be considered complete without satisfying all applicable sync requirements below.
+
+---
+
+## Rule 1: Package Changes → Documentation Update Required
+
+### When ANY package under `packages/` is created or modified:
+
+- **New package**: create `docs/features/<package-name>/PRD.md` and `docs/features/<package-name>/TASKS.md`
+- **New feature in existing package**: update existing PRD and TASKS, add to README
+- **Changed API / exported symbols**: update README, PRD, TASKS, and any reference docs
+- **Changed token/CSS contract** (`@colis/keel`, `@colis/hull`): update `docs/reference/KEEL_HULL_TOKEN_CONTRACT.md`
+- **New package published or version bumped**: update `VERDACCIO_SETUP.md` and `docs/reference/PROJECTS_LIST.md`
+
+### Docs Update Checklist (per package change)
+
+- [ ] `docs/features/<package>/PRD.md` — updated or created
+- [ ] `docs/features/<package>/TASKS.md` — updated or created
+- [ ] `packages/<package>/README.md` — reflects all changes
+- [ ] `docs/reference/PROJECTS_LIST.md` — entry exists and is accurate
+- [ ] `VERDACCIO_SETUP.md` — package order/description updated if applicable
+- [ ] Token contract updated if CSS/design tokens changed
+
+---
+
+## Rule 2: UI/Theming Changes (`@colis/keel` or `@colis/hull`) → Storybook Update Required
+
+### When `packages/keel` or `packages/hull` is modified:
+
+- **New component added**: add story file in `packages/keel-storybook/stories/<component>/`
+- **Component API changed**: update the matching story props, controls, and args
+- **Component removed or renamed**: remove or rename story accordingly
+- **New hull theme, palette, or token value**: add or update the theme matrix story
+- **Token added or changed**: update the Tokens story in Storybook
+
+### Storybook Update Checklist (per keel/hull change)
+
+- [ ] Story file exists in `packages/keel-storybook/stories/`
+- [ ] Component API documented via story `argTypes`
+- [ ] Story demonstrates all supported variants/states
+- [ ] Theme matrix story updated if token values changed
+- [ ] Hull light/dark/semantic state stories updated if theme changed
+- [ ] Story links to docs portal page and MCP tool
+
+---
+
+## Rule 3: Component/Token Changes → MCP Update Required
+
+### When `packages/keel` or `packages/hull` is modified:
+
+- **New component**: add component entry to `packages/keel-mcp/src/data/components.ts`
+- **Changed component API**: update `packages/keel-mcp/src/data/components.ts`
+- **New/changed token**: update `packages/keel-mcp/src/data/tokens.ts`
+- **New usage example**: add to `packages/keel-mcp/src/data/examples.ts`
+- **Storybook URL changed**: update `packages/keel-mcp/src/data/story-links.ts`
+
+### MCP Update Checklist (per keel/hull change)
+
+- [ ] `packages/keel-mcp/src/data/components.ts` — component list is current
+- [ ] `packages/keel-mcp/src/data/tokens.ts` — token definitions match `KEEL_HULL_TOKEN_CONTRACT.md`
+- [ ] `packages/keel-mcp/src/data/examples.ts` — code examples compile and are accurate
+- [ ] MCP story-link references point to live Storybook stories
+
+---
+
+## Enforcement in Workflow
+
+When completing any task or subtask involving a package change:
+
+1. **Before marking done**: run through the applicable checklist(s) above
+2. **If docs are missing**: add them before marking the task complete
+3. **If Storybook is missing**: add the story before marking the task complete
+4. **If MCP data is missing** (for keel/hull): update the data files before marking done
+
+### Example — Adding a Button Component to `@colis/keel`
+
+❌ WRONG — marking done when only the component is added:
+```
+✅ Button component implemented
+```
+
+✅ CORRECT — all sync requirements satisfied:
+```
+✅ Button component implemented
+✅ docs/features/keel/PRD.md updated with button details
+✅ docs/features/keel/TASKS.md updated (Task 2.2 done)
+✅ packages/keel/README.md — button usage section added
+✅ packages/keel-storybook/stories/button/ — 3 stories (Primary, Secondary, Danger)
+✅ packages/keel-mcp/src/data/components.ts — KeelButton entry added
+✅ packages/keel-mcp/src/data/examples.ts — button usage snippets added
+```
+
+---
+
+## Package Impact Checklist Template
+
+Add this to every new package `TASKS.md`:
+
+```markdown
+### Documentation Impact
+
+- [ ] PRD.md updated
+- [ ] TASKS.md updated
+- [ ] README.md updated
+- [ ] PROJECTS_LIST.md updated
+
+### Storybook Impact (keel/hull only)
+
+- [ ] Story file created/updated in `packages/keel-storybook/stories/`
+- [ ] Story covers all component variants
+- [ ] Theme matrix story updated if needed
+
+### MCP Impact (keel/hull only)
+
+- [ ] MCP data file updated in `packages/keel-mcp/src/data/`
+- [ ] Storybook links updated in MCP
+- [ ] Docs portal links updated in MCP
+```
+
+---
+
+## Review/Contribution
+
+**Created**: 2026-02-21  
+**Purpose**: Enforce that every package change keeps docs, Storybook, and MCP in sync so the Colis ecosystem remains consistently documented and LLM-accessible.

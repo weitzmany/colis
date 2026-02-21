@@ -1,0 +1,48 @@
+---
+title: MCP — AI Assistant Integration
+description: "@colis/keel-mcp gives AI assistants authoritative knowledge about keel and hull."
+---
+
+# MCP — AI Assistant Integration
+
+`@colis/keel-mcp` is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that gives AI coding assistants (Cursor, Claude Code, etc.) authoritative, real-time knowledge about `@colis/keel` components and `@colis/hull` theming.
+
+## Why Install keel-mcp?
+
+Without MCP, your AI assistant doesn't know about `@colis/keel`:
+
+- It may suggest incorrect import paths
+- It may invent non-existent prop names
+- It won't know the correct Angular standalone component syntax
+- It won't know the CSS token names for theming
+
+With keel-mcp installed and running, your AI assistant can:
+
+| Query | MCP Response |
+|-------|-------------|
+| "How do I use keel-button?" | Correct selector, imports, and all props |
+| "What variants does keel-input support?" | All `variant` options with types |
+| "Show me how to enable dark mode" | Step-by-step with exact code |
+| "What's the token for primary color?" | `--keel-color-primary` + current value |
+
+## Available MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `list_components` | List all keel components with status |
+| `get_component_api` | Full props/inputs/outputs for a component |
+| `get_component_examples` | Ready-to-paste Angular code examples |
+| `get_theme_tokens` | CSS token definitions and current values |
+| `get_theme_recipes` | Step-by-step theming guides |
+| `get_story_links` | Links to Storybook stories |
+| `get_docs_links` | Links to this documentation |
+
+→ [Tool Reference](/design-system/mcp/tool-reference/)
+
+## Quick Setup
+
+```bash
+npm install --save-dev @colis/keel-mcp
+```
+
+→ [Setup in Cursor](/design-system/mcp/setup-cursor/)

@@ -1,0 +1,17 @@
+/**
+ * @colis/hull — Main CSS Entry Point
+ *
+ * Phase 1: Empty scaffold. Layer 1 and Layer 2 will be implemented in Phase 2.
+ *
+ * Phase 2 contents will be:
+ *
+ *   @import './base/tailwind-mapping.css';    Layer 1: Tailwind-sourced token values
+ *   @import './themes/light/index.css';       Layer 2: Light theme (default)
+ *   @import './themes/dark/index.css';        Layer 2: Dark theme (class/media query)
+ *
+ * Usage in your project:
+ *   @import '@colis/hull/styles.css';
+ *
+ * For Angular projects, add to angular.json styles array:
+ *   "node_modules/@colis/hull/src/styles.css"
+ */

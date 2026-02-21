@@ -1,0 +1,73 @@
+---
+title: Dark Mode
+description: Enable and configure dark mode with @colis/hull.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Dark Mode
+
+`@colis/hull` supports three strategies for activating dark mode.
+
+## Prerequisites
+
+Dark mode requires `@colis/hull` — it does not work with keel-only (keel's defaults are light-only).
+
+```bash
+npm install @colis/keel @colis/hull
+```
+
+## Activation Strategies
+
+<Tabs>
+  <TabItem label="CSS Class">
+    Add `.hull-dark` to the `<html>` element:
+    ```html
+    <html class="hull-dark">
+    ```
+    Toggle programmatically in Angular:
+    ```typescript
+    toggleDarkMode(isDark: boolean): void {
+      document.documentElement.classList.toggle('hull-dark', isDark);
+    }
+    ```
+  </TabItem>
+  <TabItem label="Data Attribute">
+    ```html
+    <html data-hull-theme="dark">
+    ```
+    Toggle in Angular:
+    ```typescript
+    document.documentElement.setAttribute('data-hull-theme', isDark ? 'dark' : 'light');
+    ```
+  </TabItem>
+  <TabItem label="System Preference">
+    Hull automatically respects `prefers-color-scheme: dark`.
+    To force light mode regardless of system setting:
+    ```html
+    <html class="hull-light">
+    ```
+  </TabItem>
+</Tabs>
+
+## Dark Mode Tokens
+
+These tokens change between light and dark mode (Phase 2):
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--keel-color-text-base` | `#111827` | `#f9fafb` |
+| `--keel-color-bg-base` | `#ffffff` | `#111827` |
+| `--keel-color-bg-subtle` | `#f9fafb` | `#1f2937` |
+| `--keel-color-border` | `#e5e7eb` | `#374151` |
+
+## Overriding Dark Mode Colors
+
+Use Layer 3 to customize dark mode values for your brand:
+
+```css
+/* src/styles/hull.theme.css */
+.hull-dark {
+  --keel-color-primary: #a78bfa;   /* lighter purple for dark backgrounds */
+}
+```

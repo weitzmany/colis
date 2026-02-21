@@ -1,0 +1,84 @@
+---
+title: Three-Layer Architecture
+description: How hull's three CSS layers compose to create a complete theming system.
+---
+
+# Three-Layer Architecture
+
+Hull's design system is built in three composable layers, each with a distinct responsibility.
+
+## Layer Overview
+
+```
+Layer 3: Project Theme   ← your brand overrides --keel-* vars
+         ↓ overrides
+Layer 2: Hull Themes     ← built-in light/dark + semantic sets
+         ↓ overrides
+Layer 1: Base            ← Tailwind-sourced concrete token values
+         ↓ assigns to
+@colis/keel:  --keel-color-primary, --keel-space-sm, etc.
+```
+
+## Layer 1 — Base (Tailwind Mapping)
+
+Layer 1 is a CSS file that assigns concrete values to every `--keel-*` custom property, using Tailwind CSS's design scale as the value source.
+
+**Key point**: Tailwind CSS is NOT a runtime dependency. Hull simply uses Tailwind's well-tested color/spacing/typography values as static CSS constants.
+
+```css
+/* hull/src/base/tailwind-mapping.css (Phase 2) */
+:root {
+  --keel-color-primary: #3b82f6;   /* Tailwind blue-500 */
+  --keel-space-lg: 16px;           /* Tailwind spacing-4 */
+  --keel-radius-md: 6px;           /* Tailwind rounded-md */
+}
+```
+
+## Layer 2 — Hull Themes
+
+Layer 2 re-assigns tokens per visual context, building on Layer 1:
+
+```css
+/* hull/src/themes/dark/index.css (Phase 2) */
+.hull-dark, [data-hull-theme="dark"] {
+  --keel-color-text-base: #f9fafb;   /* gray-100 in dark */
+  --keel-color-bg-base: #111827;      /* gray-900 in dark */
+  --keel-color-border: #374151;       /* gray-700 in dark */
+}
+```
+
+Built-in themes planned:
+
+| Theme | Class / Selector |
+|-------|-----------------|
+| Light (default) | `:root` |
+| Dark | `.hull-dark` or `prefers-color-scheme: dark` |
+| Primary context | `.hull-primary` |
+| Danger context | `.hull-danger` |
+| Success context | `.hull-success` |
+| Warning context | `.hull-warning` |
+
+## Layer 3 — Project Override
+
+Layer 3 is a supported convention: projects create their own CSS file that overrides `--keel-*` tokens after hull.
+
+```css
+/* my-project/src/styles/hull.theme.css */
+:root {
+  --keel-color-primary:       #7c3aed;   /* brand purple */
+  --keel-color-primary-hover: #6d28d9;
+  --keel-font-family:         'Geist', sans-serif;
+}
+```
+
+Load order in `angular.json`:
+
+```json
+"styles": [
+  "node_modules/@colis/hull/src/styles.css",    ← Layer 1 + 2
+  "src/styles/hull.theme.css",                   ← Layer 3
+  "src/styles.css"
+]
+```
+
+→ [Full Project Theming Guide](/design-system/hull/project-theming/)

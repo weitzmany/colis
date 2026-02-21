@@ -1,6 +1,6 @@
 {
   "name": "@colis/deck",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Task management package for reading and managing tasks from taskmaster-ai (formerly: task-manager)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,6 +17,7 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
+    "clean": "rm -rf dist",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -25,7 +26,7 @@
     "format": "prettier --write src/",
     "format:check": "prettier --check src/",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build && npm run typecheck",
+    "prepublishOnly": "npm run clean && npm run build",
     "postinstall": "node lib/init-taskmaster.js",
     "release:patch": "npm version patch && npm run clean && npm run build && npm publish",
     "release:minor": "npm version minor && npm run clean && npm run build && npm publish",
@@ -60,7 +61,7 @@
   },
   "dependencies": {
     "@colis/rig": "^1.0.0",
-    "taskmaster-ai": "^1.0.0"
+    "task-master-ai": "^0.43.0"
   },
   "peerDependencies": {
     "chokidar": "^3.5.3",

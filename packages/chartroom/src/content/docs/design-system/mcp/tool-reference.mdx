@@ -1,0 +1,88 @@
+---
+title: MCP Tool Reference
+description: Complete reference for all @colis/keel-mcp tools.
+---
+
+# MCP Tool Reference
+
+## `list_components`
+
+List all available `@colis/keel` components with status.
+
+**Input**: none (optional `status` filter: `all | available | planned`)
+
+**Example response**:
+```json
+{
+  "components": [
+    {
+      "name": "KeelButtonComponent",
+      "selector": "keel-button",
+      "importPath": "@colis/keel",
+      "status": "planned",
+      "phase": 2
+    }
+  ]
+}
+```
+
+---
+
+## `get_component_api`
+
+Get full API documentation for a component.
+
+**Input**: `{ "component": "keel-button" }`
+
+**Returns**: inputs, outputs, slots, and which CSS tokens the component uses.
+
+---
+
+## `get_component_examples`
+
+Get ready-to-paste Angular code examples.
+
+**Input**: `{ "component": "keel-button", "variant": "primary" }`
+
+**Returns**: import statement, `@Component` decorator shape, template snippet.
+
+---
+
+## `get_theme_tokens`
+
+Get CSS custom property definitions for the keel/hull token system.
+
+**Input**: `{ "category": "color" }` (optional — omit for all tokens)
+
+**Returns**: token name, keel fallback default, hull Layer 1 value, Tailwind source reference.
+
+---
+
+## `get_theme_recipes`
+
+Step-by-step guides for common theming tasks.
+
+**Available recipes**:
+- `dark-mode` — enable hull dark mode
+- `project-theme` — apply brand overrides (Layer 3)
+- `without-hull` — custom tokens without hull
+
+---
+
+## `get_story_links`
+
+Get Storybook story URLs for a component or theme.
+
+**Input**: `{ "component": "keel-button" }`
+
+**Returns**: list of story names and their Storybook URLs.
+
+---
+
+## `get_docs_links`
+
+Get documentation portal URLs.
+
+**Input**: `{ "query": "dark mode" }`
+
+**Returns**: matching docs pages with titles and URLs.

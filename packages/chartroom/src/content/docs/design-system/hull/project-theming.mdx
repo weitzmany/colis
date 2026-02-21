@@ -1,0 +1,65 @@
+---
+title: Project Theming
+description: Apply your brand on top of @colis/hull using Layer 3 overrides.
+---
+
+# Project Theming
+
+Layer 3 is the supported pattern for applying your project's brand identity on top of hull's base design system.
+
+## The Pattern
+
+Create a project-specific CSS file that overrides `--keel-*` tokens:
+
+```css
+/* src/styles/hull.theme.css */
+:root {
+  /* Brand colors */
+  --keel-color-primary:         #7c3aed;
+  --keel-color-primary-hover:   #6d28d9;
+  --keel-color-primary-active:  #5b21b6;
+  --keel-color-primary-subtle:  #f5f3ff;
+
+  /* Brand typography */
+  --keel-font-family: 'Geist', 'Inter', system-ui, sans-serif;
+
+  /* Brand shape */
+  --keel-radius-sm: 6px;
+  --keel-radius-md: 10px;
+  --keel-radius-lg: 14px;
+}
+```
+
+## Load Order
+
+The import order is critical — project overrides must come after hull:
+
+```json
+// angular.json
+"styles": [
+  "node_modules/@colis/hull/src/styles.css",    ← Hull (Layer 1 + 2)
+  "src/styles/hull.theme.css",                   ← Your brand (Layer 3)
+  "src/styles.css"                               ← Component/utility styles
+]
+```
+
+## Rules for Layer 3
+
+- Only override tokens in the `--keel-*` contract (see [Token Contract](/design-system/keel/token-contract/))
+- Do **not** introduce new `--keel-*` variables — this namespace is reserved
+- Use your own `--my-brand-*` namespace for project-specific tokens
+- Dark mode overrides go inside `.hull-dark { }` selector
+
+## Dark Mode Brand Overrides
+
+```css
+/* src/styles/hull.theme.css */
+:root {
+  --keel-color-primary: #7c3aed;       /* brand purple — light mode */
+}
+
+.hull-dark {
+  --keel-color-primary: #a78bfa;       /* lighter purple — dark mode */
+  --keel-color-primary-hover: #8b5cf6;
+}
+```

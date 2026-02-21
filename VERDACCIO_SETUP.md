@@ -10,9 +10,14 @@ This guide will help you publish and manage `@colis/*` packages on your private 
 - **@colis/rig** - Foundational development toolkit (port management, tech detection, project initialization)
 - **@colis/embark** - Project template scaffolding tool
 
-Future packages:
-- **@colis/keel** - (planned)
-- **@colis/hull** - (planned)
+Active packages (Phase 1 scaffolded):
+- **@colis/keel** - Angular component library — standalone, themeable UI primitives (buttons, inputs, modals, etc.). Works without hull.
+- **@colis/hull** - Design system and theming package — three-layer CSS token system (Tailwind-first base, built-in light/dark themes, project override mechanism). Requires keel as peer dependency.
+- **@colis/keel-mcp** - MCP server for @colis/keel and @colis/hull — gives AI assistants authoritative component and theming knowledge.
+
+Private packages (not published to npm):
+- **@colis/chartroom** - Colis documentation portal — all @colis/* package guides, component docs, and theming reference. (Astro + Starlight, port 4300)
+- **@colis/keel-storybook** - Storybook host for @colis/keel components and @colis/hull themes. (port 6006)
 
 ## Prerequisites
 
@@ -27,6 +32,9 @@ Due to dependencies, publish in this order:
 1. **@colis/logbook** (no dependencies on other @colis packages)
 2. **@colis/rig** (depends on @colis/logbook)
 3. **@colis/embark** (depends on @colis/rig)
+4. **@colis/keel** (no dependencies on other @colis packages)
+5. **@colis/hull** (peer dependency on @colis/keel — publish keel first)
+6. **@colis/keel-mcp** (peer dependency on @colis/keel — publish keel first)
 
 ## Setup Steps
 

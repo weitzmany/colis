@@ -223,6 +223,51 @@ This document tracks project ideas that were removed from the main projects list
 
 ---
 
+### 7. Energy Usage Tracker
+
+**Removed Date**: 2026-02-09
+
+**Original Concept**:
+- Track utility usage (electricity, water, gas) through manual meter readings
+- Monitor monthly costs and spending by utility type
+- Budget thresholds and high-usage alerts
+- Usage trend analysis and saving recommendations
+- Bill uploads and parsing
+- Multi-property support for tracking multiple homes
+
+**Why Removed**:
+- Manual data entry creates high friction (users abandon quickly)
+- Better automatic solutions exist (smart meters, Nest, Sense, Emporia)
+- Utility companies provide free usage dashboards
+- Very episodic usage (monthly billing cycles only)
+- Low engagement between billing periods
+- Low standalone value when automatic IoT solutions exist
+
+**Integration Opportunities**:
+- **Home Maintenance Tracker (Primary)**: Add utility/energy monitoring module
+  - Track utility bills as part of home maintenance
+  - Set bill due reminders alongside maintenance reminders
+  - Monitor utility costs as part of home expenses
+  - Historical usage tracking for property records
+- **Personal Budget Manager (Secondary)**: Add utility expense tracking
+  - Track utility bills in monthly budget
+  - Set budget thresholds for utilities
+  - Monitor utility spending trends
+  - Compare utility costs month-over-month
+- **Home Inventory Manager**: Track home systems and energy-consuming appliances
+  - Link appliances to energy usage
+  - Track appliance age and efficiency
+  - Replacement recommendations for inefficient appliances
+
+**Value as Integration**:
+- Utility tracking makes more sense as part of broader home/budget management
+- Better retention when combined with daily/weekly home tasks
+- Reduces friction of standalone utility-only app
+- Natural fit with home maintenance and expense tracking workflows
+- Users more likely to use when integrated with frequently-accessed apps
+
+---
+
 ## Integration Strategy
 
 When considering these ideas for integration:

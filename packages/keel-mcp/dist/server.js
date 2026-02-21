@@ -18,6 +18,10 @@ import { getThemeTokens } from './tools/get-theme-tokens.js';
 import { getThemeRecipes } from './tools/get-theme-recipes.js';
 import { getStoryLinks } from './tools/get-story-links.js';
 import { getDocsLinks } from './tools/get-docs-links.js';
+import { reportIssue } from './tools/report-issue.js';
+import { requestFeature } from './tools/request-feature.js';
+import { listIssues } from './tools/list-issues.js';
+import { closeIssue } from './tools/close-issue.js';
 const server = new Server({
     name: 'keel-mcp',
     version: '0.1.0',
@@ -136,6 +140,127 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
                 },
             },
         },
+        {
+            name: 'report_issue',
+            description: 'File a bug report on the @colis packages GitHub repo (weitzmany/colis). The issue is attributed to the AI expert who found it. Always call list_issues first to avoid duplicates.',
+            inputSchema: {
+                type: 'object',
+                properties: {
+                    package: {
+                        type: 'string',
+                        description: 'The affected @colis package (e.g. @colis/keel, @colis/hull, @colis/rig)',
+                    },
+                    title: {
+                        type: 'string',
+                        description: 'Short, descriptive bug title',
+                    },
+                    description: {
+                        type: 'string',
+                        description: 'Full description: what happened, steps to reproduce, expected vs actual behaviour',
+                    },
+                    expert_name: {
+                        type: 'string',
+                        description: 'Name of the AI expert filing the issue (e.g. "Allison Foster")',
+                    },
+                    expert_role: {
+                        type: 'string',
+                        description: 'Role/expertise of the filer (e.g. "Accessibility Expert")',
+                    },
+                    project: {
+                        type: 'string',
+                        description: 'Name of the consuming project where the bug was found (optional)',
+                    },
+                    version: {
+                        type: 'string',
+                        description: 'Package version where the bug was observed (optional)',
+                    },
+                },
+                required: ['package', 'title', 'description'],
+            },
+        },
+        {
+            name: 'request_feature',
+            description: 'Create a feature request on the @colis packages GitHub repo (weitzmany/colis). Attributed to the AI expert requesting it.',
+            inputSchema: {
+                type: 'object',
+                properties: {
+                    package: {
+                        type: 'string',
+                        description: 'The target @colis package (e.g. @colis/keel)',
+                    },
+                    title: {
+                        type: 'string',
+                        description: 'Short, descriptive feature request title',
+                    },
+                    use_case: {
+                        type: 'string',
+                        description: 'Why is this needed? What problem does it solve?',
+                    },
+                    expert_name: {
+                        type: 'string',
+                        description: 'Name of the AI expert filing the request',
+                    },
+                    expert_role: {
+                        type: 'string',
+                        description: 'Role/expertise of the filer',
+                    },
+                    project: {
+                        type: 'string',
+                        description: 'Name of the consuming project that needs this feature (optional)',
+                    },
+                    proposed_solution: {
+                        type: 'string',
+                        description: 'Optional suggestion on how to implement the feature',
+                    },
+                },
+                required: ['package', 'title', 'use_case'],
+            },
+        },
+        {
+            name: 'list_issues',
+            description: 'List open issues on the @colis packages GitHub repo. Filter by package, type, or status. Call this before filing a new issue to check for duplicates.',
+            inputSchema: {
+                type: 'object',
+                properties: {
+                    package: {
+                        type: 'string',
+                        description: 'Filter by package (e.g. keel or @colis/keel)',
+                    },
+                    type: {
+                        type: 'string',
+                        enum: ['bug', 'feature-request', 'question'],
+                        description: 'Filter by issue type',
+                    },
+                    status: {
+                        type: 'string',
+                        enum: ['open', 'in-progress', 'resolved', 'awaiting-confirmation'],
+                        description: 'Filter by status label',
+                    },
+                    limit: {
+                        type: 'number',
+                        description: 'Max issues to return (default 25)',
+                    },
+                },
+            },
+        },
+        {
+            name: 'close_issue',
+            description: 'Close a @colis GitHub issue after confirming a fix works. Only the original opener (consuming project) should call this. Optionally add a closing comment.',
+            inputSchema: {
+                type: 'object',
+                properties: {
+                    issue_number: {
+                        type: 'number',
+                        description: 'GitHub issue number to close',
+                    },
+                    comment: {
+                        type: 'string',
+                        description: 'Optional comment to add before closing (e.g. "Confirmed fixed in v0.2.1")',
+                    },
+                },
+                required: ['issue_number'],
+            },
+        },
     ],
 }));
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
@@ -164,6 +289,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 break;
             case 'get_docs_links':
                 result = getDocsLinks(input);
+                break;
+            case 'report_issue':
+                result = reportIssue(input);
+                break;
+            case 'request_feature':
+                result = requestFeature(input);
+                break;
+            case 'list_issues':
+                result = listIssues(input);
+                break;
+            case 'close_issue':
+                result = closeIssue(input);
                 break;
             default:
                 return {

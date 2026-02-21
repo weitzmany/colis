@@ -85,6 +85,33 @@ export const KEEL_TOKENS: KeelToken[] = [
     description: 'Warning states',
     usedBy: [],
   },
+  {
+    name: '--keel-color-secondary',
+    category: 'color',
+    keelFallback: '#d1d5db',
+    hullLayer1Value: '#d1d5db',
+    tailwindSource: 'gray-300',
+    description: 'Secondary neutral actions',
+    usedBy: ['keel-button'],
+  },
+  {
+    name: '--keel-color-info',
+    category: 'color',
+    keelFallback: '#0ea5e9',
+    hullLayer1Value: '#0ea5e9',
+    tailwindSource: 'sky-500',
+    description: 'Informational states',
+    usedBy: ['keel-button'],
+  },
+  {
+    name: '--keel-color-tertiary',
+    category: 'color',
+    keelFallback: '#8b5cf6',
+    hullLayer1Value: '#8b5cf6',
+    tailwindSource: 'violet-500',
+    description: 'Tertiary accent states',
+    usedBy: ['keel-button'],
+  },
 
   // --- Colors: Text & Background ---
   {
@@ -141,6 +168,16 @@ export const KEEL_TOKENS: KeelToken[] = [
     description: 'Default border color',
     usedBy: ['keel-input', 'keel-modal'],
   },
+  { name: '--keel-color-gray-50', category: 'color', keelFallback: '#f9fafb', hullLayer1Value: '#f9fafb', tailwindSource: 'gray-50', description: 'Neutral gray 50', usedBy: [] },
+  { name: '--keel-color-gray-100', category: 'color', keelFallback: '#f3f4f6', hullLayer1Value: '#f3f4f6', tailwindSource: 'gray-100', description: 'Neutral gray 100', usedBy: [] },
+  { name: '--keel-color-gray-200', category: 'color', keelFallback: '#e5e7eb', hullLayer1Value: '#e5e7eb', tailwindSource: 'gray-200', description: 'Neutral gray 200', usedBy: [] },
+  { name: '--keel-color-gray-300', category: 'color', keelFallback: '#d1d5db', hullLayer1Value: '#d1d5db', tailwindSource: 'gray-300', description: 'Neutral gray 300', usedBy: ['keel-button'] },
+  { name: '--keel-color-gray-400', category: 'color', keelFallback: '#9ca3af', hullLayer1Value: '#9ca3af', tailwindSource: 'gray-400', description: 'Neutral gray 400', usedBy: ['keel-button'] },
+  { name: '--keel-color-gray-500', category: 'color', keelFallback: '#6b7280', hullLayer1Value: '#6b7280', tailwindSource: 'gray-500', description: 'Neutral gray 500', usedBy: [] },
+  { name: '--keel-color-gray-600', category: 'color', keelFallback: '#4b5563', hullLayer1Value: '#4b5563', tailwindSource: 'gray-600', description: 'Neutral gray 600', usedBy: [] },
+  { name: '--keel-color-gray-700', category: 'color', keelFallback: '#374151', hullLayer1Value: '#374151', tailwindSource: 'gray-700', description: 'Neutral gray 700', usedBy: [] },
+  { name: '--keel-color-gray-800', category: 'color', keelFallback: '#1f2937', hullLayer1Value: '#1f2937', tailwindSource: 'gray-800', description: 'Neutral gray 800', usedBy: [] },
+  { name: '--keel-color-gray-900', category: 'color', keelFallback: '#111827', hullLayer1Value: '#111827', tailwindSource: 'gray-900', description: 'Neutral gray 900', usedBy: ['keel-button'] },
 
   // --- Spacing ---
   { name: '--keel-space-xs', category: 'spacing', keelFallback: '4px', hullLayer1Value: '4px', tailwindSource: 'spacing-1', description: 'Extra small spacing (4px)', usedBy: [] },
@@ -149,6 +186,11 @@ export const KEEL_TOKENS: KeelToken[] = [
   { name: '--keel-space-lg', category: 'spacing', keelFallback: '16px', hullLayer1Value: '16px', tailwindSource: 'spacing-4', description: 'Large spacing (16px)', usedBy: ['keel-button'] },
   { name: '--keel-space-xl', category: 'spacing', keelFallback: '24px', hullLayer1Value: '24px', tailwindSource: 'spacing-6', description: 'Extra large spacing (24px)', usedBy: ['keel-modal'] },
   { name: '--keel-space-2xl', category: 'spacing', keelFallback: '32px', hullLayer1Value: '32px', tailwindSource: 'spacing-8', description: '2x large spacing (32px)', usedBy: [] },
+  { name: '--keel-button-min-size-xs', category: 'spacing', keelFallback: '0px', hullLayer1Value: '0px', tailwindSource: 'custom', description: 'Minimum button inline size for xs', usedBy: ['keel-button'] },
+  { name: '--keel-button-min-size-sm', category: 'spacing', keelFallback: '0px', hullLayer1Value: '0px', tailwindSource: 'custom', description: 'Minimum button inline size for sm', usedBy: ['keel-button'] },
+  { name: '--keel-button-min-size-md', category: 'spacing', keelFallback: '0px', hullLayer1Value: '0px', tailwindSource: 'custom', description: 'Minimum button inline size for md', usedBy: ['keel-button'] },
+  { name: '--keel-button-min-size-lg', category: 'spacing', keelFallback: '0px', hullLayer1Value: '0px', tailwindSource: 'custom', description: 'Minimum button inline size for lg', usedBy: ['keel-button'] },
+  { name: '--keel-button-min-size-xl', category: 'spacing', keelFallback: '0px', hullLayer1Value: '0px', tailwindSource: 'custom', description: 'Minimum button inline size for xl', usedBy: ['keel-button'] },
 
   // --- Border Radius ---
   { name: '--keel-radius-sm', category: 'radius', keelFallback: '4px', hullLayer1Value: '4px', tailwindSource: 'rounded-sm (2px) / rounded (4px)', description: 'Small corner radius', usedBy: [] },
@@ -158,9 +200,12 @@ export const KEEL_TOKENS: KeelToken[] = [
 
   // --- Typography ---
   { name: '--keel-font-family', category: 'typography', keelFallback: 'ui-sans-serif, system-ui, sans-serif', hullLayer1Value: 'ui-sans-serif, system-ui, sans-serif', tailwindSource: 'font-sans', description: 'Default font stack', usedBy: [] },
-  { name: '--keel-font-size-sm', category: 'typography', keelFallback: '0.875rem', hullLayer1Value: '0.875rem', tailwindSource: 'text-sm', description: 'Small text (14px)', usedBy: [] },
-  { name: '--keel-font-size-base', category: 'typography', keelFallback: '1rem', hullLayer1Value: '1rem', tailwindSource: 'text-base', description: 'Body text (16px)', usedBy: ['keel-button'] },
-  { name: '--keel-font-size-lg', category: 'typography', keelFallback: '1.125rem', hullLayer1Value: '1.125rem', tailwindSource: 'text-lg', description: 'Large text (18px)', usedBy: [] },
+  { name: '--keel-font-size-xs', category: 'typography', keelFallback: '0.75rem', hullLayer1Value: '0.75rem', tailwindSource: 'text-xs', description: 'Extra small text (12px)', usedBy: ['keel-button'] },
+  { name: '--keel-font-size-sm', category: 'typography', keelFallback: '0.875rem', hullLayer1Value: '0.875rem', tailwindSource: 'text-sm', description: 'Small text (14px)', usedBy: ['keel-button'] },
+  { name: '--keel-font-size-md', category: 'typography', keelFallback: '1rem', hullLayer1Value: '1rem', tailwindSource: 'text-base', description: 'Medium text (16px)', usedBy: ['keel-button'] },
+  { name: '--keel-font-size-base', category: 'typography', keelFallback: '1rem', hullLayer1Value: '1rem', tailwindSource: 'text-base', description: 'Alias of md for backward compatibility', usedBy: ['keel-button'] },
+  { name: '--keel-font-size-lg', category: 'typography', keelFallback: '1.125rem', hullLayer1Value: '1.125rem', tailwindSource: 'text-lg', description: 'Large text (18px)', usedBy: ['keel-button'] },
+  { name: '--keel-font-size-xl', category: 'typography', keelFallback: '1.25rem', hullLayer1Value: '1.25rem', tailwindSource: 'text-xl', description: 'Extra large text (20px)', usedBy: ['keel-button'] },
   { name: '--keel-font-weight-normal', category: 'typography', keelFallback: '400', hullLayer1Value: '400', tailwindSource: 'font-normal', description: 'Normal weight', usedBy: [] },
   { name: '--keel-font-weight-medium', category: 'typography', keelFallback: '500', hullLayer1Value: '500', tailwindSource: 'font-medium', description: 'Medium weight — buttons, labels', usedBy: ['keel-button'] },
   { name: '--keel-font-weight-bold', category: 'typography', keelFallback: '700', hullLayer1Value: '700', tailwindSource: 'font-bold', description: 'Bold weight — headings', usedBy: [] },

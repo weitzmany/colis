@@ -1,7 +1,7 @@
 # Keel — Implementation Tasks
 
 **Package**: `@colis/keel`  
-**Phase**: 1 — Foundation MVP  
+**Phase**: 1.5 — Foundation + first component  
 **Status**: In Progress  
 **Last Updated**: 2026-02-21
 
@@ -103,7 +103,7 @@
 
 ---
 
-## Phase 2 Tasks: Core Components (Future — Not Phase 1)
+## Phase 2 Tasks: Core Components
 
 The following tasks are documented for planning purposes but are **not to be implemented in Phase 1**.
 
@@ -113,7 +113,9 @@ Introduce Angular Package Format (APF) build using `ng-packagr`. Required before
 
 ### Task 2.2 — Button Component
 
-Implement `<keel-button>` with variants: `primary`, `secondary`, `danger`, `ghost`, `link`.
+**Status**: Done  
+**Completed**: 2026-02-21  
+Implemented `<keel-button>` with separate `variant` + `theme` API, plus `size`, `rounded`, `disabled`, and `clicked` output.
 
 ### Task 2.3 — Input Component
 

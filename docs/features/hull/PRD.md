@@ -3,7 +3,7 @@
 ## Product Requirements Document (PRD)
 
 **Package Name**: `@colis/hull`  
-**Status**: Phase 1 — Foundation MVP (empty installable package + layer architecture definition)  
+**Status**: Phase 2 — Layer 1 + Layer 2 implemented in `src/styles.css`  
 **Priority**: High (P1)  
 **Created Date**: 2026-02-21  
 **Last Updated**: 2026-02-21
@@ -18,15 +18,15 @@ Hull is the official design system and theming package for the `@colis` ecosyste
 
 The name follows the maritime naming convention. A **hull** is the outer shell of a ship — the surface the world sees. Hull is what gives keel's structural components their visual appearance.
 
-### Phase 1 Scope (MVP)
+### Current Scope
 
-Phase 1 delivers an **empty, installable package** with:
+Hull now ships working token values with light/dark theming:
 
 - A valid, publishable `@colis/hull` npm package
 - The three-layer architecture defined and documented
 - The directory structure and API contracts for all three layers
 - Tailwind-first Layer 1 token mapping strategy documented
-- No actual theme files yet — populated in Phase 2
+- Includes semantic color families (`primary`, `secondary`, `success`, `warning`, `danger`, `info`, `tertiary`)
 
 ### Three-Layer Architecture
 

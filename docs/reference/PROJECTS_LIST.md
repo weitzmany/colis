@@ -190,7 +190,7 @@ Projects are categorized by academic discipline and educational value.
 - **Location**: `~/Documents/packages/packages/keel/`
 - **npm Package**: `@colis/keel`
 - **Description**: Official Angular component library for the `@colis` ecosystem. Provides standalone Angular components (buttons, inputs, modals, etc.) that consume CSS custom properties via the `--keel-*` token namespace. Works without `@colis/hull` using built-in CSS variable fallback defaults.
-- **Phase 1 Status**: Foundation MVP — empty installable package with CSS token contract. No components yet.
+- **Phase Status**: Foundation + first component shipped. `keel-button` is available, with additional components planned.
 - **Dependencies**: Peer deps on `@angular/core` and `@angular/common` (≥17). No dependency on `@colis/hull`.
 - **Key Files**:
   - `package.json` — Package metadata and peer deps

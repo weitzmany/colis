@@ -7,16 +7,24 @@ import { Component } from '@angular/core';
   template: `
     <div style="display: flex; flex-direction: column; gap: 24px; font-family: var(--keel-font-family);">
       <div>
+        <p style="font-size: 11px; color: var(--keel-color-text-muted); margin: 0 0 4px;">--keel-font-size-xl ({{ '1.25rem' }})</p>
+        <p style="font-size: var(--keel-font-size-xl); margin: 0;">The quick brown fox jumps over the lazy dog</p>
+      </div>
+      <div>
         <p style="font-size: 11px; color: var(--keel-color-text-muted); margin: 0 0 4px;">--keel-font-size-lg ({{ '1.125rem' }})</p>
         <p style="font-size: var(--keel-font-size-lg); margin: 0;">The quick brown fox jumps over the lazy dog</p>
       </div>
       <div>
-        <p style="font-size: 11px; color: var(--keel-color-text-muted); margin: 0 0 4px;">--keel-font-size-base ({{ '1rem' }})</p>
-        <p style="font-size: var(--keel-font-size-base); margin: 0;">The quick brown fox jumps over the lazy dog</p>
+        <p style="font-size: 11px; color: var(--keel-color-text-muted); margin: 0 0 4px;">--keel-font-size-md ({{ '1rem' }})</p>
+        <p style="font-size: var(--keel-font-size-md, var(--keel-font-size-base)); margin: 0;">The quick brown fox jumps over the lazy dog</p>
       </div>
       <div>
         <p style="font-size: 11px; color: var(--keel-color-text-muted); margin: 0 0 4px;">--keel-font-size-sm ({{ '0.875rem' }})</p>
         <p style="font-size: var(--keel-font-size-sm); margin: 0;">The quick brown fox jumps over the lazy dog</p>
+      </div>
+      <div>
+        <p style="font-size: 11px; color: var(--keel-color-text-muted); margin: 0 0 4px;">--keel-font-size-xs ({{ '0.75rem' }})</p>
+        <p style="font-size: var(--keel-font-size-xs); margin: 0;">The quick brown fox jumps over the lazy dog</p>
       </div>
       <div style="display: flex; gap: 24px;">
         <div>

@@ -2,7 +2,7 @@
 
 Design system and theming package for `@colis/keel` — three-layer CSS token system with Tailwind-first base values.
 
-> **Phase 1 — Foundation MVP.** This package establishes the installable foundation, three-layer architecture, and directory structure. Actual theme values (Layer 1 and Layer 2) will be implemented in Phase 2.
+> **Current status:** Layer 1 token values and Layer 2 light/dark theme overrides are implemented in `src/styles.css`.
 
 ---
 
@@ -63,9 +63,9 @@ Hull's design system is built in three layers, each serving a distinct purpose:
 ```
 Layer 3: Project Theme   ← your brand overrides
          ↓ overrides
-Layer 2: Hull Themes     ← light/dark built-in themes
+Layer 2: Hull Themes     ← light/dark built-in themes (implemented)
          ↓ overrides
-Layer 1: Base            ← Tailwind-sourced token values
+Layer 1: Base            ← token baseline mapping (implemented)
          ↓ assigns to
 Keel:    --keel-*        ← consumed by keel components
 ```

@@ -56,9 +56,12 @@ export const Semantic: Story = {
   name: 'Semantic State Colors',
   args: {
     tokens: [
+      { name: '--keel-color-secondary', value: '#d1d5db' },
       { name: '--keel-color-danger', value: '#ef4444' },
       { name: '--keel-color-success', value: '#22c55e' },
       { name: '--keel-color-warning', value: '#f59e0b' },
+      { name: '--keel-color-info', value: '#0ea5e9' },
+      { name: '--keel-color-tertiary', value: '#8b5cf6' },
     ],
   },
 };

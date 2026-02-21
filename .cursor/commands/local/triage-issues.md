@@ -16,9 +16,10 @@ No parameters required.
 
 Run:
 ```bash
-gh issue list --repo weitzmany/colis --state open --label "status:open" --json number,title,labels,createdAt,body --limit 50
-gh issue list --repo weitzmany/colis --state open --label "status:in-progress" --json number,title,labels,createdAt,body --limit 50
+gh issue list --repo weitzmany/colis --state open --json number,title,labels,createdAt,body --limit 100
 ```
+
+Do **not** filter by status label during fetch. Some valid open issues may be unlabeled or partially labeled.
 
 ### 2. Group and Prioritize
 
@@ -35,6 +36,21 @@ Review and plan. List with: issue number, title, affected package, use case summ
 
 **Group 4 — Questions (`type:question`, `status:open`)**
 Lowest priority. Can often be resolved with a comment.
+
+### Label Fallback Rules (Required)
+
+If an issue is missing one or more triage labels, infer classification before listing:
+
+- `type:*` missing:
+  - use body fields (`## Type`, `Type`) if present
+  - otherwise default to **question** until clarified
+- `status:*` missing:
+  - default to **status:open**
+- `package:*` missing:
+  - infer from body/package text if possible (e.g., `@colis/keel`)
+  - otherwise mark as **package:unknown** in triage output
+
+Always include unlabeled open issues in triage output; never drop them.
 
 ### 3. Summary Table
 
@@ -58,7 +74,12 @@ After presenting the summary, ask:
 
 1. Fetch full issue details:
    ```bash
-   gh issue view <number> --repo weitzmany/colis
+   gh issue view <number> --repo weitzmany/colis --json number,title,body,labels,author,state,createdAt
+   ```
+
+   If `gh issue view` fails due deprecated project fields, use:
+   ```bash
+   gh api repos/weitzmany/colis/issues/<number>
    ```
 
 2. Move to in-progress:
@@ -69,6 +90,8 @@ After presenting the summary, ask:
    gh issue comment <number> --repo weitzmany/colis \
      --body "Acknowledged — investigating."
    ```
+
+If the issue is missing expected labels, add them while acknowledging (for example `type:feature-request`, `package:keel`, `source:ai-agent` when appropriate).
 
 3. Investigate the affected package in `packages/<name>/` and begin implementing the fix or feature.
 

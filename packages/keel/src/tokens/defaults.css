@@ -20,9 +20,9 @@
   --keel-color-primary-subtle:  #eff6ff;           /* blue-50  */
 
   /* ── Color: Secondary ───────────────────────────── */
-  --keel-color-secondary:         #6b7280;         /* gray-500 */
-  --keel-color-secondary-hover:   #4b5563;         /* gray-600 */
-  --keel-color-secondary-subtle:  #f9fafb;         /* gray-50  */
+  --keel-color-secondary:         #d1d5db;         /* gray-300 */
+  --keel-color-secondary-hover:   #9ca3af;         /* gray-400 */
+  --keel-color-secondary-subtle:  #f3f4f6;         /* gray-100 */
 
   /* ── Color: Semantic States ─────────────────────── */
   --keel-color-danger:          #ef4444;           /* red-500  */
@@ -36,6 +36,14 @@
   --keel-color-warning:         #f59e0b;           /* amber-500 */
   --keel-color-warning-hover:   #d97706;           /* amber-600 */
   --keel-color-warning-subtle:  #fffbeb;           /* amber-50  */
+
+  --keel-color-info:            #0ea5e9;           /* sky-500   */
+  --keel-color-info-hover:      #0284c7;           /* sky-600   */
+  --keel-color-info-subtle:     #f0f9ff;           /* sky-50    */
+
+  --keel-color-tertiary:        #8b5cf6;           /* violet-500 */
+  --keel-color-tertiary-hover:  #7c3aed;           /* violet-600 */
+  --keel-color-tertiary-subtle: #f5f3ff;           /* violet-50  */
 
   /* ── Color: Text ────────────────────────────────── */
   --keel-color-text-base:       #111827;           /* gray-900 */
@@ -53,6 +61,18 @@
   --keel-color-border-strong:   #d1d5db;           /* gray-300 */
   --keel-color-border-focus:    #3b82f6;           /* blue-500 */
 
+  /* ── Neutral Gray Scale ─────────────────────────── */
+  --keel-color-gray-50:  #f9fafb;
+  --keel-color-gray-100: #f3f4f6;
+  --keel-color-gray-200: #e5e7eb;
+  --keel-color-gray-300: #d1d5db;
+  --keel-color-gray-400: #9ca3af;
+  --keel-color-gray-500: #6b7280;
+  --keel-color-gray-600: #4b5563;
+  --keel-color-gray-700: #374151;
+  --keel-color-gray-800: #1f2937;
+  --keel-color-gray-900: #111827;
+
   /* ── Spacing ────────────────────────────────────── */
   --keel-space-xs:   4px;
   --keel-space-sm:   8px;
@@ -61,6 +81,13 @@
   --keel-space-xl:   24px;
   --keel-space-2xl:  32px;
   --keel-space-3xl:  48px;
+
+  /* ── Button sizing constraints (opt-in) ─────────── */
+  --keel-button-min-size-xs: 0px;
+  --keel-button-min-size-sm: 0px;
+  --keel-button-min-size-md: 0px;
+  --keel-button-min-size-lg: 0px;
+  --keel-button-min-size-xl: 0px;
 
   /* ── Border Radius ──────────────────────────────── */
   --keel-radius-sm:    4px;
@@ -75,7 +102,8 @@
 
   --keel-font-size-xs:    0.75rem;    /* 12px */
   --keel-font-size-sm:    0.875rem;   /* 14px */
-  --keel-font-size-base:  1rem;       /* 16px */
+  --keel-font-size-md:    1rem;       /* 16px */
+  --keel-font-size-base:  1rem;       /* alias for md */
   --keel-font-size-lg:    1.125rem;   /* 18px */
   --keel-font-size-xl:    1.25rem;    /* 20px */
 

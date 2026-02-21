@@ -23,10 +23,22 @@ import { Component, Input } from '@angular/core';
             {{ theme.label }}
           </h3>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <!-- Placeholder component slots — to be replaced with actual components in Phase 2 -->
-            <div [style.background]="'var(--keel-color-primary)'" [style.color]="'var(--keel-color-text-inverse)'" style="padding: 8px 16px; border-radius: var(--keel-radius-md); text-align: center; font-size: 14px;">
+            <button
+              type="button"
+              style="
+                min-height: 44px;
+                border-radius: var(--keel-radius-md);
+                padding: var(--keel-space-sm) var(--keel-space-lg);
+                border: 1px solid transparent;
+                background: var(--keel-color-primary);
+                color: var(--keel-color-text-inverse);
+                font-family: var(--keel-font-family);
+                font-size: var(--keel-font-size-base);
+                font-weight: var(--keel-font-weight-medium);
+                text-align: left;
+              ">
               Primary Button
-            </div>
+            </button>
             <div [style.background]="'var(--keel-color-bg-subtle)'" [style.color]="'var(--keel-color-text-base)'" [style.border]="'1px solid var(--keel-color-border)'" style="padding: 8px 12px; border-radius: var(--keel-radius-md); font-size: 14px;">
               Input field
             </div>

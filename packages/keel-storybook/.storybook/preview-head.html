@@ -9,18 +9,49 @@
     --keel-color-primary-active:  #1d4ed8;
     --keel-color-primary-subtle:  #eff6ff;
 
+    /* Colors — Secondary */
+    --keel-color-secondary:         #d1d5db;
+    --keel-color-secondary-hover:   #9ca3af;
+    --keel-color-secondary-subtle:  #f3f4f6;
+
     /* Colors — Semantic */
     --keel-color-danger:   #ef4444;
+    --keel-color-danger-hover: #dc2626;
+    --keel-color-danger-subtle: #fef2f2;
     --keel-color-success:  #22c55e;
+    --keel-color-success-hover: #16a34a;
+    --keel-color-success-subtle: #f0fdf4;
     --keel-color-warning:  #f59e0b;
+    --keel-color-warning-hover: #d97706;
+    --keel-color-warning-subtle: #fffbeb;
+    --keel-color-info:     #0ea5e9;
+    --keel-color-info-hover: #0284c7;
+    --keel-color-info-subtle: #f0f9ff;
+    --keel-color-tertiary: #8b5cf6;
+    --keel-color-tertiary-hover: #7c3aed;
+    --keel-color-tertiary-subtle: #f5f3ff;
 
     /* Colors — Text & BG */
     --keel-color-text-base:    #111827;
     --keel-color-text-muted:   #6b7280;
+    --keel-color-text-disabled: #9ca3af;
     --keel-color-text-inverse: #ffffff;
     --keel-color-bg-base:      #ffffff;
     --keel-color-bg-subtle:    #f9fafb;
+    --keel-color-bg-overlay:   rgb(0 0 0 / 50%);
     --keel-color-border:       #e5e7eb;
+    --keel-color-border-strong: #d1d5db;
+    --keel-color-border-focus: #3b82f6;
+    --keel-color-gray-50:  #f9fafb;
+    --keel-color-gray-100: #f3f4f6;
+    --keel-color-gray-200: #e5e7eb;
+    --keel-color-gray-300: #d1d5db;
+    --keel-color-gray-400: #9ca3af;
+    --keel-color-gray-500: #6b7280;
+    --keel-color-gray-600: #4b5563;
+    --keel-color-gray-700: #374151;
+    --keel-color-gray-800: #1f2937;
+    --keel-color-gray-900: #111827;
 
     /* Spacing */
     --keel-space-xs:   4px;
@@ -29,6 +60,11 @@
     --keel-space-lg:   16px;
     --keel-space-xl:   24px;
     --keel-space-2xl:  32px;
+    --keel-button-min-size-xs: 0px;
+    --keel-button-min-size-sm: 0px;
+    --keel-button-min-size-md: 0px;
+    --keel-button-min-size-lg: 0px;
+    --keel-button-min-size-xl: 0px;
 
     /* Border Radius */
     --keel-radius-sm:   4px;
@@ -38,9 +74,12 @@
 
     /* Typography */
     --keel-font-family:        ui-sans-serif, system-ui, sans-serif;
+    --keel-font-size-xs:       0.75rem;
     --keel-font-size-sm:       0.875rem;
+    --keel-font-size-md:       1rem;
     --keel-font-size-base:     1rem;
     --keel-font-size-lg:       1.125rem;
+    --keel-font-size-xl:       1.25rem;
     --keel-font-weight-normal: 400;
     --keel-font-weight-medium: 500;
     --keel-font-weight-bold:   700;
@@ -52,9 +91,9 @@
     --keel-shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
     /* Transitions */
-    --keel-duration-fast:   100ms;
-    --keel-duration-base:   200ms;
-    --keel-easing-default:  cubic-bezier(0.4, 0, 0.2, 1);
+    --keel-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --keel-transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --keel-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Z-Index */
     --keel-z-dropdown:  1000;
@@ -62,8 +101,9 @@
     --keel-z-tooltip:   1400;
 
     /* Focus Ring */
-    --keel-focus-ring-color:  #93c5fd;
+    --keel-focus-ring-color:  #3b82f6;
     --keel-focus-ring-width:  2px;
+    --keel-focus-ring-offset: 2px;
   }
 
   /* Hull Dark theme (preview only — Layer 2 will ship with @colis/hull) */

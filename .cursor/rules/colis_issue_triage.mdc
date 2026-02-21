@@ -21,9 +21,13 @@ list_issues({ package: "@colis/keel", type: "bug" })
 Or use the GitHub CLI directly for detailed inspection:
 
 ```bash
-gh issue list --repo weitzmany/colis --label "status:open"
-gh issue view 42 --repo weitzmany/colis
+gh issue list --repo weitzmany/colis --state open
+gh issue view 42 --repo weitzmany/colis --json number,title,body,labels,author,state,createdAt
+# fallback when gh issue view hits deprecated project fields:
+gh api repos/weitzmany/colis/issues/42
 ```
+
+Always fetch all open issues by state first, then classify by labels. Do not rely on `status:*` labels being present.
 
 ## Issue Lifecycle
 

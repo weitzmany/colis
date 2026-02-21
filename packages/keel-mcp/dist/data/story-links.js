@@ -51,13 +51,31 @@ export const STORY_LINKS = [
         storyId: 'hull-themes-theme-matrix--light-and-dark',
         url: `${STORYBOOK_BASE_URL}/?path=/story/hull-themes-theme-matrix--light-and-dark`,
     },
-    // Component stories (Phase 2 — not yet available, IDs are planned)
-    // {
-    //   component: 'keel-button',
-    //   name: 'Primary',
-    //   storyId: 'components-button--primary',
-    //   url: `${STORYBOOK_BASE_URL}/?path=/story/components-button--primary`,
-    // },
+    // Component stories
+    {
+        component: 'keel-button',
+        name: 'Button Playground',
+        storyId: 'components-button--playground',
+        url: `${STORYBOOK_BASE_URL}/?path=/story/components-button--playground`,
+    },
+    {
+        component: 'keel-button',
+        name: 'Button Variants',
+        storyId: 'components-button--variants',
+        url: `${STORYBOOK_BASE_URL}/?path=/story/components-button--variants`,
+    },
+    {
+        component: 'keel-button',
+        name: 'Button States',
+        storyId: 'components-button--themes',
+        url: `${STORYBOOK_BASE_URL}/?path=/story/components-button--themes`,
+    },
+    {
+        component: 'keel-button',
+        name: 'Button Sizes and Shape',
+        storyId: 'components-button--sizes-and-shape',
+        url: `${STORYBOOK_BASE_URL}/?path=/story/components-button--sizes-and-shape`,
+    },
 ];
 export function getStoryLinksForComponent(component) {
     return STORY_LINKS.filter((s) => s.component === component);

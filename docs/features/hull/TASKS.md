@@ -1,7 +1,7 @@
 # Hull — Implementation Tasks
 
 **Package**: `@colis/hull`  
-**Phase**: 1 — Foundation MVP  
+**Phase**: 2 — Layer 1 + Layer 2 live  
 **Status**: In Progress  
 **Last Updated**: 2026-02-21
 
@@ -109,21 +109,22 @@
 
 ---
 
-## Phase 2 Tasks: Layer 1 + Layer 2 Implementation (Future — Not Phase 1)
-
-The following tasks are documented for planning purposes but **not to be implemented in Phase 1**.
+## Phase 2 Tasks: Layer 1 + Layer 2 Implementation
 
 ### Task 2.1 — Tailwind Mapping (Layer 1)
 
-Implement `src/base/tailwind-mapping.css` with all `--keel-*` token assignments using Tailwind-equivalent values. This is the default token value set that Layer 2 themes build on.
+**Status**: Done  
+Implemented token baseline assignments in `src/styles.css` (single-file Layer 1 for now), including info/tertiary semantic families used by `keel-button`.
 
 ### Task 2.2 — Light Theme (Layer 2)
 
-Implement `src/themes/light/index.css`. Light is the default theme applied to `:root`.
+**Status**: Done  
+Implemented light/default context on `:root`, `.hull-light`, and `[data-hull-theme='light']`.
 
 ### Task 2.3 — Dark Theme (Layer 2)
 
-Implement `src/themes/dark/index.css`. Dark mode via `.hull-dark` class and `prefers-color-scheme: dark`.
+**Status**: Done  
+Implemented dark mode overrides via `.hull-dark`, `[data-hull-theme='dark']`, and `prefers-color-scheme` media query.
 
 ### Task 2.4 — Main CSS Entry Point
 

@@ -3,7 +3,7 @@
 ## Product Requirements Document (PRD)
 
 **Package Name**: `@colis/keel`  
-**Status**: Phase 1 — Foundation MVP (empty installable package)  
+**Status**: Phase 1.5 — Foundation + first shipped component (`keel-button`)  
 **Priority**: High (P1)  
 **Created Date**: 2026-02-21  
 **Last Updated**: 2026-02-21
@@ -18,14 +18,14 @@ Keel is the official Angular component library for the `@colis` ecosystem. It pr
 
 The name follows the maritime naming convention of the `@colis` package family. A **keel** is the structural spine of a ship — the foundational element everything else is built on.
 
-### Phase 1 Scope (MVP)
+### Phase 1.5 Scope
 
-Phase 1 delivers an **empty, installable package** with:
+Phase 1.5 delivers an installable package with the first production component:
 
 - A valid, publishable `@colis/keel` npm package
-- The public API contract shape for future standalone Angular components
+- A shipped standalone `KeelButtonComponent` (`<keel-button>`)
 - CSS custom property (token) consumption contract with safe fallback defaults
-- No actual UI components yet — those come in Phase 2+
+- A stable API for button variants and interaction states
 
 ### Problem Statement
 
@@ -191,7 +191,7 @@ import { KeelButtonComponent } from '@colis/keel';
 @Component({
   standalone: true,
   imports: [KeelButtonComponent],
-  template: `<keel-button variant="primary">Click me</keel-button>`
+  template: `<keel-button variant="solid" theme="primary">Click me</keel-button>`
 })
 export class MyComponent { }
 ```
@@ -239,13 +239,13 @@ README.md
 
 ---
 
-## Planned Components (Phase 2+)
+## Components Roadmap
 
-The following components are planned but **not in scope for Phase 1**:
+The first component is shipped. Remaining components are planned:
 
 | Component | Selector | Priority |
 |-----------|----------|----------|
-| Button | `<keel-button>` | P1 |
+| Button | `<keel-button>` | Shipped |
 | Input | `<keel-input>` | P1 |
 | Textarea | `<keel-textarea>` | P1 |
 | Select | `<keel-select>` | P1 |
@@ -262,12 +262,17 @@ The following components are planned but **not in scope for Phase 1**:
 
 ---
 
-## Phase 1 Acceptance Criteria
+## Phase 1.5 Acceptance Criteria
 
 - [ ] `@colis/keel` package exists in `packages/keel/`
 - [ ] `package.json` is valid and follows `@colis` package conventions
 - [ ] Package can be installed in an Angular project with `npm install @colis/keel`
-- [ ] `src/index.ts` exports the public API namespace (empty in Phase 1)
+- [ ] `src/index.ts` exports `KeelButtonComponent`
+- [ ] `<keel-button>` supports variants: `solid`, `outline`, `flat`, `link`
+- [ ] `<keel-button>` supports themes: `primary`, `secondary`, `success`, `warning`, `danger`, `info`, `tertiary`, `dark`
+- [ ] `<keel-button>` supports sizes: `xs`, `sm`, `md`, `lg`, `xl`
+- [ ] `<keel-button>` supports `disabled` and `rounded` states
+- [ ] `<keel-button>` emits `clicked` output when interactive
 - [ ] CSS variable token contract is documented in `README.md`
 - [ ] No dependency on `@colis/hull` in `package.json`
 - [ ] Angular peer dependency is declared
@@ -275,9 +280,9 @@ The following components are planned but **not in scope for Phase 1**:
 
 ---
 
-## Out of Scope (Phase 1)
+## Out of Scope (Phase 1.5)
 
-- Any actual Angular components
+- Additional Angular components beyond `keel-button`
 - Animation or motion design
 - Accessibility testing of components (deferred to Phase 2)
 - Angular CDK integration
@@ -291,7 +296,7 @@ The following components are planned but **not in scope for Phase 1**:
 
 ### Phase 2 — Core Components
 
-Implement the P1 component set (button, input, modal, etc.) using the token contract defined in Phase 1. Introduce `ng-packagr` build pipeline.
+Implement the next P1 component set (input, modal, etc.) using the token contract defined in Phase 1. Introduce `ng-packagr` build pipeline.
 
 ### Phase 3 — Extended Components
 

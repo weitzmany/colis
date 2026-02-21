@@ -12,6 +12,9 @@ yarn-error.log*
 dev-debug.log
 # Dependency directories
 node_modules/
+# Build outputs (private app hosts/docs)
+packages/keel-storybook/dist/
+packages/chartroom/dist/
 # Environment variables
 .env
 # Editor directories and files

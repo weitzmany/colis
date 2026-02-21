@@ -250,10 +250,11 @@ echo ""
 # ─── Git commit & push ───────────────────────────────────────────────────────
 
 if [ $PASS -gt 0 ]; then
-  echo "Committing version bumps..."
+  echo "Committing release changes..."
 
-  # Stage all package.json changes (version bumps from npm version)
-  git -C "$REPO_ROOT" add packages/*/package.json
+  # Stage everything release-related so the repo is clean after publish.
+  # (Ignores apply via .gitignore.)
+  git -C "$REPO_ROOT" add -A
 
   # Build a commit message listing every published package + new version
   COMMIT_MSG="chore: release $(IFS=', '; echo "${TO_PUBLISH[*]}")"$'\n\n'
@@ -262,9 +263,12 @@ if [ $PASS -gt 0 ]; then
     COMMIT_MSG+="  - $name@$version"$'\n'
   done
 
-  git -C "$REPO_ROOT" commit -m "$COMMIT_MSG"
-  git -C "$REPO_ROOT" push
-
-  echo ""
-  echo "✅ Changes committed and pushed."
+  if git -C "$REPO_ROOT" diff --cached --quiet; then
+    echo "ℹ️  Nothing to commit."
+  else
+    git -C "$REPO_ROOT" commit -m "$COMMIT_MSG"
+    git -C "$REPO_ROOT" push --follow-tags
+    echo ""
+    echo "✅ Changes committed and pushed."
+  fi
 fi

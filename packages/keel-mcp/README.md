@@ -20,33 +20,70 @@ When installed and configured, your AI agent (Cursor, Claude Code, etc.) can cal
 
 ---
 
-## Installation
+## Installation & MCP Setup
 
-In your project that uses `@colis/keel`:
+### Step 1 — Install globally
 
 ```bash
-npm install --save-dev @colis/keel-mcp
+npm install -g @colis/keel-mcp
 ```
 
----
+This installs the `keel-mcp` binary to your PATH.
 
-## Configure Cursor
+### Step 2 — Configure Cursor
 
-Add to your project's `.cursor/mcp.json`:
+**Global** (available in all projects) — add to `~/.cursor/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "keel": {
-      "command": "node",
-      "args": ["node_modules/@colis/keel-mcp/dist/server.js"],
+      "command": "keel-mcp",
       "description": "Keel component and hull theming assistant"
     }
   }
 }
 ```
 
-Restart Cursor. The `keel` MCP tools will be available to the agent.
+**Per-project** — add to `.cursor/mcp.json` in the project root (same config):
+
+```json
+{
+  "mcpServers": {
+    "keel": {
+      "command": "keel-mcp",
+      "description": "Keel component and hull theming assistant"
+    }
+  }
+}
+```
+
+### Step 3 — Restart Cursor
+
+The `keel` MCP tools will be available to the agent in every project.
+
+### Keeping it up to date
+
+When new components or tokens are added to `@colis/keel`, a new version of `@colis/keel-mcp` will be published with updated data. Run this to get the latest:
+
+```bash
+npm update -g @colis/keel-mcp
+```
+
+Then restart Cursor.
+
+---
+
+> **Registry note:** `@colis/keel-mcp` is on a private registry.  
+> Make sure your `~/.npmrc` has the scope configured before installing:
+> ```
+> @colis:registry=http://<your-verdaccio-host>:4873/
+> ```
+
+> **Why not `npx keel-mcp`?**  
+> `npx keel-mcp` looks for a package called `keel-mcp` on the public npm registry.  
+> The package is `@colis/keel-mcp` (scoped), so `npx` won't find it that way.  
+> Installing globally and using `keel-mcp` directly is the correct approach.
 
 ---
 

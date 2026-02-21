@@ -1,6 +1,6 @@
 {
   "name": "@colis/keel-mcp",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "MCP server for @colis/keel and @colis/hull — gives AI assistants authoritative component and theming knowledge",
   "type": "module",
   "main": "dist/server.js",

@@ -245,3 +245,26 @@ done
 echo "========================================"
 echo " Done: $PASS published, ${#SKIP_REASONS[@]} skipped, $FAIL failed"
 echo "========================================"
+echo ""
+
+# ─── Git commit & push ───────────────────────────────────────────────────────
+
+if [ $PASS -gt 0 ]; then
+  echo "Committing version bumps..."
+
+  # Stage all package.json changes (version bumps from npm version)
+  git -C "$REPO_ROOT" add packages/*/package.json
+
+  # Build a commit message listing every published package + new version
+  COMMIT_MSG="chore: release $(IFS=', '; echo "${TO_PUBLISH[*]}")"$'\n\n'
+  for name in "${TO_PUBLISH[@]}"; do
+    version=$(node -e "process.stdout.write(require('$PACKAGES_DIR/$name/package.json').version)")
+    COMMIT_MSG+="  - $name@$version"$'\n'
+  done
+
+  git -C "$REPO_ROOT" commit -m "$COMMIT_MSG"
+  git -C "$REPO_ROOT" push
+
+  echo ""
+  echo "✅ Changes committed and pushed."
+fi

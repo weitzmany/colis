@@ -1,6 +1,6 @@
 {
   "name": "@colis/keel",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Angular component library for the Colis ecosystem — standalone, themeable UI primitives",
   "type": "module",
   "main": "dist/index.js",
@@ -17,12 +17,13 @@
     "build": "ngc -p tsconfig.json",
     "build:watch": "ngc -p tsconfig.json --watch",
     "test:angular-metadata": "node scripts/verify-angular-metadata.mjs",
+    "test:button-hover": "node scripts/verify-button-hover.mjs",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "clean": "rimraf dist",
-    "prepublishOnly": "npm run clean && npm run build && npm run test:angular-metadata",
+    "prepublishOnly": "npm run clean && npm run build && npm run test:angular-metadata && npm run test:button-hover",
     "release:patch": "npm version patch && npm run clean && npm run build && npm publish",
     "release:minor": "npm version minor && npm run clean && npm run build && npm publish",
     "release:major": "npm version major && npm run clean && npm run build && npm publish"

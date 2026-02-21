@@ -51,6 +51,19 @@ type KeelButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
         text-decoration: none;
         text-underline-offset: 2px;
         cursor: pointer;
+        transition:
+          background-color var(--keel-transition-fast, 150ms ease),
+          color var(--keel-transition-fast, 150ms ease),
+          border-color var(--keel-transition-fast, 150ms ease),
+          opacity var(--keel-transition-fast, 150ms ease);
+      }
+
+      .kh-button:hover:not(:disabled) {
+        background: var(--keel-button-bg-hover, var(--keel-color-primary-hover));
+      }
+
+      .kh-button:active:not(:disabled) {
+        background: var(--keel-button-bg-active, var(--keel-color-primary-active));
       }
 
       .kh-button-rounded { border-radius: var(--keel-radius-full); }
@@ -102,9 +115,15 @@ type KeelButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
         color: var(--keel-button-bg);
         border-color: var(--keel-button-bg);
       }
+      .kh-button-outline:hover:not(:disabled) {
+        background: var(--keel-button-bg-soft-hover, var(--keel-color-primary-subtle));
+      }
       .kh-button-flat {
         background: var(--keel-button-bg-soft-hover);
         color: var(--keel-button-bg);
+      }
+      .kh-button-flat:hover:not(:disabled) {
+        background: var(--keel-button-bg-soft-hover, var(--keel-color-primary-subtle));
       }
       .kh-button-link {
         background: transparent;
@@ -112,6 +131,9 @@ type KeelButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
         color: var(--keel-button-bg);
         text-decoration: underline;
         padding-inline: var(--keel-space-xs, 4px);
+      }
+      .kh-button-link:hover:not(:disabled) {
+        color: var(--keel-button-bg-hover, var(--keel-color-primary-hover));
       }
     `,
   ],

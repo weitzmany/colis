@@ -1,0 +1,96 @@
+---
+description: Rules for consuming-project AI agents on how to report bugs and feature requests for @colis/* packages via keel-mcp.
+globs:
+alwaysApply: true
+---
+
+# @colis Package Feedback — Consuming Project Rule
+
+## When to File an Issue
+
+File a bug report when you observe that a `@colis/*` package:
+- Behaves differently from its documented API (check `get_component_api`)
+- Throws unexpected errors during normal usage
+- Produces incorrect output, wrong styling, or broken theming
+
+File a feature request when:
+- A component is missing an essential prop or event the project needs
+- A theme token doesn't exist but is clearly needed for the design
+- A package lacks functionality that would broadly benefit consumers
+
+## Before Filing — Check for Duplicates
+
+**Always call `list_issues` before filing.** Provide the relevant package and type filter.
+If an existing open issue covers the same problem, do not file a duplicate.
+
+```
+list_issues({ package: "@colis/keel", type: "bug" })
+```
+
+## How to File a Bug
+
+Use the `report_issue` MCP tool. Include your expert persona details so the issue is
+attributed correctly on GitHub.
+
+Required fields:
+- `package` — the full scoped name, e.g. `@colis/keel`
+- `title` — short, descriptive
+- `description` — what happened, steps to reproduce, expected vs. actual
+- `expert_name` — your persona name from `.cursor/rules/experts/` (e.g. "Allison Foster")
+- `expert_role` — your expertise area (e.g. "Accessibility Expert")
+
+Optional but helpful:
+- `project` — name of this consuming project
+- `version` — package version where the bug was observed
+
+## How to File a Feature Request
+
+Use the `request_feature` MCP tool.
+
+Required fields:
+- `package` — e.g. `@colis/keel`
+- `title` — short, descriptive
+- `use_case` — why the feature is needed, what problem it solves
+- `expert_name` and `expert_role` — your persona from `.cursor/rules/experts/`
+
+Optional:
+- `project` — consuming project that needs this
+- `proposed_solution` — your implementation suggestion
+
+## Closing an Issue (Confirming a Fix)
+
+When the `@colis` packages team marks an issue `status:awaiting-confirmation`, they have
+shipped a fix and are waiting for **you** (the opener) to confirm it works.
+
+After upgrading the affected package and verifying the fix:
+
+```
+close_issue({
+  issue_number: 42,
+  comment: "Confirmed fixed in @colis/keel v0.3.0 — button contrast now passes WCAG AA."
+})
+```
+
+**Only the consuming project that filed the issue should close it.**
+Do not close issues filed by other projects or unrelated to the current bug.
+
+## Important Rules
+
+- **Never include commit messages that trigger GitHub auto-close** such as "fixes #42" or
+  "closes #42". Always use `close_issue` via MCP instead.
+- **Only the opener closes.** The `@colis` maintainers can mark `status:resolved` but cannot
+  close an issue — that right belongs to the consuming project that opened it.
+- Attribute every issue to your expert persona. Issues filed as "Cursor Agent" are harder to
+  triage and may be deprioritised.
+- If `gh` CLI is not installed or not authenticated, the tool will return instructions on how
+  to set it up.
+
+## Label Reference
+
+| Label | Meaning |
+|-------|---------|
+| `status:open` | Filed, not yet acknowledged |
+| `status:in-progress` | @colis team is actively working on it |
+| `status:resolved` | Fix shipped — waiting for opener to confirm |
+| `status:awaiting-confirmation` | Same as resolved — please close when confirmed |
+| `source:ai-agent` | Automatically applied to all issues filed via MCP |

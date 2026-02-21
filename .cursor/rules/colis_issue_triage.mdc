@@ -1,0 +1,118 @@
+---
+description: Rules for the packages-repo AI agent on how to triage, work on, and resolve GitHub issues in weitzmany/colis.
+globs:
+alwaysApply: true
+---
+
+# @colis Issue Triage — Packages Repo Rule
+
+This rule applies to AI agents working **inside this monorepo** (`weitzmany/colis`).
+It defines the full issue lifecycle from triage to resolution.
+
+## Reading Open Issues
+
+Use the `list_issues` MCP tool to see what is open:
+
+```
+list_issues({ status: "open" })
+list_issues({ package: "@colis/keel", type: "bug" })
+```
+
+Or use the GitHub CLI directly for detailed inspection:
+
+```bash
+gh issue list --repo weitzmany/colis --label "status:open"
+gh issue view 42 --repo weitzmany/colis
+```
+
+## Issue Lifecycle
+
+```
+status:open → status:in-progress → status:resolved → (opener closes)
+```
+
+### 1. Acknowledge (status:open → status:in-progress)
+
+When you start working on an issue, update its label:
+
+```bash
+gh issue edit <number> --repo weitzmany/colis \
+  --remove-label "status:open" \
+  --add-label "status:in-progress"
+gh issue comment <number> --repo weitzmany/colis \
+  --body "Acknowledged — investigating."
+```
+
+### 2. Resolve (status:in-progress → status:resolved + status:awaiting-confirmation)
+
+After shipping a fix, mark the issue resolved and notify the opener:
+
+```bash
+gh issue edit <number> --repo weitzmany/colis \
+  --remove-label "status:in-progress" \
+  --add-label "status:resolved,status:awaiting-confirmation"
+gh issue comment <number> --repo weitzmany/colis \
+  --body "Fixed in @colis/<package> v<X.Y.Z>. Please update the package in your project and confirm the fix works, then close this issue."
+```
+
+### 3. Close — Opener Only
+
+**Do NOT close issues yourself.** The consuming project that filed the issue
+must close it after confirming the fix. Adding a comment asking them to do so is correct.
+
+If an issue has been `status:awaiting-confirmation` for more than two weeks with no response,
+you may add a comment noting you'll close it if there's no reply within 48 hours — but do not
+close it unilaterally without explicit user approval.
+
+## Commit Message Safety
+
+**Never write commit messages that trigger GitHub's automatic issue closing.**
+
+GitHub closes issues automatically when merges to the default branch contain:
+- `fixes #<n>`, `fix #<n>`, `fixed #<n>`
+- `closes #<n>`, `close #<n>`, `closed #<n>`
+- `resolves #<n>`, `resolve #<n>`, `resolved #<n>`
+
+Use neutral references instead:
+
+```bash
+# ✅ Safe — reference without trigger
+git commit -m "fix(keel): improve button contrast (see #42)"
+
+# ✅ Safe — package-scoped reference
+git commit -m "fix(@colis/keel): address accessibility contrast issue #42"
+
+# ❌ Dangerous — auto-closes the issue
+git commit -m "fix(keel): improve button contrast, closes #42"
+```
+
+## Publishing After a Fix
+
+After resolving an issue and publishing the fix:
+
+1. Update the issue comment with the exact version that contains the fix.
+2. Change label to `status:resolved` + `status:awaiting-confirmation`.
+3. Wait for the consuming project to verify and close the issue.
+
+## Label Reference
+
+| Label | Who Sets It | Meaning |
+|-------|------------|---------|
+| `status:open` | reporter (MCP tool) | Filed, not yet acknowledged |
+| `status:in-progress` | packages repo LLM | Actively being worked on |
+| `status:resolved` | packages repo LLM | Fix shipped |
+| `status:awaiting-confirmation` | packages repo LLM | Waiting for opener to close |
+| `source:ai-agent` | reporter (MCP tool) | Filed by a Cursor agent |
+| `type:bug` | reporter | Bug report |
+| `type:feature-request` | reporter | Feature request |
+| `package:*` | reporter | Affected package |
+
+## Triage Priority
+
+1. `type:bug` + `status:open` — highest priority, breaks consuming projects
+2. `type:feature-request` + `status:open` — review and plan
+3. `type:question` — answer in a comment and close when resolved
+
+When multiple bugs are open, fix them in dependency order:
+- Core packages (`@colis/rig`) first
+- Then leaf packages (`@colis/keel`, `@colis/hull`, etc.)

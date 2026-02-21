@@ -1,6 +1,6 @@
 {
   "name": "@colis/hull",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Design system and theming package for @colis/keel — three-layer CSS token system with Tailwind-first base",
   "type": "module",
   "main": "dist/index.js",

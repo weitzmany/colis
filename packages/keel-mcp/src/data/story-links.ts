@@ -87,6 +87,18 @@ export const STORY_LINKS: StoryLink[] = [
     storyId: 'components-button--sizes-and-shape',
     url: `${STORYBOOK_BASE_URL}/?path=/story/components-button--sizes-and-shape`,
   },
+  {
+    component: 'keel-input',
+    name: 'Input Playground',
+    storyId: 'components-input--playground',
+    url: `${STORYBOOK_BASE_URL}/?path=/story/components-input--playground`,
+  },
+  {
+    component: 'keel-input',
+    name: 'Input States',
+    storyId: 'components-input--states',
+    url: `${STORYBOOK_BASE_URL}/?path=/story/components-input--states`,
+  },
 ];
 
 export function getStoryLinksForComponent(component: string): StoryLink[] {

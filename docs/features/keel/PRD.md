@@ -3,7 +3,7 @@
 ## Product Requirements Document (PRD)
 
 **Package Name**: `@colis/keel`  
-**Status**: Phase 1.5 — Foundation + first shipped component (`keel-button`)  
+**Status**: Phase 1.6 — Foundation + shipped components (`keel-button`, `keel-input`)  
 **Priority**: High (P1)  
 **Created Date**: 2026-02-21  
 **Last Updated**: 2026-02-21
@@ -246,7 +246,7 @@ The first component is shipped. Remaining components are planned:
 | Component | Selector | Priority |
 |-----------|----------|----------|
 | Button | `<keel-button>` | Shipped |
-| Input | `<keel-input>` | P1 |
+| Input | `<keel-input>` | Shipped |
 | Textarea | `<keel-textarea>` | P1 |
 | Select | `<keel-select>` | P1 |
 | Checkbox | `<keel-checkbox>` | P1 |

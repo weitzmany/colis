@@ -2,7 +2,7 @@
 
 Angular component library for the Colis ecosystem — standalone, themeable UI primitives.
 
-> **Current status:** `keel-button` is available. Additional primitives are planned.
+> **Current status:** `keel-button` and `keel-input` are available. Additional primitives are planned.
 
 ---
 
@@ -152,12 +152,60 @@ export class ExampleComponent {
 - default slot: button content, e.g. `<keel-button>Save</keel-button>`
 - `[keelButtonIcon]`: reserved placeholder for future icon component support
 
+### Input (`<keel-input>`)
+
+`KeelInputComponent` is a standalone Angular component exported from `@colis/keel`.
+
+```typescript
+import { Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { KeelInputComponent } from '@colis/keel';
+
+@Component({
+  standalone: true,
+  imports: [ReactiveFormsModule, KeelInputComponent],
+  template: `
+    <keel-input
+      [formControl]="email"
+      [placeholder]="'john@company.com'"
+      [invalid]="email.invalid && email.touched"
+    >
+      <span keelInputLabel>Email</span>
+      <span keelInputHelper *ngIf="email.invalid && email.touched">Please enter a valid email</span>
+    </keel-input>
+  `
+})
+export class ExampleComponent {
+  email = new FormControl('');
+}
+```
+
+#### Inputs
+
+| Input | Type | Default |
+|------|------|---------|
+| `type` | `'text' \| 'email' \| 'password' \| 'number' \| 'search'` | `'text'` |
+| `placeholder` | `string` | `''` |
+| `disabled` | `boolean` | `false` |
+| `invalid` | `boolean` | `false` |
+
+#### Outputs
+
+| Output | Type | Description |
+|--------|------|-------------|
+| `valueChange` | `EventEmitter<string>` | Emitted when the input value changes |
+
+#### Projection Slots
+
+- `[keelInputLabel]`: label content above the input
+- `[keelInputHelper]`: helper or error content below the input
+
 ## Planned Components
 
 | Component | Selector | Status |
 |-----------|----------|--------|
 | Button | `<keel-button>` | Available |
-| Input | `<keel-input>` | Planned |
+| Input | `<keel-input>` | Available |
 | Textarea | `<keel-textarea>` | Planned |
 | Select | `<keel-select>` | Planned |
 | Checkbox | `<keel-checkbox>` | Planned |

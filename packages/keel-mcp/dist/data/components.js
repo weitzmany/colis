@@ -94,9 +94,9 @@ export const KEEL_COMPONENTS = [
         name: 'KeelInputComponent',
         selector: 'keel-input',
         importPath: '@colis/keel',
-        status: 'planned',
-        description: 'Text input field with label, validation states, and helper text',
-        phase: 2,
+        status: 'available',
+        description: 'Text input field with Angular Forms support and validation states',
+        phase: 1,
         inputs: [
             {
                 name: 'type',
@@ -134,8 +134,8 @@ export const KEEL_COMPONENTS = [
             },
         ],
         slots: [
-            { name: 'label', description: 'Input label text' },
-            { name: 'helper', description: 'Helper or error text below the input' },
+            { name: '[keelInputLabel]', description: 'Input label content' },
+            { name: '[keelInputHelper]', description: 'Helper or error text below the input' },
         ],
         cssTokens: [
             '--keel-color-border',
@@ -146,7 +146,7 @@ export const KEEL_COMPONENTS = [
             '--keel-space-md',
             '--keel-radius-md',
         ],
-        storyId: null,
+        storyId: 'components-input--playground',
         docsPath: '/design-system/keel/components/input',
     },
     {

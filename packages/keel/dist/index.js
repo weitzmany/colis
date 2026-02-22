@@ -10,5 +10,6 @@
  *   @import '@colis/keel/src/tokens/defaults.css';
  */
 export * from './components/button/keel-button.component';
-export const KEEL_VERSION = '0.1.1';
+export * from './components/input/keel-input.component';
+export const KEEL_VERSION = '0.3.3';
 //# sourceMappingURL=index.js.map

@@ -69,7 +69,7 @@ export const COMPONENT_EXAMPLES = [
         componentDecorator: "@Component({ standalone: true, imports: [KeelButtonComponent] })",
         template: '<keel-button (clicked)="onSave()">Save</keel-button>',
     },
-    // keel-input (Phase 2 — placeholder until component ships)
+    // keel-input (available)
     {
         component: 'keel-input',
         title: 'Basic text input',
@@ -77,7 +77,7 @@ export const COMPONENT_EXAMPLES = [
         imports: "import { KeelInputComponent } from '@colis/keel';",
         componentDecorator: "@Component({ standalone: true, imports: [KeelInputComponent] })",
         template: `<keel-input placeholder="Enter your name">
-  <span slot="label">Full name</span>
+  <span keelInputLabel>Full name</span>
 </keel-input>`,
     },
     {
@@ -87,8 +87,8 @@ export const COMPONENT_EXAMPLES = [
         imports: "import { KeelInputComponent } from '@colis/keel';",
         componentDecorator: "@Component({ standalone: true, imports: [KeelInputComponent] })",
         template: `<keel-input [invalid]="true" placeholder="email@example.com">
-  <span slot="label">Email</span>
-  <span slot="helper">Please enter a valid email address</span>
+  <span keelInputLabel>Email</span>
+  <span keelInputHelper>Please enter a valid email address</span>
 </keel-input>`,
     },
 ];

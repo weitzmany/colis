@@ -119,7 +119,9 @@ Implemented `<keel-button>` with separate `variant` + `theme` API, plus `size`, 
 
 ### Task 2.3 — Input Component
 
-Implement `<keel-input>` with label, error state, disabled state.
+**Status**: Done  
+**Completed**: 2026-02-21  
+Implemented `<keel-input>` as a standalone component with `type`, `placeholder`, `disabled`, `invalid`, `valueChange`, and Angular Forms (`ControlValueAccessor`) support.
 
 ### Task 2.4 — Modal Component
 

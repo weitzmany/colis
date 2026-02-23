@@ -32,6 +32,7 @@ export type KeelInputType = 'text' | 'email' | 'password' | 'number' | 'search';
       <input
         class="kh-input__control"
         [type]="type"
+        [name]="name"
         [placeholder]="placeholder"
         [disabled]="disabled"
         [value]="value"
@@ -119,6 +120,7 @@ export type KeelInputType = 'text' | 'email' | 'password' | 'number' | 'search';
 })
 export class KeelInputComponent implements ControlValueAccessor {
   @Input() type: KeelInputType = 'text';
+  @Input() name = '';
   @Input() placeholder = '';
   @Input({ transform: booleanAttribute }) disabled = false;
   @Input({ transform: booleanAttribute }) invalid = false;

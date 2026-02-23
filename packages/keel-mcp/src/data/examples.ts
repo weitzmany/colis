@@ -80,6 +80,15 @@ export const COMPONENT_EXAMPLES: ComponentExample[] = [
     componentDecorator: "@Component({ standalone: true, imports: [KeelButtonComponent] })",
     template: '<keel-button (clicked)="onSave()">Save</keel-button>',
   },
+  {
+    component: 'keel-button',
+    title: 'Loading state',
+    variant: 'solid',
+    description: 'Show spinner and prevent interaction while request runs',
+    imports: "import { KeelButtonComponent } from '@colis/keel';",
+    componentDecorator: "@Component({ standalone: true, imports: [KeelButtonComponent] })",
+    template: '<keel-button [loading]="true">Saving</keel-button>',
+  },
 
   // keel-input (available)
   {
@@ -88,7 +97,7 @@ export const COMPONENT_EXAMPLES: ComponentExample[] = [
     description: 'Simple text input with label',
     imports: "import { KeelInputComponent } from '@colis/keel';",
     componentDecorator: "@Component({ standalone: true, imports: [KeelInputComponent] })",
-    template: `<keel-input placeholder="Enter your name">
+    template: `<keel-input name="fullName" placeholder="Enter your name">
   <span keelInputLabel>Full name</span>
 </keel-input>`,
   },

@@ -9,12 +9,15 @@ export declare class KeelButtonComponent {
     size: KeelButtonSize;
     rounded: boolean;
     disabled: boolean;
+    loading: boolean;
     clicked: EventEmitter<void>;
     get buttonClasses(): string[];
+    get isDisabled(): boolean;
     onClick(): void;
     static ɵfac: i0.ɵɵFactoryDeclaration<KeelButtonComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<KeelButtonComponent, "keel-button", never, { "variant": { "alias": "variant"; "required": false; }; "theme": { "alias": "theme"; "required": false; }; "size": { "alias": "size"; "required": false; }; "rounded": { "alias": "rounded"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "clicked": "clicked"; }, never, ["[keelButtonIcon]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KeelButtonComponent, "keel-button", never, { "variant": { "alias": "variant"; "required": false; }; "theme": { "alias": "theme"; "required": false; }; "size": { "alias": "size"; "required": false; }; "rounded": { "alias": "rounded"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "loading": { "alias": "loading"; "required": false; }; }, { "clicked": "clicked"; }, never, ["[keelButtonIcon]", "*"], true, never>;
     static ngAcceptInputType_rounded: unknown;
     static ngAcceptInputType_disabled: unknown;
+    static ngAcceptInputType_loading: unknown;
 }
 //# sourceMappingURL=keel-button.component.d.ts.map

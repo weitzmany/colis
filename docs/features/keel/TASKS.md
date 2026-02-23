@@ -114,14 +114,14 @@ Introduce Angular Package Format (APF) build using `ng-packagr`. Required before
 ### Task 2.2 — Button Component
 
 **Status**: Done  
-**Completed**: 2026-02-21  
-Implemented `<keel-button>` with separate `variant` + `theme` API, plus `size`, `rounded`, `disabled`, and `clicked` output.
+**Completed**: 2026-02-22  
+Implemented `<keel-button>` with separate `variant` + `theme` API, plus `size`, `rounded`, `disabled`, `loading`, spinner state, and `clicked` output.
 
 ### Task 2.3 — Input Component
 
 **Status**: Done  
-**Completed**: 2026-02-21  
-Implemented `<keel-input>` as a standalone component with `type`, `placeholder`, `disabled`, `invalid`, `valueChange`, and Angular Forms (`ControlValueAccessor`) support.
+**Completed**: 2026-02-22  
+Implemented `<keel-input>` as a standalone component with `type`, `name`, `placeholder`, `disabled`, `invalid`, `valueChange`, and Angular Forms (`ControlValueAccessor`) support.
 
 ### Task 2.4 — Modal Component
 

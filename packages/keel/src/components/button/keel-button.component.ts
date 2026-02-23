@@ -30,8 +30,9 @@ export type KeelButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
       class="kh-button"
       [ngClass]="buttonClasses"
       type="button"
-      [disabled]="disabled"
+      [disabled]="isDisabled"
       (click)="onClick()">
+      <span class="kh-button__spinner" *ngIf="loading" aria-hidden="true"></span>
       <span class="kh-button__icon" aria-hidden="true">
         <ng-content select="[keelButtonIcon]" />
       </span>
@@ -87,6 +88,21 @@ export type KeelButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
       .kh-button:disabled {
         cursor: not-allowed;
         opacity: 0.6;
+      }
+
+      .kh-button__spinner {
+        width: 1em;
+        height: 1em;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: kh-button-spin 0.8s linear infinite;
+      }
+
+      @keyframes kh-button-spin {
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       .kh-button-rounded {
@@ -225,6 +241,7 @@ export class KeelButtonComponent {
   @Input() size: KeelButtonSize = 'md';
   @Input({ transform: booleanAttribute }) rounded = false;
   @Input({ transform: booleanAttribute }) disabled = false;
+  @Input({ transform: booleanAttribute }) loading = false;
 
   @Output() clicked = new EventEmitter<void>();
 
@@ -237,8 +254,12 @@ export class KeelButtonComponent {
     ].filter(Boolean);
   }
 
+  get isDisabled(): boolean {
+    return this.disabled || this.loading;
+  }
+
   onClick(): void {
-    if (this.disabled) {
+    if (this.isDisabled) {
       return;
     }
 

@@ -23,8 +23,9 @@ type KeelButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
       class="kh-button"
       [ngClass]="buttonClasses"
       type="button"
-      [disabled]="disabled"
+      [disabled]="isDisabled"
       >
+      <span class="kh-button__spinner" *ngIf="loading" aria-hidden="true"></span>
       <ng-content />
     </button>
   `,
@@ -64,6 +65,21 @@ type KeelButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
       .kh-button:active:not(:disabled) {
         background: var(--keel-button-bg-active, var(--keel-color-primary-active));
+      }
+
+      .kh-button__spinner {
+        width: 1em;
+        height: 1em;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: kh-button-spin 0.8s linear infinite;
+      }
+
+      @keyframes kh-button-spin {
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       .kh-button-rounded { border-radius: var(--keel-radius-full); }
@@ -144,6 +160,7 @@ class KeelButtonPreviewComponent {
   @Input() size: KeelButtonSize = 'md';
   @Input() rounded = false;
   @Input() disabled = false;
+  @Input() loading = false;
 
   get buttonClasses(): string[] {
     return [
@@ -153,6 +170,10 @@ class KeelButtonPreviewComponent {
       this.rounded ? 'kh-button-rounded' : '',
     ].filter(Boolean);
   }
+
+  get isDisabled(): boolean {
+    return this.disabled || this.loading;
+  }
 }
 
 type ButtonStoryArgs = {
@@ -161,6 +182,7 @@ type ButtonStoryArgs = {
   size: KeelButtonSize;
   rounded: boolean;
   disabled: boolean;
+  loading: boolean;
 };
 
 const meta: Meta<ButtonStoryArgs> = {
@@ -182,6 +204,7 @@ const meta: Meta<ButtonStoryArgs> = {
     },
     rounded: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    loading: { control: 'boolean' },
   },
   render: (args) => ({
     props: args,
@@ -192,6 +215,7 @@ const meta: Meta<ButtonStoryArgs> = {
         [size]="size"
         [rounded]="rounded"
         [disabled]="disabled"
+        [loading]="loading"
       >
         Save
       </keel-button>
@@ -209,6 +233,7 @@ export const Playground: Story = {
     size: 'md',
     rounded: false,
     disabled: false,
+    loading: false,
   },
 };
 
@@ -253,7 +278,19 @@ export const SizesAndShape: Story = {
         <keel-button size="xl">XL</keel-button>
         <keel-button rounded="true">Rounded</keel-button>
         <keel-button [disabled]="true">Disabled</keel-button>
+        <keel-button [loading]="true">Loading</keel-button>
       </div>
     `,
   }),
+};
+
+export const Loading: Story = {
+  args: {
+    variant: 'solid',
+    theme: 'primary',
+    size: 'md',
+    rounded: false,
+    disabled: false,
+    loading: true,
+  },
 };

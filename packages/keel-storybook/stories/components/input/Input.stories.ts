@@ -16,6 +16,7 @@ type KeelInputType = 'text' | 'email' | 'password' | 'number' | 'search';
       <input
         class="kh-input__control"
         [type]="type"
+        [name]="name"
         [placeholder]="placeholder"
         [disabled]="disabled"
       />
@@ -86,6 +87,7 @@ type KeelInputType = 'text' | 'email' | 'password' | 'number' | 'search';
 })
 class KeelInputPreviewComponent {
   @Input() type: KeelInputType = 'text';
+  @Input() name = '';
   @Input() placeholder = 'Enter value';
   @Input() disabled = false;
   @Input() invalid = false;
@@ -93,6 +95,7 @@ class KeelInputPreviewComponent {
 
 type InputStoryArgs = {
   type: KeelInputType;
+  name: string;
   placeholder: string;
   disabled: boolean;
   invalid: boolean;
@@ -107,6 +110,7 @@ const meta: Meta<InputStoryArgs> = {
       control: 'select',
       options: ['text', 'email', 'password', 'number', 'search'],
     },
+    name: { control: 'text' },
     placeholder: { control: 'text' },
     disabled: { control: 'boolean' },
     invalid: { control: 'boolean' },
@@ -116,6 +120,7 @@ const meta: Meta<InputStoryArgs> = {
     template: `
       <keel-input
         [type]="type"
+        [name]="name"
         [placeholder]="placeholder"
         [disabled]="disabled"
         [invalid]="invalid"
@@ -133,6 +138,7 @@ type Story = StoryObj<InputStoryArgs>;
 export const Playground: Story = {
   args: {
     type: 'text',
+    name: 'fullName',
     placeholder: 'Enter your full name',
     disabled: false,
     invalid: false,

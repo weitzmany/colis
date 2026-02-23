@@ -77,6 +77,12 @@ export const STORY_LINKS = [
         url: `${STORYBOOK_BASE_URL}/?path=/story/components-button--sizes-and-shape`,
     },
     {
+        component: 'keel-button',
+        name: 'Button Loading',
+        storyId: 'components-button--loading',
+        url: `${STORYBOOK_BASE_URL}/?path=/story/components-button--loading`,
+    },
+    {
         component: 'keel-input',
         name: 'Input Playground',
         storyId: 'components-input--playground',

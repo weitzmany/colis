@@ -49,12 +49,19 @@ export const KEEL_COMPONENTS = [
                 required: false,
                 description: 'Disables the button, preventing interaction',
             },
+            {
+                name: 'loading',
+                type: 'boolean',
+                default: false,
+                required: false,
+                description: 'Shows a spinner and disables interaction while async work is running',
+            },
         ],
         outputs: [
             {
                 name: 'clicked',
                 type: 'EventEmitter<void>',
-                description: 'Emitted when button is clicked (not when disabled)',
+                description: 'Emitted when button is clicked (not when disabled or loading)',
             },
         ],
         slots: [
@@ -86,6 +93,7 @@ export const KEEL_COMPONENTS = [
             '--keel-font-size-lg',
             '--keel-font-size-xl',
             '--keel-font-weight-medium',
+            '--keel-color-text-inverse',
         ],
         storyId: 'components-button--playground',
         docsPath: '/design-system/keel/components/button',
@@ -110,6 +118,13 @@ export const KEEL_COMPONENTS = [
                 type: 'string',
                 required: false,
                 description: 'Placeholder text',
+            },
+            {
+                name: 'name',
+                type: 'string',
+                default: '',
+                required: false,
+                description: 'Native input name attribute',
             },
             {
                 name: 'disabled',

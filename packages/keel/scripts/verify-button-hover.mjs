@@ -10,6 +10,9 @@ const requiredSnippets = [
   '.kh-button-outline:hover:not(:disabled)',
   '.kh-button-flat:hover:not(:disabled)',
   '.kh-button-link:hover:not(:disabled)',
+  '.kh-button__spinner',
+  '@Input({ transform: booleanAttribute }) loading = false;',
+  '[disabled]="isDisabled"',
 ];
 
 for (const snippet of requiredSnippets) {

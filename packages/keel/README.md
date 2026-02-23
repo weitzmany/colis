@@ -140,12 +140,13 @@ export class ExampleComponent {
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` |
 | `rounded` | `boolean` | `false` |
 | `disabled` | `boolean` | `false` |
+| `loading` | `boolean` | `false` |
 
 #### Outputs
 
 | Output | Type | Description |
 |--------|------|-------------|
-| `clicked` | `EventEmitter<void>` | Emitted when the button is clicked and not disabled |
+| `clicked` | `EventEmitter<void>` | Emitted when the button is clicked and not disabled/loading |
 
 #### Slot Placeholders
 
@@ -185,6 +186,7 @@ export class ExampleComponent {
 | Input | Type | Default |
 |------|------|---------|
 | `type` | `'text' \| 'email' \| 'password' \| 'number' \| 'search'` | `'text'` |
+| `name` | `string` | `''` |
 | `placeholder` | `string` | `''` |
 | `disabled` | `boolean` | `false` |
 | `invalid` | `boolean` | `false` |

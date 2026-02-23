@@ -271,8 +271,12 @@ The first component is shipped. Remaining components are planned:
 - [ ] `<keel-button>` supports variants: `solid`, `outline`, `flat`, `link`
 - [ ] `<keel-button>` supports themes: `primary`, `secondary`, `success`, `warning`, `danger`, `info`, `tertiary`, `dark`
 - [ ] `<keel-button>` supports sizes: `xs`, `sm`, `md`, `lg`, `xl`
-- [ ] `<keel-button>` supports `disabled` and `rounded` states
+- [ ] `<keel-button>` supports `disabled`, `rounded`, and `loading` states
 - [ ] `<keel-button>` emits `clicked` output when interactive
+- [ ] `<keel-input>` is exported from `src/index.ts`
+- [ ] `<keel-input>` supports `type`, `name`, `placeholder`, `disabled`, `invalid`
+- [ ] `<keel-input>` supports `keelInputLabel` and `keelInputHelper` projected slots
+- [ ] `<keel-input>` supports Angular Forms via `ControlValueAccessor`
 - [ ] CSS variable token contract is documented in `README.md`
 - [ ] No dependency on `@colis/hull` in `package.json`
 - [ ] Angular peer dependency is declared
@@ -282,7 +286,7 @@ The first component is shipped. Remaining components are planned:
 
 ## Out of Scope (Phase 1.5)
 
-- Additional Angular components beyond `keel-button`
+- Additional Angular components beyond `keel-button` and `keel-input`
 - Animation or motion design
 - Accessibility testing of components (deferred to Phase 2)
 - Angular CDK integration
